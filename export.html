@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="row">
+        <div class="page-header">
+            <h1>
+          Data Export
+        </h1>
+        </div>
+    </div>
+    <div class="row">
+        <p>All exports are UTF-8 CSV files. The first row contains header information. Fields are quoted and
+        separated by commas.</p>
+        <dl class="">
+            <dt>
+                <a href="export/volume">Volume of news</a>
+            </dt>
+            <dd>Export all of the metadata for all the reports as <br/>
+                <ol class="list-inline">
+                    <li>ID</li>
+                    <li>Date</li>
+                    <li>Word count</li>
+                    <li>Document match count</li>
+                    <li>Paragraph match count</li>
+                    <li>Newspaper title</li>
+                    <li>Region</li>
+                    <li>Status</li>
+                </ol>
+            </dd>
+            <dt>
+                <a href="export/matching">Matching documents</a>
+            </dt>
+            <dd>Export all of the document-level matching data as<br/>
+                <ol class="list-inline">
+                    <li>Source ID</li>
+                    <li>Source date</li>
+                    <li>Source paper</li>
+                    <li>Source region</li>
+                    <li>Target Id</li>
+                    <li>Target date</li>
+                    <li>Target paper</li>
+                    <li>Target region</li>
+                    <li>Match percentage</li>
+                </ol>
+            </dd>
+            <dt>
+                <a href="export/matching-paragraphs">Matching paragraph</a>
+            </dt>
+            <dd>Export all of the document-level matching data as<br/>
+                <ol class="list-inline">
+                    <li>Source ID</li>
+                    <li>Source date</li>
+                    <li>Source paper</li>
+                    <li>Source region</li>
+                    <li>Target Id</li>
+                    <li>Target date</li>
+                    <li>Target paper</li>
+                    <li>Target region</li>
+                    <li>Match percentage</li>
+                </ol>
+            </dd>
+        </dl>
+    </div>
+</div>
