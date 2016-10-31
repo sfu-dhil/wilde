@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="row">
+        <div class="page-header">
+            <h1>Wilde Reports</h1>
+        </div>
+    </div>
+    <div class="row" data-template="app:similarities">
+        <p data-template="app:similarities-summary"/>
+        <div data-template="app:similarities-paginate"/>
+        <div data-template="app:similarities-results"/>
+        <div data-template="app:similarities-paginate"/>
+    </div>
+    <script type="text/javascript" src="resources/google-diff-match-patch-js/diff_match_patch.js"/>
+    <script type="text/javascript" src="resources/jsdiff/index.js"/>
+    <script type="text/javascript">
+        function normalize($p) {
+          return $p.text().trim().toLowerCase().replace(/(?:\r\n|\r|\n)/g, '');
+        }
+        
+        $(document).ready(function(){
+          $("div.paragraph-compare").each(function(){
+            var $this = $(this);
+            var $a = $this.find('.paragraph-a');
+            var $b = $this.find('.paragraph-b');
+            var $d = $this.find('.paragraph-d');
+            
+            $d.html(diffString(normalize($a), normalize($b)));
+            console.log();
+            $d.append("&lt;br/&gt;&lt;i&gt;Match: " + $this.data('score') + '&lt;/i&gt;');
+          });
+        });
+    </script>
+</div>

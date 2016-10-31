@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="row">
+        <div class="page-header">
+            <h1>
+                Similarity Graph
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div id="graph">
+            <style scoped="scoped">
+                @import url("resources/css/jquery.cropbox.css")
+            </style>
+        </div>
+        <div class="text-center">
+            <div class="btn-group" role="group" aria-label="zoom in/zoom out">
+                <button class="btn btn-default zoom-in">
+                    <span class="glyphicon glyphicon-zoom-in"/>
+                    <span class="sr-only">Zoom in</span>
+                </button>
+                <button class="btn btn-default zoom-out">
+                    <span class="glyphicon glyphicon glyphicon-zoom-out"/>
+                    <span class="sr-only">Zoom in</span>
+                </button>
+                <button class="btn btn-default download">
+                    <span class="glyphicon glyphicon-download-alt"/>
+                    <span class="sr-only">Download</span>
+                </button>
+                <button type="button" class="btn btn-default dropdown-toggle layout-parent" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Layout  <span class="caret"/>
+                </button>
+                <ul class="dropdown-menu engines">
+                    <li>
+                        <a href="" data-engine="circo">circo</a>
+                    </li>
+                    <li>
+                        <a href="" data-engine="dot">dot</a>
+                    </li>
+                    <li>
+                        <a href="" data-engine="fdp">fdp</a>
+                    </li>
+                    <li>
+                        <a href="" data-engine="neato">neato</a>
+                    </li>
+                    <li>
+                        <a href="" data-engine="nop">nop</a>
+                    </li>
+                    <li>
+                        <a href="" data-engine="nop1">nop1</a>
+                    </li>
+                    <li>
+                        <a href="" data-engine="nop2">nop2</a>
+                    </li>
+                    <li>
+                        <a href="" data-engine="osage">osage</a>
+                    </li>
+                    <li>
+                        <a href="" data-engine="patchwork">patchwork</a>
+                    </li>
+                    <li>
+                        <a href="" data-engine="sfdp">sfdp</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="resources/js/viz.js"/>
+    <script type="text/javascript" src="resources/js/jquery.cropbox.js"/>
+    <script type="text/javascript" src="resources/js/graph.js"/>
+</div>

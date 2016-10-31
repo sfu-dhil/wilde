@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="row">
+        <div class="page-header">
+            <h1>Similarity</h1>
+        </div>
+    </div>
+    <div class="row">
+        <form>
+            <div class="form-group">
+                <label for="c1">First passage</label>
+                <textarea class="form-control" rows="6" cols="40" name="c1" id="c1" data-template="app:measure-textarea" data-template-name="c1"/>
+            </div>
+            <div class="form-group">
+                <label for="c2">Second passage</label>
+                <textarea class="form-control" rows="6" cols="40" name="c2" id="c2" data-template="app:measure-textarea" data-template-name="c2"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" name="measure" value="Measure"/>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <span data-template="app:measure"/>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        var $a = $("#first");
+        var $b = $("#second");
+        var $d = $("#difference");
+        
+        $d.html(diffString($a.text(), $b.text()));
+        });
+    </script>
+    <script type="text/javascript" src="resources/jsdiff/index.js"/>
+</div>

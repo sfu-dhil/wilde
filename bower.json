@@ -1,0 +1,31 @@
+{
+  "directory": "resources",
+  "name": "wilde-app",
+  "authors": [
+    "Michael Joyce <mjoyce@sfu.ca>"
+  ],
+  "description": "Detecting copying in XHTML documents.",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "jquery#^1.12.4",
+    "bootstrap": "boostrap#^3.3.7",
+    "ckeditor": "^4.5.11",
+    "js-cookie": "js-cookie/js-cookie#^2.1.3",
+    "google-diff-match-patch-js": "^1.0.0",
+    "jquery-ajaxQueue": "gnarf/jquery-ajaxQueue#^0.1.1",
+    "cropbox": "^0.1.9",
+    "tablesorter": "*",
+    "jsdiff": "http://ejohn.org/files/jsdiff.js",
+    "js-url": "^2.3.1"
+  }
+}

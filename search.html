@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="row">
+        <div class="page-header">
+            <h1> Search the collection </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <form class="">
+                <div class="form-group">
+                    <label class="sr-only" for="query">Search term</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="query" name="query" data-template="templates:form-control"/>
+                        <div class="input-group-addon">
+                            <button>
+                                <span class="glyphicon glyphicon-search"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <dl class="dl-horizontal">
+            <dt>match any term</dt>
+            <dd>
+                <kbd>durham cathedral</kbd> matches "durham" or "catehdral."</dd>
+            <dt>wildcards</dt>
+            <dd>
+                <kbd>exa*ted</kbd> matches "exalted" and "exaggerated".</dd>
+            <dd>
+                <kbd>f?nny</kbd> matches "funny" and "finny" but not "faanny."</dd>
+            <dt>match all terms</dt>
+            <dd>
+                <kbd>+durham +cathedral</kbd> matches paragraphs which contain both durham and
+                    cathedral.</dd>
+            <dt>match <i>some</i> terms</dt>
+            <dd>
+                <kbd>-durham +cathedral</kbd> matches paragraphs which do not contain durham but do contain
+                    cathedral.</dd>
+            <dt>phrase</dt>
+            <dd>
+                <kbd>"views of the lakes"</kbd>
+            </dd>
+            <dt>proximity search</dt>
+            <dd>
+                <kbd>"mining synopsis"~10</kbd> matches paragraphs which contain the words mining and
+                    synopsis no more than 10 words apart.</dd>
+            <dt>fuzzy search</dt>
+            <dd>
+                <kbd>celestial~</kbd> matches words which are similar to celestial.</dd>
+            <dd>
+                <kbd>celestial~0.9</kbd> matches words which are closer to celestial than <kbd>celestial~0.1</kbd>
+                    would.</dd>
+            <dt>boolean</dt>
+            <dd>
+                <kbd>moreland AND brigham</kbd> finds paragraphs that contain both moreland and
+                    brigham</dd>
+            <dt>grouping</dt>
+            <dd>
+                <kbd>(moreland OR cumberland) AND brigham</kbd>
+            </dd>
+        </dl>
+    </div>
+    <div class="row">
+        <div class="app:search">
+            <div data-template="app:search-summary"/>
+            <div data-template="app:search-paginate"/>
+            <div data-template="app:search-results"/>
+            <div data-template="app:search-paginate"/>
+        </div>
+    </div>
+</div>
