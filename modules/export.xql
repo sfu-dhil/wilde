@@ -24,6 +24,8 @@ declare function export:volume() {
             <item>Paragraph matches</item>
             <item>Newspaper Title</item>
             <item>Region</item>
+            <item>City</item>
+            <item>Language</item>
             <item>Status</item>
         </row>
 
@@ -37,6 +39,8 @@ declare function export:volume() {
             <item>{count(document:paragraph-matches($document))}</item>
             <item>{document:publisher($document)}</item>
             <item>{document:region($document)}</item>
+            <item>{document:city($document)}</item>
+            <item>{document:language($document)}</item>
             <item>{document:status($document)}</item>
         </row>
         
@@ -50,10 +54,14 @@ declare function export:matching-paragraphs() {
             <item>Source date</item>
             <item>Source paper</item>
             <item>Source region</item>
+            <item>Source city</item>
+            <item>Source language</item>
             <item>Target Id</item>
             <item>Target date</item>
             <item>Target paper</item>
             <item>Target region</item>
+            <item>Target city</item>
+            <item>Target language</item>
             <item>Match</item>
         </row>
     
@@ -71,10 +79,14 @@ declare function export:matching-paragraphs() {
             <item>{document:date($link)}</item>
             <item>{document:publisher($link)}</item>
             <item>{document:region($link)}</item>
+            <item>{document:city($link)}</item>
+            <item>{document:language($link)}</item>
             <item>{document:id($target)}</item>
             <item>{document:date($target)}</item>
             <item>{document:publisher($target)}</item>
             <item>{document:region($target)}</item>
+            <item>{document:city($target)}</item>
+            <item>{document:language($target)}</item>
             <item>{$link/@data-similarity/string()}</item>
         </row>
         

@@ -32,7 +32,7 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
         <table class='table table-striped table-hover table-condensed' id="tbl-browser">
             <thead>
                 <tr>
-                    <th>Date</th><th>Publisher</th><th>Region</th>
+                    <th>Date</th><th>Publisher</th><th>Region</th><th>City</th><th>Language</th>
                     <th>Indexed</th><th>Matches</th><th>Words</th>
                 </tr>
             </thead>
@@ -42,6 +42,8 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
                     <td>{app:link-view(document:id($document), string(document:date($document)))}</td>
                     <td>{document:publisher($document)}</td>
                     <td>{document:region($document)}</td>
+                    <td>{document:city($document)}</td>
+                    <td>{document:language($document)}</td>
                     <td>{document:indexed-document($document)}/{document:indexed-paragraph($document)}</td>
                     <td>{count(document:document-matches($document))}/{count(document:paragraph-matches($document))}</td>
                     <td>{document:word-count($document)}</td>
@@ -99,6 +101,10 @@ declare function app:doc-region($node as node(), $model as map(*)) as xs:string 
     document:region($model('document'))
 };
 
+declare function app:doc-city($ndoe as node(), $model as map(*)) as xs:string {
+    document:city($model('document'))
+};
+
 declare function app:doc-modified($node as node(), $model as map(*)) as xs:string {
     string(document:modified($model('document')))
 };
@@ -108,10 +114,7 @@ declare function app:doc-content($node as node(), $model as map(*)) as node()* {
 };
 
 declare function app:doc-language($node as node(), $model as map(*)) as xs:string {
-    switch(document:language($model('document')))
-        case 'en' return 'English'
-        case 'fr' return 'French'
-        default return 'unknown'        
+    document:language($model('document'))
 };
 
 declare function app:document-indexed($node as node(), $model as map(*)) as xs:string {

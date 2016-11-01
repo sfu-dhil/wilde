@@ -67,6 +67,14 @@ declare function document:paragraph-matches($node as node()) as node()* {
     root($node)//a[@class='similarity']
 };
 
+declare function document:city($node as node()) as xs:string {
+    string(root($node)//meta[@name='dc.region.city']/@content)
+};
+
+declare function document:language($node as node()) as xs:string {
+    string(root($node)//meta[@name='dc.language']/@content)
+};
+
 declare function document:collection($node as node()) as xs:string {
     let $uri := document:uri($node)
     let $parts := tokenize($uri, '/')
@@ -105,11 +113,4 @@ declare function document:similar-paragraphs($node as node()) as node()* {
     for $node in root($node)//a[@class='similarity']
     order by $node/@data-similarity descending
     return $node
-};
-
-declare function document:language($node as node()) as xs:string {
-    switch(string(root($node)/html/@xml:lang))
-        case 'en' return 'English'
-        case 'fr' return 'French'
-        default return 'unknown'            
 };
