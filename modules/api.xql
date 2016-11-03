@@ -27,16 +27,22 @@ declare function api:documents() {
                index-paragraph="{document:indexed-paragraph($document)}" />
 };
 
+declare function api:generate-paragraph-ids() {
+  let $collection := collection:documents()
+  let $count := sum(
+  for $p in $collection//p[not(@id)]
+      let $null := update insert attribute { 'id' } { generate-id($p) } into $p
+      return 1
+  )
+  return <result>{$count} IDs generated.</result>
+};
+
 declare function api:delete-indexes() {
     let $collection := collection:documents()
     return (
         update delete $collection//meta[starts-with(@name, 'index.')],
         update delete $collection//link[@rel='similarity'],
         update delete $collection//a[@class='similarity'],
-        for $p in $collection//p[not(@id)]
-            let $null := update insert attribute { 'id' } { generate-id($p) } into $p
-            return ()
-        ,
         <result>deleted all indexes.</result>
     )
 };
