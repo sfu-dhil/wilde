@@ -10,10 +10,6 @@ declare variable $exist:controller external;
 declare variable $exist:prefix external;
 declare variable $exist:root external;
 
-let $logout := request:get-parameter('logout', ())
-let $set-user := login:set-user($config:login-domain, (), false())
-
-return
 if ($exist:path eq '') then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="{request:get-uri()}/"/>
