@@ -1,2 +1,5 @@
-resources
-build
+build/
+
+resources/*
+!resources/js/
+!resources/css/

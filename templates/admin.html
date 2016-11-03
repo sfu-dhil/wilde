@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title data-template="config:app-title">App Title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta data-template="config:app-meta"/>
+        <link rel="shortcut icon" href="$shared/resources/images/exist_icon_16x16.ico"/>
+        <link rel="stylesheet" type="text/css" href="../resources/bootstrap/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="../resources/bootstrap/dist/css/bootstrap-theme.min.css"/>
+        <link rel="stylesheet" type="text/css" href="../resources/css/style.css"/>
+        <script type="text/javascript" src="../resources/jquery/dist/jquery.min.js"/>
+        <script type="text/javascript" src="../resources/bootstrap/dist/js/bootstrap.min.js"/>
+    </head>
+    <body id="body">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"/>
+                    <span class="icon-bar"/>
+                    <span class="icon-bar"/>
+                </button>
+                <a data-template="config:app-title" class="navbar-brand" href="../index.html">App Title</a>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="index.html">Admin</a>
+                    </li>
+                    <li>
+                        <a href="reindex.html">Reindex</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#">
+                            <span data-template="app:username"/>
+                        </a>
+                    </li>
+                    <li>
+                        <div data-template="app:if-attribute-set" data-template-attribute="ca.nines.wilde.user">
+                            <a href="?logout=true">logout</a>
+                        </div>
+                        <div data-template="app:if-attribute-unset" data-template-attribute="ca.nines.wilde.user">
+                            <a data-toggle="modal" href="#loginModal">Login</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div id="content" class="container"/>
+        <div data-template="app:if-attribute-unset" data-template-attribute="ca.nines.wilde.user">
+            <div data-template="templates:include" data-template-path="templates/login-panel.html"/>
+        </div>
+    </body>
+</html>

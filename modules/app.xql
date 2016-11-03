@@ -14,9 +14,47 @@ import module namespace tx="http://nines.ca/exist/wilde/transform" at "transform
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
-declare function app:user($node as node(), $model as map(*)) as xs:string {
-    xmldb:get-current-user()
+(:Check if the HTTP request has the named attribute and is true.:)
+declare function app:if-attribute-set($node as node(), $model as map(*), $attribute as xs:string) {
+    let $isSet :=
+        (exists($attribute) and request:get-attribute($attribute))
+    return
+        if ($isSet) then
+            templates:process($node/node(), $model)
+        else
+            ()
 };
+
+(:Check if the HTTP request does not have the named attribute:)
+declare function app:if-attribute-unset($node as node(), $model as map(*), $attribute as xs:string) { 
+    let $isSet :=
+        (exists($attribute) and request:get-attribute($attribute))
+    return
+        if (not($isSet)) then
+            templates:process($node/node(), $model)
+        else
+            ()
+};
+
+(:Return the current user name.:)
+declare function app:username($node as node(), $model as map(*)) {
+    let $user:= request:get-attribute($config:login-user)
+    let $name := if ($user) then sm:get-account-metadata($user, xs:anyURI('http://axschema.org/namePerson')) else 'Guest'
+    return if ($name) then $name else $user
+};
+
+(:Return the current user info as a map.:)
+declare 
+    %templates:wrap
+function app:userinfo($node as node(), $model as map(*)) as map(*) {
+    let $user:= request:get-attribute($config:login-user)
+    let $name := if ($user) then sm:get-account-metadata($user, xs:anyURI('http://axschema.org/namePerson')) else 'Guest'
+    let $group := if ($user) then sm:get-user-groups($user) else 'guest'
+    return
+        map { "user-id" := $user, "user-name" := $name, "user-groups" := $group}
+};
+
+
 
 declare function app:link-view($id as xs:string, $content) as node() {
     <a href="view.html?f={$id}">{$content}</a>
@@ -32,7 +70,7 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
         <table class='table table-striped table-hover table-condensed' id="tbl-browser">
             <thead>
                 <tr>
-                    <th>Date</th><th>Publisher</th><th>Region</th>
+                    <th>Date</th><th>Publisher</th><th>Region</th><th>City</th><th>Language</th>
                     <th>Indexed</th><th>Matches</th><th>Words</th>
                 </tr>
             </thead>
@@ -42,6 +80,8 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
                     <td>{app:link-view(document:id($document), string(document:date($document)))}</td>
                     <td>{document:publisher($document)}</td>
                     <td>{document:region($document)}</td>
+                    <td>{document:city($document)}</td>
+                    <td>{document:language($document)}</td>
                     <td>{document:indexed-document($document)}/{document:indexed-paragraph($document)}</td>
                     <td>{count(document:document-matches($document))}/{count(document:paragraph-matches($document))}</td>
                     <td>{document:word-count($document)}</td>
@@ -99,6 +139,10 @@ declare function app:doc-region($node as node(), $model as map(*)) as xs:string 
     document:region($model('document'))
 };
 
+declare function app:doc-city($ndoe as node(), $model as map(*)) as xs:string {
+    document:city($model('document'))
+};
+
 declare function app:doc-modified($node as node(), $model as map(*)) as xs:string {
     string(document:modified($model('document')))
 };
@@ -108,10 +152,7 @@ declare function app:doc-content($node as node(), $model as map(*)) as node()* {
 };
 
 declare function app:doc-language($node as node(), $model as map(*)) as xs:string {
-    switch(document:language($model('document')))
-        case 'en' return 'English'
-        case 'fr' return 'French'
-        default return 'unknown'        
+    document:language($model('document'))
 };
 
 declare function app:document-indexed($node as node(), $model as map(*)) as xs:string {
