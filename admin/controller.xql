@@ -12,7 +12,7 @@ declare variable $exist:prefix external;
 declare variable $exist:root external;
 
 let $logout := request:get-parameter('logout', ())
-let $set-user := login:set-user($config:login-domain, '/exist/apps/wilde/admin', 'P14D', false())
+let $set-user := login:set-user($config:login-domain, '/exist/apps/wilde', 'P14D', false())
 
 return
 if ($exist:path eq '') then
