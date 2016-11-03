@@ -10,11 +10,13 @@ declare namespace json="http://www.json.org";
 declare option output:method "json";
 declare option output:media-type "text/javascript";
 
+import module namespace login="http://exist-db.org/xquery/login" at "resource:org/exist/xquery/modules/persistentlogin/login.xql";
 import module namespace console="http://exist-db.org/xquery/console";
 import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
 import module namespace collection="http://nines.ca/exist/wilde/collection" at "collection.xql";
 import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
 import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql";
+import module namespace app="http://nines.ca/exist/wilde/templates" at "app.xql";
 
 declare function api:documents() {
     let $documents := collection:documents()
@@ -102,6 +104,12 @@ declare function api:save-document() {
     return <result>{$result}</result>
 };
 
+declare function local:username() {
+    let $user:= request:get-attribute($config:login-user)
+    let $name := if ($user) then sm:get-account-metadata($user, xs:anyURI('http://axschema.org/namePerson')) else 'Guest'
+    return if ($name) then $name else $user
+};
+
 let $functionName := request:get-attribute('function')
 let $function := 
     try {
@@ -109,10 +117,12 @@ let $function :=
     } catch * {
         ()
     }
-    
+
+let $set-user := login:set-user($config:login-domain, (), false())
+
 return    
 if(exists($function)) then
-    <root> { $function() } </root>
+    <root> <user> { local:username() } </user> { $function() } </root>
 else
     let $null := response:set-status-code(404)
     return <error status="404">The API function {$functionName} cannot be found.</error>

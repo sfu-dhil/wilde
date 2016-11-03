@@ -79,9 +79,8 @@
     
     function doReindex(event) {
         event.preventDefault();
-        
-        
         type = $(this).data('level');
+        console.log("Reindexing " + type);
         fn = null;
         switch (type) {
             case 'document':
@@ -106,6 +105,7 @@
     
     function doParagraphIds() {
         event.preventDefault();
+        console.log("generating paragraph ids.");
         $.ajax({
             url: "../api/generate-paragraph-ids",
             type: "GET",
@@ -121,7 +121,7 @@
     
     function deleteIndexes (event) {
         event.preventDefault();
-        
+        console.log("deleting indexes.");
         $.ajax({
             url: "../api/delete-indexes",
             type: "GET",
