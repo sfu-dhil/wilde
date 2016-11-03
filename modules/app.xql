@@ -14,9 +14,47 @@ import module namespace tx="http://nines.ca/exist/wilde/transform" at "transform
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
-declare function app:user($node as node(), $model as map(*)) as xs:string {
-    xmldb:get-current-user()
+(:Check if the HTTP request has the named attribute and is true.:)
+declare function app:if-attribute-set($node as node(), $model as map(*), $attribute as xs:string) {
+    let $isSet :=
+        (exists($attribute) and request:get-attribute($attribute))
+    return
+        if ($isSet) then
+            templates:process($node/node(), $model)
+        else
+            ()
 };
+
+(:Check if the HTTP request does not have the named attribute:)
+declare function app:if-attribute-unset($node as node(), $model as map(*), $attribute as xs:string) { 
+    let $isSet :=
+        (exists($attribute) and request:get-attribute($attribute))
+    return
+        if (not($isSet)) then
+            templates:process($node/node(), $model)
+        else
+            ()
+};
+
+(:Return the current user name.:)
+declare function app:username($node as node(), $model as map(*)) {
+    let $user:= request:get-attribute($config:login-user)
+    let $name := if ($user) then sm:get-account-metadata($user, xs:anyURI('http://axschema.org/namePerson')) else 'Guest'
+    return if ($name) then $name else $user
+};
+
+(:Return the current user info as a map.:)
+declare 
+    %templates:wrap
+function app:userinfo($node as node(), $model as map(*)) as map(*) {
+    let $user:= request:get-attribute($config:login-user)
+    let $name := if ($user) then sm:get-account-metadata($user, xs:anyURI('http://axschema.org/namePerson')) else 'Guest'
+    let $group := if ($user) then sm:get-user-groups($user) else 'guest'
+    return
+        map { "user-id" := $user, "user-name" := $name, "user-groups" := $group}
+};
+
+
 
 declare function app:link-view($id as xs:string, $content) as node() {
     <a href="view.html?f={$id}">{$content}</a>

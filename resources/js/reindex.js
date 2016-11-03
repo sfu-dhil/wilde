@@ -30,7 +30,7 @@
         for (var i = 0; i < data.document.length; i++) {
             var document = data.document[i];
             $.ajaxQueue({
-                url: 'api/reindex-document',
+                url: '../api/reindex-document',
                 data: {
                     f: document.id
                 },
@@ -57,7 +57,7 @@
         for (var i = 0; i < data.document.length; i++) {
             var document = data.document[i];
             $.ajaxQueue({
-                url: 'api/reindex-paragraphs',
+                url: '../api/reindex-paragraphs',
                 data: {
                     f: document.id
                 },
@@ -96,7 +96,7 @@
         }
         
         $.ajax({
-            url: "api/documents",
+            url: "../api/documents",
             type: "GET",
             dataType: "json",
             success: fn,
@@ -107,7 +107,7 @@
     function doParagraphIds() {
         event.preventDefault();
         $.ajax({
-            url: "api/generate-paragraph-ids",
+            url: "../api/generate-paragraph-ids",
             type: "GET",
             dataType: "json",
             success: function (data) {
@@ -123,7 +123,7 @@
         event.preventDefault();
         
         $.ajax({
-            url: "api/delete-indexes",
+            url: "../api/delete-indexes",
             type: "GET",
             dataType: "json",
             success: function (data) {

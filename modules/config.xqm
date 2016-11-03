@@ -12,6 +12,12 @@ declare namespace repo="http://exist-db.org/xquery/repo";
 declare namespace expath="http://expath.org/ns/pkg";
 
 (: 
+  User auth variables 
+:)
+declare variable $config:login-domain := 'ca.nines.wilde';
+declare variable $config:login-user := $config:login-domain || '.user';
+
+(: 
     Determine the application root collection from the current module load path.
 :)
 declare variable $config:app-root := 
