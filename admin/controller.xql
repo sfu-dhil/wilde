@@ -26,7 +26,7 @@ else if ($exist:path eq "/") then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="index.html"/>
     </dispatch>
-                
+
 else if (ends-with($exist:resource, ".html")) then
     if (request:get-attribute($config:login-user)) then
     (: the html page is run through view.xql to expand templates :)
@@ -68,13 +68,15 @@ else if (contains($exist:path, "/$shared/")) then
         </forward>
     </dispatch>
     
-    
 else if(contains($exist:path, "/api/")) then
+  if(request:get-attribute($config:login-user)) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/modules/api.xql">
+        <forward url="{$exist:controller}/../modules/api.xql">
             <set-attribute name="function" value="{substring-after($exist:path, '/api/')}"/>
         </forward>
     </dispatch>
+  else
+    <result code="403">403 - NOT AUTHORIZED.</result>
 
 else if(contains($exist:path, "/export/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
