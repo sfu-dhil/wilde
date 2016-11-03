@@ -1,2 +1,3 @@
-resources
-build
+resources/*
+!resources/js/
+build/
