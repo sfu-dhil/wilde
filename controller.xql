@@ -2,6 +2,7 @@ xquery version "3.0";
 
 import module namespace console="http://exist-db.org/xquery/console";
 import module namespace config="http://nines.ca/exist/wilde/config" at "modules/config.xqm";
+import module namespace functx="http://www.functx.com";
 
 declare variable $exist:path external;
 declare variable $exist:resource external;
@@ -14,26 +15,24 @@ if ($exist:path eq '') then
         <redirect url="{request:get-uri()}/"/>
     </dispatch>
     
-    
 else if ($exist:path eq "/") then
     (: forward root path to index.xql :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="index.html"/>
     </dispatch>
-                
+    
 else if (ends-with($exist:resource, ".html")) then
     (: the html page is run through view.xql to expand templates :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <view>
             <forward url="{$exist:controller}/modules/view.xql"/>
         </view>
-    <error-handler>
-    	<forward url="{$exist:controller}/error-page.html" method="get"/>
-    	<forward url="{$exist:controller}/modules/view.xql"/>
-    </error-handler>
-  </dispatch> 
-        
-        
+		<error-handler>
+			<forward url="{$exist:controller}/error-page.html" method="get"/>
+			<forward url="{$exist:controller}/modules/view.xql"/>
+		</error-handler>
+    </dispatch>
+    
 (: Resource paths starting with $shared are loaded from the shared-resources app :)
 else if (contains($exist:path, "/$shared/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -42,14 +41,6 @@ else if (contains($exist:path, "/$shared/")) then
         </forward>
     </dispatch>
     
-    
-else if(contains($exist:path, "/api/")) then
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/modules/api.xql">
-            <set-attribute name="function" value="{substring-after($exist:path, '/api/')}"/>
-        </forward>
-    </dispatch>
-
 else if(contains($exist:path, "/export/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/modules/export.xql">
@@ -57,6 +48,12 @@ else if(contains($exist:path, "/export/")) then
         </forward>
     </dispatch>
 
+else if(contains($exist:path, "/api/")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/modules/api-public.xql">
+            <set-attribute name="function" value="{substring-after($exist:path, '/api/')}"/>
+        </forward>
+    </dispatch>
 
 else
     (: everything else is passed through :)

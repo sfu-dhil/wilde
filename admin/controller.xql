@@ -71,7 +71,7 @@ else if (contains($exist:path, "/$shared/")) then
 else if(contains($exist:path, "/api/")) then
   if(request:get-attribute($config:login-user)) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/../modules/api.xql">
+        <forward url="{$exist:controller}/../modules/api-admin.xql">
             <set-attribute name="function" value="{substring-after($exist:path, '/api/')}"/>
         </forward>
     </dispatch>

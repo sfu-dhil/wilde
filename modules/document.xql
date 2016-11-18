@@ -35,6 +35,10 @@ declare function document:status($node as node()) as xs:string {
     string(root($node)//meta[@name='status']/@content)
 };
 
+declare function document:path($node as node()) as xs:string {
+  string(root($node)//meta[@name='wr.path']/@content)
+};
+
 declare function document:word-count($node as node()) as xs:string {
     string(root($node)//meta[@name='wr.wordcount']/@content)
 };

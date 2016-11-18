@@ -10,58 +10,13 @@ import module namespace document="http://nines.ca/exist/wilde/document" at "docu
 import module namespace similarity="http://nines.ca/exist/wilde/similarity" at "similarity.xql";
 import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql";
 import module namespace tx="http://nines.ca/exist/wilde/transform" at "transform.xql";
+import module namespace stats="http://nines.ca/exist/wilde/stats" at "stats.xql";
 
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
-(:Check if the HTTP request has the named attribute and is true.:)
-declare function app:if-attribute-set($node as node(), $model as map(*), $attribute as xs:string) {
-    let $isSet :=
-        (exists($attribute) and request:get-attribute($attribute))
-    return
-        if ($isSet) then
-            templates:process($node/node(), $model)
-        else
-            ()
-};
-
-(:Check if the HTTP request does not have the named attribute:)
-declare function app:if-attribute-unset($node as node(), $model as map(*), $attribute as xs:string) { 
-    let $isSet :=
-        (exists($attribute) and request:get-attribute($attribute))
-    return
-        if (not($isSet)) then
-            templates:process($node/node(), $model)
-        else
-            ()
-};
-
-(:Return the current user name.:)
-declare function app:username($node as node(), $model as map(*)) {
-    let $user:= request:get-attribute($config:login-user)
-    let $name := if ($user) then sm:get-account-metadata($user, xs:anyURI('http://axschema.org/namePerson')) else 'Guest'
-    return if ($name) then $name else $user
-};
-
-(:Return the current user info as a map.:)
-declare 
-    %templates:wrap
-function app:userinfo($node as node(), $model as map(*)) as map(*) {
-    let $user:= request:get-attribute($config:login-user)
-    let $name := if ($user) then sm:get-account-metadata($user, xs:anyURI('http://axschema.org/namePerson')) else 'Guest'
-    let $group := if ($user) then sm:get-user-groups($user) else 'guest'
-    return
-        map { "user-id" := $user, "user-name" := $name, "user-groups" := $group}
-};
-
-
-
 declare function app:link-view($id as xs:string, $content) as node() {
     <a href="view.html?f={$id}">{$content}</a>
-};
-
-declare function app:link-edit($id as xs:string, $content) as node() {
-    <a href="edit.html?f={$id}">{$content}</a>
 };
 
 declare function app:browse($node as node(), $model as map(*)) as node() {
@@ -109,10 +64,6 @@ declare function app:load($node as node(), $model as map(*)) {
 
 declare function app:doc-title($node as node(), $model as map(*)) as xs:string {
     document:title($model('document'))
-};
-
-declare function app:doc-edit($node as node(), $model as map(*)) as node() {
-    app:link-edit($model('doc-id'), 'Edit')
 };
 
 declare function app:doc-subtitle($node as node(), $model as map(*)) as xs:string {
@@ -418,68 +369,21 @@ function app:measure-textarea($node as node(), $model as map(*), $name) {
     request:get-parameter($name, '')
 };
 
-declare function app:publishers-select($node as node(), $model as map(*)) {
-    let $document := $model('document')
-    return
-        <select name='publisher' id='publisher' class='form-control'> {
-            for $publisher in collection:publishers()
-            return <option>
-                { if(document:publisher($document) = $publisher) then
-                    attribute { 'selected' } { 'selected' }
-                  else ()
-                  }
-                {$publisher}
-            </option>,
-            <option class='publisher-other-option'>Other Publisher</option>
-        } </select>
-};
-
-declare function app:regions-select($node as node(), $model as map(*)) {
-    let $document := $model('document')
-    return
-        <select name='region' id='region' class='form-control'> {
-            for $region in collection:regions()
-            return <option>
-                { if(document:region($document) = $region) then
-                    attribute { 'selected' } { 'selected' }
-                  else ()
-                  }
-                {$region}
-            </option>,
-            <option class='region-other-option'>Other Region</option>
-        } </select>
-};
-
-declare function app:statuses-select($node as node(), $model as map(*)) {
-    let $document := $model('document')
-    return
-        <select name='status' id='status' class='form-control'> {
-            for $status in collection:statuses()
-            return <option> {
-                if(document:status($document) = $status) then
-                    attribute { 'selected' } { 'selected' }
-                else
-                    ()
-                }
-                {$status}
-            </option>
-        } </select>
-};
-
-declare function app:date-input($node as node(), $model as map(*)) {
-    <input type='date' class='form-control' name='date' id='date' value='{document:date($model('document'))}' />
-};
-
-declare function app:title-input($node as node(), $model as map(*)) {
-    <input type='text' class='form-control' name='title' id='title'  value='{document:title($model('document'))}' />
-};
-
-declare 
-    %templates:wrap
-function app:edit($node as node(), $model as map(*)) {
-    $model('document')//xhtml:body/node()
-};
-
-declare function app:save($node as node(), $model as map(*)) {
-    ()
+declare function app:statistics($node as node(), $model as map(*)) {
+    <dl>
+        <dt>Word count</dt>
+        <dd>{stats:count-words()}</dd>
+        <dt>Paragraph count</dt>
+        <dd>{stats:count-paragraphs()}</dd>
+        <dt>Document count</dt>
+        <dd>{stats:count-documents()}</dd>
+        <dt>Paragraphs with one or more matches</dt>
+        <dd>{stats:count-paragraphs-with-matches()}</dd>
+        <dt>Total paragraph matches</dt>
+        <dd>{stats:count-paragraph-matches()}</dd>
+        <dt>Documents with one or more matches</dt>
+        <dd>{stats:count-documents-with-matches()}</dd>
+        <dt>Total document matches</dt>
+        <dd>{stats:count-document-matches()}</dd>
+    </dl>
 };

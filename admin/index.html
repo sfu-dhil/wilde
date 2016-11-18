@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/admin.html" data-template-at="content">
     <div class="row">
-        <div class="col-md-8">
-            <div class="page-header">
-                <h1 data-template="config:app-title">Generated page</h1>
-            </div>
-            <div class="alert alert-success">
-                <p>The page template uses the <a href="http://twitter.github.com/bootstrap/">Bootstrap</a> CSS library for the page layout.</p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <h2>Application Info</h2>
-            <div data-template="config:app-info"/>
+        <div class="page-header">
+            <h1>Admin</h1>
         </div>
     </div>
+    <div class="row">
+        <div data-template="admin:browse"/>
+    </div>
+    <script type="text/javascript" src="../resources/tablesorter/jquery.tablesorter.min.js"/>
+    <script>
+    $(document).ready(function(){
+    $("#tbl-browser").tablesorter();
+    });
+  </script>
 </div>

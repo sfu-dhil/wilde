@@ -19,6 +19,10 @@ div.paragraph-compare{
     border-bottom: 1px solid lightgrey;
 }
 
+td a {
+    white-space: nowrap;
+}
+
 body div.overlay{
     display: none;
 }

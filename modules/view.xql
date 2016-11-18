@@ -13,6 +13,7 @@ import module namespace templates="http://exist-db.org/xquery/templates" ;
  :)
 import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
 import module namespace app="http://nines.ca/exist/wilde/templates" at "app.xql";
+import module namespace admin="http://nines.ca/exist/wilde/admin" at "admin.xql";
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 

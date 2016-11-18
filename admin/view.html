@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/admin.html" data-template-at="content">
+    <div data-template="admin:load">
+        <div class="row">
+            <div class="page-header">
+                <h1>
+                    <span data-template="app:doc-title">Report</span>
+                </h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div data-template="admin:doc-content"/>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Actions</div>
+                    <div class="panel-body">
+                        <span data-template="admin:link-edit"/>
+                        <span data-template="admin:link-delete"/>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Metadata</div>
+                    <div class="panel-body">
+                        <dl>
+                            <dt>Newspaper</dt>
+                            <dd>
+                                <span data-template="app:doc-publisher"/>
+                            </dd>
+                            <dt>Date published</dt>
+                            <dd>
+                                <span data-template="app:doc-date"/>
+                            </dd>
+                            <dt>Region</dt>
+                            <dd>
+                                <span data-template="app:doc-region"/>, <span data-template="app:doc-city"/>
+                            </dd>
+                            <dt>Language</dt>
+                            <dd>
+                                <span data-template="app:doc-language"/>
+                            </dd>
+                            <dt>Word count</dt>
+                            <dd>
+                                <span data-template="app:doc-word-count"/>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Document Matches</div>
+                    <div class="panel-body">
+                        <p>Indexed: <span data-template="app:document-indexed"/>
+                        </p>
+                        <div data-template="app:document-similarities"/>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Paragraph Matches</div>
+                    <div class="panel-body">
+                        <p>Indexed: <span data-template="app:paragraph-indexed"/>
+                        </p>
+                        <div data-template="app:paragraph-similarities"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
