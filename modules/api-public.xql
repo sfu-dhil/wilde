@@ -29,6 +29,30 @@ declare function api:documents() {
                index-paragraph="{document:indexed-paragraph($document)}" />
 };
 
+declare function api:graph-data() {
+  let $documents := collection:documents()
+  
+  return 
+  <root> {
+    for $document in $documents
+      return 
+        if(count(document:similar-documents($document)) eq 0) then 
+          () 
+        else
+          <node id="{document:id($document)}" label="{document:publisher($document)}\n{document:date($document)}" group="{document:region($document)}" />
+  } {
+    for $link in $documents//xhtml:link[@rel='similarity']
+    let $target := collection:fetch($link/@href/string())
+    order by document:date($link), document:date($target), $link/@data-similarity descending
+    return
+        if((document:date($link) = document:date($target)) and (document:id($link) gt document:id($target))) then ()
+        else if(document:date($link) gt document:date($target)) then ()
+        else
+          <edge from="{document:id($link)}" to="{document:id($target)}" />
+  }
+  </root>
+};
+
 let $functionName := request:get-attribute('function')
 let $function := 
     try {
