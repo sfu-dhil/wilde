@@ -12,8 +12,8 @@
                     <label class="sr-only" for="query">Search term</label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="query" name="query" data-template="templates:form-control"/>
-                        <div class="input-group-addon">
-                            <button>
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="button">
                                 <span class="glyphicon glyphicon-search"/>
                             </button>
                         </div>
@@ -21,44 +21,47 @@
                 </div>
             </form>
         </div>
+        <div class="col-sm-12">
+            <p>Create a detailed, custom query using the search term guidelines below.</p>
+        </div>
         <dl class="dl-horizontal">
             <dt>match any term</dt>
             <dd>
-                <kbd>durham cathedral</kbd> matches "durham" or "catehdral."</dd>
+                <kbd>wilde verdict</kbd> matches "wilde" or "verdict."</dd>
             <dt>wildcards</dt>
             <dd>
-                <kbd>exa*ted</kbd> matches "exalted" and "exaggerated".</dd>
+                <kbd>crim*</kbd> matches "crime" and "criminal".</dd>
             <dd>
-                <kbd>f?nny</kbd> matches "funny" and "finny" but not "faanny."</dd>
+                <kbd>s?t</kbd> matches "sit" and "sat" but not "saat."</dd>
             <dt>match all terms</dt>
             <dd>
-                <kbd>+durham +cathedral</kbd> matches paragraphs which contain both durham and
-                    cathedral.</dd>
+                <kbd>+wilde +verdict</kbd> matches paragraphs which contain both wilde and
+                verdict.</dd>
             <dt>match <i>some</i> terms</dt>
             <dd>
-                <kbd>-durham +cathedral</kbd> matches paragraphs which do not contain durham but do contain
-                    cathedral.</dd>
+                <kbd>-wilde +verdict</kbd> matches paragraphs which do not contain wilde but do contain
+                verdict.</dd>
             <dt>phrase</dt>
             <dd>
-                <kbd>"views of the lakes"</kbd>
+                <kbd>"at the witness box"</kbd>
             </dd>
             <dt>proximity search</dt>
             <dd>
-                <kbd>"mining synopsis"~10</kbd> matches paragraphs which contain the words mining and
-                    synopsis no more than 10 words apart.</dd>
+                <kbd>"wilde queensberry"~10</kbd> matches paragraphs which contain the words wilde and
+                queensberry no more than 10 words apart.</dd>
             <dt>fuzzy search</dt>
             <dd>
-                <kbd>celestial~</kbd> matches words which are similar to celestial.</dd>
+                <kbd>persecution~</kbd> matches words which are similar to persecution.</dd>
             <dd>
-                <kbd>celestial~0.9</kbd> matches words which are closer to celestial than <kbd>celestial~0.1</kbd>
-                    would.</dd>
+                <kbd>persecution~0.9</kbd> matches words which are closer to persecution than <kbd>persecution~0.1</kbd>
+                would.</dd>
             <dt>boolean</dt>
             <dd>
-                <kbd>moreland AND brigham</kbd> finds paragraphs that contain both moreland and
-                    brigham</dd>
+                <kbd>queensberry AND clarke</kbd> finds paragraphs that contain both queensberry and
+                clarke</dd>
             <dt>grouping</dt>
             <dd>
-                <kbd>(moreland OR cumberland) AND brigham</kbd>
+                <kbd>(queensberry OR wilde) AND clarke</kbd>
             </dd>
         </dl>
     </div>

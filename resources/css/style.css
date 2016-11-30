@@ -83,3 +83,15 @@ table.search-results td.hi{
 table.search-results td.next{
     text-align: left;
 }
+
+/* Erik added rules */
+
+kbd {
+    color: black;
+    background-color: #eee;
+}
+
+blockquote.similarity {
+    margin: 0 0 20px 40px;
+    font-size: 14px;
+}
