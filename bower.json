@@ -26,6 +26,7 @@
     "tablesorter": "*",
     "jsdiff": "http://ejohn.org/files/jsdiff.js",
     "js-url": "^2.3.1",
-    "vis": "^4.17.0"
+    "vis": "^4.17.0",
+    "cytoscape": "^2.7.11"
   }
 }
