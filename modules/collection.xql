@@ -24,11 +24,24 @@ declare function collection:paragraph($doc-id as xs:string, $par-id as xs:string
     return $collection//html[@id=$doc-id]//p[@id=$par-id]
 };
 
+declare function collection:next($document) as node()? {
+  let $publisher := document:publisher($document)
+  let $date := document:date($document)
+  
+  let $documents := 
+    for $doc in collection($config:data-root)[.//meta[@name='dc.publisher' and @content=$publisher]]
+    where document:date($doc) ge $date
+    order by document:date($doc), document:id($doc)
+    return $doc
+  
+  return $documents[2]
+};
+
 declare function collection:documents() as node()* {
     let $collection := collection:collection()
     return
         for $doc in $collection
-        order by document:region($doc), document:publisher($doc), document:date($doc)
+        order by document:region($doc), document:publisher($doc), document:date($doc), document:id($doc)
         return $doc
 };
 

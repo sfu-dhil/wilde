@@ -74,6 +74,15 @@ declare function app:doc-status($node as node(), $model as map(*)) as xs:string 
     document:status($model('document'))
 };
 
+declare function app:doc-next($node as node(), $model as map(*)) as node()? {
+  let $next := collection:next($model('document'))  
+  return 
+    if($next) then
+      <a href="view.html?f={document:id($next)}">{document:title($next)}</a>
+    else
+      ()
+};
+
 declare function app:doc-word-count($node as node(), $model as map(*)) as xs:string {
     document:word-count($model('document'))
 };
