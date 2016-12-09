@@ -13,6 +13,8 @@ import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql"
 import module namespace tx="http://nines.ca/exist/wilde/transform" at "transform.xql";
 import module namespace stats="http://nines.ca/exist/wilde/stats" at "stats.xql";
 
+declare namespace string="java:org.apache.commons.lang3.StringUtils";
+
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
@@ -248,7 +250,7 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
     let $pb := $db//p
     
     return <div>
-        <div class='row paragraph-compare'>
+        <div class='row'>
             <div class='col-sm-4'>
                 Original paragraph in <br/>
                 {app:link-view($a, document:title($da))}
@@ -364,16 +366,25 @@ declare function app:measure($node as node(), $model as map(*)) {
     let $c2 := request:get-parameter('c2', '')
     
     return <dl class='dl-horizontal'>
-        <dt>compression</dt>
-        <dd>{similarity:similarity("compression", $c1, $c2)}</dd>
         <dt>levenshtein</dt>
-        <dd>{similarity:similarity("levenshtein", $c1, $c2)}</dd>
+        <dd>{
+          if($c1 and $c2) then
+            let $a := similarity:normalize($c1)
+            let $b := similarity:normalize($c2)
+            let $d := string:getLevenshteinDistance($a, $b)
+            let $m := max((string-length($a), string-length($b)))
+            return 1 - $d div $m
+          else 
+            ()
+        } </dd>
         <dt>cosine</dt>
         <dd>{similarity:similarity("cosine", $c1, $c2)}</dd>
         <dt>jaccard</dt>
         <dd>{similarity:similarity("jaccard", $c1, $c2)}</dd>
         <dt>overlap</dt>
         <dd>{similarity:similarity("overlap", $c1, $c2)}</dd>
+        <dt>compression</dt>
+        <dd>{similarity:similarity("compression", $c1, $c2)}</dd>
         <dt>first</dt>
         <dd id='first'>{similarity:normalize($c1)}</dd>
         <dt>second</dt>

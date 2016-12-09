@@ -7,13 +7,21 @@ import module namespace console="http://exist-db.org/xquery/console";
 import module namespace math="http://exist-db.org/xquery/math";
 import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
 
+(: 
+  Sadly, the eXist 2.2 normalize-unicode() function is broken. So we call out
+  to the java one.
+:)
+declare namespace normalizer = "java:java.text.Normalizer";
+declare namespace form = "java:java.text.Normalizer$Form";
+
 declare namespace string="java:org.apache.commons.lang3.StringUtils";
 declare namespace locale="java:java.util.Locale";
 
-declare function similarity:normalize($a as item()) as xs:string {
-    let $normalized := normalize-unicode($a, 'NFD')
-    let $stripped := replace($normalized, '[^a-zA-Z0-9 -]+', 'X')
-    return lower-case(normalize-space($stripped))
+declare function similarity:normalize($string as item()) as xs:string {
+    let $normalized := normalizer:normalize($string, form:value-of('NFD'))
+    let $cleaned := replace($normalized, '[^a-zA-Z0-9 -]', '')
+    let $lower := lower-case($cleaned)
+    return normalize-space($lower)
 };
 
 declare function similarity:word-list($str as xs:string) as xs:string* {
