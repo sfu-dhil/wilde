@@ -6,6 +6,7 @@ import module namespace kwic="http://exist-db.org/xquery/kwic";
 import module namespace templates="http://exist-db.org/xquery/templates" ;
 import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
 import module namespace collection="http://nines.ca/exist/wilde/collection" at "collection.xql";
+import module namespace console="http://exist-db.org/xquery/console";
 import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
 import module namespace similarity="http://nines.ca/exist/wilde/similarity" at "similarity.xql";
 import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql";
@@ -80,7 +81,17 @@ declare function app:doc-next($node as node(), $model as map(*)) as node()? {
     if($next) then
       <a href="view.html?f={document:id($next)}">{document:title($next)}</a>
     else
-      ()
+      text { "No next document" }
+};
+
+declare function app:doc-previous($node as node(), $model as map(*)) as node()? {
+  let $previous := collection:previous($model('document'))  
+  let $null := console:log("previous: " || $previous)
+  return 
+    if($previous) then
+      <a href="view.html?f={document:id($previous)}">{document:title($previous)}</a>
+    else
+      text { "No previous document" }
 };
 
 declare function app:doc-word-count($node as node(), $model as map(*)) as xs:string {

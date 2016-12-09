@@ -29,12 +29,33 @@ declare function collection:next($document) as node()? {
   let $date := document:date($document)
   
   let $documents := 
-    for $doc in collection($config:data-root)[.//meta[@name='dc.publisher' and @content=$publisher]]
-    where document:date($doc) ge $date
+    for $doc in collection($config:data-root)/html[.//meta[@name='dc.publisher' and @content=$publisher]]
     order by document:date($doc), document:id($doc)
     return $doc
   
-  return $documents[2]
+  let $idx := functx:index-of-node($documents, $document)
+  return 
+    if($idx lt count($documents)) then
+      $documents[$idx + 1]
+    else 
+      ()
+};
+
+declare function collection:previous($document) as node()? {
+  let $publisher := document:publisher($document)
+  let $date := document:date($document)
+  
+  let $documents := 
+    for $doc in collection($config:data-root)/html[.//meta[@name='dc.publisher' and @content=$publisher]]
+    order by document:date($doc), document:id($doc)
+    return $doc
+  
+  let $idx := functx:index-of-node($documents, $document)
+  return 
+    if($idx ge 2) then
+      $documents[$idx - 1]
+    else 
+      ()
 };
 
 declare function collection:documents() as node()* {

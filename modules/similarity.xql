@@ -11,7 +11,9 @@ declare namespace string="java:org.apache.commons.lang3.StringUtils";
 declare namespace locale="java:java.util.Locale";
 
 declare function similarity:normalize($a as item()) as xs:string {
-    replace(lower-case(normalize-space(string($a))), '[^a-zA-Z0-9 ]', '')    
+    let $normalized := normalize-unicode($a, 'NFD')
+    let $stripped := replace($normalized, '[^a-zA-Z0-9 -]+', 'X')
+    return lower-case(normalize-space($stripped))
 };
 
 declare function similarity:word-list($str as xs:string) as xs:string* {
