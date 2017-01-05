@@ -17,11 +17,22 @@ declare namespace form = "java:java.text.Normalizer$Form";
 declare namespace string="java:org.apache.commons.lang3.StringUtils";
 declare namespace locale="java:java.util.Locale";
 
+declare function similarity:normalize($string as item(), $clean) as xs:string {
+    (:  Sigh. eXist 2.2 has a bug that mucks up encoded entities when going to/from 
+        java. So to work around it, text must have double-encoded entities. :) 
+    let $doubleEncoded := replace($string, '&amp;', '&amp;amp;')
+    let $unicode := normalizer:normalize($doubleEncoded, form:value-of('NFD'))
+    let $space := normalize-space($unicode)
+    let $lower := lower-case($space)
+    return 
+      if( not($clean)) then
+        $lower
+      else
+        replace($lower, '[^a-zA-Z0-9 -]', '')
+};
+
 declare function similarity:normalize($string as item()) as xs:string {
-    let $normalized := normalizer:normalize($string, form:value-of('NFD'))
-    let $cleaned := replace($normalized, '[^a-zA-Z0-9 -]', '')
-    let $lower := lower-case($cleaned)
-    return normalize-space($lower)
+  similarity:normalize($string, false())
 };
 
 declare function similarity:word-list($str as xs:string) as xs:string* {
@@ -30,12 +41,9 @@ declare function similarity:word-list($str as xs:string) as xs:string* {
 };
 
 declare function similarity:levenshtein($a, $b) as xs:double { 
-    let $a := similarity:normalize($a)
-    let $b := similarity:normalize($b)
     let $maxLength := max((string-length($a), string-length($b)))
     let $minLength := min((string-length($a), string-length($b)))
     let $limit := $maxLength * (1.0 - $config:similarity-threshold)
-    let $null := console:log("normalized: [" || $a || "] [" || $b || "]")
     
     return 
         if(($maxLength - $minLength) gt ((1 - $config:similarity-threshold) * $maxLength)) then
@@ -95,7 +103,7 @@ declare function similarity:overlap($p as xs:string, $q as xs:string) as xs:doub
 };
 
 declare function similarity:compressed-string-size($x as xs:string) as xs:integer {
-    let $x := similarity:normalize($x)
+    let $x := similarity:normalize($x, true())
     
     let $bx := util:base64-encode($x) cast as xs:base64Binary
     let $cx := compression:gzip($bx)
@@ -117,12 +125,11 @@ declare function similarity:available() {
 };
 
 declare function similarity:similarity($type as xs:string, $a, $b) as xs:double {
-    let $ta := similarity:normalize($a)
-    let $tb := similarity:normalize($b)
+    let $ta := similarity:normalize($a, true())
+    let $tb := similarity:normalize($b, true())
     return 
         if($ta = '' or $tb ='') then
-            let $null := console:log("ta: '" || $ta || "' and tb: '" || $tb || "'")
-            return 0
+            0
         else 
             switch($type)
                 case 'compression' 

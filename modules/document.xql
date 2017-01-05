@@ -32,7 +32,12 @@ declare function document:subtitle($node as node()) as xs:string {
 };
 
 declare function document:status($node as node()) as xs:string {
-    string(root($node)//meta[@name='status']/@content)
+  let $statuses := root($node)//meta[@name='status']/@content
+  return 
+    if(count($statuses) >= 1) then 
+      string($statuses[1])
+    else 
+      'draft'
 };
 
 declare function document:path($node as node()) as xs:string {

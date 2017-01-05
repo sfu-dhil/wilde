@@ -53,6 +53,11 @@ declare function api:graph-data() {
   </root>
 };
 
+declare function api:publishers() {
+    for $publisher in collection:publishers()
+    return <node>{$publisher}</node> 
+};
+
 let $functionName := request:get-attribute('function')
 let $function := 
     try {

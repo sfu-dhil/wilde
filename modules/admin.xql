@@ -92,14 +92,20 @@ declare function admin:browse($node as node(), $model as map(*)) as node() {
         <table class='table table-striped table-hover table-condensed' id="tbl-browser">
             <thead>
                 <tr>
-                    <th>Date</th><th>Path</th><th>Indexed</th>
+                    <th>Date</th>
+                    <th>Language</th>
+                    <th>Region</th>
+                    <th>Title</th>
+                    <th>Indexed</th>
                 </tr>
             </thead>
             <tbody>{
                 for $document in $documents
                 return <tr>
                     <td>{admin:link-view(document:id($document), string(document:date($document)))}</td>
-                    <td>{document:path($document)}</td>
+                    <td>{document:language($document)}</td>
+                    <td>{document:region($document)}</td>
+                    <td>{document:title($document)}</td>
                     <td>{document:indexed-document($document)}/{document:indexed-paragraph($document)}</td>
                 </tr>
             }</tbody>
@@ -129,60 +135,52 @@ declare function admin:doc-save($node as node(), $model as map(*)) as node()* {
   ()
 };
 
-declare function admin:publishers-select($node as node(), $model as map(*)) {
-    let $document := $model('document')
-    return
-        <select name='publisher' id='publisher' class='form-control'> {
-            for $publisher in collection:publishers()
-            return <option>
-                { if(document:publisher($document) = $publisher) then
-                    attribute { 'selected' } { 'selected' }
-                  else ()
-                  }
-                {$publisher}
-            </option>,
-            <option class='publisher-other-option'>Other Publisher</option>
-        } </select>
-};
-
-declare function admin:regions-select($node as node(), $model as map(*)) {
-    let $document := $model('document')
-    return
-        <select name='region' id='region' class='form-control'> {
-            for $region in collection:regions()
-            return <option>
-                { if(document:region($document) = $region) then
-                    attribute { 'selected' } { 'selected' }
-                  else ()
-                  }
-                {$region}
-            </option>,
-            <option class='region-other-option'>Other Region</option>
-        } </select>
-};
-
-declare function admin:statuses-select($node as node(), $model as map(*)) {
-    let $document := $model('document')
-    return
-        <select name='status' id='status' class='form-control'> {
-            for $status in collection:statuses()
-            return <option> {
-                if(document:status($document) = $status) then
-                    attribute { 'selected' } { 'selected' }
-                else
-                    ()
-                }
-                {$status}
-            </option>
-        } </select>
-};
-
 declare function admin:date-input($node as node(), $model as map(*)) {
+  <div class='form-group'>
+    <label for='date'>Date Published</label>
     <input type='date' class='form-control' name='date' id='date' value='{document:date($model('document'))}' />
+  </div>
+};
+
+declare function admin:publisher-input($node as node(), $model as map(*)) {
+  <div class='form-group'>
+    <label for='date'>Publisher</label>
+    <input type='text' class='form-control' name='date' id='date' value='{document:publisher($model('document'))}' />
+  </div>
+};
+
+declare function admin:status-input($node as node(), $model as map(*)) {
+  <div class='form-group'>
+    <label for='date'>Status</label>
+    <input type='text' class='form-control' name='date' id='date' value='{document:status($model('document'))}' />
+  </div>
+};
+declare function admin:region-input($node as node(), $model as map(*)) {
+  <div class='form-group'>
+    <label for='date'>Region</label>
+    <input type='text' class='form-control' name='date' id='date' value='{document:region($model('document'))}' />
+  </div>
 };
 
 declare function admin:title-input($node as node(), $model as map(*)) {
+  <div class='form-group'>
+    <label for='date'>Title</label>
     <input type='text' class='form-control' name='title' id='title'  value='{document:title($model('document'))}' />
+  </div>
+};
+
+declare function admin:language-input($node as node(), $model as map(*)) {
+  <div class='form-group'>
+    <label for='date'>Language</label>
+    <input type='text' class='form-control' name='title' id='title'  value='{document:language($model('document'))}' />
+  </div>
+};
+
+declare function admin:city-input($node as node(), $model as map(*)) {
+  <div class='form-group'>
+    <label for='date'>City</label>
+    <input type='text' class='form-control' name='title' id='title'  value='{document:city($model('document'))}' />
+  </div>
 };
 
 declare 

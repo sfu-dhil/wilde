@@ -16,7 +16,19 @@ declare function collection:collection() as node()* {
 
 declare function collection:fetch($id as xs:string) as node() {
     let $collection := collection($config:data-root)
-    return $collection//html[@id=$id]
+    let $document := $collection//html[@id=$id]
+    return
+      if($document) then
+        $document
+      else 
+        <html>
+          <head>
+            <title>Cannot find {$id}.</title>
+          </head>
+          <body>
+            <p>Cannot find {$id}.</p>
+          </body>
+        </html>
 };
 
 declare function collection:paragraph($doc-id as xs:string, $par-id as xs:string) as node() {

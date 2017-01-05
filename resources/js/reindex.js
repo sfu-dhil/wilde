@@ -1,17 +1,20 @@
 (function ($) {
     
-    var ajaxQueue = $({
-    });
     var running = 0;
+    
+    var ajaxQueue = $({});   
     
     $.ajaxQueue = function (ajaxOpts) {
         running++;
         var oldComplete = ajaxOpts.complete;
         ajaxQueue.queue(function (next) {
-            ajaxOpts.complete = function () {
+            ajaxOpts.complete = function (xhr, status) {
                 running--;
                 if (oldComplete) {
                     oldComplete.apply(this, arguments);
+                }
+                if(status === 'error') {
+                  ajaxQueue.stop( true );
                 }
                 next();
             };
@@ -37,7 +40,11 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
+                  if(data.error) {
+                    $progress.prepend('<li>' + data.error + '</li>');
+                  } else {
                     $progress.prepend('<li>' + data.result.title + ' (' + data.result.id + ')' + ': ' + data.result.matches + ' matches in ' + data.result.duration + ' seconds.</li>');
+                  }
                 },
                 error: function (xhr, status, errorThrown) {
                     $progress.prepend('<li>' + document.title + ' error: ' + xhr.status + ' - ' + errorThrown + '<br/>' + xhr.responseText + '</li>');

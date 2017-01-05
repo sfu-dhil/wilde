@@ -5,32 +5,86 @@
             <h1>Similarity</h1>
         </div>
     </div>
-    <div class="row">
-        <form>
-            <div class="form-group">
-                <label for="c1">First passage</label>
-                <textarea class="form-control" rows="6" cols="40" name="c1" id="c1" data-template="app:measure-textarea" data-template-name="c1"/>
+    <form>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="c1">First passage</label>
+                    <textarea class="form-control" rows="6" cols="40" name="c1" id="c1" data-template="app:measure-textarea" data-template-name="c1"/>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="c2">Second passage</label>
-                <textarea class="form-control" rows="6" cols="40" name="c2" id="c2" data-template="app:measure-textarea" data-template-name="c2"/>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="c2">Second passage</label>
+                    <textarea class="form-control" rows="6" cols="40" name="c2" id="c2" data-template="app:measure-textarea" data-template-name="c2"/>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" name="measure" value="Measure"/>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <input type="submit" name="measure" value="Measure" class="btn btn-primary"/>
+                </div>
             </div>
-        </form>
-    </div>
+            <div class="col-md-10">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="clean" value="yes" data-template="templates:form-control"/> Ignore Punctuation &amp; Accents
+              </label>
+                </div>
+            </div>
+        </div>
+    </form>
     <div class="row">
         <span data-template="app:measure"/>
     </div>
     <script type="text/javascript">
-        $(document).ready(function(){
-        var $a = $("#first");
-        var $b = $("#second");
+      // 
+        function htmlize(diffs) {
+          var html = [];
+          var pattern_amp = /&amp;/g;
+          var pattern_lt = /&lt;/g;
+          var pattern_gt = /&gt;/g;
+          var pattern_para = /\n/g;
+          
+          for (var x = 0; x &lt; diffs.length; x++) {
+            var op = diffs[x][0];    // Operation (insert, delete, equal)
+            var text = diffs[x][1];
+            switch (op) {
+              case DIFF_INSERT:
+                html[x] = '&lt;ins&gt;' + text + '&lt;/ins&gt;';
+                break;
+              case DIFF_DELETE:
+                html[x] = '&lt;del&gt;' + text + '&lt;/del&gt;';
+                break;
+              case DIFF_EQUAL:
+                html[x] = '&lt;span&gt;' + text + '&lt;/span&gt;';
+                break;
+            }
+          }
+          return html.join('');
+        };        
+      // </script>
+    <script type="text/javascript">
+      function normalize(string) {
+        var lower = string.toLowerCase().normalize("NFC");
+        var lbs = lower.replace(/(\r\n|\n|\r)/gm," ");
+        var clean = lbs.replace(/\s+/g, ' ');
+        return clean;
+      }
+    
+      $(document).ready(function(){
+        var dmp = new diff_match_patch();
+        
+        var a = normalize($("#first").text());
+        var b = normalize($("#second").text());
         var $d = $("#difference");
         
-        $d.html(diffString($a.text(), $b.text()));
-        });
+        var diff = dmp.diff_main(a, b);
+        dmp.diff_cleanupSemantic(diff);
+        var html = htmlize(diff);            
+        $d.html(html);
+      });
     </script>
-    <script type="text/javascript" src="resources/jsdiff/index.js"/>
+    <script type="text/javascript" src="resources/google-diff-match-patch-js/diff_match_patch.js"/>
 </div>

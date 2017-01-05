@@ -17,8 +17,11 @@ declare variable $index:initialIndex := true;
 declare function index:comparable-documents($document as node()) as node()* {
     let $id := document:id($document)
     return 
-    for $document in collection:documents()[(./html/@id lt $id)]
-    return $document
+    for $document in collection:documents()
+      where
+        (document:id($document) lt $id) and 
+        (document:status($document) != 'draft')
+      return $document
 };
 
 declare function index:reindex-paragraphs($document as node()) as node() {
@@ -29,7 +32,7 @@ declare function index:reindex-paragraphs($document as node()) as node() {
     let $comparables := index:comparable-documents($document)
     let $null := console:log('Comparing ' || document:id($document) || ' against ' || count($comparables))
     let $matches := 
-        if(count($comparables) = 0) then
+        if(count($comparables) eq 0) then
             (0)
         else
             for $comp in $comparables
@@ -61,12 +64,13 @@ declare function index:reindex-document($document as node()) as node() {
     let $null := console:log('Comparing ' || document:id($document) || ' against ' || count($comparables))
     
     let $matches := 
-        if(count($comparables) = 0) then
+        if(count($comparables) eq 0) then
             (0)
         else
             for $comp in $comparables
+              let $null := console:log("comparing " || document:id($document) || " against " || document:id($comp))
                 return
-                    let $m := similarity:similarity($metric, string($document), string($comp))
+                    let $m := similarity:similarity($metric, string($document/xhtml:html/xhtml:body), string($comp/xhtml:html/xhtml:body))
                     return if($m > $threshold) then (
                         1,
                         update insert <link rel="similarity" class="levenshtein" href="{document:id($comp)}" data-similarity="{$m}" /> into $document//head,

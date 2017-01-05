@@ -114,7 +114,9 @@ let $function :=
 
 return    
 if(exists($function)) then
-    <root> { $function() } </root>
+    <root> { 
+        $function() 
+    } </root>
 else
     let $null := response:set-status-code(404)
     return <error status="404">The API function {$functionName} cannot be found.</error>

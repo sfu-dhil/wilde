@@ -249,7 +249,8 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
     let $pa := $da//p
     let $pb := $db//p
     
-    return <div>
+    return 
+      <div>
         <div class='row'>
             <div class='col-sm-4'>
                 Original paragraph in <br/>
@@ -263,22 +264,14 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
         </div> {
             for $other at $i in $pa
                 let $q := local:find-similar("levenshtein", $pb, $other)
-                return <div class='row paragraph-compare' data-score="{format-number($q/@data-similarity, "###.#%")}%">
+                return  
+                  <div class='row paragraph-compare' data-score="{format-number($q/@data-similarity, "###.#%")}%">
                     <div class='col-sm-4 paragraph-a'>{string($other)}</div>
                     <div class='col-sm-4 paragraph-b'>{string($q)}</div>
                     <div class='col-sm-4 paragraph-d'> </div>
                 </div>
             }
     </div>
-};
-
-declare function app:similarities($node as node(), $model as map(*)) {
-    let $page := request:get-parameter('p', 1)
-    let $similarities := collection:similarities()
-    return map {
-        'similarities' := $similarities,
-        'page' := $page
-    }
 };
 
 declare function app:similarities-summary($node as node(), $model as map(*)) {
@@ -364,18 +357,22 @@ declare function app:similarities-results($node as node(), $model as map(*)) {
 declare function app:measure($node as node(), $model as map(*)) {
     let $c1 := request:get-parameter('c1', '')
     let $c2 := request:get-parameter('c2', '')
+    let $clean := request:get-parameter('clean', 'no') = "yes"
+    let $a := similarity:normalize($c1, $clean)
+    let $b := similarity:normalize($c2, $clean)
+    
+    let $d := string:getLevenshteinDistance($a, $b)
+    let $m := max((string-length($a), string-length($b)))
+    
+    let $null := console:log("clean is " || $clean)
     
     return <dl class='dl-horizontal'>
         <dt>levenshtein</dt>
         <dd>{
           if($c1 and $c2) then
-            let $a := similarity:normalize($c1)
-            let $b := similarity:normalize($c2)
-            let $d := string:getLevenshteinDistance($a, $b)
-            let $m := max((string-length($a), string-length($b)))
-            return 1 - $d div $m
+            1 - $d div $m
           else 
-            ()
+            0
         } </dd>
         <dt>cosine</dt>
         <dd>{similarity:similarity("cosine", $c1, $c2)}</dd>
@@ -386,9 +383,9 @@ declare function app:measure($node as node(), $model as map(*)) {
         <dt>compression</dt>
         <dd>{similarity:similarity("compression", $c1, $c2)}</dd>
         <dt>first</dt>
-        <dd id='first'>{similarity:normalize($c1)}</dd>
+        <dd id='first'>{$a}</dd>
         <dt>second</dt>
-        <dd id='second'>{similarity:normalize($c2)}</dd>
+        <dd id='second'>{$b}</dd>
         <dt>difference</dt>
         <dd id='difference'></dd>
     </dl>
