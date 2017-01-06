@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/admin.html" data-template-at="content">
+    <style scoped="scoped">
+    @import "../resources/css/edit.css";
+  </style>
     <div data-template="admin:load">
         <div class="row">
             <div class="page-header">
@@ -11,7 +14,9 @@
         <form method="post">
             <div class="row">
                 <div class="col-sm-8">
-                    <div data-template="admin:doc-content"/>
+                    <div id="editor" contenteditable="true">
+                        <div data-template="admin:doc-content"/>
+                    </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="panel panel-default">
@@ -36,4 +41,10 @@
             </div>
         </form>
     </div>
+    <script type="text/javascript">
+      var CKEDITOR_BASEPATH = '/exist/apps/wilde/resources/ckeditor/';
+    </script>
+    <script type="text/javascript" src="../resources/typeahead.js/dist/typeahead.bundle.min.js"/>
+    <script type="text/javascript" src="../resources/ckeditor/ckeditor.js"/>
+    <script type="text/javascript" src="../resources/js/edit.js"/>
 </div>

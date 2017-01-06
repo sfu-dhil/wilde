@@ -55,7 +55,27 @@ declare function api:graph-data() {
 
 declare function api:publishers() {
     for $publisher in collection:publishers()
-    return <node>{$publisher}</node> 
+    return <json:value>{$publisher}</json:value> 
+};
+
+declare function api:statuses() {
+    for $status in collection:statuses()
+    return <json:value>{$status}</json:value> 
+};
+
+declare function api:regions() {
+    for $region in collection:regions()
+    return <json:value>{$region}</json:value> 
+};
+
+declare function api:languages() {
+    for $language in collection:languages()
+    return <json:value>{$language}</json:value> 
+};
+
+declare function api:cities() {
+  for $city in collection:cities()
+  return <json:value>{$city}</json:value>
 };
 
 let $functionName := request:get-attribute('function')

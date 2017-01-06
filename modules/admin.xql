@@ -136,50 +136,78 @@ declare function admin:doc-save($node as node(), $model as map(*)) as node()* {
 };
 
 declare function admin:date-input($node as node(), $model as map(*)) {
-  <div class='form-group'>
-    <label for='date'>Date Published</label>
-    <input type='date' class='form-control' name='date' id='date' value='{document:date($model('document'))}' />
-  </div>
+  let $date := 
+    if($model('document')) then document:date($model('document')) else '1895-04-01'
+  
+  return
+    <div class='form-group'>
+      <label for='date'>Date Published</label>
+      <input type='date' class='form-control' name='date' id='date' value='{$date}' />
+    </div>
 };
 
 declare function admin:publisher-input($node as node(), $model as map(*)) {
-  <div class='form-group'>
-    <label for='date'>Publisher</label>
-    <input type='text' class='form-control' name='date' id='date' value='{document:publisher($model('document'))}' />
-  </div>
+  let $publisher :=
+    if($model('document')) then document:publisher($model('document')) else ''
+
+  return
+    <div class='form-group'>
+      <label for='date'>Publisher</label>
+      <input type='text' class='form-control typeahead' name='date' id='date' value='{$publisher}' data-typeahead-url="../api/publishers"/>
+    </div>
 };
 
 declare function admin:status-input($node as node(), $model as map(*)) {
+  let $status :=
+    if($model('document')) then document:status($model('document')) else 'draft'
+    
+  return  
   <div class='form-group'>
     <label for='date'>Status</label>
-    <input type='text' class='form-control' name='date' id='date' value='{document:status($model('document'))}' />
+    <input type='text' class='form-control typeahead' name='date' id='date' value='{$status}' data-typeahead-url="../api/statuses" />
   </div>
 };
 declare function admin:region-input($node as node(), $model as map(*)) {
+  let $region :=
+    if($model('document')) then document:region($model('document')) else ''
+    
+  return  
   <div class='form-group'>
     <label for='date'>Region</label>
-    <input type='text' class='form-control' name='date' id='date' value='{document:region($model('document'))}' />
+    <input type='text' class='form-control typeahead' name='date' id='date' value='{$region}' data-typeahead-url="../api/regions" />
   </div>
 };
 
 declare function admin:title-input($node as node(), $model as map(*)) {
+  let $title :=
+    if($model('document')) then document:title($model('document')) else ''
+    
+  return
   <div class='form-group'>
     <label for='date'>Title</label>
-    <input type='text' class='form-control' name='title' id='title'  value='{document:title($model('document'))}' />
+    <input type='text' class='form-control' name='title' id='title'  value='{$title}' />
   </div>
 };
 
 declare function admin:language-input($node as node(), $model as map(*)) {
+  let $language :=
+    if($model('document')) then document:language($model('document')) else ''
+    
+  return
   <div class='form-group'>
     <label for='date'>Language</label>
-    <input type='text' class='form-control' name='title' id='title'  value='{document:language($model('document'))}' />
+    <input type='text' class='form-control typeahead' name='title' id='title'  value='{$language}' data-typeahead-url="../api/languages" />
   </div>
 };
 
 declare function admin:city-input($node as node(), $model as map(*)) {
+  let $city :=
+    if($model('document')) then document:city($model('document')) else ''
+    
+  return
   <div class='form-group'>
     <label for='date'>City</label>
-    <input type='text' class='form-control' name='title' id='title'  value='{document:city($model('document'))}' />
+    <input type='text' class='form-control typeahead' name='title' id='title'  value='{$city}' data-typeahead-url="../api/cities" />
   </div>
 };
 

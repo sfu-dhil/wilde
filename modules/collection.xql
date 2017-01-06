@@ -92,14 +92,28 @@ declare function collection:publishers() as xs:string* {
     return $publisher    
 };
 
+declare function collection:statuses() as xs:string* {
+    for $status in distinct-values(collection($config:data-root)//meta[@name='status']/@content)
+    order by $status
+    return $status    
+};
+
 declare function collection:regions() as xs:string* {
     for $region in distinct-values(collection($config:data-root)//meta[@name='dc.region']/@content)
     order by $region
     return $region    
 };
 
-declare function collection:statuses() as xs:string* {
-    ('candidate', 'draft')
+declare function collection:languages() as xs:string* {
+    for $language in distinct-values(collection($config:data-root)//meta[@name='dc.language']/@content)
+    order by $language
+    return $language    
+};
+
+declare function collection:cities() as xs:string* {
+    for $city in distinct-values(collection($config:data-root)//meta[@name='dc.region.city']/@content)
+    order by $city
+    return $city    
 };
 
 declare function collection:search($query as xs:string) as node()* {
