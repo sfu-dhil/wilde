@@ -1,3 +1,6 @@
+(:~
+ : I don't think this module is used at all. 
+ :)
 xquery version "3.0";
 
 module namespace tx="http://nines.ca/exist/wilde/transform";

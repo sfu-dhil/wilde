@@ -1,3 +1,7 @@
+(:~
+ : Simple text statistics for documents. Assumes the documents are 
+ : very simple XHTML (just paragraphs).
+ :)
 xquery version "3.0";
 
 module namespace stats="http://nines.ca/exist/wilde/stats";
@@ -8,30 +12,27 @@ import module namespace math="http://exist-db.org/xquery/math";
 import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
 import module namespace collection="http://nines.ca/exist/wilde/collection" at "collection.xql";
 
-
 declare namespace string="java:org.apache.commons.lang3.StringUtils";
 declare namespace locale="java:java.util.Locale";
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
-(:
-Total number of words: 1,053,155
-x Total number of paragraphs: 9,281
-x Total number of documents: 1,108
-x Total number of paragraphs which match one or more other paragraphs: 3,763.
-x Total number of paragraph matches:  8,733
-x Total number of documents which contain a match: 334
-x Total number of document matches: 1,141.
-:)
-
+(:~
+ : Count the words in the in the collection.
+ : @return Integer count of the words.
+ :)
 declare function stats:count-words() as xs:int {
   let $wc := 
-	 for $p in collection('/db/apps/wilde-data/data')//p 
+	 for $p in collection($config:data-root)//p 
 	 return count(tokenize($p, '\s'))
 
   return sum($wc)
 };
 
+(:~
+ : Count the paragraphs in the in the collection.
+ : @return Integer count of the paragraphs.
+ :)
 declare function stats:count-paragraphs() as xs:int {
   let $wc := 
     for $d in collection:documents()
@@ -39,10 +40,19 @@ declare function stats:count-paragraphs() as xs:int {
   return sum($wc)
 };
 
+(:~
+ : Count the documents in the in the collection.
+ : @return Integer count of the documents.
+ :)
 declare function stats:count-documents() as xs:int {
   count(collection:collection()//html)
 };
 
+(:~
+ : Count the paragraphs in the in the collection which contain one or
+ : more matches.
+ : @return Integer count of the paragraphs with matches.
+ :)
 declare function stats:count-paragraphs-with-matches() as xs:int {
   let $wc := 
     for $d in collection:documents()
@@ -50,17 +60,30 @@ declare function stats:count-paragraphs-with-matches() as xs:int {
   return sum($wc)
 };
 
+(:~
+ : Count the paragraph matches in the in the collection which contain one or
+ : more matches.
+ : @return Integer count of the paragraph matches.
+ :)
 declare function stats:count-paragraph-matches() as xs:int {
   let $wc := 
     for $d in collection:documents()
     return count($d//a[@class='similarity'])
-  return sum($wc)
+  return sum($wc) / 2
 };
 
+(:~
+ : Count the documents which contain one or more document-level matches.
+ : @return Integer count of the documents with matches.
+ :)
 declare function stats:count-documents-with-matches() as xs:int {
   count(collection:collection()//html[.//link])
 };
 
+(:~
+ : Count the document-level matches in the in the collection.
+ : @return Integer count of the documents with matches.
+ :)
 declare function stats:count-document-matches() as xs:int {
   count(collection:collection()//link)
 };
