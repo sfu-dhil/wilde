@@ -62,7 +62,7 @@ declare variable $config:similarities-per-page := 50;
 (:
     Path to the data collection.
 :)
-declare variable $config:data-root := $config:app-root || "/data";
+declare variable $config:data-root := "/db/apps/wilde-data/data";
 
 declare variable $config:repo-descriptor := doc(concat($config:app-root, "/repo.xml"))/repo:meta;
 

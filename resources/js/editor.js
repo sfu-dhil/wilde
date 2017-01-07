@@ -21,7 +21,7 @@
     function save_btn_click(e) {
         $("body").addClass("saving");
         editor.setReadOnly(true);
-        $.ajax({
+        $.ajax('api/save-document', {
             data: {
                 content: editor.getData(),
                 status: $("#doc-status").val(),

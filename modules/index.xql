@@ -19,7 +19,7 @@ declare function index:comparable-documents($document as node()) as node()* {
     return 
     for $document in collection:documents()
       where
-        (document:id($document) lt $id) and 
+        (document:id($document) != $id) and
         (document:status($document) != 'draft')
       return $document
 };
