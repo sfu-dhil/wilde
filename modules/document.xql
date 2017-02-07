@@ -3,7 +3,6 @@ xquery version "3.0";
 module namespace document="http://nines.ca/exist/wilde/document";
 
 import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
-import module namespace console="http://exist-db.org/xquery/console";
 import module namespace functx='http://www.functx.com';
 
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
@@ -11,9 +10,7 @@ declare default element namespace "http://www.w3.org/1999/xhtml";
 
 declare function document:id($node as node()) as xs:string {
     let $id := root($node)/html/@id
-    return if(empty($id)) then
-        let $null := console:log('No id for ' || document-uri($node))
-        return ''
+    return if(empty($id)) then ''
     else
         $id
 };

@@ -1,6 +1,5 @@
 xquery version "3.0";
 
-import module namespace console="http://exist-db.org/xquery/console";
 import module namespace config="http://nines.ca/exist/wilde/config" at "../modules/config.xqm";
 import module namespace login="http://exist-db.org/xquery/login" at "resource:org/exist/xquery/modules/persistentlogin/login.xql";
 import module namespace functx="http://www.functx.com";

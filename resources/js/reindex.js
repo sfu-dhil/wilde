@@ -26,17 +26,12 @@
         running++;
         
         var $output = $("div#output");
-        
-        var documents = data.document.filter(function(item){
-          return item['index-document'] == 'No' && item.status != 'draft';
-        });
-        
-        $output.append('Found ' + documents.length + ' documents to process.');
+        $output.append('Found ' + data.document.length + ' documents to process.');
         $output.append('<ol id="progress" reversed="reversed"></ol>');
         var $progress = $('#progress');
         
-        for (var i = 0; i < documents.length; i++) {
-            var document = documents[i];
+        for (var i = 0; i < data.document.length; i++) {
+            var document = data.document[i];
             $.ajaxQueue({
                 url: 'api/reindex-document',
                 data: {
@@ -62,19 +57,12 @@
     function processParagraphs(data) {
         running++;
         
-        
-        var documents = data.document.filter(function(item){
-          return item['index-paragraph'] == 'No' && item.status != 'draft';
-        });
-        
         var $output = $("div#output");
-        $output.append('Found ' + documents.length + ' documents with paragraphs to process.');
+        $output.append('Found ' + data.document.length + ' documents with paragraphs to process.');
         $output.append('<ol id="progress" reversed="reversed"></ol>');
         var $progress = $('#progress');
-        
-        var $progress = $('#progress');
-        for (var i = 0; i < documents.length; i++) {
-            var document = documents[i];
+        for (var i = 0; i < data.document.length; i++) {
+            var document = data.document[i];
             $.ajaxQueue({
                 url: 'api/reindex-paragraphs',
                 data: {

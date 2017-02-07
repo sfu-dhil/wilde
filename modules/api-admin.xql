@@ -11,7 +11,6 @@ declare option output:method "json";
 declare option output:media-type "text/javascript";
 
 import module namespace login="http://exist-db.org/xquery/login" at "resource:org/exist/xquery/modules/persistentlogin/login.xql";
-import module namespace console="http://exist-db.org/xquery/console";
 import module namespace functx='http://www.functx.com';
 import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
 import module namespace collection="http://nines.ca/exist/wilde/collection" at "collection.xql";
@@ -52,45 +51,54 @@ declare function api:delete-indexes() {
 
 declare function api:reindex-document() {
     let $f := request:get-parameter('f', '')
-    let $null := console:log("reindexing document " || $f)
     let $doc := collection:fetch($f)
     return index:reindex-document($doc)
 };
 
 declare function api:reindex-paragraphs() {
     let $f := request:get-parameter('f', '')
-    let $null := console:log("reindexing paragraphs in " || $f)
     let $doc := collection:fetch($f)
     return index:reindex-paragraphs($doc)
 };
 
 declare function api:save-document() {
     let $f := request:get-parameter('f', '')
-    let $doc := collection:fetch($f)
-
-    let $null := update replace $doc//title/text() with request:get-parameter('title', '')
-    let $null := update value $doc//meta[@name='dc.date']/@content with request:get-parameter('date', '')
-    let $null := update value $doc//meta[@name='dc.publisher']/@content with request:get-parameter('publisher', '')
-    let $null := update value $doc//meta[@name='status']/@content with request:get-parameter('status', '')
-    let $null := update value $doc//meta[@name='dc.region']/@content with request:get-parameter('region', '')
-    let $null := update value $doc//meta[@name='wr.wordcount']/@content with -1
-    let $null := update value $doc//meta[@name='dc.language']/@content with request:get-parameter('language', '')
-    let $null := update value $doc//meta[@name='dc.region.city']/@content with request:get-parameter('city', '')
-    let $null := update value $doc//meta[@name='dc.region']/@content with request:get-parameter('region', '')
+    let $title := request:get-parameter('title', '')
+    let $publisher := request:get-parameter('publisher', '')
+    let $region := request:get-parameter('region', '')
+    let $date := request:get-parameter('date', '')
+    let $status := request:get-parameter('status', '')
+    let $content := request:get-parameter('content', '')
     
-    let $null := update value $doc//meta[@name='index.document']/@content with "false"
-    let $null := update value $doc//meta[@name='index.paragraph']/@content with "false"
-
-    let $content := util:parse-html(request:get-parameter('content', ''))
-    let $fixed := functx:change-element-ns-deep($content, 'http://www.w3.org/1999/xhtml', '')
-    let $null := update replace $doc//body with <body>{$fixed//BODY/*}</body>
-
-    let $null := update delete $doc//link
-    let $null := update delete collection:documents()//a[@data-document=$f]
-    let $null := update delete collection:documents()//link[@href=$f]
-
-    return 
-      <result>success</result>
+    let $result := 
+        try {
+            let $doc := collection:fetch($f)
+            let $node := util:parse-html('<div xmlns="http://www.w3.org/1999/xhtml">' || $content || '</div>')
+            
+            let $actions := (
+                update value $doc//title with $title,
+                
+                update value $doc//meta[@name='dc.date']/@content with $date,
+                update value $doc//meta[@name='dc.publisher']/@content with $publisher,
+                update value $doc//meta[@name='status']/@content with $status,
+                update value $doc//meta[@name='dc.region']/@content with $region,
+                update delete $doc//meta[@name='index.document'],
+                update delete $doc//meta[@name='index.paragraph'],
+                
+                update delete $doc//link[@rel='similarity'],
+                
+                update delete $doc//body/node(),
+                update insert $node//div/node() into $doc//body,
+                
+                update delete collection:collection()//a[@class='similarity'][@data-document=$f],
+                update delete collection:collection()//link[@class='similarity'][@data-document=$f]
+            )
+            return "success " || string-join($actions, '/')
+        } catch * {
+            "failed: " || ' ' || $err:code || ' ' || ' ' || $err:description || ' ' || $err:value
+        }
+        
+    return <result>{$result}</result>
 };
 
 let $functionName := request:get-attribute('function')

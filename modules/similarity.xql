@@ -3,7 +3,6 @@ xquery version "3.0";
 module namespace similarity="http://nines.ca/exist/wilde/similarity";
 
 import module namespace functx="http://www.functx.com"; 
-import module namespace console="http://exist-db.org/xquery/console";
 import module namespace math="http://exist-db.org/xquery/math";
 import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
 
@@ -143,8 +142,6 @@ declare function similarity:similarity($type as xs:string, $a, $b) as xs:double 
                 case 'overlap'
                     return similarity:overlap($ta, $tb)
                 default 
-                    return
-                    let $null := console:log("unknown similarity measure: " || $type)
                     return -1
 };
 
