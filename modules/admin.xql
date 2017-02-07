@@ -152,8 +152,8 @@ declare function admin:publisher-input($node as node(), $model as map(*)) {
 
   return
     <div class='form-group'>
-      <label for='date'>Publisher</label>
-      <input type='text' class='form-control typeahead' name='date' id='date' value='{$publisher}' data-typeahead-url="../api/publishers"/>
+      <label for='publisher'>Publisher</label>
+      <input type='text' class='form-control typeahead' name='publisher' id='publisher' value='{$publisher}' data-typeahead-url="../api/publishers"/>
     </div>
 };
 
@@ -163,8 +163,8 @@ declare function admin:status-input($node as node(), $model as map(*)) {
     
   return  
   <div class='form-group'>
-    <label for='date'>Status</label>
-    <input type='text' class='form-control typeahead' name='date' id='date' value='{$status}' data-typeahead-url="../api/statuses" />
+    <label for='status'>Status</label>
+    <input type='text' class='form-control typeahead' name='status' id='status' value='{$status}' data-typeahead-url="../api/statuses" />
   </div>
 };
 declare function admin:region-input($node as node(), $model as map(*)) {
@@ -173,8 +173,8 @@ declare function admin:region-input($node as node(), $model as map(*)) {
     
   return  
   <div class='form-group'>
-    <label for='date'>Region</label>
-    <input type='text' class='form-control typeahead' name='date' id='date' value='{$region}' data-typeahead-url="../api/regions" />
+    <label for='region'>Region</label>
+    <input type='text' class='form-control typeahead' name='region' id='region' value='{$region}' data-typeahead-url="../api/regions" />
   </div>
 };
 
@@ -184,7 +184,7 @@ declare function admin:title-input($node as node(), $model as map(*)) {
     
   return
   <div class='form-group'>
-    <label for='date'>Title</label>
+    <label for='title'>Title</label>
     <input type='text' class='form-control' name='title' id='title'  value='{$title}' />
   </div>
 };
@@ -195,8 +195,8 @@ declare function admin:language-input($node as node(), $model as map(*)) {
     
   return
   <div class='form-group'>
-    <label for='date'>Language</label>
-    <input type='text' class='form-control typeahead' name='title' id='title'  value='{$language}' data-typeahead-url="../api/languages" />
+    <label for='language'>Language</label>
+    <input type='text' class='form-control typeahead' name='language' id='language'  value='{$language}' data-typeahead-url="../api/languages" />
   </div>
 };
 
@@ -206,8 +206,8 @@ declare function admin:city-input($node as node(), $model as map(*)) {
     
   return
   <div class='form-group'>
-    <label for='date'>City</label>
-    <input type='text' class='form-control typeahead' name='title' id='title'  value='{$city}' data-typeahead-url="../api/cities" />
+    <label for='city'>City</label>
+    <input type='text' class='form-control typeahead' name='city' id='city'  value='{$city}' data-typeahead-url="../api/cities" />
   </div>
 };
 
