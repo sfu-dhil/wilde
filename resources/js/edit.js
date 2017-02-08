@@ -5,7 +5,7 @@
   
   function init() {
     CKEDITOR.replace('editor', {
-      customConfig: '/exist/apps/wilde/resources/js/ckeditor-config.js'
+      customConfig: '../js/ckeditor-config.js' // relative to ckeditor.js
     });
 
     $(".typeahead").each(function () {
