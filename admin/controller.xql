@@ -10,8 +10,10 @@ declare variable $exist:controller external;
 declare variable $exist:prefix external;
 declare variable $exist:root external;
 
+let $cookie-path := string-join((request:get-context-path(), $exist:prefix, $exist:controller))
+
 let $logout := request:get-parameter('logout', ())
-let $set-user := login:set-user($config:login-domain, '/exist/apps/wilde', 'P14D', false())
+let $set-user := login:set-user($config:login-domain, $cookie-path, 'P14D', false())
 
 return
 if ($exist:path eq '') then
