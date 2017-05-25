@@ -13,6 +13,7 @@ import module namespace tx="http://nines.ca/exist/wilde/transform" at "transform
 import module namespace stats="http://nines.ca/exist/wilde/stats" at "stats.xql";
 
 declare namespace string="java:org.apache.commons.lang3.StringUtils";
+declare namespace array="http://www.w3.org/2005/xpath-functions/array";
 
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
@@ -45,6 +46,75 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
                 </tr>
             }</tbody>
         </table>
+};
+
+declare function local:count($list, $item) as xs:integer {
+  let $matches := for $i in $list
+    return if($item = $i) then 1 else 0
+  return sum($matches)
+};
+
+declare function app:browse-date($node as node(), $model as map(*)) as node() {
+  let $collection := collection:documents()
+  let $date := request:get-parameter('date', false())
+  return
+    if($date) then
+      let $docs := collection:documents('dc.date', $date)
+      return <ul> {
+        for $document in $docs
+        order by document:publisher($document)
+        return <li>{app:link-view(document:id($document), document:title($document))}</li>
+      } </ul>
+    else      
+      let $dates := $collection//xhtml:meta[@name="dc.date"]/@content
+      return
+        <ul> {
+          for $date in distinct-values($dates)
+          order by $date
+          return <li><a href="?date={$date}">{$date}</a>: {local:count($dates, $date)}</li>
+        } </ul>
+};
+
+declare function app:browse-publisher($node as node(), $model as map(*)) as node() {
+  let $collection := collection:documents()
+  let $publisher := request:get-parameter('publisher', false())
+  return
+    if($publisher) then
+      let $docs := collection:documents('dc.publisher', $publisher)
+      return <ul> {
+        for $document in $docs
+        order by document:date($document)
+        return <li>{app:link-view(document:id($document), document:title($document))}</li>
+      } </ul>
+    else      
+      let $publishers := $collection//xhtml:meta[@name="dc.publisher"]/@content
+      return
+        <ul> {
+          for $publisher in distinct-values($publishers)
+          order by $publisher
+          return <li><a href="?publisher={$publisher}">{$publisher}</a>: {local:count($publishers, $publisher)}</li>
+        } </ul>
+};
+
+declare function app:browse-language($node as node(), $model as map(*)) as node() {
+  let $collection := collection:documents()
+  let $language := request:get-parameter('language', false())
+  return
+    if($language) then
+      let $docs := collection:documents('dc.language', $language)
+      return <ul> {
+        for $document in $docs
+        order by document:title($document)
+        return <li>{app:link-view(document:id($document), document:title($document))}</li>
+      } </ul>
+    else      
+      let $languages := $collection//xhtml:meta[@name="dc.language"]/@content
+      return
+        <ul> {
+          for $language in distinct-values($languages)
+          order by $language
+          return <li><a href="?language={$language}">{$language}</a>: {local:count($languages, $language)}</li>
+        } </ul>
 };
 
 declare function app:count-documents($node as node(), $model as map(*), $name, $value) as xs:integer {

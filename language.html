@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="row">
+        <div class="page-header">
+            <h1>Browse by Language</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div data-template="app:browse-language"/>
+    </div>
+    <script type="text/javascript" src="resources/tablesorter/jquery.tablesorter.min.js"/>
+    <script>
+    $(document).ready(function(){
+    $("#tbl-browser").tablesorter();
+    });
+  </script>
+</div>
