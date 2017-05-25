@@ -21,6 +21,10 @@ declare variable $config:login-user := $config:login-domain || '.user';
 :)
 declare variable $config:app-root := 
     let $rawPath := system:get-module-load-path()
+	return 
+       if(starts-with($rawPath, '/Applications/eXist-db/webapp')) then
+         'file://' || substring-before($rawPath, '/modules')
+       else 
     let $modulePath :=
         (: strip the xmldb: part :)
         if (starts-with($rawPath, "xmldb:exist://")) then
