@@ -2,8 +2,6 @@ xquery version "3.0";
 
 (: use dot -T png tmp.dot -o tmp.png -Kfdp to render the graph to a png. :)
 
-import module namespace console="http://exist-db.org/xquery/console";
-
 import module namespace config="http://nines.ca/exist/wilde/config" at "../modules/config.xqm";
 import module namespace collection="http://nines.ca/exist/wilde/collection" at "../modules/collection.xql";
 import module namespace document="http://nines.ca/exist/wilde/document" at "../modules/document.xql";
@@ -31,10 +29,7 @@ declare function graph:node-color($document) {
             case 'Australian' return 'cyan'
             case 'British' return 'bisque'
             case 'French' return 'darkolivegreen1'
-            default
-                return
-                    let $null := console:log("Unknown region " || document:region($document))
-                    return 'white'
+            default return 'white'
     return "color=" || $color
 };
 

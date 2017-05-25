@@ -3,7 +3,6 @@ xquery version "3.0";
 module namespace index="http://nines.ca/exist/wilde/index";
 
 import module namespace functx="http://www.functx.com"; 
-import module namespace console="http://exist-db.org/xquery/console";
 import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
 import module namespace collection="http://nines.ca/exist/wilde/collection" at "collection.xql";
 import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
@@ -19,7 +18,7 @@ declare function index:comparable-documents($document as node()) as node()* {
     return 
     for $document in collection:documents()
       where
-        (document:id($document) != $id) and
+        (document:id($document) lt $id) and 
         (document:status($document) != 'draft')
       return $document
 };
@@ -30,7 +29,6 @@ declare function index:reindex-paragraphs($document as node()) as node() {
     let $startTime := util:system-time()
     
     let $comparables := index:comparable-documents($document)
-    let $null := console:log('Comparing ' || document:id($document) || ' against ' || count($comparables))
     let $matches := 
         if(count($comparables) eq 0) then
             (0)
@@ -61,14 +59,12 @@ declare function index:reindex-document($document as node()) as node() {
     let $startTime := util:system-time()
     
     let $comparables := index:comparable-documents($document)
-    let $null := console:log('Comparing ' || document:id($document) || ' against ' || count($comparables))
     
     let $matches := 
         if(count($comparables) eq 0) then
             (0)
         else
             for $comp in $comparables
-              let $null := console:log("comparing " || document:id($document) || " against " || document:id($comp))
                 return
                     let $m := similarity:similarity($metric, string($document/xhtml:html/xhtml:body), string($comp/xhtml:html/xhtml:body))
                     return if($m > $threshold) then (

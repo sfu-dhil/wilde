@@ -6,7 +6,6 @@ xquery version "3.0";
 module namespace tx="http://nines.ca/exist/wilde/transform";
 
 import module namespace kwic="http://exist-db.org/xquery/kwic";
-import module namespace console="http://exist-db.org/xquery/console";
 import module namespace collection="http://nines.ca/exist/wilde/collection" at "collection.xql";
 import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
 

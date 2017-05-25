@@ -6,7 +6,6 @@ import module namespace kwic="http://exist-db.org/xquery/kwic";
 import module namespace templates="http://exist-db.org/xquery/templates" ;
 import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
 import module namespace collection="http://nines.ca/exist/wilde/collection" at "collection.xql";
-import module namespace console="http://exist-db.org/xquery/console";
 import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
 import module namespace similarity="http://nines.ca/exist/wilde/similarity" at "similarity.xql";
 import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql";
@@ -88,7 +87,6 @@ declare function app:doc-next($node as node(), $model as map(*)) as node()? {
 
 declare function app:doc-previous($node as node(), $model as map(*)) as node()? {
   let $previous := collection:previous($model('document'))  
-  let $null := console:log("previous: " || $previous)
   return 
     if($previous) then
       <a href="view.html?f={document:id($previous)}">{document:title($previous)}</a>
@@ -363,8 +361,6 @@ declare function app:measure($node as node(), $model as map(*)) {
     
     let $d := string:getLevenshteinDistance($a, $b)
     let $m := max((string-length($a), string-length($b)))
-    
-    let $null := console:log("clean is " || $clean)
     
     return <dl class='dl-horizontal'>
         <dt>levenshtein</dt>

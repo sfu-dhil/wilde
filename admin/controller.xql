@@ -1,6 +1,5 @@
 xquery version "3.0";
 
-import module namespace console="http://exist-db.org/xquery/console";
 import module namespace config="http://nines.ca/exist/wilde/config" at "../modules/config.xqm";
 import module namespace login="http://exist-db.org/xquery/login" at "resource:org/exist/xquery/modules/persistentlogin/login.xql";
 import module namespace functx="http://www.functx.com";
@@ -11,8 +10,10 @@ declare variable $exist:controller external;
 declare variable $exist:prefix external;
 declare variable $exist:root external;
 
+let $cookie-path := string-join((request:get-context-path(), $exist:prefix, $exist:controller))
+
 let $logout := request:get-parameter('logout', ())
-let $set-user := login:set-user($config:login-domain, '/exist/apps/wilde', 'P14D', false())
+let $set-user := login:set-user($config:login-domain, $cookie-path, 'P14D', false())
 
 return
 if ($exist:path eq '') then
