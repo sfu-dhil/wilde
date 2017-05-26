@@ -71,7 +71,10 @@ declare function app:browse-date($node as node(), $model as map(*)) as node() {
         <ul> {
           for $date in distinct-values($dates)
           order by $date
-          return <li><a href="?date={$date}">{$date}</a>: {local:count($dates, $date)}</li>
+          return 
+            <li data-date="{$date}" data-count="{local:count($dates, $date)}">
+              <a href="?date={$date}">{$date}</a>: {local:count($dates, $date)}
+            </li>
         } </ul>
 };
 

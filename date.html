@@ -6,12 +6,44 @@
         </div>
     </div>
     <div class="row">
-        <div data-template="app:browse-date"/>
+      <div id='chart'></div>
+      <div data-template="app:browse-date"/>
     </div>
-    <script type="text/javascript" src="resources/tablesorter/jquery.tablesorter.min.js"/>
-    <script>
-    $(document).ready(function(){
-    $("#tbl-browser").tablesorter();
-    });
-  </script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      
+      var annotations = {
+        '1895-04-03': ['Libel trial', 'Wilde accused Queensbury of libel'],
+        '1895-04-26': ['First trial', 'Wilde tried for sodomy.'],
+        '1895-05-25': ['Second trial', 'Wilde retried for sodomy.'],
+        }
+      
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Date');
+        data.addColumn('number', 'Article Count');
+        data.addColumn({type: 'string', role: 'annotation'});
+        data.addColumn({type: 'string', role: 'annotationText'});
+        $("li[data-date]").each(function(index,$item) {
+          var date = $(this).data('date');
+          var count = $(this).data('count');
+          if(date in annotations) {
+            data.addRows([[date, count, annotations[date][0], annotations[date][1]]]);        
+          } else {
+            data.addRows([[date, count, null, null]]);        
+          }
+        });
+        
+        var options = {
+          title: 'Articles by Day',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+        
+        var chart = new google.visualization.LineChart(document.getElementById('chart'));        
+        chart.draw(data, options);
+      }
+    </script>
 </div>
