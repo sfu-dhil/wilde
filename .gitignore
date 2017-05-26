@@ -3,3 +3,5 @@ build/
 resources/*
 !resources/js/
 !resources/css/
+wilde.xpr
+docs/build
