@@ -63,18 +63,27 @@ declare function app:browse-date($node as node(), $model as map(*)) as node() {
       return <ul> {
         for $document in $docs
         order by document:publisher($document)
-        return <li>{app:link-view(document:id($document), document:title($document))}</li>
+        return <li>{app:link-view(document:id($document), document:title($document))} ({document:language($document)})</li>
       } </ul>
     else      
       let $dates := $collection//xhtml:meta[@name="dc.date"]/@content
+      let $languages := distinct-values($collection//xhtml:meta[@name="dc.language"]/@content)
       return
-        <ul> {
-          for $date in distinct-values($dates)
-          order by $date
-          return 
-            <li data-date="{$date}" data-count="{local:count($dates, $date)}">
-              <a href="?date={$date}">{$date}</a>: {local:count($dates, $date)}
-            </li>
+        <ul data-languages="{string-join($languages, ',')}" id='languages'> {
+            for $date in distinct-values($dates)
+            let $dateCount := count($dates[ . = $date ])
+            order by $date
+            return 
+              <li> {
+                attribute data-date { $date },
+                attribute data-count { $dateCount },
+                for $language in $languages 
+                return attribute 
+                  { "data-" || $language } 
+                  { count($collection//xhtml:head[./xhtml:meta[@name='dc.date'][@content=$date]][./xhtml:meta[@name='dc.language'][@content=$language]]) }
+              }
+                <a href="?date={$date}">{$date}</a>: { $dateCount }
+              </li>
         } </ul>
 };
 
@@ -117,6 +126,27 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
           for $language in distinct-values($languages)
           order by $language
           return <li><a href="?language={$language}">{$language}</a>: {local:count($languages, $language)}</li>
+        } </ul>
+};
+
+declare function app:browse-region($node as node(), $model as map(*)) as node() {
+  let $collection := collection:documents()
+  let $region := request:get-parameter('region', false())
+  return
+    if($region) then
+      let $docs := collection:documents('dc.region', $region)
+      return <ul> {
+        for $document in $docs
+        order by document:title($document)
+        return <li>{app:link-view(document:id($document), document:title($document))}</li>
+      } </ul>
+    else      
+      let $regions := $collection//xhtml:meta[@name="dc.region"]/@content
+      return
+        <ul> {
+          for $region in distinct-values($regions)
+          order by $region
+          return <li><a href="?region={$region}">{$region}</a>: {local:count($regions, $region)}</li>
         } </ul>
 };
 

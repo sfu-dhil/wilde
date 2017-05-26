@@ -21,19 +21,40 @@
         }
       
       function drawChart() {
+        var $dateItems = $("li[data-date]");
+        if($dateItems.length === 0) {
+          return;
+        }
+        var languages = $("#languages").data('languages').toLowerCase().split(',');
+        
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Date');
-        data.addColumn('number', 'Article Count');
+        //data.addColumn('number', 'Article Count');
+        languages.forEach(function(language) {
+          data.addColumn('number', language);
+        });
+        
         data.addColumn({type: 'string', role: 'annotation'});
         data.addColumn({type: 'string', role: 'annotationText'});
-        $("li[data-date]").each(function(index,$item) {
+        
+        $dateItems.each(function(index,$item) {
+          var $this = $(this);
           var date = $(this).data('date');
-          var count = $(this).data('count');
+          var item = [];
+          item.push(date);
+          // item.push($this.data('count'));
+          languages.forEach(function(language){
+            item.push($this.data(language));
+          });
+          
           if(date in annotations) {
-            data.addRows([[date, count, annotations[date][0], annotations[date][1]]]);        
+            item.push(annotations[date][0])
+            item.push(annotations[date][1]);        
           } else {
-            data.addRows([[date, count, null, null]]);        
+            item.push(null);
+            item.push(null);
           }
+          data.addRow(item);
         });
         
         var options = {
