@@ -4,8 +4,12 @@ import module namespace config="http://nines.ca/exist/wilde/config" at "modules/
 import module namespace functx="http://www.functx.com";
 import module namespace console="http://exist-db.org/xquery/console";
 import module namespace text="http://exist-db.org/xquery/text";
+import module namespace debug="http://nines.ca/exist/wilde/debug" at "modules/debug.xql";
 
 declare namespace exist="http://exist.sourceforge.net/NS/exist";
+declare namespace request="http://exist-db.org/xquery/request";
+declare namespace session="http://exist-db.org/xquery/session";
+declare namespace system="http://exist-db.org/xquery/system";
 
 declare variable $exist:path external;
 declare variable $exist:resource external;
@@ -24,16 +28,23 @@ else if ($exist:path eq "/") then
         <redirect url="index.html"/>
     </dispatch>
     
+else if ($exist:resource = 'debug' and request:get-server-name() = 'localhost') then
+  debug:debug()
+    
 else if (ends-with($exist:resource, ".html")) then
   (: the html page is run through view.xql to expand templates :)
   <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
     <view>
         <forward url="{$exist:controller}/modules/view.xql"/>
-    </view>
-    <error-handler>
-    	<forward url="{$exist:controller}/error-page.html" method="get"/>
-    	<forward url="{$exist:controller}/modules/view.xql"/>
-    </error-handler>
+    </view> {
+      if(request:get-server-name() = 'localhost') then
+        ()
+      else
+    		<error-handler>
+    			<forward url="{$exist:controller}/error-page.html" method="get"/>
+    			<forward url="{$exist:controller}/modules/view.xql"/>
+    		</error-handler>    	
+    }
   </dispatch>
     
 (: Resource paths starting with $shared are loaded from the shared-resources app :)

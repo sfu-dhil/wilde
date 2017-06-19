@@ -21,6 +21,14 @@ declare function collection:collection() as node()* {
 };
 
 (:~
+ : Fetch the metadata.xml content which describes the collection.
+ : @return Node for metadata.xml
+ :)
+declare function collection:metadata() as node()* {
+  doc($config:data-root || '/metadata.xml')
+};
+
+(:~
  : Fetch a document from the collection.
  : @param $id the string ID of the document to fetch
  : @return The HTML root node of the document or a blank HTML document.

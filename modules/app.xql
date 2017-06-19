@@ -12,6 +12,9 @@ import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql"
 import module namespace tx="http://nines.ca/exist/wilde/transform" at "transform.xql";
 import module namespace stats="http://nines.ca/exist/wilde/stats" at "stats.xql";
 
+declare namespace console="http://exist-db.org/xquery/console";
+
+declare namespace wilde="http://dhil.lib.sfu.ca/wilde";
 declare namespace string="java:org.apache.commons.lang3.StringUtils";
 declare namespace array="http://www.w3.org/2005/xpath-functions/array";
 
@@ -87,7 +90,7 @@ declare function app:browse-date($node as node(), $model as map(*)) as node() {
         } </ul>
 };
 
-declare function app:browse-publisher($node as node(), $model as map(*)) as node() {
+declare function app:browse-newspaper($node as node(), $model as map(*)) as node() {
   let $collection := collection:documents()
   let $publisher := request:get-parameter('publisher', false())
   return
@@ -98,14 +101,29 @@ declare function app:browse-publisher($node as node(), $model as map(*)) as node
         order by document:date($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
-    else      
+    else    
+      let $metadata := collection:metadata()
       let $publishers := $collection//xhtml:meta[@name="dc.publisher"]/@content
-      return
-        <ul> {
-          for $publisher in distinct-values($publishers)
-          order by $publisher
-          return <li><a href="?publisher={$publisher}">{$publisher}</a>: {local:count($publishers, $publisher)}</li>
-        } </ul>
+      return       
+        <table class='table table-striped table-hover table-condensed' id="tbl-browser">
+            <thead>
+                <tr>
+                    <th>Publisher</th><th>Region</th><th>City</th><th>Language</th><th>Count</th>
+                </tr>
+            </thead>
+            <tbody>{
+              for $publisher in distinct-values($publishers)
+              let $meta := $metadata//wilde:newspaper[@title=$publisher]
+              order by $publisher
+                return <tr>
+                    <td><a href="?publisher={$publisher}">{$publisher}</a></td>
+                    <td>{ $meta/@region/string() }</td>
+                    <td>{ $meta/@city/string() }</td>
+                    <td>{ $meta/@language/string() }</td>
+                    <td>{local:count($publishers, $publisher)}</td>
+                </tr>
+            }</tbody>
+        </table>
 };
 
 declare function app:browse-language($node as node(), $model as map(*)) as node() {
@@ -124,8 +142,12 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
       return
         <ul> {
           for $language in distinct-values($languages)
+          let $count := local:count($languages, $language)
           order by $language
-          return <li><a href="?language={$language}">{$language}</a>: {local:count($languages, $language)}</li>
+          return <li data-language="{$language}" data-count="{$count}">
+              <a href="?language={$language}">{$language}</a>: 
+              {$count}
+            </li>
         } </ul>
 };
 
@@ -145,8 +167,12 @@ declare function app:browse-region($node as node(), $model as map(*)) as node() 
       return
         <ul> {
           for $region in distinct-values($regions)
+          let $count := local:count($regions, $region)
           order by $region
-          return <li><a href="?region={$region}">{$region}</a>: {local:count($regions, $region)}</li>
+          return <li data-region="{$region}" data-count="{$count}">
+              <a href="?region={$region}">{$region}</a>: 
+              {$count}
+            </li>
         } </ul>
 };
 
