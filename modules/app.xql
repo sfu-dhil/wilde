@@ -120,6 +120,27 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
         } </ul>
 };
 
+declare function app:browse-region($node as node(), $model as map(*)) as node() {
+  let $collection := collection:documents()
+  let $region := request:get-parameter('region', false())
+  return
+    if($region) then
+      let $docs := collection:documents('dc.region', $region)
+      return <ul> {
+        for $document in $docs
+        order by document:title($document)
+        return <li>{app:link-view(document:id($document), document:title($document))}</li>
+      } </ul>
+    else      
+      let $regions := $collection//xhtml:meta[@name="dc.region"]/@content
+      return
+        <ul> {
+          for $region in distinct-values($regions)
+          order by $region
+          return <li><a href="?region={$region}">{$region}</a>: {local:count($regions, $region)}</li>
+        } </ul>
+};
+
 declare function app:count-documents($node as node(), $model as map(*), $name, $value) as xs:integer {
     if(empty($name) and empty($value)) then
         count(collection:documents())
