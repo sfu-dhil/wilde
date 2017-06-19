@@ -4,8 +4,13 @@
     <property name="project.version" value="${package(version)}"/>
     <property name="project.app" value="wilde"/>
     <property name="build.dir" value="build"/>
-    <target name="xar">
+    <target name="xar" depends="docs">
         <mkdir dir="${build.dir}"/>
         <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/*"/>
+    </target>
+    <target name="docs">
+      <exec executable="make" dir="docs">
+        <arg value="html"/>
+      </exec>
     </target>
 </project>

@@ -63,18 +63,27 @@ declare function app:browse-date($node as node(), $model as map(*)) as node() {
       return <ul> {
         for $document in $docs
         order by document:publisher($document)
-        return <li>{app:link-view(document:id($document), document:title($document))}</li>
+        return <li>{app:link-view(document:id($document), document:title($document))} ({document:language($document)})</li>
       } </ul>
     else      
       let $dates := $collection//xhtml:meta[@name="dc.date"]/@content
+      let $languages := distinct-values($collection//xhtml:meta[@name="dc.language"]/@content)
       return
-        <ul> {
-          for $date in distinct-values($dates)
-          order by $date
-          return 
-            <li data-date="{$date}" data-count="{local:count($dates, $date)}">
-              <a href="?date={$date}">{$date}</a>: {local:count($dates, $date)}
-            </li>
+        <ul data-languages="{string-join($languages, ',')}" id='languages'> {
+            for $date in distinct-values($dates)
+            let $dateCount := count($dates[ . = $date ])
+            order by $date
+            return 
+              <li> {
+                attribute data-date { $date },
+                attribute data-count { $dateCount },
+                for $language in $languages 
+                return attribute 
+                  { "data-" || $language } 
+                  { count($collection//xhtml:head[./xhtml:meta[@name='dc.date'][@content=$date]][./xhtml:meta[@name='dc.language'][@content=$language]]) }
+              }
+                <a href="?date={$date}">{$date}</a>: { $dateCount }
+              </li>
         } </ul>
 };
 

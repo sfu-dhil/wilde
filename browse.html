@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+    <div class="row">
+        <div class="page-header">
+            <h1>Wilde Trials Press Reports</h1>
+            <p>The collection contains <span data-template="app:count-documents"/> documents, of which
+                <span data-template="app:count-documents" data-template-name="status" data-template-value="draft"/> are drafts.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div data-template="app:browse"/>
+    </div>
+    <script type="text/javascript" src="resources/tablesorter/jquery.tablesorter.min.js"/>
+    <script>
+        $(document).ready(function(){
+            $("#tbl-browser").tablesorter();
+        });
+    </script>
+</div>
