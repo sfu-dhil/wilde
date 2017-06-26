@@ -12,8 +12,6 @@ import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql"
 import module namespace tx="http://nines.ca/exist/wilde/transform" at "transform.xql";
 import module namespace stats="http://nines.ca/exist/wilde/stats" at "stats.xql";
 
-declare namespace console="http://exist-db.org/xquery/console";
-
 declare namespace wilde="http://dhil.lib.sfu.ca/wilde";
 declare namespace string="java:org.apache.commons.lang3.StringUtils";
 declare namespace array="http://www.w3.org/2005/xpath-functions/array";

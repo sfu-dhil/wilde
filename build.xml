@@ -4,7 +4,7 @@
     <property name="project.version" value="${package(version)}"/>
     <property name="project.app" value="wilde"/>
     <property name="build.dir" value="build"/>
-    <target name="xar" depends="docs">
+    <target name="xar" depends="docs,bower">
         <mkdir dir="${build.dir}"/>
         <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/*"/>
     </target>
@@ -16,4 +16,9 @@
         <arg value="html"/>
       </exec>
     </target>
+  <target name="bower">
+    <exec executable="bower">
+      <arg value="install"/>
+    </exec>
+  </target>
 </project>

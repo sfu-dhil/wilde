@@ -6,7 +6,6 @@
 xquery version "3.0";
 
 import module namespace templates="http://exist-db.org/xquery/templates";
-import module namespace console="http://exist-db.org/xquery/console";
 
 (: 
  : The following modules provide functions which will be called by the 
