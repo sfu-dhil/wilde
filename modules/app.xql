@@ -31,7 +31,7 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
         <table class='table table-striped table-hover table-condensed' id="tbl-browser">
             <thead>
                 <tr>
-                    <th>Date</th><th>Publisher</th><th>Region</th><th>City</th><th>Language</th>
+                    <th>Date</th><th>Newspaper</th><th>Region</th><th>City</th><th>Language</th>
                     <th>Indexed</th><th>Matches</th><th>Words</th>
                 </tr>
             </thead>
@@ -108,7 +108,7 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
         <table class='table table-striped table-hover table-condensed' id="tbl-browser">
             <thead>
                 <tr>
-                    <th>Publisher</th><th>Region</th><th>City</th><th>Language</th><th>Count</th>
+                    <th>Newspaper</th><th>Region</th><th>City</th><th>Language</th><th>Count</th>
                 </tr>
             </thead>
             <tbody>{
