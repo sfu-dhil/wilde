@@ -13,8 +13,6 @@ import module namespace tx="http://nines.ca/exist/wilde/transform" at "transform
 import module namespace stats="http://nines.ca/exist/wilde/stats" at "stats.xql";
 import module namespace lang="http://nines.ca/exist/wilde/lang" at "lang.xql";
 
-declare namespace console="http://exist-db.org/xquery/console";
-
 declare namespace wilde="http://dhil.lib.sfu.ca/wilde";
 declare namespace string="java:org.apache.commons.lang3.StringUtils";
 declare namespace array="http://www.w3.org/2005/xpath-functions/array";
@@ -38,14 +36,13 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
         <table class='table table-striped table-hover table-condensed' id="tbl-browser">
             <thead>
                 <tr>
-                    <th>ID</th><th>Date</th><th>Publisher</th><th>Region</th><th>City</th><th>Language</th>
+                    <th>Date</th><th>Newspaper</th><th>Region</th><th>City</th><th>Language</th>
                     <th>Indexed</th><th>Matches</th><th>Words</th>
                 </tr>
             </thead>
             <tbody>{
                 for $document in $documents
                 return <tr>
-                    <td>{document:id($document)}</td>
                     <td>{app:link-view(document:id($document), string(document:date($document)))}</td>
                     <td>{document:publisher($document)}</td>
                     <td>{document:region($document)}</td>
@@ -116,7 +113,7 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
         <table class='table table-striped table-hover table-condensed' id="tbl-browser">
             <thead>
                 <tr>
-                    <th>Publisher</th><th>Region</th><th>City</th><th>Language</th><th>Count</th>
+                    <th>Newspaper</th><th>Region</th><th>City</th><th>Language</th><th>Count</th>
                 </tr>
             </thead>
             <tbody>{

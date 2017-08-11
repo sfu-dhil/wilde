@@ -2,7 +2,6 @@ xquery version "3.0";
 
 import module namespace config="http://nines.ca/exist/wilde/config" at "modules/config.xqm";
 import module namespace functx="http://www.functx.com";
-import module namespace console="http://exist-db.org/xquery/console";
 import module namespace text="http://exist-db.org/xquery/text";
 import module namespace debug="http://nines.ca/exist/wilde/debug" at "modules/debug.xql";
 

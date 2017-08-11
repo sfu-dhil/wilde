@@ -27,7 +27,7 @@
     "jsdiff": "http://ejohn.org/files/jsdiff.js",
     "js-url": "^2.3.1",
     "vis": "^4.17.0",
-    "cytoscape": "^2.7.11",
-    "typeahead.js": "^0.11.1"
+    "typeahead.js": "^0.11.1",
+    "gexf-js": "git@github.com:ubermichael/gexf-js"
   }
 }
