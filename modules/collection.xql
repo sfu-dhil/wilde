@@ -17,7 +17,7 @@ declare default element namespace "http://www.w3.org/1999/xhtml";
  : @return Node representing the data collection
  :)
 declare function collection:collection() as node()* {
-    collection($config:data-root)
+    collection($config:data-root || '/reports')
 };
 
 (:~

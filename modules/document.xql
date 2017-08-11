@@ -81,6 +81,10 @@ declare function document:language($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.language']/@content)
 };
 
+declare function document:translations($node as node()) as xs:string* {
+  root($node)//div[@class='translation']/@lang/string()
+};
+
 declare function document:collection($node as node()) as xs:string {
     let $uri := document:uri($node)
     let $parts := tokenize($uri, '/')

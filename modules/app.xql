@@ -11,6 +11,7 @@ import module namespace similarity="http://nines.ca/exist/wilde/similarity" at "
 import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql";
 import module namespace tx="http://nines.ca/exist/wilde/transform" at "transform.xql";
 import module namespace stats="http://nines.ca/exist/wilde/stats" at "stats.xql";
+import module namespace lang="http://nines.ca/exist/wilde/lang" at "lang.xql";
 
 declare namespace console="http://exist-db.org/xquery/console";
 
@@ -20,6 +21,12 @@ declare namespace array="http://www.w3.org/2005/xpath-functions/array";
 
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
+
+declare function app:code2lang($code) {
+  switch($code) 
+    case 'en' return 'English'
+    default return 'Unknown ' || $code
+};
 
 declare function app:link-view($id as xs:string, $content) as node() {
     <a href="view.html?f={$id}">{$content}</a>
@@ -31,18 +38,19 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
         <table class='table table-striped table-hover table-condensed' id="tbl-browser">
             <thead>
                 <tr>
-                    <th>Date</th><th>Publisher</th><th>Region</th><th>City</th><th>Language</th>
+                    <th>ID</th><th>Date</th><th>Publisher</th><th>Region</th><th>City</th><th>Language</th>
                     <th>Indexed</th><th>Matches</th><th>Words</th>
                 </tr>
             </thead>
             <tbody>{
                 for $document in $documents
                 return <tr>
+                    <td>{document:id($document)}</td>
                     <td>{app:link-view(document:id($document), string(document:date($document)))}</td>
                     <td>{document:publisher($document)}</td>
                     <td>{document:region($document)}</td>
                     <td>{document:city($document)}</td>
-                    <td>{document:language($document)}</td>
+                    <td>{lang:code2lang(document:language($document))}</td>
                     <td>{document:indexed-document($document)}/{document:indexed-paragraph($document)}</td>
                     <td>{count(document:document-matches($document))}/{count(document:paragraph-matches($document))}</td>
                     <td>{document:word-count($document)}</td>
@@ -119,7 +127,7 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
                     <td><a href="?publisher={$publisher}">{$publisher}</a></td>
                     <td>{ $meta/@region/string() }</td>
                     <td>{ $meta/@city/string() }</td>
-                    <td>{ $meta/@language/string() }</td>
+                    <td>{ lang:code2lang($meta/@language/string()) }</td>
                     <td>{local:count($publishers, $publisher)}</td>
                 </tr>
             }</tbody>
@@ -144,8 +152,8 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
           for $language in distinct-values($languages)
           let $count := local:count($languages, $language)
           order by $language
-          return <li data-language="{$language}" data-count="{$count}">
-              <a href="?language={$language}">{$language}</a>: 
+          return <li data-language="{lang:code2lang($language)}" data-count="{$count}">
+              <a href="?language={$language}">{lang:code2lang($language)}</a>: 
               {$count}
             </li>
         } </ul>
@@ -245,6 +253,40 @@ declare function app:doc-city($ndoe as node(), $model as map(*)) as xs:string {
 
 declare function app:doc-modified($node as node(), $model as map(*)) as xs:string {
     string(document:modified($model('document')))
+};
+
+declare function app:doc-translation-tabs($node as node(), $model as map(*)) as node()* {
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+      <a href="#original" role="tab" data-toggle="tab">
+        {lang:code2lang(document:language($model('document')))}
+      </a>
+    </li> 
+    { 
+      for $lang in document:translations($model('document'))
+      return   
+        <li role="presentation">
+          <a href="#{$lang}" role="tab" data-toggle="tab">{lang:code2lang($lang)}</a>
+        </li>
+    }
+  </ul>
+};
+
+declare function app:doc-translations($node as node(), $model as map(*)) as node()* {
+  let $doc := $model('document')
+  return  
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="original">
+        { $doc//div[@id='original'] }
+      </div>
+      { 
+        for $lang in document:translations($model('document'))
+        return   
+        <div role="tabpanel" class="tab-pane" id="{$lang}">
+          { $doc//div[@lang=$lang] }
+        </div>
+      }
+    </div>
 };
 
 declare function app:doc-content($node as node(), $model as map(*)) as node()* {
