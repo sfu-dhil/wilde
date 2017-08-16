@@ -66,7 +66,7 @@ declare variable $config:similarities-per-page := 50;
 (:
     Path to the data collection.
 :)
-declare variable $config:data-root := "/db/apps/wilde-data/data/reports";
+declare variable $config:data-root := "/db/apps/wilde-data/data";
 
 declare variable $config:graphs-root := "/db/apps/wilde-data/data/graphs";
 

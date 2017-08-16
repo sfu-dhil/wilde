@@ -6,7 +6,9 @@
     <property name="build.dir" value="build"/>
     <target name="xar" depends="docs,bower">
         <mkdir dir="${build.dir}"/>
-        <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/*"/>
+        <zip basedir="."
+             destfile="${build.dir}/${project.app}-${project.version}.xar"
+             excludes="${build.dir}/*,wilde.xpr"/>
     </target>
     <target name="docs">
       <exec executable="make" dir="docs">
