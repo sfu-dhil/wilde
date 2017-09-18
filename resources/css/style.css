@@ -99,3 +99,45 @@ blockquote.similarity {
     margin: 0 0 20px 40px;
     font-size: 14px;
 }
+
+/* Home page carousel */
+.carousel-caption{
+    background: rgba(0,0,0,0.4);
+    border-radius: 10px;
+}
+
+/* images with captions */
+figure {
+    margin: 1em 40px;
+}
+
+figcaption {
+    text-align: center;
+    font-style: italic;  
+}
+
+/* Sticky footer styles */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 80px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 80px;
+  background-color: #f5f5f5;
+}
+
+.footer > .container {
+  margin: 20px;
+  padding-right: 15px;
+  padding-left: 15px;
+}

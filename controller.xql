@@ -1,6 +1,9 @@
 xquery version "3.0";
 
 import module namespace config="http://nines.ca/exist/wilde/config" at "modules/config.xqm";
+import module namespace collection="http://nines.ca/exist/wilde/collection" at "modules/collection.xql";
+import module namespace graph="http://nines.ca/exist/wilde/graph" at "modules/graph.xql";
+
 import module namespace functx="http://www.functx.com";
 import module namespace text="http://exist-db.org/xquery/text";
 import module namespace debug="http://nines.ca/exist/wilde/debug" at "modules/debug.xql";
@@ -45,6 +48,9 @@ else if (ends-with($exist:resource, ".html")) then
     		</error-handler>    	
     }
   </dispatch>
+  
+else if (ends-with($exist:resource, ".gexf")) then
+  collection:graph($exist:resource)
     
 (: Resource paths starting with $shared are loaded from the shared-resources app :)
 else if (contains($exist:path, "/$shared/")) then

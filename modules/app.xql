@@ -12,6 +12,7 @@ import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql"
 import module namespace tx="http://nines.ca/exist/wilde/transform" at "transform.xql";
 import module namespace stats="http://nines.ca/exist/wilde/stats" at "stats.xql";
 import module namespace lang="http://nines.ca/exist/wilde/lang" at "lang.xql";
+import module namespace graph="http://nines.ca/exist/wilde/graph" at "graph.xql";
 
 declare namespace wilde="http://dhil.lib.sfu.ca/wilde";
 declare namespace string="java:org.apache.commons.lang3.StringUtils";
@@ -578,4 +579,33 @@ declare function app:statistics($node as node(), $model as map(*)) {
         <dt>Total document matches</dt>
         <dd>{stats:count-document-matches()}</dd>
     </dl>
+};
+
+declare function app:graph-list($node as node(), $model as map(*)) as node() {
+  <dl class='dl-horizontal'>{
+    for $graph in collection:graph-list()
+    return (
+      <dt>{graph:title($graph)}</dt>,
+      <dd>
+        {graph:description($graph)}<br/>
+        <a href="graph.html?f={graph:filename($graph)}">View</a>
+      </dd>
+      )
+  }</dl>
+};
+
+declare function app:load-graph($node as node(), $model as map(*)) {
+    let $f := request:get-parameter('f', '')
+    let $doc := collection:graph($f)
+    
+    return map {
+        "graph-id" := $f,
+        "graph" := $doc
+    }
+};
+
+declare function app:graph-view($node as node(), $model as map(*)) as node() {
+    let $f := request:get-parameter('f', '')
+    return 
+      <iframe src="gefx.html#{$f}" style="width: 100%; height: 700px;" />
 };

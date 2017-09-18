@@ -5,18 +5,19 @@
             <h1>Similarity</h1>
         </div>
     </div>
+  <p>To compare any two news reports from the collection, enter them into the two fields below. The text-comparison tool will produce a text similarity score using a number of different measures and markup the differences between the two texts. </p>  
     <form accept-charset="utf-8">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="c1">First passage</label>
-                    <textarea class="form-control" rows="6" cols="40" name="c1" id="c1" data-template="app:measure-textarea" data-template-name="c1"/>
+                    <textarea class="form-control" rows="6" cols="40" name="c1" id="c1" data-template="app:measure-textarea" data-template-name="c1"></textarea>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="c2">Second passage</label>
-                    <textarea class="form-control" rows="6" cols="40" name="c2" id="c2" data-template="app:measure-textarea" data-template-name="c2"/>
+                    <textarea class="form-control" rows="6" cols="40" name="c2" id="c2" data-template="app:measure-textarea" data-template-name="c2"></textarea>
                 </div>
             </div>
         </div>
@@ -86,5 +87,5 @@
         $d.html(html);
       });
     </script>
-    <script type="text/javascript" src="resources/google-diff-match-patch-js/diff_match_patch.js"/>
+    <script type="text/javascript" src="resources/lib/google-diff-match-patch-js/diff_match_patch.js"/>
 </div>

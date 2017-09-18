@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title data-template="config:app-title">App Title</title>
+    <title data-template="config:app-title">Wilde Trials News Archive</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta data-template="config:app-meta" />
     <link href="resources/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -20,28 +20,46 @@
           <span class="icon-bar"></span> 
           <span class="icon-bar"></span> 
         </button>
-        <a class="navbar-brand" data-template="config:app-title" href="./index.html">Wilde Trials</a> 
+        <a class="navbar-brand" href="index.html">Wilde Trials</a> 
       </div> 
       <div class="navbar-collapse collapse" id="navbar-collapse-1"> 
         <ul class="nav navbar-nav">
           <li class="dropdown"> 
-            <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">Browse by <span class="caret"></span></a> 
+            <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">About <span class="caret"></span></a> 
             <ul class="dropdown-menu">
-              <li><a href="date.html">Date</a></li>
-              <li><a href="newspaper.html">Newspaper</a></li>
-              <li><a href="region.html">Region</a></li>
-              <li><a href="language.html">Language</a></li>
-              <li><a href="list.html">List</a></li>
+              <li><a href="about.html">Overview</a></li>
+              <li><a href="reports.html">Reports</a></li>
+              <li><a href="region.html">Contributors</a></li>
+            </ul> 
+          </li>
+          <li class="dropdown"> 
+            <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">Reports <span class="caret"></span></a> 
+            <ul class="dropdown-menu">
+              <li><a href="date.html">By Date</a></li>
+              <li><a href="newspaper.html">By Newspaper</a></li>
+              <li><a href="region.html">By Region</a></li>
+              <li><a href="language.html">By Language</a></li>
+              <li><a href="list.html">Complete List</a></li>
             </ul> 
           </li>
         <li> <a href="search.html">Search</a> </li>
-        <li> <a href="measure.html">Measure</a> </li>
-        <li> <a href="export.html">Export</a> </li>
-        <li> <a href="docs/build/html/index.html">Documentation</a> </li>
-      </ul> 
+        <li> <a href="measure.html">Compare</a> </li>
+        <li> <a href="networks.html">News Networks</a> </li>
+        </ul> 
       </div> 
     </nav> 
     <div class="container" id="content"></div>
+    
+    <footer class="footer">
+      <div class="container">      
+        <p>
+          <b>Wilde Trials News Archive</b> <br/> 
+          <a href="export.html">Data</a> | <a href="docs/build/html/index.html">Documentation</a> | 
+          <a href="#">Contact</a> | <a href="https://github.com/sfu-dhil/wilde">GitHub</a> | <a href="#">License</a>
+        </p>
+      </div>
+    </footer>
+    
     <!-- Piwik -->
     <script type="text/javascript">
   var _paq = _paq || [];

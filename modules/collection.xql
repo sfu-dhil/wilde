@@ -28,6 +28,26 @@ declare function collection:metadata() as node()* {
   doc($config:data-root || '/metadata.xml')
 };
 
+declare function collection:graph($filename as xs:string) as node() {
+  if(not(matches($filename, '^[a-zA-Z0-9 .-]*$'))) then
+    ()
+   else
+    let $path := $config:graphs-root || '/' || $filename
+    return 
+      if(doc-available($path)) then
+        doc($path)
+      else
+        ()
+};
+
+declare function collection:graph-list() as node()* {
+    let $collection := collection($config:graphs-root)
+    return 
+        for $doc in $collection
+        order by util:document-name($doc)
+        return $doc
+};
+
 (:~
  : Fetch a document from the collection.
  : @param $id the string ID of the document to fetch
