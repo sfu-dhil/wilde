@@ -18,7 +18,6 @@ import module namespace document="http://nines.ca/exist/wilde/document" at "docu
 import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql";
 import module namespace app="http://nines.ca/exist/wilde/templates" at "app.xql";
 import module namespace lang="http://nines.ca/exist/wilde/lang" at "lang.xql";
-import module namespace console="http://exist-db.org/xquery/console";
 import module namespace util="http://exist-db.org/xquery/util";
 
 declare function api:documents() {
@@ -38,7 +37,6 @@ declare function api:save-document() {
   
   let $result := try {
     let $node := util:parse-html('<div xmlns="http://www.w3.org/1999/xhtml">' || request:get-parameter('content', '') || '</div>')  
-    let $null := console:log($node)
     
     let $actions := (      
       update value $doc//title with request:get-parameter('title', ''),

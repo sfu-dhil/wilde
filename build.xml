@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="xar" name="wilde">
-    <xmlproperty file="expath-pkg.xml"/>
-    <property name="project.version" value="${package(version)}"/>
-    <property name="project.app" value="wilde"/>
-    <property name="build.dir" value="build"/>
-    <target name="xar" depends="docs,bower">
-        <mkdir dir="${build.dir}"/>
-        <zip basedir="."
-             destfile="${build.dir}/${project.app}-${project.version}.xar"
-             excludes="${build.dir}/*,wilde.xpr"/>
-    </target>
-    <target name="docs">
-      <exec executable="make" dir="docs">
-        <arg value="clean"/>
-      </exec>
-      <exec executable="make" dir="docs">
-        <arg value="html"/>
-      </exec>
-    </target>
+  <xmlproperty file="expath-pkg.xml" />
+  <property name="project.version" value="${package(version)}" />
+  <property name="project.app" value="wilde" />
+  <property name="build.dir" value="build" />
+
+  <fileset id="console-usages" dir="." includes="**/*.xql">
+    <contains text="console"/>
+  </fileset>
+  <fail status="1" message="One or more usages of console detected.">
+    <condition>
+      <resourcecount when="greater" count="0" refid="console-usages" />
+    </condition>
+  </fail>  
+  
+  <target depends="docs,bower" name="xar">
+    <mkdir dir="${build.dir}" />
+    <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/*,wilde.xpr" />
+  </target>
+  <target name="docs">
+    <exec dir="docs" executable="make">
+      <arg value="clean" />
+    </exec>
+    <exec dir="docs" executable="make">
+      <arg value="html" />
+    </exec>
+  </target>
   <target name="bower">
     <exec executable="bower">
-      <arg value="install"/>
+      <arg value="install" />
     </exec>
   </target>
 </project>
