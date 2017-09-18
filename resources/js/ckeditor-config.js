@@ -15,8 +15,14 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'about', groups: [ 'about' ] }
 	];
 
-	config.removeButtons = 'Subscript,Superscript,Scayt,Link,Unlink,Anchor,Image,Table,HorizontalRule,SpecialChar,Maximize,Strike,NumberedList,BulletedList,Indent,Outdent,Blockquote,Styles,About';
-	config.format_tags = 'p;h1;h2;h3';
+  CKEDITOR.stylesSet.add( 'my_styles', [
+      // Block-level styles.
+      { name: 'heading', element: 'p', styles: { color: 'Blue' }, attributes: {class: 'heading'} },
+      { name: 'signature',  element: 'p', styles: { color: 'Red' }, attributes: {class: 'signature'}  }
+  ]);
+  config.stylesSet = 'my_styles';
+
+	config.removeButtons = 'Subscript,Superscript,Scayt,Link,Unlink,Anchor,Image,Table,HorizontalRule,SpecialChar,Maximize,Strike,NumberedList,BulletedList,Indent,Outdent,Blockquote,About';
 	 
   config.extraPlugins = 'autogrow';	
   config.autoGrow_onStartup = true;

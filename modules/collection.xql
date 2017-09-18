@@ -176,6 +176,16 @@ declare function collection:languages() as xs:string* {
 };
 
 (:~
+ : Fetch a list of languages, ordered by name.
+ : @return Sequence of strings.
+ :)
+declare function collection:sources() as xs:string* {
+    for $source in distinct-values(collection($config:data-root)//meta[@name='dc.source']/@content)
+    order by $source
+    return $source    
+};
+
+(:~
  : Fetch a list of cities, ordered by name.
  : @return Sequence of strings.
  :)

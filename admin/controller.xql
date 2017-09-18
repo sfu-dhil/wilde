@@ -47,7 +47,7 @@ else if (ends-with($exist:resource, ".html")) then
     else
       <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
           <!-- This forwards the entry to the content page blog.html -->
-          <forward url="{$exist:controller}/security.html"/>
+          <forward url="{$exist:controller}/../templates/security.html"/>
           <!-- This send the page through the templating process -->
           <view>
               <forward url="{$exist:controller}/../modules/view.xql">

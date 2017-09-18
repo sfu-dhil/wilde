@@ -16,6 +16,7 @@ import module namespace collection="http://nines.ca/exist/wilde/collection" at "
 import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
 import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql";
 import module namespace app="http://nines.ca/exist/wilde/templates" at "app.xql";
+import module namespace lang="http://nines.ca/exist/wilde/lang" at "lang.xql";
 
 declare function api:documents() {
     let $documents := collection:documents()
@@ -69,11 +70,16 @@ declare function api:regions() {
 
 declare function api:languages() {
     for $language in collection:languages()
-    return <json:value>{$language}</json:value> 
+    return <json:value>{lang:code2lang($language)}</json:value> 
 };
 
 declare function api:cities() {
   for $city in collection:cities()
+  return <json:value>{$city}</json:value>
+};
+
+declare function api:sources() {
+  for $city in collection:sources()
   return <json:value>{$city}</json:value>
 };
 
