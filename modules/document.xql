@@ -77,8 +77,16 @@ declare function document:city($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.region.city']/@content)
 };
 
+declare function document:source($node as node()) as xs:string {
+    string(root($node)//meta[@name='dc.source']/@content)
+};
+
 declare function document:language($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.language']/@content)
+};
+
+declare function document:translations($node as node()) as xs:string* {
+  root($node)//div[@class='translation']/@lang/string()
 };
 
 declare function document:collection($node as node()) as xs:string {

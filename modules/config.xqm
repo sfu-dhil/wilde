@@ -68,6 +68,8 @@ declare variable $config:similarities-per-page := 50;
 :)
 declare variable $config:data-root := "/db/apps/wilde-data/data";
 
+declare variable $config:graphs-root := "/db/apps/wilde-data/data/graphs";
+
 declare variable $config:repo-descriptor := doc(concat($config:app-root, "/repo.xml"))/repo:meta;
 
 declare variable $config:expath-descriptor := doc(concat($config:app-root, "/expath-pkg.xml"))/expath:package;

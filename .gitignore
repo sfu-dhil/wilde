@@ -1,7 +1,4 @@
 build/
-
-resources/*
-!resources/js/
-!resources/css/
+resources/lib
 wilde.xpr
 docs/build

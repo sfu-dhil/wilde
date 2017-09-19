@@ -10,6 +10,7 @@ import module namespace document="http://nines.ca/exist/wilde/document" at "docu
 import module namespace similarity="http://nines.ca/exist/wilde/similarity" at "similarity.xql";
 import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql";
 import module namespace tx="http://nines.ca/exist/wilde/transform" at "transform.xql";
+import module namespace lang="http://nines.ca/exist/wilde/lang" at "lang.xql";
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
@@ -112,8 +113,43 @@ declare function admin:browse($node as node(), $model as map(*)) as node() {
         </table>
 };
 
+declare function admin:doc-translation-tabs($node as node(), $model as map(*)) as node()* {
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+      <a href="#original" role="tab" data-toggle="tab">
+        {lang:code2lang(document:language($model('document')))}
+      </a>
+    </li> 
+    { 
+      for $lang in document:translations($model('document'))
+      return   
+        <li role="presentation">
+          <a href="#{$lang}" role="tab" data-toggle="tab">{lang:code2lang($lang)}</a>
+        </li>
+    }
+  </ul>
+};
+
+declare function admin:doc-translations($node as node(), $model as map(*)) as node()* {
+  let $doc := $model('document')
+  return  
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="original">
+        { $doc//div[@id='original'] }
+      </div>
+      { 
+        for $lang in document:translations($model('document'))
+        return   
+        <div role="tabpanel" class="tab-pane" id="{$lang}">
+          { $doc//div[@lang=$lang] }
+        </div>
+      }
+    </div>
+};
+
+
 declare function admin:doc-content($node as node(), $model as map(*)) as node()* {
-    $model('document')//body/*
+    $model('document')//body/div[@id='original']/node()
 };
 
 declare function admin:doc-delete($node as node(), $model as map(*)) {
@@ -131,8 +167,8 @@ declare function admin:doc-delete($node as node(), $model as map(*)) {
   return "The document has been deleted. It is shown here for your records."
 };
 
-declare function admin:doc-save($node as node(), $model as map(*)) as node()* {
-  ()
+declare function admin:id-input($node as node(), $model as map(*)) {
+  <input type='hidden' name='doc-id' id='doc-id' value='{document:id($model('document'))}'/>
 };
 
 declare function admin:date-input($node as node(), $model as map(*)) {
@@ -196,7 +232,7 @@ declare function admin:language-input($node as node(), $model as map(*)) {
   return
   <div class='form-group'>
     <label for='language'>Language</label>
-    <input type='text' class='form-control typeahead' name='language' id='language'  value='{$language}' data-typeahead-url="../api/languages" />
+    <input type='text' class='form-control typeahead' name='language' id='language'  value='{lang:code2lang($language)}' data-typeahead-url="../api/languages" />
   </div>
 };
 
@@ -211,12 +247,13 @@ declare function admin:city-input($node as node(), $model as map(*)) {
   </div>
 };
 
-declare 
-    %templates:wrap
-function admin:edit($node as node(), $model as map(*)) {
-    $model('document')//xhtml:body/node()
-};
-
-declare function admin:save($node as node(), $model as map(*)) {
-    ()
+declare function admin:source-input($node as node(), $model as map(*)) {
+  let $source :=
+    if($model('document')) then document:source($model('document')) else ''
+    
+  return
+  <div class='form-group'>
+    <label for='city'>Source</label>
+    <input type='text' class='form-control' name='source' id='source'  value='{$source}' />
+  </div>
 };

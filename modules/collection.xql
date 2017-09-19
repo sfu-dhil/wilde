@@ -17,7 +17,7 @@ declare default element namespace "http://www.w3.org/1999/xhtml";
  : @return Node representing the data collection
  :)
 declare function collection:collection() as node()* {
-    collection($config:data-root)
+    collection($config:data-root || '/reports')
 };
 
 (:~
@@ -26,6 +26,26 @@ declare function collection:collection() as node()* {
  :)
 declare function collection:metadata() as node()* {
   doc($config:data-root || '/metadata.xml')
+};
+
+declare function collection:graph($filename as xs:string) as node() {
+  if(not(matches($filename, '^[a-zA-Z0-9 .-]*$'))) then
+    ()
+   else
+    let $path := $config:graphs-root || '/' || $filename
+    return 
+      if(doc-available($path)) then
+        doc($path)
+      else
+        ()
+};
+
+declare function collection:graph-list() as node()* {
+    let $collection := collection($config:graphs-root)
+    return 
+        for $doc in $collection
+        order by util:document-name($doc)
+        return $doc
 };
 
 (:~
@@ -173,6 +193,16 @@ declare function collection:languages() as xs:string* {
     for $language in distinct-values(collection($config:data-root)//meta[@name='dc.language']/@content)
     order by $language
     return $language    
+};
+
+(:~
+ : Fetch a list of languages, ordered by name.
+ : @return Sequence of strings.
+ :)
+declare function collection:sources() as xs:string* {
+    for $source in distinct-values(collection($config:data-root)//meta[@name='dc.source']/@content)
+    order by $source
+    return $source    
 };
 
 (:~
