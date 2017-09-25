@@ -37,6 +37,13 @@ body.saving div.overlay{
     background-color: rgba(64, 64, 64, 0.5);
 }
 
+p.heading {
+  font-weight: bold;
+}
+
+p.signature {
+    font-style: italic;
+}
 
 /* table sorter styles */
 
