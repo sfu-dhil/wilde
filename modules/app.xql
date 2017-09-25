@@ -38,7 +38,7 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
             <thead>
                 <tr>
                     <th>Date</th><th>Newspaper</th><th>Region</th><th>City</th><th>Language</th>
-                    <th>Indexed</th><th>Matches</th><th>Words</th>
+                    <th>Matches</th><th>Words</th>
                 </tr>
             </thead>
             <tbody>{
@@ -49,7 +49,6 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
                     <td>{document:region($document)}</td>
                     <td>{document:city($document)}</td>
                     <td>{lang:code2lang(document:language($document))}</td>
-                    <td>{document:indexed-document($document)}/{document:indexed-paragraph($document)}</td>
                     <td>{count(document:document-matches($document))}/{count(document:paragraph-matches($document))}</td>
                     <td>{document:word-count($document)}</td>
                 </tr>
@@ -257,7 +256,7 @@ declare function app:doc-translation-tabs($node as node(), $model as map(*)) as 
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active">
       <a href="#original" role="tab" data-toggle="tab">
-        {lang:code2lang(document:language($model('document')))}
+        <b>{lang:code2lang(document:language($model('document')))}</b>
       </a>
     </li> 
     { 
@@ -292,7 +291,7 @@ declare function app:doc-content($node as node(), $model as map(*)) as node()* {
 };
 
 declare function app:doc-language($node as node(), $model as map(*)) as xs:string {
-    document:language($model('document'))
+    lang:code2lang(document:language($model('document')))
 };
 
 declare function app:document-indexed($node as node(), $model as map(*)) as xs:string {

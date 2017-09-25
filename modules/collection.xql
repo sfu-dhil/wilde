@@ -223,7 +223,7 @@ declare function collection:search($query as xs:string) as node()* {
     if(empty($query) or $query = '') then
         ()
     else
-        for $hit in collection($config:data-root)//p[ft:query(., $query)]
+        for $hit in collection($config:data-root)//div[@id="original"]/p[ft:query(., $query)]
         order by ft:score($hit) descending
         return $hit        
 };

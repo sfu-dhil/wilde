@@ -31,7 +31,7 @@ declare function document:subtitle($node as node()) as xs:string {
 declare function document:status($node as node()) as xs:string {
   let $statuses := root($node)//meta[@name='status']/@content
   return 
-    if(count($statuses) >= 1) then 
+    if(count($statuses) >= 1) then
       string($statuses[1])
     else 
       'draft'
@@ -74,7 +74,12 @@ declare function document:paragraph-matches($node as node()) as node()* {
 };
 
 declare function document:city($node as node()) as xs:string {
-    string(root($node)//meta[@name='dc.region.city']/@content)
+  let $cities := root($node)//meta[@name='dc.region.city']/@content
+  return
+    if(count($cities) > 1) then
+      string($cities[1])
+    else
+      string(root($node)//meta[@name='dc.region.city']/@content)
 };
 
 declare function document:source($node as node()) as xs:string {
@@ -82,7 +87,12 @@ declare function document:source($node as node()) as xs:string {
 };
 
 declare function document:language($node as node()) as xs:string {
-    string(root($node)//meta[@name='dc.language']/@content)
+  let $languages := root($node)//meta[@name='dc.language']/@content
+  return 
+    if(count($languages) > 1) then
+        $languages[1]
+    else
+      string(root($node)//meta[@name='dc.language']/@content)
 };
 
 declare function document:translations($node as node()) as xs:string* {
