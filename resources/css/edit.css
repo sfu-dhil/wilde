@@ -35,3 +35,11 @@
 .twitter-typeahead {
     display: block !important;
 }
+
+p.heading {
+  font-weight: bold;
+}
+
+p.signature {
+    font-style: italic;
+}

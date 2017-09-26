@@ -19,26 +19,15 @@
                         <div data-template="admin:doc-content"/>
                     </div>
                     <div id="result">
+                      Result
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="panel panel-default">
-                        <div class="panel-heading">Metadata</div>
-                        <div class="panel-body">
-                            <span data-template="admin:date-input"/>
-                            <span data-template="admin:publisher-input"/>
-                            <span data-template="admin:status-input"/>
-                            <span data-template="admin:region-input"/>
-                            <span data-template="admin:title-input"/>
-                            <span data-template="admin:language-input"/>
-                            <span data-template="admin:city-input"/>
-                            <span data-template="admin:source-input"/>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
                         <div class="panel-heading">Controls</div>
                         <div class="panel-body">
                             <button type="submit" class="btn btn-primary" id='btn-save'>Save</button>
+                            <button class="btn btn-danger" id='btn-cancel'>Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -46,10 +35,10 @@
         </form>
     </div>
     <script type="text/javascript">
-      var CKEDITOR_BASEPATH = '../resources/ckeditor/';
+      var CKEDITOR_BASEPATH = '../resources/lib/ckeditor/';
     </script>
-    <script type="text/javascript" src="../resources/typeahead.js/dist/typeahead.bundle.min.js"/>
-    <script type="text/javascript" src="../resources/ckeditor/ckeditor.js"/>
+    <script type="text/javascript" src="../resources/lib/typeahead.js/dist/typeahead.bundle.min.js"/>
+    <script type="text/javascript" src="../resources/lib/ckeditor/ckeditor.js"/>
     <script type="text/javascript" src="../resources/js/ckeditor-config.js"/>
     <script type="text/javascript" src="../resources/js/edit.js"/>
 </div>

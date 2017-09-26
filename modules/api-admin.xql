@@ -38,28 +38,12 @@ declare function api:save-document() {
   let $result := try {
     let $node := util:parse-html('<div xmlns="http://www.w3.org/1999/xhtml">' || request:get-parameter('content', '') || '</div>')  
     
-    let $actions := (      
-      update value $doc//title with request:get-parameter('title', ''),
-      
-      update value $doc//meta[@name='dc.date']/@content with request:get-parameter('date', ''),
-      update value $doc//meta[@name='dc.publisher']/@content with request:get-parameter('publisher', ''),
-      update value $doc//meta[@name='status']/@content with request:get-parameter('status', ''),
-      update value $doc//meta[@name='dc.region']/@content with request:get-parameter('region', ''),
-      update value $doc//meta[@name='wr.wordcount']/@content with '',
-      update value $doc//meta[@name='dc.language']/@content with lang:lang2code(request:get-parameter('language', '')),
-      update value $doc//meta[@name='dc.region.city']/@content with request:get-parameter('city', ''),
-      
-      if(exists($doc//meta[@name='dc.source']/@content)) then
-        update value $doc//meta[@name='dc.source']/@content with request:get-parameter('source', '')
-      else
-        update insert <meta name='dc.source' content='{request:get-parameter('source', '')}'/> into $doc//head
-      ,
-      
-      
+    let $actions := (
       update value $doc//meta[@name='wd.translated']/@content with 'no',
       update delete $doc//div[@class='translation'],
       update delete $doc//div[@id='original']/node(),
       update insert $node//div/node() into $doc//div[@id='original'],
+      update delete $doc//@style,
       
       update delete collection:collection()//a[@class='similarity'][@data-document=$docId],
       update delete collection:collection()//link[@class='similarity'][@data-document=$docId]

@@ -17,11 +17,13 @@ CKEDITOR.editorConfig = function( config ) {
 
   CKEDITOR.stylesSet.add( 'my_styles', [
       // Block-level styles.
-      { name: 'heading', element: 'p', styles: { color: 'Blue' }, attributes: {class: 'heading'} },
-      { name: 'signature',  element: 'p', styles: { color: 'Red' }, attributes: {class: 'signature'}  }
+      { name: 'Heading', element: 'p', attributes: { 'class': 'heading' } },
+      { name: 'Signature',  element: 'p', attributes: { 'class': 'signature' }  }
   ]);
   config.stylesSet = 'my_styles';
-
+  config.allowedContent = true;
+  config.contentsCss = '../resources/css/edit.css';
+  
 	config.removeButtons = 'Subscript,Superscript,Scayt,Link,Unlink,Anchor,Image,Table,HorizontalRule,SpecialChar,Maximize,Strike,NumberedList,BulletedList,Indent,Outdent,Blockquote,About';
 	 
   config.extraPlugins = 'autogrow';	

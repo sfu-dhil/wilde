@@ -16,9 +16,13 @@
   }
 
   function window_unload(e) {
-    if (state === 'dirty') {
+    if (state !== 'clean') {
         return "This page contains unsaved changes.";
     }
+  }
+  
+  function message(text) {
+    $("#result").append("<p>" + text + "</p>");
   }
   
   function save_click(e) {
@@ -28,15 +32,7 @@
     }
     var formData = {
       docId: $('#doc-id').val(),
-      content: editor.getData(),
-      date: $('#date').val(),
-      publisher: $('#publisher').val(),
-      status: $('#status').val(),
-      region: $('#region').val(),
-      title: $('#title').val(),
-      language: $('#language').val(),
-      city: $("#city").val(),
-      source: $("#source").val()
+      content: editor.getData()
     };
 
     $.ajax({
@@ -45,27 +41,30 @@
       dataType: 'json',
       data: formData,
       
-      complete: function(xhr, status) {
-        // $("#result").append('<p>complete: ' + status + '</p>');
-      },
       success: function(data, status, xhr) {
-        $("#result").append('<p>' + data.result + '</p>');
+        state = 'clean';
+        message("Changes saved.");
       },
       error: function(xhr, status, error) {
-        $("#result").append('<p>' + error + '</p>');
+        message("Failed to save changes. " + error);
       }
     });
+  }
+  
+  function cancel_click(e) {
+    e.preventDefault();
+    window.history.go(-1);
   }
 
   function init() {
   
     editor = CKEDITOR.replace('editor', {
-      customConfig: '../js/ckeditor-config.js' // relative to ckeditor.js
+      customConfig: '../../js/ckeditor-config.js' // relative to ckeditor.js
     });
     
     // check for unsaved changes
     state = 'clean';
-    // $(window).on("beforeunload", window_unload);
+    $(window).on("beforeunload", window_unload);
     $("#wilde-editor input").change(function(){state = 'dirty';});
     editor.on('change', function(){state = 'dirty';})
 
@@ -76,6 +75,8 @@
     
     // save button do the thing.
     $("#btn-save").click(save_click);
+    
+    $("#btn-cancel").click(cancel_click);
   }
   
   $(document).ready(init);
