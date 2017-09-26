@@ -38,12 +38,16 @@ else if (ends-with($exist:resource, ".html")) then
                 <set-attribute name="$exist:prefix" value="{$exist:prefix}"/>
                 <set-attribute name="$exist:controller" value="{$exist:controller}"/>
             </forward>
-        </view>
-    		<error-handler>
-    			<forward url="{$exist:controller}/../error-page.html" method="get"/>
-    			<forward url="{$exist:controller}/../modules/view.xql"/>
-    		</error-handler>
-      </dispatch>
+        </view> {
+        if(request:get-server-name() = 'localhost') then
+          ()
+        else
+      		<error-handler>
+      			<forward url="{$exist:controller}/error-page.html" method="get"/>
+      			<forward url="{$exist:controller}/modules/view.xql"/>
+      		</error-handler>    	
+      }
+    </dispatch>
     else
       <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
           <!-- This forwards the entry to the content page blog.html -->
@@ -54,11 +58,15 @@ else if (ends-with($exist:resource, ".html")) then
                   <set-attribute name="$exist:prefix" value="{$exist:prefix}"/>
                   <set-attribute name="$exist:controller" value="{$exist:controller}"/>
               </forward>
-          </view>
-          <error-handler>
-              <forward url="{$exist:controller}/../error-page.html" method="get"/>
-              <forward url="{$exist:controller}/../modules/view.xql"/>
-          </error-handler>
+          </view>{
+          if(request:get-server-name() = 'localhost') then
+            ()
+          else
+        		<error-handler>
+        			<forward url="{$exist:controller}/error-page.html" method="get"/>
+        			<forward url="{$exist:controller}/modules/view.xql"/>
+        		</error-handler>    	
+        }
       </dispatch>
         
 (: Resource paths starting with $shared are loaded from the shared-resources app :)

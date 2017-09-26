@@ -98,6 +98,7 @@ declare function admin:browse($node as node(), $model as map(*)) as node() {
                     <th>Region</th>
                     <th>Title</th>
                     <th>Indexed</th>
+                    <th>Translations</th>
                 </tr>
             </thead>
             <tbody>{
@@ -108,6 +109,7 @@ declare function admin:browse($node as node(), $model as map(*)) as node() {
                     <td>{document:region($document)}</td>
                     <td>{document:title($document)}</td>
                     <td>{document:indexed-document($document)}/{document:indexed-paragraph($document)}</td>
+                    <td>{document:count-translations($document)}</td>
                 </tr>
             }</tbody>
         </table>
