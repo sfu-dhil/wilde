@@ -294,6 +294,32 @@ declare function app:doc-language($node as node(), $model as map(*)) as xs:strin
     lang:code2lang(document:language($model('document')))
 };
 
+declare function app:doc-source($node as node(), $model as map(*)) as node()* {
+      for $source in document:source($model('document'))
+      return 
+        <dd> { $source } </dd>
+};
+
+declare function app:doc-source-url($node as node(), $model as map(*)) as node()* {
+      for $url in document:source-url($model('document'))
+      return 
+        <dd>
+          <a href="{ $url }"> {
+            analyze-string($url,'^https?://([^\/]*)')//fn:group[@nr=1] 
+          } </a> 
+        </dd>
+};
+
+declare function app:doc-facsimile($node as node(), $model as map(*)) as node()* {
+      for $url in document:facsimile($model('document'))
+      return 
+        <dd>
+          <a href="{ $url }"> {
+            analyze-string($url,'^https?://([^\/]*)')//fn:group[@nr=1] 
+          } </a> 
+        </dd>
+};
+
 declare function app:document-indexed($node as node(), $model as map(*)) as xs:string {
     document:indexed-document($model('document'))
 };
