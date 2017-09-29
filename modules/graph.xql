@@ -15,7 +15,9 @@ declare function graph:filename($node as node()) as xs:string {
 
 declare function graph:title($node as node()) as xs:string {
   let $filename := graph:filename($node)
-  return fn:substring-before($filename, '.gexf')
+  let $basename := fn:substring-before($filename, '.gexf')
+  let $decoded := util:unescape-uri($basename, 'utf-8')
+  return $decoded
 };
 
 declare function graph:description($node as node()) as xs:string {

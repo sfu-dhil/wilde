@@ -295,9 +295,9 @@ declare function app:doc-language($node as node(), $model as map(*)) as xs:strin
 };
 
 declare function app:doc-source($node as node(), $model as map(*)) as node()* {
-      for $source in document:source($model('document'))
-      return 
-        <dd> { $source } </dd>
+  for $source in document:source($model('document'))
+  return 
+    <dd> { $source } </dd>
 };
 
 declare function app:doc-source-url($node as node(), $model as map(*)) as node()* {
@@ -607,7 +607,7 @@ declare function app:statistics($node as node(), $model as map(*)) {
 };
 
 declare function app:graph-list($node as node(), $model as map(*)) as node() {
-  <dl class='dl-horizontal'>{
+  <dl>{
     for $graph in collection:graph-list()
     return (
       <dt>{graph:title($graph)}</dt>,

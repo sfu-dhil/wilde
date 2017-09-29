@@ -9,6 +9,8 @@ import module namespace config="http://nines.ca/exist/wilde/config" at "config.x
 import module namespace functx='http://www.functx.com';
 import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
 
+import module namespace console="http://exist-db.org/xquery/console";
+
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
@@ -29,9 +31,9 @@ declare function collection:metadata() as node()* {
 };
 
 declare function collection:graph($filename as xs:string) as node() {
-  if(not(matches($filename, '^[a-zA-Z0-9 .-]*$'))) then
+  if(not(matches($filename, '^[a-zA-Z0-9% .-]*$'))) then
     ()
-   else
+  else
     let $path := $config:graphs-root || '/' || $filename
     return 
       if(doc-available($path)) then
@@ -43,8 +45,15 @@ declare function collection:graph($filename as xs:string) as node() {
 declare function collection:graph-list() as node()* {
     let $collection := collection($config:graphs-root)
     return 
-        for $doc in $collection
-        order by util:document-name($doc)
+        for $doc in $collection  
+        let $uri := xs:anyURI($config:graphs-root || util:document-name($doc))
+        let $null := 
+          if('application/xml' != xmldb:get-mime-type($uri)) then
+            xmldb:set-mime-type($uri, 'application/xml')
+          else
+            ()          
+        where fn:ends-with(util:document-name($doc), '.gexf')
+        order by util:document-name($doc)        
         return $doc
 };
 

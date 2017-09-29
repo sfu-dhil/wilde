@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
-    <div class="row">
-        <div class="page-header">
-            <h1>Wilde Trials Press Reports</h1>
-            <p>The collection contains <span data-template="app:count-documents"/> documents.</p>
-        </div>
+<div data-template="templates:surround" data-template-at="content"
+  data-template-with="templates/page.html" xmlns="http://www.w3.org/1999/xhtml">
+  <div class="row">
+    <div class="page-header">
+      <h1>Wilde Trials International News Archive</h1>
+      <p>The complete list of news reports on Wilde’s trials is below. Each
+        column provides basic metadata about an individual report. The Matches
+        column displays, for each report, the number of matching reports and the
+        number of matching paragraphs found across the entire collection. To
+        open any report, click on its date.</p>
+      
+      <p>You can also browse the entire collection of reports by <a
+        href="date.html">date</a>, <a href="newspaper.html">newspaper</a>, <a
+          href="region.html">region</a>, or <a href="language.html">language</a>.</p>      
     </div>
-    <div class="row">
-      <p>The complete list of reports is below. The Matches column displays the number of matching reports and the 
-        number of matching paragraphs found across the entire collection.</p>
-        <div data-template="app:browse"/>
-    </div>
-    <script type="text/javascript" src="resources/lib/tablesorter/jquery.tablesorter.min.js"/>
-    <script>
-        $(document).ready(function(){
-            $("#tbl-browser").tablesorter();
-        });
-    </script>
+  </div>
+  <div class="row">
+    <div data-template="app:browse" />
+  </div>
+  <script src="resources/lib/tablesorter/jquery.tablesorter.min.js"
+    type="text/javascript" />
+  <script> $(document).ready(function(){ $("#tbl-browser").tablesorter(); });
+  </script>
 </div>
