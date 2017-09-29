@@ -9,8 +9,6 @@ import module namespace config="http://nines.ca/exist/wilde/config" at "config.x
 import module namespace functx='http://www.functx.com';
 import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
 
-import module namespace console="http://exist-db.org/xquery/console";
-
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
