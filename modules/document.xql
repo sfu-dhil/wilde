@@ -83,18 +83,11 @@ declare function document:city($node as node()) as xs:string {
 };
 
 declare function document:source($node as node()) as xs:string* {
-  for $source in root($node)//meta[@name='dc.source']/@content
-  let $content := string($source)
-  where(not(starts-with($content, 'http')))
-  order by $content
-  return $content
+  root($node)//meta[@name='dc.source']/@content/string()
 };
 
 declare function document:source-url($node as node()) as xs:string* {
-  for $source in root($node)//meta[@name='dc.source.url']/@content
-  let $content := string($source)
-  order by $content
-  return $content
+  root($node)//meta[@name='dc.source.url']/@content
 };
 
 declare function document:facsimile($node as node()) as xs:string* {

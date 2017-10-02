@@ -12,13 +12,19 @@
         </div>
       </div>
       <div class="row">
-        <form method="post" id="wilde-editor">
+        <form method="post" id="wilde-metadata">
             <span data-template="admin:id-input"/>
               <div class="row">
                   <div class="col-sm-8">
-                      <div id="editor" contenteditable="true">
-                          <div data-template="admin:doc-content"/>
-                      </div>
+
+                    <span data-template="admin:date-input"></span>
+                    <span data-template="admin:publisher-input"></span>
+                    <span data-template="admin:status-input"></span>
+                    <span data-template="admin:region-input"></span>
+                    <span data-template="admin:language-input"></span>
+                    <span data-template="admin:city-input"></span>
+                    <span data-template="admin:source-input"></span>
+                    
                       <div id="result">
                         Result
                       </div>
@@ -28,7 +34,7 @@
                           <div class="panel-heading">Controls</div>
                           <div class="panel-body">
                               <button type="submit" class="btn btn-primary" id='btn-save'>Save</button>
-                            <button class="btn btn-danger pull-right" id='btn-cancel'>Cancel</button>
+                              <button class="btn btn-danger pull-right" id='btn-cancel'>Cancel</button>
                           </div>
                       </div>
                   </div>
@@ -36,10 +42,6 @@
           </form>
       </div>
     </div>
-    <script type="text/javascript">
-      var CKEDITOR_BASEPATH = '../resources/lib/ckeditor/';
-    </script>
-    <script type="text/javascript" src="../resources/lib/ckeditor/ckeditor.js"/>
-    <script type="text/javascript" src="../resources/js/ckeditor-config.js"/>
-    <script type="text/javascript" src="../resources/js/edit.js"/>
+  <script type="text/javascript" src="../resources/lib/typeahead.js/dist/typeahead.bundle.min.js"/>
+  <script type="text/javascript" src="../resources/js/meta.js"/>
 </div>

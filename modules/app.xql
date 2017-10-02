@@ -156,6 +156,30 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
         } </ul>
 };
 
+declare function app:browse-source($node as node(), $model as map(*)) as node() {
+  let $collection := collection:documents()
+  let $source := request:get-parameter('source', false())
+  return
+    if($source) then
+      let $docs := collection:documents('dc.source', $source)
+      return <ul> {
+        for $document in $docs
+        order by document:title($document)
+        return <li>{app:link-view(document:id($document), document:title($document))}</li>
+      } </ul>
+    else
+      let $sources := $collection//xhtml:meta[@name="dc.source"]/@content
+      return
+        <ul> {
+          for $source in distinct-values($sources)
+          let $count := local:count($sources, $source)
+          order by $source
+          return <li>
+              <a href="?source={$source}">{$source}</a>: {$count}
+            </li>
+        } </ul>
+};
+
 declare function app:browse-region($node as node(), $model as map(*)) as node() {
   let $collection := collection:documents()
   let $region := request:get-parameter('region', false())
@@ -304,7 +328,7 @@ declare function app:doc-source-url($node as node(), $model as map(*)) as node()
       for $url in document:source-url($model('document'))
       return 
         <dd>
-          <a href="{ $url }"> {
+          <a href="{ $url }" target="_blank"> {
             analyze-string($url,'^https?://([^\/]*)')//fn:group[@nr=1] 
           } </a> 
         </dd>
@@ -314,7 +338,7 @@ declare function app:doc-facsimile($node as node(), $model as map(*)) as node()*
       for $url in document:facsimile($model('document'))
       return 
         <dd>
-          <a href="{ $url }"> {
+          <a href="{ $url }" target="_blank"> {
             analyze-string($url,'^https?://([^\/]*)')//fn:group[@nr=1] 
           } </a> 
         </dd>
