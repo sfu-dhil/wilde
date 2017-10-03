@@ -318,10 +318,8 @@ declare function app:doc-language($node as node(), $model as map(*)) as xs:strin
     lang:code2lang(document:language($model('document')))
 };
 
-declare function app:doc-source($node as node(), $model as map(*)) as node()* {
-  for $source in document:source($model('document'))
-  return 
-    <dd> { $source } </dd>
+declare function app:doc-source($node as node(), $model as map(*)) as xs:string {
+  string-join(document:source($model('document')), ', ')
 };
 
 declare function app:doc-source-url($node as node(), $model as map(*)) as node()* {
