@@ -35,7 +35,7 @@ declare function tx:document($nodes as node()*) as node()* {
                 <strong class='match'> { tx:document($node/node()) } </strong>
 
             case element(a) return
-                if($node/@class = 'similarity') then
+                if(contains($node/@class, 'similarity')) then
                     let $document := collection:fetch($node/@data-document)
                     let $paragraph := $document//p[@id=$node/@data-paragraph]
                     return 

@@ -71,6 +71,14 @@ td.similar{
     font-weight: bold;
 }
 
+li.levenshtein {
+  font-weight: bold;
+}
+
+li.cosine {
+  font-style: italic;
+}
+
 tr.reference span.number{
     display: inline-block;
     padding-right: 20px;

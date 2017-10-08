@@ -298,13 +298,13 @@ declare function app:doc-translations($node as node(), $model as map(*)) as node
   return  
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="original">
-        { $doc//div[@id='original'] }
+        { tx:document($doc//div[@id='original']) }
       </div>
       { 
         for $lang in document:translations($model('document'))
         return   
         <div role="tabpanel" class="tab-pane" id="{$lang}">
-          { $doc//div[@lang=$lang] }
+          { tx:document($doc//div[@lang=$lang]) }
         </div>
       }
     </div>
@@ -359,7 +359,7 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
             <ul> {
                 for $link in $similarities
                 let $doc := collection:fetch($link/@href)
-                return <li>{app:link-view($link/@href, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
+                return <li class="{$link/@class}">{app:link-view($link/@href, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
             } </ul>
 };
 
@@ -372,7 +372,7 @@ declare function app:paragraph-similarities($node as node(), $model as map(*)) a
             <ul> {
                 for $link in $similarities
                 let $doc := collection:fetch($link/@data-document)
-                return <li>{app:link-view($link/@data-document, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
+                return <li class="{$link/@class}">{app:link-view($link/@data-document, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
             } </ul>
 };
 
