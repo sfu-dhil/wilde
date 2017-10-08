@@ -66,7 +66,7 @@ declare function export:matching-paragraphs() {
     
     let $documents := collection:documents()
     let $body := 
-        for $link in $documents//xhtml:a[@class='similarity']
+        for $link in $documents//xhtml:a[contains(@class, 'similarity')]
         let $target := collection:fetch($link/@data-document/string())
         order by document:date($link), document:date($target), $link/@data-similarity descending
         return
