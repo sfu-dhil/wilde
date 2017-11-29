@@ -77,6 +77,11 @@ declare function admin:link-edit($node as node(), $model as map(*)) as node() {
     return <a class='btn btn-primary' href="edit.html?f={document:id($document)}">Edit</a>
 };
 
+declare function admin:link-meta($node as node(), $model as map(*)) as node() {
+    let $document := $model('document')
+    return <a class='btn btn-primary' href="meta.html?f={document:id($document)}">Metadata</a>
+};
+
 declare function admin:link-save($node as node(), $model as map(*)) as node() {
     let $document := $model('document')
     return <a class='btn btn-primary' href="save.html?f={document:id($document)}">Save</a>
@@ -107,7 +112,7 @@ declare function admin:browse($node as node(), $model as map(*)) as node() {
                     <td>{admin:link-view(document:id($document), string(document:date($document)))}</td>
                     <td>{document:language($document)}</td>
                     <td>{document:region($document)}</td>
-                    <td>{document:title($document)}</td>
+                    <td>{document:publisher($document)}</td>
                     <td>{document:indexed-document($document)}/{document:indexed-paragraph($document)}</td>
                     <td>{document:count-translations($document)}</td>
                 </tr>
@@ -180,7 +185,8 @@ declare function admin:date-input($node as node(), $model as map(*)) {
   return
     <div class='form-group'>
       <label for='date'>Date Published</label>
-      <input type='date' class='form-control' name='date' id='date' value='{$date}' />
+      <input type='date' class='form-control' name='date' id='date' value='{$date}' min="1895-04-01" max="1895-06-30"/>
+      <p class="help-block">Enter the date formatted as YYYY-MM-DD.</p>
     </div>
 };
 
@@ -192,6 +198,7 @@ declare function admin:publisher-input($node as node(), $model as map(*)) {
     <div class='form-group'>
       <label for='publisher'>Publisher</label>
       <input type='text' class='form-control typeahead' name='publisher' id='publisher' value='{$publisher}' data-typeahead-url="../api/publishers"/>
+      <p class="help-block">Enter the name of the newspaper or the publisher.</p>
     </div>
 };
 
@@ -203,6 +210,7 @@ declare function admin:status-input($node as node(), $model as map(*)) {
   <div class='form-group'>
     <label for='status'>Status</label>
     <input type='text' class='form-control typeahead' name='status' id='status' value='{$status}' data-typeahead-url="../api/statuses" />
+    <p class="help-block">"draft" for reports in progress. "candidate" for works ready to translate and match.</p>
   </div>
 };
 declare function admin:region-input($node as node(), $model as map(*)) {
@@ -213,17 +221,7 @@ declare function admin:region-input($node as node(), $model as map(*)) {
   <div class='form-group'>
     <label for='region'>Region</label>
     <input type='text' class='form-control typeahead' name='region' id='region' value='{$region}' data-typeahead-url="../api/regions" />
-  </div>
-};
-
-declare function admin:title-input($node as node(), $model as map(*)) {
-  let $title :=
-    if($model('document')) then document:title($model('document')) else ''
-    
-  return
-  <div class='form-group'>
-    <label for='title'>Title</label>
-    <input type='text' class='form-control' name='title' id='title'  value='{$title}' />
+    <p class="help-block">"French" or "Spanish" or "American" - not the name of a country.</p>
   </div>
 };
 
@@ -234,7 +232,16 @@ declare function admin:language-input($node as node(), $model as map(*)) {
   return
   <div class='form-group'>
     <label for='language'>Language</label>
-    <input type='text' class='form-control typeahead' name='language' id='language'  value='{lang:code2lang($language)}' data-typeahead-url="../api/languages" />
+    <select class='form-control' name='language' id='language'> {
+      for $code in collection:languages()
+      order by lang:code2lang($code)
+      return 
+        <option value="{$code}">
+          { if($language = $code) then attribute selected {"selected"} else ()}
+          {lang:code2lang($code)}
+        </option>
+    } </select>
+    <p class="help-block">Select a language from the drop-down. Contact a programmer if you need to add one, although that programmer may cry.</p>
   </div>
 };
 
@@ -246,10 +253,37 @@ declare function admin:city-input($node as node(), $model as map(*)) {
   <div class='form-group'>
     <label for='city'>City</label>
     <input type='text' class='form-control typeahead' name='city' id='city'  value='{$city}' data-typeahead-url="../api/cities" />
+    <p class="help-block">Enter the name of the city where the report was published.</p>
   </div>
 };
 
 declare function admin:source-input($node as node(), $model as map(*)) {
+  let $sources :=
+    if($model('document')) then document:source($model('document')) else ('')
+    
+  return 
+    for $source in $sources
+    where not(starts-with($source, 'http'))
+    return
+      <div class='form-group'>
+        <label for='city'>Source</label>
+        <input type='text' class='form-control' name='source' id='source'  value='{$source}' />
+      </div>
+};
+
+declare function admin:source-url-input($node as node(), $model as map(*)) {
+  let $sources :=
+    if($model('document')) then document:source($model('document')) else ''
+    
+  return
+  for $source in $sources return
+    <div class='form-group'>
+      <label for='city'>Source</label>
+      <input type='url' class='form-control' name='source-url' id='source-url'  value='{$source}' />
+    </div>
+};
+
+declare function admin:facsimile-url-input($node as node(), $model as map(*)) {
   let $source :=
     if($model('document')) then document:source($model('document')) else ''
     

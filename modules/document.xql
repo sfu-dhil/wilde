@@ -70,7 +70,7 @@ declare function document:document-matches($node as node()) as node()* {
 };
 
 declare function document:paragraph-matches($node as node()) as node()* {
-    root($node)//a[@class='similarity']
+    root($node)//div[@id='original']//a[contains(@class, 'similarity')]
 };
 
 declare function document:city($node as node()) as xs:string {
@@ -83,18 +83,11 @@ declare function document:city($node as node()) as xs:string {
 };
 
 declare function document:source($node as node()) as xs:string* {
-  for $source in root($node)//meta[@name='dc.source']/@content
-  let $content := string($source)
-  where(not(starts-with($content, 'http')))
-  order by $content
-  return $content
+  root($node)//meta[@name='dc.source']/@content/string()
 };
 
 declare function document:source-url($node as node()) as xs:string* {
-  for $source in root($node)//meta[@name='dc.source.url']/@content
-  let $content := string($source)
-  order by $content
-  return $content
+  root($node)//meta[@name='dc.source.url']/@content
 };
 
 declare function document:facsimile($node as node()) as xs:string* {
@@ -130,12 +123,7 @@ declare function document:modified($node as node()) as xs:dateTime {
 };
 
 declare function document:indexed-document($node as node()) as xs:string* {
-    let $c := root($node)//meta[@name="index.document"]/@content
-    return
-        if($c = 'true') then
-            'Yes'
-        else
-            'No'
+    root($node)//meta[@name="index.document"]/@content
 };
 
 declare function document:similar-documents($node as node()) as node()* {
@@ -145,16 +133,11 @@ declare function document:similar-documents($node as node()) as node()* {
 };
 
 declare function document:indexed-paragraph($node as node()) as xs:string* {
-    let $c := root($node)//meta[@name="index.paragraph"]/@content
-    return
-        if($c = 'true') then
-            'Yes'
-        else
-            'No'
+    root($node)//meta[@name="index.paragraph"]/@content
 };
 
 declare function document:similar-paragraphs($node as node()) as node()* {
-    for $node in root($node)//a[@class='similarity']
+    for $node in root($node)//div[@id='original']//a[contains(@class, 'similarity')]
     order by $node/@data-similarity descending
     return $node
 };

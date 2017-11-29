@@ -156,6 +156,30 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
         } </ul>
 };
 
+declare function app:browse-source($node as node(), $model as map(*)) as node() {
+  let $collection := collection:documents()
+  let $source := request:get-parameter('source', false())
+  return
+    if($source) then
+      let $docs := collection:documents('dc.source', $source)
+      return <ul> {
+        for $document in $docs
+        order by document:title($document)
+        return <li>{app:link-view(document:id($document), document:title($document))}</li>
+      } </ul>
+    else
+      let $sources := $collection//xhtml:meta[@name="dc.source"]/@content
+      return
+        <ul> {
+          for $source in distinct-values($sources)
+          let $count := local:count($sources, $source)
+          order by $source
+          return <li>
+              <a href="?source={$source}">{$source}</a>: {$count}
+            </li>
+        } </ul>
+};
+
 declare function app:browse-region($node as node(), $model as map(*)) as node() {
   let $collection := collection:documents()
   let $region := request:get-parameter('region', false())
@@ -274,13 +298,13 @@ declare function app:doc-translations($node as node(), $model as map(*)) as node
   return  
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="original">
-        { $doc//div[@id='original'] }
+        { tx:document($doc//div[@id='original']) }
       </div>
       { 
         for $lang in document:translations($model('document'))
         return   
         <div role="tabpanel" class="tab-pane" id="{$lang}">
-          { $doc//div[@lang=$lang] }
+          { tx:document($doc//div[@lang=$lang]) }
         </div>
       }
     </div>
@@ -294,17 +318,15 @@ declare function app:doc-language($node as node(), $model as map(*)) as xs:strin
     lang:code2lang(document:language($model('document')))
 };
 
-declare function app:doc-source($node as node(), $model as map(*)) as node()* {
-  for $source in document:source($model('document'))
-  return 
-    <dd> { $source } </dd>
+declare function app:doc-source($node as node(), $model as map(*)) as xs:string {
+  string-join(document:source($model('document')), ', ')
 };
 
 declare function app:doc-source-url($node as node(), $model as map(*)) as node()* {
       for $url in document:source-url($model('document'))
       return 
         <dd>
-          <a href="{ $url }"> {
+          <a href="{ $url }" target="_blank"> {
             analyze-string($url,'^https?://([^\/]*)')//fn:group[@nr=1] 
           } </a> 
         </dd>
@@ -314,7 +336,7 @@ declare function app:doc-facsimile($node as node(), $model as map(*)) as node()*
       for $url in document:facsimile($model('document'))
       return 
         <dd>
-          <a href="{ $url }"> {
+          <a href="{ $url }" target="_blank"> {
             analyze-string($url,'^https?://([^\/]*)')//fn:group[@nr=1] 
           } </a> 
         </dd>
@@ -337,7 +359,7 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
             <ul> {
                 for $link in $similarities
                 let $doc := collection:fetch($link/@href)
-                return <li>{app:link-view($link/@href, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
+                return <li class="{$link/@class}">{app:link-view($link/@href, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
             } </ul>
 };
 
@@ -350,7 +372,7 @@ declare function app:paragraph-similarities($node as node(), $model as map(*)) a
             <ul> {
                 for $link in $similarities
                 let $doc := collection:fetch($link/@data-document)
-                return <li>{app:link-view($link/@data-document, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
+                return <li class="{$link/@class}">{app:link-view($link/@data-document, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
             } </ul>
 };
 
