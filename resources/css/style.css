@@ -131,6 +131,14 @@ figcaption {
     font-style: italic;  
 }
 
+/* cross headers */
+span.cross-head {
+    display: block;
+    text-transform: uppercase;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 /* Sticky footer styles */
 html {
   position: relative;

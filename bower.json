@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "jquery": "jquery#^1.12.4",
-    "bootstrap": "boostrap#^3.3.7",
+    "bootstrap": "bootstrap#^3.3.7",
     "ckeditor": "^4.5.11",
     "js-cookie": "js-cookie/js-cookie#^2.1.3",
     "google-diff-match-patch-js": "^1.0.0",
@@ -28,6 +28,7 @@
     "js-url": "^2.3.1",
     "vis": "^4.17.0",
     "typeahead.js": "^0.11.1",
-    "gexf-js": "git@github.com:ubermichael/gexf-js"
+    "gexf-js": "git@github.com:ubermichael/gexf-js",
+    "bootswatch": "bootswatch#3.3.7"
   }
 }

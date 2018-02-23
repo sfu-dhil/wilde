@@ -448,6 +448,7 @@ declare function local:find-similar($measure as xs:string, $p as node()+, $q as 
     let $matches := 
         for $t in $p 
             let $score := similarity:similarity($measure, $t, $q)
+            where $score > 0
             order by $score descending
             return <div data-similarity="{$score}">{$t}</div>
     return $matches[1]
@@ -460,8 +461,10 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
     let $da := collection:fetch($a)
     let $db := collection:fetch($b)
     
-    let $pa := $da//p
-    let $pb := $db//p
+    let $lang := $da//div[@id='original']/@lang
+    
+    let $pa := $da//p[not(@class='heading')]
+    let $pb := $db//div[@lang=$lang]//p[not(@class='heading')]
     
     return 
       <div>
@@ -481,7 +484,9 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
                 return  
                   <div class='row paragraph-compare' data-score="{format-number($q/@data-similarity, "###.#%")}%">
                     <div class='col-sm-4 paragraph-a'>{string($other)}</div>
-                    <div class='col-sm-4 paragraph-b'>{string($q)}</div>
+                    <div class='col-sm-4 paragraph-b'> {
+                      if($q) then string($q) else ''
+                    } </div>
                     <div class='col-sm-4 paragraph-d'> </div>
                 </div>
             }
