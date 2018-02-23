@@ -158,24 +158,25 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
 
 declare function app:browse-source($node as node(), $model as map(*)) as node() {
   let $collection := collection:documents()
-  let $source := request:get-parameter('source', false())
+  let $region := request:get-parameter('region', false())
   return
-    if($source) then
-      let $docs := collection:documents('dc.source', $source)
+    if($region) then
+      let $docs := collection:documents('dc.region', $region)
       return <ul> {
         for $document in $docs
         order by document:title($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
-    else
-      let $sources := $collection//xhtml:meta[@name="dc.source"]/@content
+    else      
+      let $regions := $collection//xhtml:meta[@name="dc.region"]/@content
       return
         <ul> {
-          for $source in distinct-values($sources)
-          let $count := local:count($sources, $source)
-          order by $source
-          return <li>
-              <a href="?source={$source}">{$source}</a>: {$count}
+          for $region in distinct-values($regions)
+          let $count := local:count($regions, $region)
+          order by $region
+          return <li data-region="{$region}" data-count="{$count}">
+              <a href="?region={$region}">{$region}</a>: 
+              {$count}
             </li>
         } </ul>
 };
