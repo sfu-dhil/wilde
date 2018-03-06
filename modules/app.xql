@@ -158,24 +158,24 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
 
 declare function app:browse-source($node as node(), $model as map(*)) as node() {
   let $collection := collection:documents()
-  let $region := request:get-parameter('region', false())
+  let $source := request:get-parameter('source', false())
   return
-    if($region) then
-      let $docs := collection:documents('dc.region', $region)
+    if($source) then
+      let $docs := collection:documents('dc.source', $source)
       return <ul> {
         for $document in $docs
         order by document:title($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
     else      
-      let $regions := $collection//xhtml:meta[@name="dc.region"]/@content
+      let $sources := $collection//xhtml:meta[@name="dc.source"]/@content
       return
         <ul> {
-          for $region in distinct-values($regions)
-          let $count := local:count($regions, $region)
-          order by $region
-          return <li data-region="{$region}" data-count="{$count}">
-              <a href="?region={$region}">{$region}</a>: 
+          for $source in distinct-values($sources)
+          let $count := local:count($sources, $source)
+          order by $source
+          return <li data-source="{$source}" data-count="{$count}">
+              <a href="?source={$source}">{$source}</a>: 
               {$count}
             </li>
         } </ul>
@@ -392,7 +392,11 @@ declare function app:search-summary($node as node(), $model as map(*)) {
     if(empty($model('query')) or $model('query') = '') then
         ()
     else
-        <p>Found {count($model('hits'))} for search query <kbd>{$model('query')}</kbd>.</p>
+        <p>
+          Found {count($model('hits'))} for search 
+          query <kbd>{$model('query')}</kbd>. 
+          <a href="export/search?query={$model('query')}" class='btn btn-default pull-right'>Export Results</a>
+        </p>
 };
 
 declare function app:search-paginate($node as node(), $model as map(*)) {
@@ -464,7 +468,7 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
     
     let $lang := $da//div[@id='original']/@lang
     
-    let $pa := $da//p[not(@class='heading')]
+    let $pa := $da//div[@id='original']//p[not(@class='heading')]
     let $pb := $db//div[@lang=$lang]//p[not(@class='heading')]
     
     return 

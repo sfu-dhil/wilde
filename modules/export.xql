@@ -1,5 +1,7 @@
 xquery version "3.0";
 
+declare default element namespace "http://www.w3.org/1999/xhtml";
+
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare namespace export="http://nines.ca/exist/wilde/export";
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
@@ -9,9 +11,42 @@ declare option output:method "text";
 declare option output:media-type "text/csv";
 
 import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
+import module namespace kwic="http://exist-db.org/xquery/kwic";
 import module namespace collection="http://nines.ca/exist/wilde/collection" at "collection.xql";
 import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
 import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql";
+
+declare function export:search() {
+    let $query := request:get-parameter('query', '')
+    let $page := request:get-parameter('p', 1)
+    let $hits := collection:search($query)
+
+    let $headers := (     
+      <row>
+          <item>ID</item>
+          <item>Title</item>
+          <item>Result</item>
+        </row>,
+        <row>
+          <item>Found {count($hits)} results for search query {$query}.</item>
+        </row>
+    )
+    
+    let $body := for $hit in $hits
+        let $did := document:id($hit)
+        let $title := document:title($hit)
+        let $config := <config xmlns='' width="60" table="no" />
+        let $kwic := kwic:summarize($hit, $config)
+        for $node in $kwic
+            return
+                <row>
+                    <item>{$did}</item>
+                    <item>{$title}</item>
+                    <item>{$node//text()}</item>
+                </row>
+    
+    return ($headers, $body)
+};
 
 declare function export:volume() {
     let $headers := 

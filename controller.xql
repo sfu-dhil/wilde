@@ -38,15 +38,7 @@ else if (ends-with($exist:resource, ".html")) then
   <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
     <view>
         <forward url="{$exist:controller}/modules/view.xql"/>
-    </view> {
-      if(request:get-server-name() = 'localhost') then
-        ()
-      else
-    		<error-handler>
-    			<forward url="{$exist:controller}/error-page.html" method="get"/>
-    			<forward url="{$exist:controller}/modules/view.xql"/>
-    		</error-handler>    	
-    }
+    </view> 
   </dispatch>
   
 else if (ends-with($exist:resource, ".gexf")) then
