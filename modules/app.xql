@@ -156,26 +156,26 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
         } </ul>
 };
 
-declare function app:browse-source($node as node(), $model as map(*)) as node() {
+declare function app:browse-origin($node as node(), $model as map(*)) as node() {
   let $collection := collection:documents()
-  let $source := request:get-parameter('source', false())
+  let $origin := request:get-parameter('origin', false())
   return
-    if($source) then
-      let $docs := collection:documents('dc.source', $source)
+    if($origin) then
+      let $docs := collection:documents('dc.source', $origin)
       return <ul> {
         for $document in $docs
-        order by document:title($document)
+        order by document:publisher($document), document:date($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
     else      
-      let $sources := $collection//xhtml:meta[@name="dc.source"]/@content
+      let $origins := $collection//xhtml:meta[@name="dc.source"]/@content
       return
         <ul> {
-          for $source in distinct-values($sources)
-          let $count := local:count($sources, $source)
-          order by $source
-          return <li data-source="{$source}" data-count="{$count}">
-              <a href="?source={$source}">{$source}</a>: 
+          for $origin in distinct-values($origins)
+          let $count := local:count($origins, $origin)
+          order by $origin
+          return <li data-source="{$origin}" data-count="{$count}">
+              <a href="?origin={$origin}">{$origin}</a>: 
               {$count}
             </li>
         } </ul>
