@@ -21,7 +21,12 @@ declare function document:apply-paragraph-ids($node as node()) {
 };
 
 declare function document:title($node as node() ) as xs:string {
-    string(root($node)//title)
+    let $title := normalize-space(root($node)//title/string())
+    return 
+    if(string-length($title) gt 1) then
+        $title
+    else
+        "(unknown title)" 
 };
 
 declare function document:subtitle($node as node()) as xs:string {
@@ -123,7 +128,8 @@ declare function document:modified($node as node()) as xs:dateTime {
 };
 
 declare function document:indexed-document($node as node()) as xs:string* {
-    root($node)//meta[@name="index.document"]/@content
+  let $node := root($node)//meta[@name="index.document"]
+  return if($node) then $node/@content else "No"
 };
 
 declare function document:similar-documents($node as node()) as node()* {
@@ -133,7 +139,8 @@ declare function document:similar-documents($node as node()) as node()* {
 };
 
 declare function document:indexed-paragraph($node as node()) as xs:string* {
-    root($node)//meta[@name="index.paragraph"]/@content
+  let $node := root($node)//meta[@name="index.paragraph"]
+  return if($node) then $node/@content else "No"
 };
 
 declare function document:similar-paragraphs($node as node()) as node()* {
