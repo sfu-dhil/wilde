@@ -107,24 +107,31 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
     else    
-      let $metadata := collection:metadata()
       let $publishers := $collection//xhtml:meta[@name="dc.publisher"]/@content
       return       
         <table class='table table-striped table-hover table-condensed' id="tbl-browser">
             <thead>
                 <tr>
-                    <th>Newspaper</th><th>Region</th><th>City</th><th>Language</th><th>Count</th>
+                   <th>Newspaper</th>
+                   <th>Region</th>
+                   <th>City</th>
+                   <th>Language</th>
+                   <th>Count</th>
                 </tr>
             </thead>
             <tbody>{
               for $publisher in distinct-values($publishers)
-              let $meta := $metadata//wilde:newspaper[@title=$publisher]
               order by $publisher
                 return <tr>
                     <td><a href="?publisher={$publisher}">{$publisher}</a></td>
-                    <td>{ $meta/@region/string() }</td>
-                    <td>{ $meta/@city/string() }</td>
-                    <td>{ lang:code2lang($meta/@language/string()) }</td>
+                    <td>{ collection:regions($publisher) }</td>
+                    <td>{ collection:cities($publisher) }</td>
+                    <td>{ 
+                      for $code in collection:languages($publisher)
+                      let $name := lang:code2lang($code)
+                      order by $name
+                      return $name
+                    }</td>
                     <td>{local:count($publishers, $publisher)}</td>
                 </tr>
             }</tbody>
