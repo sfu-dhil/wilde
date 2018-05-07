@@ -165,27 +165,64 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
 
 declare function app:browse-origin($node as node(), $model as map(*)) as node() {
   let $collection := collection:documents()
-  let $origin := request:get-parameter('origin', false())
+  let $name := request:get-parameter('name', 'dc.source')
+  let $origin := request:get-parameter('origin', 'none')
   return
-    if($origin) then
-      let $docs := collection:documents('dc.source', $origin)
+    if($origin ne 'none') then
+      let $docs := collection:documents($name, $origin)
       return <ul> {
         for $document in $docs
         order by document:publisher($document), document:date($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
     else      
-      let $origins := $collection//xhtml:meta[@name="dc.source"]/@content
-      return
-        <ul> {
-          for $origin in distinct-values($origins)
-          let $count := local:count($origins, $origin)
-          order by $origin
-          return <li data-source="{$origin}" data-count="{$count}">
-              <a href="?origin={$origin}">{$origin}</a>: 
-              {$count}
-            </li>
-        } </ul>
+      <div class='row'>
+        <div class='col-sm-4'>
+          <h3>Source</h3>
+          <ul> {
+            let $origins := $collection//xhtml:meta[@name="dc.source"]/@content
+            for $origin in distinct-values($origins)
+            let $count := local:count($origins, $origin)
+            order by $origin
+            return <li data-source="{$origin}">
+                <a href="?origin={$origin}&amp;name=dc.source">{
+                  if(string-length($origin) gt 1) then $origin else '(unknown)' 
+                }</a>: 
+                {$count}
+              </li>
+          } </ul>
+          </div>
+          <div class='col-sm-4'>
+            <h3>Source Database</h3>
+          <ul> {
+            let $origins := $collection//xhtml:meta[@name="dc.source.database"]/@content
+            for $origin in distinct-values($origins)
+            let $count := local:count($origins, $origin)
+            order by $origin
+            return <li data-source="{$origin}">
+                <a href="?origin={$origin}&amp;name=dc.source.database">{
+                  if(string-length($origin) gt 1) then $origin else '(unknown)' 
+                }</a>: 
+                {$count}
+              </li>
+          } </ul>
+          </div>
+          <div class='col-sm-4'>
+            <h3>Source Institution</h3>
+          <ul> {
+            let $origins := $collection//xhtml:meta[@name="dc.source.institution"]/@content
+            for $origin in distinct-values($origins)
+            let $count := local:count($origins, $origin)
+            order by $origin
+            return <li data-source="{$origin}">
+                <a href="?origin={$origin}&amp;name=dc.source.institution">{
+                  if(string-length($origin) gt 1) then $origin else '(unknown)' 
+                }</a>: 
+                {$count}
+              </li>
+          } </ul>
+          </div>
+      </div>
 };
 
 declare function app:browse-region($node as node(), $model as map(*)) as node() {
