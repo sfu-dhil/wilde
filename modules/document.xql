@@ -66,6 +66,10 @@ declare function document:publisher($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.publisher']/@content)
 };
 
+declare function document:edition($node as node()) as xs:string {
+    string(root($node)//meta[@name='dc.publisher.edition']/@content)
+};
+
 declare function document:region($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.region']/@content)
 };
@@ -91,8 +95,16 @@ declare function document:source($node as node()) as xs:string* {
   root($node)//meta[@name='dc.source']/@content/string()
 };
 
+declare function document:source-institution($node as node()) as xs:string* {
+  root($node)//meta[@name='dc.source.institution']/@content/string()
+};
+
 declare function document:source-url($node as node()) as xs:string* {
   root($node)//meta[@name='dc.source.url']/@content
+};
+
+declare function document:source-database($node as node()) as xs:string* {
+  root($node)//meta[@name='dc.source.database']/@content
 };
 
 declare function document:facsimile($node as node()) as xs:string* {

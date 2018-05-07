@@ -309,6 +309,10 @@ declare function app:doc-publisher($node as node(), $model as map(*)) as xs:stri
     document:publisher($model('document'))
 };
 
+declare function app:doc-edition($node as node(), $model as map(*)) as xs:string {
+  document:edition($model('document'))
+};
+
 declare function app:doc-region($node as node(), $model as map(*)) as xs:string {
     document:region($model('document'))
 };
@@ -363,18 +367,30 @@ declare function app:doc-language($node as node(), $model as map(*)) as xs:strin
     lang:code2lang(document:language($model('document')))
 };
 
-declare function app:doc-source($node as node(), $model as map(*)) as xs:string {
-  string-join(document:source($model('document')), ', ')
-};
+(:
+* British Library (dc.source.institution if present)
+* British Library Newspapers (dc.source.database if present)
+* explore.bl.uk (the name part of dc.source.url, if present. Linked to the complete URL. May be repeated.)
+:)
 
-declare function app:doc-source-url($node as node(), $model as map(*)) as node()* {
-      for $url in document:source-url($model('document'))
+declare function app:doc-source($node as node(), $model as map(*)) as node()* {
+  (
+    for $institution in document:source-institution($model('document')) 
+    return <dd>{$institution}</dd>
+  ),
+  (
+    for $database in document:source-database($model('document'))
+    return <dd>{$database}</dd>
+  ), 
+  (
+    for $url in document:source-url($model('document'))
       return 
         <dd>
           <a href="{ $url }" target="_blank"> {
             analyze-string($url,'^https?://([^\/]*)')//fn:group[@nr=1] 
           } </a> 
         </dd>
+  )
 };
 
 declare function app:doc-facsimile($node as node(), $model as map(*)) as node()* {
@@ -386,6 +402,7 @@ declare function app:doc-facsimile($node as node(), $model as map(*)) as node()*
           } </a> 
         </dd>
 };
+
 
 declare function app:document-indexed($node as node(), $model as map(*)) as xs:string {
     document:indexed-document($model('document'))
