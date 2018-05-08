@@ -177,22 +177,7 @@ declare function app:browse-origin($node as node(), $model as map(*)) as node() 
       } </ul>
     else      
       <div class='row'>
-        <div class='col-sm-4'>
-          <h3>Source</h3>
-          <ul> {
-            let $origins := $collection//xhtml:meta[@name="dc.source"]/@content
-            for $origin in distinct-values($origins)
-            let $count := local:count($origins, $origin)
-            order by $origin
-            return <li data-source="{$origin}">
-                <a href="?origin={$origin}&amp;name=dc.source">{
-                  if(string-length($origin) gt 1) then $origin else '(unknown)' 
-                }</a>: 
-                {$count}
-              </li>
-          } </ul>
-          </div>
-          <div class='col-sm-4'>
+          <div class='col-sm-6'>
             <h3>Source Database</h3>
           <ul> {
             let $origins := $collection//xhtml:meta[@name="dc.source.database"]/@content
@@ -207,7 +192,7 @@ declare function app:browse-origin($node as node(), $model as map(*)) as node() 
               </li>
           } </ul>
           </div>
-          <div class='col-sm-4'>
+          <div class='col-sm-6'>
             <h3>Source Institution</h3>
           <ul> {
             let $origins := $collection//xhtml:meta[@name="dc.source.institution"]/@content
@@ -310,7 +295,8 @@ declare function app:doc-publisher($node as node(), $model as map(*)) as xs:stri
 };
 
 declare function app:doc-edition($node as node(), $model as map(*)) as xs:string {
-  document:edition($model('document'))
+  let $edition := document:edition($model('document'))
+  return if(string-length($edition) gt 0) then " - " || document:edition($model('document')) else ""
 };
 
 declare function app:doc-region($node as node(), $model as map(*)) as xs:string {
