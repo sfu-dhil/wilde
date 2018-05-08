@@ -2,7 +2,7 @@
 <package xmlns="http://expath.org/ns/pkg"
          name="http://nines.ca/exist/wilde"
          abbrev="wilde"
-         version="0.9.9"
+         version="0.9.10"
          spec="1.0">
     <title>Wilde Trials Press Reports</title>
     <dependency package="http://exist-db.org/apps/shared"/>
