@@ -21,12 +21,6 @@ declare namespace array="http://www.w3.org/2005/xpath-functions/array";
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
-declare function app:code2lang($code) {
-  switch($code) 
-    case 'en' return 'English'
-    default return 'Unknown ' || $code
-};
-
 declare function app:link-view($id as xs:string, $content) as node() {
     <a href="view.html?f={$id}">{$content}</a>
 };
@@ -127,10 +121,7 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
                     <td>{ collection:regions($publisher) }</td>
                     <td>{ collection:cities($publisher) }</td>
                     <td>{ 
-                      for $code in collection:languages($publisher)
-                      let $name := lang:code2lang($code)
-                      order by $name
-                      return $name
+                      string-join(lang:code2lang(collection:languages($publisher)), ', ')
                     }</td>
                     <td>{local:count($publishers, $publisher)}</td>
                 </tr>
