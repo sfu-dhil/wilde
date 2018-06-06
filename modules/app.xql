@@ -21,12 +21,6 @@ declare namespace array="http://www.w3.org/2005/xpath-functions/array";
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
-declare function app:code2lang($code) {
-  switch($code) 
-    case 'en' return 'English'
-    default return 'Unknown ' || $code
-};
-
 declare function app:link-view($id as xs:string, $content) as node() {
     <a href="view.html?f={$id}">{$content}</a>
 };
@@ -107,24 +101,28 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
     else    
-      let $metadata := collection:metadata()
       let $publishers := $collection//xhtml:meta[@name="dc.publisher"]/@content
       return       
         <table class='table table-striped table-hover table-condensed' id="tbl-browser">
             <thead>
                 <tr>
-                    <th>Newspaper</th><th>Region</th><th>City</th><th>Language</th><th>Count</th>
+                   <th>Newspaper</th>
+                   <th>Region</th>
+                   <th>City</th>
+                   <th>Language</th>
+                   <th>Count</th>
                 </tr>
             </thead>
             <tbody>{
               for $publisher in distinct-values($publishers)
-              let $meta := $metadata//wilde:newspaper[@title=$publisher]
               order by $publisher
                 return <tr>
                     <td><a href="?publisher={$publisher}">{$publisher}</a></td>
-                    <td>{ $meta/@region/string() }</td>
-                    <td>{ $meta/@city/string() }</td>
-                    <td>{ lang:code2lang($meta/@language/string()) }</td>
+                    <td>{ collection:regions($publisher) }</td>
+                    <td>{ collection:cities($publisher) }</td>
+                    <td>{ 
+                      string-join(lang:code2lang(collection:languages($publisher)), ', ')
+                    }</td>
                     <td>{local:count($publishers, $publisher)}</td>
                 </tr>
             }</tbody>
@@ -156,28 +154,51 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
         } </ul>
 };
 
-declare function app:browse-source($node as node(), $model as map(*)) as node() {
+declare function app:browse-origin($node as node(), $model as map(*)) as node() {
   let $collection := collection:documents()
-  let $source := request:get-parameter('source', false())
+  let $name := request:get-parameter('name', 'dc.source')
+  let $origin := request:get-parameter('origin', 'none')
   return
-    if($source) then
-      let $docs := collection:documents('dc.source', $source)
+    if($origin ne 'none') then
+      let $docs := collection:documents($name, $origin)
       return <ul> {
         for $document in $docs
-        order by document:title($document)
+        order by document:publisher($document), document:date($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
-    else
-      let $sources := $collection//xhtml:meta[@name="dc.source"]/@content
-      return
-        <ul> {
-          for $source in distinct-values($sources)
-          let $count := local:count($sources, $source)
-          order by $source
-          return <li>
-              <a href="?source={$source}">{$source}</a>: {$count}
-            </li>
-        } </ul>
+    else      
+      <div class='row'>
+          <div class='col-sm-6'>
+            <h3>Source Database</h3>
+          <ul> {
+            let $origins := $collection//xhtml:meta[@name="dc.source.database"]/@content
+            for $origin in distinct-values($origins)
+            let $count := local:count($origins, $origin)
+            order by $origin
+            return <li data-source="{$origin}">
+                <a href="?origin={$origin}&amp;name=dc.source.database">{
+                  if(string-length($origin) gt 1) then $origin else '(unknown)' 
+                }</a>: 
+                {$count}
+              </li>
+          } </ul>
+          </div>
+          <div class='col-sm-6'>
+            <h3>Source Institution</h3>
+          <ul> {
+            let $origins := $collection//xhtml:meta[@name="dc.source.institution"]/@content
+            for $origin in distinct-values($origins)
+            let $count := local:count($origins, $origin)
+            order by $origin
+            return <li data-source="{$origin}">
+                <a href="?origin={$origin}&amp;name=dc.source.institution">{
+                  if(string-length($origin) gt 1) then $origin else '(unknown)' 
+                }</a>: 
+                {$count}
+              </li>
+          } </ul>
+          </div>
+      </div>
 };
 
 declare function app:browse-region($node as node(), $model as map(*)) as node() {
@@ -264,6 +285,11 @@ declare function app:doc-publisher($node as node(), $model as map(*)) as xs:stri
     document:publisher($model('document'))
 };
 
+declare function app:doc-edition($node as node(), $model as map(*)) as xs:string {
+  let $edition := document:edition($model('document'))
+  return if(string-length($edition) gt 0) then " - " || document:edition($model('document')) else ""
+};
+
 declare function app:doc-region($node as node(), $model as map(*)) as xs:string {
     document:region($model('document'))
 };
@@ -298,13 +324,13 @@ declare function app:doc-translations($node as node(), $model as map(*)) as node
   return  
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="original">
-        { $doc//div[@id='original'] }
+        { tx:document($doc//div[@id='original']) }
       </div>
       { 
         for $lang in document:translations($model('document'))
         return   
         <div role="tabpanel" class="tab-pane" id="{$lang}">
-          { $doc//div[@lang=$lang] }
+          { tx:document($doc//div[@lang=$lang]) }
         </div>
       }
     </div>
@@ -318,18 +344,30 @@ declare function app:doc-language($node as node(), $model as map(*)) as xs:strin
     lang:code2lang(document:language($model('document')))
 };
 
-declare function app:doc-source($node as node(), $model as map(*)) as xs:string {
-  string-join(document:source($model('document')), ', ')
-};
+(:
+* British Library (dc.source.institution if present)
+* British Library Newspapers (dc.source.database if present)
+* explore.bl.uk (the name part of dc.source.url, if present. Linked to the complete URL. May be repeated.)
+:)
 
-declare function app:doc-source-url($node as node(), $model as map(*)) as node()* {
-      for $url in document:source-url($model('document'))
+declare function app:doc-source($node as node(), $model as map(*)) as node()* {
+  (
+    for $institution in document:source-institution($model('document')) 
+    return <dd>{$institution}</dd>
+  ),
+  (
+    for $database in document:source-database($model('document'))
+    return <dd>{$database}</dd>
+  ), 
+  (
+    for $url in document:source-url($model('document'))
       return 
         <dd>
           <a href="{ $url }" target="_blank"> {
             analyze-string($url,'^https?://([^\/]*)')//fn:group[@nr=1] 
           } </a> 
         </dd>
+  )
 };
 
 declare function app:doc-facsimile($node as node(), $model as map(*)) as node()* {
@@ -341,6 +379,7 @@ declare function app:doc-facsimile($node as node(), $model as map(*)) as node()*
           } </a> 
         </dd>
 };
+
 
 declare function app:document-indexed($node as node(), $model as map(*)) as xs:string {
     document:indexed-document($model('document'))
@@ -359,7 +398,7 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
             <ul> {
                 for $link in $similarities
                 let $doc := collection:fetch($link/@href)
-                return <li>{app:link-view($link/@href, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
+                return <li class="{$link/@class}">{app:link-view($link/@href, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
             } </ul>
 };
 
@@ -372,7 +411,7 @@ declare function app:paragraph-similarities($node as node(), $model as map(*)) a
             <ul> {
                 for $link in $similarities
                 let $doc := collection:fetch($link/@data-document)
-                return <li>{app:link-view($link/@data-document, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
+                return <li class="{$link/@class}">{app:link-view($link/@data-document, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
             } </ul>
 };
 
@@ -391,7 +430,11 @@ declare function app:search-summary($node as node(), $model as map(*)) {
     if(empty($model('query')) or $model('query') = '') then
         ()
     else
-        <p>Found {count($model('hits'))} for search query <kbd>{$model('query')}</kbd>.</p>
+        <p>
+          Found {count($model('hits'))} for search 
+          query <kbd>{$model('query')}</kbd>. 
+          <a href="export/search?query={$model('query')}" class='btn btn-default pull-right'>Export Results</a>
+        </p>
 };
 
 declare function app:search-paginate($node as node(), $model as map(*)) {
@@ -448,6 +491,7 @@ declare function local:find-similar($measure as xs:string, $p as node()+, $q as 
     let $matches := 
         for $t in $p 
             let $score := similarity:similarity($measure, $t, $q)
+            where $score > 0
             order by $score descending
             return <div data-similarity="{$score}">{$t}</div>
     return $matches[1]
@@ -460,8 +504,10 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
     let $da := collection:fetch($a)
     let $db := collection:fetch($b)
     
-    let $pa := $da//p
-    let $pb := $db//p
+    let $lang := $da//div[@id='original']/@lang
+    
+    let $pa := $da//div[@id='original']//p[not(@class='heading')]
+    let $pb := $db//div[@lang=$lang]//p[not(@class='heading')]
     
     return 
       <div>
@@ -481,7 +527,9 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
                 return  
                   <div class='row paragraph-compare' data-score="{format-number($q/@data-similarity, "###.#%")}%">
                     <div class='col-sm-4 paragraph-a'>{string($other)}</div>
-                    <div class='col-sm-4 paragraph-b'>{string($q)}</div>
+                    <div class='col-sm-4 paragraph-b'> {
+                      if($q) then string($q) else ''
+                    } </div>
                     <div class='col-sm-4 paragraph-d'> </div>
                 </div>
             }

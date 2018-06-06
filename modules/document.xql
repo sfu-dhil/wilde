@@ -21,7 +21,12 @@ declare function document:apply-paragraph-ids($node as node()) {
 };
 
 declare function document:title($node as node() ) as xs:string {
-    string(root($node)//title)
+    let $title := normalize-space(root($node)//title/string())
+    return 
+    if(string-length($title) gt 1) then
+        $title
+    else
+        "(unknown title)" 
 };
 
 declare function document:subtitle($node as node()) as xs:string {
@@ -61,6 +66,10 @@ declare function document:publisher($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.publisher']/@content)
 };
 
+declare function document:edition($node as node()) as xs:string {
+    string(root($node)//meta[@name='dc.publisher.edition']/@content)
+};
+
 declare function document:region($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.region']/@content)
 };
@@ -70,7 +79,7 @@ declare function document:document-matches($node as node()) as node()* {
 };
 
 declare function document:paragraph-matches($node as node()) as node()* {
-    root($node)//a[@class='similarity']
+    root($node)//div[@id='original']//a[contains(@class, 'similarity')]
 };
 
 declare function document:city($node as node()) as xs:string {
@@ -86,8 +95,16 @@ declare function document:source($node as node()) as xs:string* {
   root($node)//meta[@name='dc.source']/@content/string()
 };
 
+declare function document:source-institution($node as node()) as xs:string* {
+  root($node)//meta[@name='dc.source.institution']/@content/string()
+};
+
 declare function document:source-url($node as node()) as xs:string* {
   root($node)//meta[@name='dc.source.url']/@content
+};
+
+declare function document:source-database($node as node()) as xs:string* {
+  root($node)//meta[@name='dc.source.database']/@content
 };
 
 declare function document:facsimile($node as node()) as xs:string* {
@@ -123,12 +140,8 @@ declare function document:modified($node as node()) as xs:dateTime {
 };
 
 declare function document:indexed-document($node as node()) as xs:string* {
-    let $c := root($node)//meta[@name="index.document"]/@content
-    return
-        if($c = 'true') then
-            'Yes'
-        else
-            'No'
+  let $node := root($node)//meta[@name="index.document"]
+  return if($node) then $node/@content else "No"
 };
 
 declare function document:similar-documents($node as node()) as node()* {
@@ -138,16 +151,12 @@ declare function document:similar-documents($node as node()) as node()* {
 };
 
 declare function document:indexed-paragraph($node as node()) as xs:string* {
-    let $c := root($node)//meta[@name="index.paragraph"]/@content
-    return
-        if($c = 'true') then
-            'Yes'
-        else
-            'No'
+  let $node := root($node)//meta[@name="index.paragraph"]
+  return if($node) then $node/@content else "No"
 };
 
 declare function document:similar-paragraphs($node as node()) as node()* {
-    for $node in root($node)//a[@class='similarity']
+    for $node in root($node)//div[@id='original']//a[contains(@class, 'similarity')]
     order by $node/@data-similarity descending
     return $node
 };

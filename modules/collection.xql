@@ -20,14 +20,6 @@ declare function collection:collection() as node()* {
     collection($config:data-root || '/reports')
 };
 
-(:~
- : Fetch the metadata.xml content which describes the collection.
- : @return Node for metadata.xml
- :)
-declare function collection:metadata() as node()* {
-  doc($config:data-root || '/metadata.xml')
-};
-
 declare function collection:graph($filename as xs:string) as node() {
   if(not(matches($filename, '^[a-zA-Z0-9% .-]*$'))) then
     ()
@@ -192,6 +184,11 @@ declare function collection:regions() as xs:string* {
     return $region    
 };
 
+declare function collection:regions($publisher as xs:string) as xs:string* {
+  let $nodes := collection:collection()//head[meta[@name='dc.publisher' and @content=$publisher]]/meta[@name='dc.region']/@content
+  return distinct-values($nodes)
+};
+
 (:~
  : Fetch a list of languages, ordered by name.
  : @return Sequence of strings.
@@ -200,6 +197,11 @@ declare function collection:languages() as xs:string* {
     for $language in distinct-values(collection($config:data-root)//meta[@name='dc.language']/@content)
     order by $language
     return $language    
+};
+
+declare function collection:languages($publisher as xs:string) as xs:string* {
+  let $nodes := collection:collection()//head[meta[@name='dc.publisher' and @content=$publisher]]/meta[@name='dc.language']/@content
+  return distinct-values($nodes)
 };
 
 (:~
@@ -221,6 +223,12 @@ declare function collection:cities() as xs:string* {
     order by $city
     return $city
 };
+
+declare function collection:cities($publisher as xs:string) as xs:string* {
+  let $nodes := collection:collection()//head[meta[@name='dc.publisher' and @content=$publisher]]/meta[@name='dc.region.city']/@content
+  return distinct-values($nodes)
+};
+
 
 (:~
  : Search the collection for the query string.

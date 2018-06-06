@@ -35,12 +35,23 @@ declare function tx:document($nodes as node()*) as node()* {
                 <strong class='match'> { tx:document($node/node()) } </strong>
 
             case element(a) return
-                if($node/@class = 'similarity') then
+                if(contains($node/@class, 'similarity')) then
                     let $document := collection:fetch($node/@data-document)
                     let $paragraph := $document//p[@id=$node/@data-paragraph]
                     return 
                     <blockquote class='similarity'> 
-                        <p>{string($paragraph)}</p> 
+                        <p>{string($paragraph[1])}</p> 
+                        { 
+                          if (count($paragraph) ne 1) then 
+                          <div>
+                            <b>DUPLICATE.</b>
+                            { 
+                              for $p in $paragraph
+                              return <div> {$node/@data-paragraph/string()}::{document:id($p)} - {$p/@id/string()} - {string($p)}</div>
+                            }
+                          </div> 
+                          else () 
+                        }
                         <a href='view.html?f={document:id($document)}#{$paragraph/@id}'>{document:title($document)}</a> 
                         ({format-number($node/@data-similarity, "###.#%")}%)<br/>
                         <a href='compare.html?a={document:id($node)}&amp;b={$node/@data-document}'>Compare two documents</a>

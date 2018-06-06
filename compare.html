@@ -7,8 +7,6 @@
         <div data-template="app:compare-documents"/>
     </div>
     <script type="text/javascript">
-        // 
-        
         function normalize(string) {
           var lower = string.toLowerCase();
           var lbs = lower.replace(/(\r\n|\n|\r)/gm," ");
@@ -50,14 +48,18 @@
             var b = normalize($this.find('.paragraph-b').text());
             var $d = $this.find('.paragraph-d');
     
-            var diff = dmp.diff_main(a, b);
-            dmp.diff_cleanupSemantic(diff);
-            var html = htmlize(diff);            
-            $d.html(html);
-            $d.append("&lt;br/&gt;Match: " + $this.data('score'));        
+            if( ! b) {
+              $d.html("No similar paragraph.");
+            } else {
+              var diff = dmp.diff_main(a, b);
+              dmp.diff_cleanupSemantic(diff);
+              var html = htmlize(diff);            
+              $d.html(html);
+              $d.append("&lt;br/&gt;Match: " + $this.data('score'));        
+            }
           });
         });
-        // </script>
+    </script>
     <script type="text/javascript" src="resources/lib/js-url/url.min.js"/>
     <script type="text/javascript" src="resources/js/view.js"/>
     <script type="text/javascript" src="resources/lib/google-diff-match-patch-js/diff_match_patch.js"/>

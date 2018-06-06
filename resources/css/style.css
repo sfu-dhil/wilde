@@ -23,6 +23,10 @@ td a {
     white-space: nowrap;
 }
 
+body {
+  font-size: 16px;
+}
+
 body div.overlay{
     display: none;
 }
@@ -69,6 +73,14 @@ td.dissimilar{
 }
 td.similar{
     font-weight: bold;
+}
+
+li.levenshtein {
+  font-weight: bold;
+}
+
+li.cosine {
+  font-style: italic;
 }
 
 tr.reference span.number{
@@ -121,6 +133,14 @@ figure {
 figcaption {
     text-align: center;
     font-style: italic;  
+}
+
+/* cross headers */
+span.cross-head {
+    display: block;
+    text-transform: uppercase;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 /* Sticky footer styles */
