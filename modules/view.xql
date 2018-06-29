@@ -11,9 +11,8 @@ import module namespace templates="http://exist-db.org/xquery/templates";
  : The following modules provide functions which will be called by the 
  : templating.
  :)
-import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
-import module namespace app="http://nines.ca/exist/wilde/templates" at "app.xql";
-import module namespace admin="http://nines.ca/exist/wilde/admin" at "admin.xql";
+import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
+import module namespace app="http://dhil.lib.sfu.ca/exist/wilde-app/templates" at "app.xql";
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 

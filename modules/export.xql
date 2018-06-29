@@ -3,18 +3,18 @@ xquery version "3.0";
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
-declare namespace export="http://nines.ca/exist/wilde/export";
+declare namespace export="http://dhil.lib.sfu.ca/exist/wilde-app/export";
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace json="http://www.json.org";
 
 declare option output:method "text";
 declare option output:media-type "text/csv";
 
-import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
+import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace kwic="http://exist-db.org/xquery/kwic";
-import module namespace collection="http://nines.ca/exist/wilde/collection" at "collection.xql";
-import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
-import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql";
+import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
+import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
+import module namespace index="http://dhil.lib.sfu.ca/exist/wilde-app/index" at "index.xql";
 
 declare function export:search() {
     let $query := request:get-parameter('query', '')
@@ -179,7 +179,7 @@ declare function local:rows2csv($rows) {
 let $functionName := request:get-attribute('function')
 let $function := 
     try {
-        function-lookup(QName("http://nines.ca/exist/wilde/export", $functionName), 0)
+        function-lookup(QName("http://dhil.lib.sfu.ca/exist/wilde-app/export", $functionName), 0)
     } catch * {
         ()
     }

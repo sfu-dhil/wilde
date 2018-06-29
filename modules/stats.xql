@@ -4,12 +4,12 @@
  :)
 xquery version "3.0";
 
-module namespace stats="http://nines.ca/exist/wilde/stats";
+module namespace stats="http://dhil.lib.sfu.ca/exist/wilde-app/stats";
 
 import module namespace functx="http://www.functx.com"; 
 import module namespace math="http://exist-db.org/xquery/math";
-import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
-import module namespace collection="http://nines.ca/exist/wilde/collection" at "collection.xql";
+import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
+import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
 
 declare namespace string="java:org.apache.commons.lang3.StringUtils";
 declare namespace locale="java:java.util.Locale";

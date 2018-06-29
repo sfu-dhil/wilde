@@ -3,7 +3,7 @@ xquery version "3.0";
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
-declare namespace api="http://nines.ca/exist/wilde/api-public";
+declare namespace api="http://dhil.lib.sfu.ca/exist/wilde-app/api-public";
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace json="http://www.json.org";
 
@@ -11,12 +11,12 @@ declare option output:method "json";
 declare option output:media-type "text/javascript";
 
 import module namespace login="http://exist-db.org/xquery/login" at "resource:org/exist/xquery/modules/persistentlogin/login.xql";
-import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
-import module namespace collection="http://nines.ca/exist/wilde/collection" at "collection.xql";
-import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
-import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql";
-import module namespace app="http://nines.ca/exist/wilde/templates" at "app.xql";
-import module namespace lang="http://nines.ca/exist/wilde/lang" at "lang.xql";
+import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
+import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
+import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
+import module namespace index="http://dhil.lib.sfu.ca/exist/wilde-app/index" at "index.xql";
+import module namespace app="http://dhil.lib.sfu.ca/exist/wilde-app/templates" at "app.xql";
+import module namespace lang="http://dhil.lib.sfu.ca/exist/wilde-app/lang" at "lang.xql";
 
 declare function api:documents() {
     let $documents := collection:documents()
@@ -86,7 +86,7 @@ declare function api:sources() {
 let $functionName := request:get-attribute('function')
 let $function := 
     try {
-        function-lookup(QName("http://nines.ca/exist/wilde/api-public", $functionName), 0)
+        function-lookup(QName("http://dhil.lib.sfu.ca/exist/wilde-app/api-public", $functionName), 0)
     } catch * {
         ()
     }

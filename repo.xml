@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <meta xmlns="http://exist-db.org/xquery/repo">
-    <description>Wilde Trials Press Reports</description>
+    <description>Wilde Trials App</description>
     <author/>
     <website/>
-    <status>alpha</status>
+    <status>stable</status>
     <license>GNU-LGPL</license>
     <copyright>true</copyright>
     <type>application</type>
     <target>wilde</target>
     <prepare>pre-install.xql</prepare>
     <finish/>
-    <permissions xmlns:repo="http://exist-db.org/xquery/repo" password="" user="admin@example.com" group="dba" mode="rw-rw-r--"/>
+<deployed>2018-06-28T10:50:26.921-07:00</deployed>
 </meta>

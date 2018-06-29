@@ -3,11 +3,11 @@
  :)
 xquery version "3.0";
 
-module namespace tx="http://nines.ca/exist/wilde/transform";
+module namespace tx="http://dhil.lib.sfu.ca/exist/wilde-app/transform";
 
 import module namespace kwic="http://exist-db.org/xquery/kwic";
-import module namespace collection="http://nines.ca/exist/wilde/collection" at "collection.xql";
-import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
+import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
+import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
 
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";

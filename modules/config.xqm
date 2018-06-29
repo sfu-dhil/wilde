@@ -1,30 +1,21 @@
 xquery version "3.0";
 
 (:~
- : A set of helper functions and variables to access the application context from
+ : A set of helper functions to access the application context from
  : within a module.
  :)
-module namespace config="http://nines.ca/exist/wilde/config";
+module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config";
 
 declare namespace templates="http://exist-db.org/xquery/templates";
+
 declare namespace repo="http://exist-db.org/xquery/repo";
 declare namespace expath="http://expath.org/ns/pkg";
-
-(: 
-  User auth variables 
-:)
-declare variable $config:login-domain := 'ca.nines.wilde';
-declare variable $config:login-user := $config:login-domain || '.user';
 
 (: 
     Determine the application root collection from the current module load path.
 :)
 declare variable $config:app-root := 
     let $rawPath := system:get-module-load-path()
-	return 
-       if(starts-with($rawPath, '/Applications/eXist-db/webapp')) then
-         'file://' || substring-before($rawPath, '/modules')
-       else 
     let $modulePath :=
         (: strip the xmldb: part :)
         if (starts-with($rawPath, "xmldb:exist://")) then
@@ -34,9 +25,20 @@ declare variable $config:app-root :=
                 substring($rawPath, 15)
         else
             $rawPath
+    let $path := substring-before($modulePath, "/modules")
     return
-        substring-before($modulePath, "/modules")
+        if(starts-with($path, '/Users')) then
+            'file:/' || $path
+        else
+            $path
 ;
+
+(:
+    Path to the data inside eXist
+:)
+declare variable $config:data-root := '/db/apps/wilde-data/data';
+
+declare variable $config:graph-root := '/db/apps/wilde-data/data/graphs';
 
 (:
     Default string metric.
@@ -62,13 +64,6 @@ declare variable $config:search-results-per-page := 20;
     Similarities to display per page. I think it's unused.
 :)
 declare variable $config:similarities-per-page := 50;
-
-(:
-    Path to the data collection.
-:)
-declare variable $config:data-root := "/db/apps/wilde-data/data";
-
-declare variable $config:graphs-root := "/db/apps/wilde-data/data/graphs";
 
 declare variable $config:repo-descriptor := doc(concat($config:app-root, "/repo.xml"))/repo:meta;
 
@@ -99,24 +94,10 @@ declare function config:expath-descriptor() as element(expath:package) {
     $config:expath-descriptor
 };
 
-(:~
- : Insert the application title into some HTML.
- : @param $node HTML node in the DOM to replace
- : @param $model Data model.
- : @return Content for the DOM as text.
- :)
-declare 
-    %templates:wrap 
-function config:app-title($node as node(), $model as map(*)) as text() {
+declare %templates:wrap function config:app-title($node as node(), $model as map(*)) as text() {
     $config:expath-descriptor/expath:title/text()
 };
 
-(:~
- : Insert the application configuration into some HTML.
- : @param $node HTML node in the DOM to replace
- : @param $model Data model.
- : @return Content for the DOM as HTML meta elements.
- :)
 declare function config:app-meta($node as node(), $model as map(*)) as element()* {
     <meta xmlns="http://www.w3.org/1999/xhtml" name="description" content="{$config:repo-descriptor/repo:description/text()}"/>,
     for $author in $config:repo-descriptor/repo:author
