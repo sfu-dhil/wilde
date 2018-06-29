@@ -1,18 +1,17 @@
 xquery version "3.0";
 
-module namespace app="http://nines.ca/exist/wilde/templates";
+module namespace app="http://dhil.lib.sfu.ca/exist/wilde-app/templates";
 
 import module namespace kwic="http://exist-db.org/xquery/kwic";
 import module namespace templates="http://exist-db.org/xquery/templates" ;
-import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
-import module namespace collection="http://nines.ca/exist/wilde/collection" at "collection.xql";
-import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
-import module namespace similarity="http://nines.ca/exist/wilde/similarity" at "similarity.xql";
-import module namespace index="http://nines.ca/exist/wilde/index" at "index.xql";
-import module namespace tx="http://nines.ca/exist/wilde/transform" at "transform.xql";
-import module namespace stats="http://nines.ca/exist/wilde/stats" at "stats.xql";
-import module namespace lang="http://nines.ca/exist/wilde/lang" at "lang.xql";
-import module namespace graph="http://nines.ca/exist/wilde/graph" at "graph.xql";
+import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
+import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
+import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
+import module namespace similarity="http://dhil.lib.sfu.ca/exist/wilde-app/similarity" at "similarity.xql";
+import module namespace tx="http://dhil.lib.sfu.ca/exist/wilde-app/transform" at "transform.xql";
+import module namespace stats="http://dhil.lib.sfu.ca/exist/wilde-app/stats" at "stats.xql";
+import module namespace lang="http://dhil.lib.sfu.ca/exist/wilde-app/lang" at "lang.xql";
+import module namespace graph="http://dhil.lib.sfu.ca/exist/wilde-app/graph" at "graph.xql";
 
 declare namespace wilde="http://dhil.lib.sfu.ca/wilde";
 declare namespace string="java:org.apache.commons.lang3.StringUtils";
@@ -364,7 +363,7 @@ declare function app:doc-source($node as node(), $model as map(*)) as node()* {
       return 
         <dd>
           <a href="{ $url }" target="_blank"> {
-            analyze-string($url,'^https?://([^\/]*)')//fn:group[@nr=1] 
+            analyze-string($url,'^https?://([^/]*)')//fn:group[@nr=1] 
           } </a> 
         </dd>
   )
@@ -375,7 +374,7 @@ declare function app:doc-facsimile($node as node(), $model as map(*)) as node()*
       return 
         <dd>
           <a href="{ $url }" target="_blank"> {
-            analyze-string($url,'^https?://([^\/]*)')//fn:group[@nr=1] 
+            analyze-string($url,'^https?://([^/]*)')//fn:group[@nr=1] 
           } </a> 
         </dd>
 };

@@ -3,11 +3,11 @@
  :)
 xquery version "3.0";
 
-module namespace collection="http://nines.ca/exist/wilde/collection";
+module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection";
 
-import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
+import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace functx='http://www.functx.com';
-import module namespace document="http://nines.ca/exist/wilde/document" at "document.xql";
+import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
 
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
@@ -24,7 +24,7 @@ declare function collection:graph($filename as xs:string) as node() {
   if(not(matches($filename, '^[a-zA-Z0-9% .-]*$'))) then
     ()
   else
-    let $path := $config:graphs-root || '/' || $filename
+    let $path := $config:graph-root || '/' || $filename
     return 
       if(doc-available($path)) then
         doc($path)
@@ -33,10 +33,10 @@ declare function collection:graph($filename as xs:string) as node() {
 };
 
 declare function collection:graph-list() as node()* {
-    let $collection := collection($config:graphs-root)
+    let $collection := collection($config:graph-root)
     return 
         for $doc in $collection  
-        let $uri := xs:anyURI($config:graphs-root || util:document-name($doc))
+        let $uri := xs:anyURI($config:graph-root || util:document-name($doc))
         let $null := 
           if('application/xml' != xmldb:get-mime-type($uri)) then
             xmldb:set-mime-type($uri, 'application/xml')

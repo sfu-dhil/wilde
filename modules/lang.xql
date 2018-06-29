@@ -1,6 +1,6 @@
 xquery version "3.0";
 
-module namespace lang="http://nines.ca/exist/wilde/lang";
+module namespace lang="http://dhil.lib.sfu.ca/exist/wilde-app/lang";
 
 (:
     Language codes must not contain spaces - they are used as

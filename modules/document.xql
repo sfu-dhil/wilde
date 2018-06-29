@@ -1,8 +1,8 @@
 xquery version "3.0";
 
-module namespace document="http://nines.ca/exist/wilde/document";
+module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document";
 
-import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
+import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace functx='http://www.functx.com';
 
 declare namespace xhtml='http://www.w3.org/1999/xhtml';

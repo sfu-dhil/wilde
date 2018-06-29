@@ -1,26 +1,16 @@
 xquery version "3.0";
 
-module namespace similarity="http://nines.ca/exist/wilde/similarity";
+module namespace similarity="http://dhil.lib.sfu.ca/exist/wilde-app/similarity";
 
 import module namespace functx="http://www.functx.com"; 
 import module namespace math="http://exist-db.org/xquery/math";
-import module namespace config="http://nines.ca/exist/wilde/config" at "config.xqm";
-
-(: 
-  Sadly, the eXist 2.2 normalize-unicode() function is broken. So we call out
-  to the java one.
-:)
-declare namespace normalizer = "java:java.text.Normalizer";
-declare namespace form = "java:java.text.Normalizer$Form";
+import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 
 declare namespace string="java:org.apache.commons.lang3.StringUtils";
 declare namespace locale="java:java.util.Locale";
 
 declare function similarity:normalize($string as item(), $clean) as xs:string {
-    (:  Sigh. eXist 2.2 has a bug that mucks up encoded entities when going to/from 
-        java. So to work around it, text must have double-encoded entities. :) 
-    let $doubleEncoded := replace($string, '&amp;', '&amp;amp;')
-    let $unicode := normalizer:normalize($doubleEncoded, form:value-of('NFD'))
+    let $unicode := normalize-unicode($string, 'NFD')
     let $space := normalize-space($unicode)
     let $lower := lower-case($space)
     return 

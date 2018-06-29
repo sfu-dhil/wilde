@@ -1,17 +1,14 @@
-xquery version "3.0";
+xquery version "3.1";
 
-import module namespace config="http://nines.ca/exist/wilde/config" at "modules/config.xqm";
-import module namespace collection="http://nines.ca/exist/wilde/collection" at "modules/collection.xql";
-import module namespace graph="http://nines.ca/exist/wilde/graph" at "modules/graph.xql";
+import module namespace console="http://exist-db.org/xquery/console";
 
-import module namespace functx="http://www.functx.com";
-import module namespace text="http://exist-db.org/xquery/text";
-import module namespace debug="http://nines.ca/exist/wilde/debug" at "modules/debug.xql";
+import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "modules/collection.xql";
+
 
 declare namespace exist="http://exist.sourceforge.net/NS/exist";
 declare namespace request="http://exist-db.org/xquery/request";
-declare namespace session="http://exist-db.org/xquery/session";
-declare namespace system="http://exist-db.org/xquery/system";
+
+declare default element namespace 'http://exist.sourceforge.net/NS/exist';
 
 declare variable $exist:path external;
 declare variable $exist:resource external;
@@ -20,37 +17,38 @@ declare variable $exist:prefix external;
 declare variable $exist:root external;
 
 if ($exist:path eq '') then
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <redirect url="{request:get-uri()}/"/>
+    <dispatch>
+        <redirect url="{request:get-uri()}/index.html"/>
     </dispatch>
     
 else if ($exist:path eq "/") then
-    (: forward root path to index.xql :)
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+    <dispatch>
         <redirect url="index.html"/>
     </dispatch>
     
-else if ($exist:resource = 'debug' and request:get-server-name() = 'localhost') then
-  debug:debug()
+else if(ends-with($exist:resource, ".html") and not(contains($exist:path, '/pages/'))) then
+    <dispatch>
+        <forward url="{$exist:controller}/pages/{$exist:resource}"/>
+    </dispatch>
     
 else if (ends-with($exist:resource, ".html")) then
-  (: the html page is run through view.xql to expand templates :)
-  <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-    <view>
-        <forward url="{$exist:controller}/modules/view.xql"/>
-    </view> 
-  </dispatch>
-  
+    (: the html page is run through view.xql to expand templates :)
+    <dispatch>
+        <view>
+            <forward url="{$exist:controller}/modules/view.xql"/>
+        </view> { 
+            if(request:get-server-name() != 'localhost') then
+        		<error-handler>
+        			<forward url="{$exist:controller}/error-page.html" method="get"/>
+        			<forward url="{$exist:controller}/modules/view.xql"/>
+        		</error-handler>
+        	else
+        	   ()
+        }
+    </dispatch>
+
 else if (ends-with($exist:resource, ".gexf")) then
   collection:graph($exist:resource)
-    
-(: Resource paths starting with $shared are loaded from the shared-resources app :)
-else if (contains($exist:path, "/$shared/")) then
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="/shared-resources/{substring-after($exist:path, '/$shared/')}">
-            <set-header name="Cache-Control" value="max-age=3600, must-revalidate"/>
-        </forward>
-    </dispatch>
     
 else if(contains($exist:path, "/export/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -68,6 +66,6 @@ else if(contains($exist:path, "/api/")) then
 
 else
     (: everything else is passed through :)
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+    <dispatch>
         <cache-control cache="yes"/>
     </dispatch>

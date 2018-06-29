@@ -1,6 +1,6 @@
 xquery version "3.0";
 
-module namespace debug="http://nines.ca/exist/wilde/debug";
+module namespace debug="http://dhil.lib.sfu.ca/exist/wilde-app/debug";
 
 declare namespace request="http://exist-db.org/xquery/request";
 declare namespace session="http://exist-db.org/xquery/session";
