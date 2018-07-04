@@ -15,11 +15,6 @@ declare function document:id($node as node()) as xs:string {
         $id
 };
 
-declare function document:apply-paragraph-ids($node as node()) {
-    for $p in root($node)//p[not(@id)]
-    return update insert attribute id {generate-id($p)} into $p
-};
-
 declare function document:title($node as node() ) as xs:string {
     let $title := normalize-space(root($node)//title/string())
     return 
