@@ -58,11 +58,6 @@ declare function api:publishers() {
     return <json:value>{$publisher}</json:value> 
 };
 
-declare function api:statuses() {
-    for $status in collection:statuses()
-    return <json:value>{$status}</json:value> 
-};
-
 declare function api:regions() {
     for $region in collection:regions()
     return <json:value>{$region}</json:value> 

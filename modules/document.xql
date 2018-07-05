@@ -2,8 +2,10 @@ xquery version "3.0";
 
 module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document";
 
-import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
+import module namespace console="http://exist-db.org/xquery/console";
 import module namespace functx='http://www.functx.com';
+
+import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
@@ -28,29 +30,12 @@ declare function document:subtitle($node as node()) as xs:string {
     string(root($node)//body/p[1])
 };
 
-declare function document:status($node as node()) as xs:string {
-  let $statuses := root($node)//meta[@name='status']/@content
-  return 
-    if(count($statuses) >= 1) then
-      string($statuses[1])
-    else 
-      'draft'
-};
-
 declare function document:path($node as node()) as xs:string {
   string(root($node)//meta[@name='wr.path']/@content)
 };
 
 declare function document:word-count($node as node()) as xs:string {
     string(root($node)//meta[@name='wr.wordcount']/@content)
-};
-
-declare function document:uri($node as node()) as xs:string {
-    replace(document-uri(root($node)), $config:data-root, '')
-};
-
-declare function document:filename($node as node()) as xs:string {
-    util:document-name(root($node))
 };
 
 declare function document:date($node as node()) as xs:string {
@@ -68,7 +53,7 @@ declare function document:edition($node as node()) as xs:string {
 declare function document:region($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.region']/@content)
 };
-
+(: stopped here. :)
 declare function document:document-matches($node as node()) as node()* {
     root($node)//link[@rel='similarity']
 };
@@ -85,6 +70,8 @@ declare function document:city($node as node()) as xs:string {
     else
       string(root($node)//meta[@name='dc.region.city']/@content)
 };
+
+(: Stopped unit testing here. :)
 
 declare function document:source($node as node()) as xs:string* {
   root($node)//meta[@name='dc.source']/@content/string()
@@ -122,16 +109,6 @@ declare function document:translations($node as node()) as xs:string* {
 
 declare function document:count-translations($node as node()) as xs:integer {
   count(root($node)//div[@class='translation'])
-};
-
-declare function document:collection($node as node()) as xs:string {
-    let $uri := document:uri($node)
-    let $parts := tokenize($uri, '/')
-    return string-join(subsequence($parts,2, count($parts) - 2), '/')  
-};
-
-declare function document:modified($node as node()) as xs:dateTime {
-    xmldb:last-modified($config:data-root || '/' || document:collection($node), document:filename($node))
 };
 
 declare function document:indexed-document($node as node()) as xs:string* {

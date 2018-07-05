@@ -250,10 +250,6 @@ declare function app:doc-subtitle($node as node(), $model as map(*)) as xs:strin
     document:subtitle($model('document'))
 };
 
-declare function app:doc-status($node as node(), $model as map(*)) as xs:string {
-    document:status($model('document'))
-};
-
 declare function app:doc-next($node as node(), $model as map(*)) as node()? {
   let $next := collection:next($model('document'))  
   return 
@@ -295,10 +291,6 @@ declare function app:doc-region($node as node(), $model as map(*)) as xs:string 
 
 declare function app:doc-city($ndoe as node(), $model as map(*)) as xs:string {
     document:city($model('document'))
-};
-
-declare function app:doc-modified($node as node(), $model as map(*)) as xs:string {
-    string(document:modified($model('document')))
 };
 
 declare function app:doc-translation-tabs($node as node(), $model as map(*)) as node()* {

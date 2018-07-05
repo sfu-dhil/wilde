@@ -165,16 +165,6 @@ declare function collection:publishers() as xs:string* {
 };
 
 (:~
- : Fetch a list of statuses, ordered by name.
- : @return Sequence of strings.
- :)
-declare function collection:statuses() as xs:string* {
-    for $status in distinct-values(collection($config:data-root)//meta[@name='status']/@content)
-    order by $status
-    return $status    
-};
-
-(:~
  : Fetch a list of regions, ordered by name.
  : @return Sequence of strings.
  :)
