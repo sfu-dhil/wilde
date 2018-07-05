@@ -88,7 +88,12 @@ declare function similarity:overlap($p as xs:string, $q as xs:string) as xs:doub
     let $w1 := similarity:word-list($p)
     let $w2 := similarity:word-list($q)
     let $intersect := functx:value-intersect($w1, $w2)
-    return count($intersect) div min((count($w1), count($w2)))
+    let $m := min((count($w1), count($w2)))
+    return 
+        if($m = 0) then 
+            0 
+        else
+            count($intersect) div min((count($w1), count($w2)))
 };
 
 declare function similarity:compressed-string-size($x as xs:string) as xs:integer {
@@ -134,4 +139,3 @@ declare function similarity:similarity($type as xs:string, $a, $b) as xs:double 
                 default 
                     return -1
 };
-

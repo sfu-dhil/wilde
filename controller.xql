@@ -4,7 +4,6 @@ import module namespace console="http://exist-db.org/xquery/console";
 
 import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "modules/collection.xql";
 
-
 declare namespace exist="http://exist.sourceforge.net/NS/exist";
 declare namespace request="http://exist-db.org/xquery/request";
 

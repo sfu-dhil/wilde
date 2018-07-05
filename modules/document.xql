@@ -71,14 +71,12 @@ declare function document:city($node as node()) as xs:string {
       string(root($node)//meta[@name='dc.region.city']/@content)
 };
 
-(: Stopped unit testing here. :)
-
 declare function document:source($node as node()) as xs:string* {
-  root($node)//meta[@name='dc.source']/@content/string()
+  root($node)//meta[@name='dc.source']/@content
 };
 
 declare function document:source-institution($node as node()) as xs:string* {
-  root($node)//meta[@name='dc.source.institution']/@content/string()
+  root($node)//meta[@name='dc.source.institution']/@content
 };
 
 declare function document:source-url($node as node()) as xs:string* {
@@ -90,17 +88,16 @@ declare function document:source-database($node as node()) as xs:string* {
 };
 
 declare function document:facsimile($node as node()) as xs:string* {
-  for $uri in root($node)//meta[@name='dc.source.facsimile']/@content
-  return $uri
+  root($node)//meta[@name='dc.source.facsimile']/@content
 };
 
 declare function document:language($node as node()) as xs:string {
   let $languages := root($node)//meta[@name='dc.language']/@content
-  return 
-    if(count($languages) > 1) then
+  return
+    if(count($languages) >= 1) then
         $languages[1]
     else
-      string(root($node)//meta[@name='dc.language']/@content)
+        ''      
 };
 
 declare function document:translations($node as node()) as xs:string* {
@@ -110,6 +107,8 @@ declare function document:translations($node as node()) as xs:string* {
 declare function document:count-translations($node as node()) as xs:integer {
   count(root($node)//div[@class='translation'])
 };
+
+(: :)
 
 declare function document:indexed-document($node as node()) as xs:string* {
   let $node := root($node)//meta[@name="index.document"]
