@@ -414,8 +414,81 @@ function doctest:count-translations() {
     )
 };
 
+declare
+    %xunit:test
+function doctest:indexed-document() {
+    (
+        let $doc := <html><head><meta name="index.document" content="foo"/></head><body></body></html>
+        return (
+        assert:equals(('foo'), doc:indexed-document($doc)),
+        assert:count(1, doc:indexed-document($doc//body))
+        )
+    )
+};
 
-(:
+declare
+    %xunit:test
+function doctest:indexed-paragraph() {
+    (
+        let $doc := <html><head><meta name="index.paragraph" content="foo"/></head><body></body></html>
+        return (
+        assert:equals(('foo'), doc:indexed-paragraph($doc)),
+        assert:count(1, doc:indexed-paragraph($doc//body))
+        )
+    )
+};
+
+declare
+    %xunit:test
+function doctest:similar-documents() {
+    (
+        let $doc := 
+            <html>
+                <head>
+                    <link rel='similarity' href='foo'/>
+                    <link rel='other' href="bar"/>
+                </head>
+                <body/>
+            </html>
+            
+        let $ranking := doc:similar-documents($doc)
+        
+        return (
+                 assert:count(1, $ranking),
+                 assert:equals('similarity', $ranking[1]/@rel/string()),
+                 assert:equals('foo', $ranking[1]/@href/string())
+                )
+    )
+};
+
+declare
+    %xunit:test
+function doctest:similar-paragraphs() {
+    (
+    let $doc := 
+        <html>
+            <body>
+                <div id="original">
+                    <a href="bar"/>
+                    <a href="foo" class="similarity"/>
+                </div>
+                <div class="translated">
+                    <a href="bario"/>
+                    <a href="foorio" class="similarity"/>
+                </div>
+            </body>
+        </html>
+            
+        let $ranking := doc:similar-paragraphs($doc)
+        
+        return (
+                 assert:count(1, $ranking),
+                 assert:equals('similarity', $ranking[1]/@class/string()),
+                 assert:equals('foo', $ranking[1]/@href/string())
+                )
+    )
+};
+
 declare 
     %xunit:test
     %xunit:error("http://dhil.lib.sfu.ca/exist/wilde-app/doctest", 'PT')
@@ -424,4 +497,3 @@ function doctest:err() {
     return 
         fn:error(QName('http://dhil.lib.sfu.ca/exist/wilde-app/doctest', 'PT'))
 };
-:)

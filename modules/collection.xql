@@ -18,6 +18,7 @@ declare default element namespace "http://www.w3.org/1999/xhtml";
  :)
 declare function collection:collection() as node()* {
     collection($config:data-root || '/reports')
+   
 };
 
 declare function collection:graph($filename as xs:string) as node() {
