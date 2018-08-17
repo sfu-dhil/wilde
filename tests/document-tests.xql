@@ -2,8 +2,6 @@ xquery version "3.0";
 
 module namespace doctest="http://dhil.lib.sfu.ca/exist/wilde-app/doctest";
 
-import module namespace console="http://exist-db.org/xquery/console";
-
 import module namespace xunit="http://dhil.lib.sfu.ca/exist/xunit/xunit" at "xunit.xql";
 import module namespace assert="http://dhil.lib.sfu.ca/exist/xunit/assert" at "assert.xql";
 
@@ -11,24 +9,24 @@ import module namespace doc="http://dhil.lib.sfu.ca/exist/wilde-app/document" at
 
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
-declare 
+declare
     %xunit:test
 function doctest:id() {
     let $doc := <html id="abc"><head><title>T1</title></head></html>
     return (
         assert:equals('abc', doc:id($doc)),
-        assert:equals('abc', doc:id($doc//title))        
+        assert:equals('abc', doc:id($doc//title))
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:id-child() {
     let $doc := <html id='cheese'><head><title>T1</title></head></html>
     return assert:equals('cheese', doc:id($doc//title))
 };
 
-declare 
+declare
     %xunit:test
     %xunit:skip('XML IDs are not implemented yet.')
 function doctest:xmlids() {
@@ -66,7 +64,7 @@ function doctest:missing-title() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:subtitle() {
     let $doc := <html><head></head><body><p>foo</p><p>bar</p></body></html>
@@ -75,8 +73,8 @@ function doctest:subtitle() {
         assert:equals('foo', doc:subtitle($doc//p[2]))
     )
 };
-    
-declare 
+
+declare
     %xunit:test
 function doctest:path() {
     let $doc := <html><head><meta name="wr.path" content="foo"/></head><body></body></html>
@@ -86,7 +84,7 @@ function doctest:path() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:missing-path() {
     let $doc := <html><head></head><body></body></html>
@@ -96,7 +94,7 @@ function doctest:missing-path() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:word-count() {
     let $doc := <html><head><meta name="wr.wordcount" content="foo"/></head><body></body></html>
@@ -106,7 +104,7 @@ function doctest:word-count() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:missing-word-count() {
     let $doc := <html><head></head><body></body></html>
@@ -116,7 +114,7 @@ function doctest:missing-word-count() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:date() {
     let $doc := <html><head><meta name="dc.date" content="foo"/></head><body></body></html>
@@ -126,7 +124,7 @@ function doctest:date() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:missing-date() {
     let $doc := <html><head></head><body></body></html>
@@ -136,17 +134,17 @@ function doctest:missing-date() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:publisher() {
     let $doc := <html><head><meta name="dc.publisher" content="foo"/></head><body></body></html>
-    return ( 
+    return (
         assert:equals('foo', doc:publisher($doc)),
         assert:equals('foo', doc:publisher($doc//body))
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:missing-publisher() {
     let $doc := <html><head></head><body></body></html>
@@ -156,7 +154,7 @@ function doctest:missing-publisher() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:edition() {
     let $doc := <html><head><meta name="dc.publisher.edition" content="foo"/></head><body></body></html>
@@ -166,7 +164,7 @@ function doctest:edition() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:missing-edition() {
     let $doc := <html><head></head><body></body></html>
@@ -177,7 +175,7 @@ function doctest:missing-edition() {
 };
 
 
-declare 
+declare
     %xunit:test
 function doctest:region() {
     let $doc := <html><head><meta name="dc.region" content="foo"/></head><body></body></html>
@@ -187,7 +185,7 @@ function doctest:region() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:missing-region() {
     let $doc := <html><head></head><body></body></html>
@@ -197,10 +195,10 @@ function doctest:missing-region() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:document-matches() {
-    let $doc := 
+    let $doc :=
         <html>
             <head>
                 <link rel='similarity' href='foo'/>
@@ -212,13 +210,13 @@ function doctest:document-matches() {
     return (
         assert:count(1, $matches),
         assert:equals('foo', $matches[1]/@href/string())
-    )        
+    )
 };
- 
-declare 
+
+declare
     %xunit:test
 function doctest:paragraph-matches() {
-    let $doc := 
+    let $doc :=
         <html>
             <body>
                 <div id="original">
@@ -236,10 +234,10 @@ function doctest:paragraph-matches() {
         assert:count(1, $matches),
         assert:equals('foo', $matches[1]/@href/string())
     )
-        
+
 };
-    
-declare 
+
+declare
     %xunit:test
 function doctest:city() {
     let $doc := <html><head><meta name="dc.region.city" content="foo"/></head><body></body></html>
@@ -249,7 +247,7 @@ function doctest:city() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:city-multiple() {
     let $doc := <html><head><meta name="dc.region.city" content="foo"/><meta name="dc.region.city" content="bar"/></head><body></body></html>
@@ -259,7 +257,7 @@ function doctest:city-multiple() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:source() {
     let $doc := <html><head><meta name="dc.source" content="foo"/></head><body></body></html>
@@ -270,7 +268,7 @@ function doctest:source() {
 };
 
 
-declare 
+declare
     %xunit:test
 function doctest:source-multiple() {
     let $doc := <html><head><meta name="dc.source" content="foo"/><meta name="dc.source" content="bar"/></head><body></body></html>
@@ -280,7 +278,7 @@ function doctest:source-multiple() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:source-institution() {
     let $doc := <html><head><meta name="dc.source.institution" content="foo"/></head><body></body></html>
@@ -291,7 +289,7 @@ function doctest:source-institution() {
 };
 
 
-declare 
+declare
     %xunit:test
 function doctest:source-institution-multiple() {
     let $doc := <html><head><meta name="dc.source.institution" content="foo"/><meta name="dc.source.institution" content="bar"/></head><body></body></html>
@@ -302,7 +300,7 @@ function doctest:source-institution-multiple() {
 };
 
 
-declare 
+declare
     %xunit:test
 function doctest:source-url() {
     let $doc := <html><head><meta name="dc.source.url" content="foo"/></head><body></body></html>
@@ -312,7 +310,7 @@ function doctest:source-url() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:source-url-multiple() {
     let $doc := <html><head><meta name="dc.source.url" content="foo"/><meta name="dc.source.url" content="bar"/></head><body></body></html>
@@ -322,7 +320,7 @@ function doctest:source-url-multiple() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:source-database() {
     let $doc := <html><head><meta name="dc.source.database" content="foo"/></head><body></body></html>
@@ -332,7 +330,7 @@ function doctest:source-database() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:source-database-multiple() {
     let $doc := <html><head><meta name="dc.source.database" content="foo"/><meta name="dc.source.database" content="bar"/></head><body></body></html>
@@ -342,7 +340,7 @@ function doctest:source-database-multiple() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:facsimile() {
     let $doc := <html><head><meta name="dc.source.facsimile" content="foo"/></head><body></body></html>
@@ -353,7 +351,7 @@ function doctest:facsimile() {
 };
 
 
-declare 
+declare
     %xunit:test
 function doctest:facsimile-multiple() {
     let $doc := <html><head><meta name="dc.source.facsimile" content="foo"/><meta name="dc.source.facsimile" content="bar"/></head><body></body></html>
@@ -363,7 +361,7 @@ function doctest:facsimile-multiple() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:language() {
     let $doc := <html><head><meta name="dc.language" content="foo"/></head><body></body></html>
@@ -373,7 +371,7 @@ function doctest:language() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:language-multiple() {
     let $doc := <html><head><meta name="dc.language" content="foo"/><meta name="dc.language" content="bar"/></head><body></body></html>
@@ -384,7 +382,7 @@ function doctest:language-multiple() {
 };
 
 
-declare 
+declare
     %xunit:test
 function doctest:translations() {
     let $doc := <html><head></head><body><div class='translation' lang='foo'/></body></html>
@@ -394,7 +392,7 @@ function doctest:translations() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:translations-multiple() {
     let $doc := <html><head></head><body><div class='translation' lang='foo'/><div class='translation' lang='bar'/></body></html>
@@ -404,7 +402,7 @@ function doctest:translations-multiple() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function doctest:count-translations() {
     let $doc := <html><head></head><body><div class='translation' lang='foo'/><div class='translation' lang='bar'/></body></html>
@@ -416,12 +414,12 @@ function doctest:count-translations() {
 
 
 (:
-declare 
+declare
     %xunit:test
     %xunit:error("http://dhil.lib.sfu.ca/exist/wilde-app/doctest", 'PT')
 function doctest:err() {
-    let $doc := <html id='cheese'><head><title>T1</title></head></html>    
-    return 
+    let $doc := <html id='cheese'><head><title>T1</title></head></html>
+    return
         fn:error(QName('http://dhil.lib.sfu.ca/exist/wilde-app/doctest', 'PT'))
 };
 :)

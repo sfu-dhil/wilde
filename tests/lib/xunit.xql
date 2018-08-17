@@ -2,8 +2,6 @@ xquery version "3.0";
 
 module namespace xunit="http://dhil.lib.sfu.ca/exist/xunit/xunit";
 
-import module namespace console="http://exist-db.org/xquery/console";
-
 import module namespace assert="http://dhil.lib.sfu.ca/exist/xunit/assert" at "assert.xql";
 
 declare namespace inspect="http://exist-db.org/xquery/inspection";
@@ -54,11 +52,11 @@ declare function xunit:call($function as function(*)) {
     let $skip := xunit:find-annotation($function, $xunit:skip)
     let $error := xunit:find-annotation($function, $xunit:error)
     let $meta := inspect:inspect-function($function)
-    
+
     return
         <testcase module="{$meta/@module}" name="{$meta/@name}"> {
             if(count($skip) > 0) then
-                xunit:call-skip($function, $skip)            
+                xunit:call-skip($function, $skip)
             else if(count($error) > 0) then
                 xunit:call-error($function, $error)
             else
@@ -78,10 +76,10 @@ declare function xunit:find-tests($uri as xs:anyURI) {
 
 declare function xunit:test($uri as xs:anyURI) {
     let $functions := xunit:find-tests($uri)
-    let $results := 
-        for $function in $functions 
+    let $results :=
+        for $function in $functions
         return xunit:call($function)
-    return 
+    return
         <test count="{count($functions)}" uri="{$uri}">
             { $results }
         </test>

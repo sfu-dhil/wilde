@@ -2,8 +2,6 @@ xquery version "3.0";
 
 module namespace simtest="http://dhil.lib.sfu.ca/exist/wilde-app/similarity-test";
 
-import module namespace console="http://exist-db.org/xquery/console";
-
 import module namespace xunit="http://dhil.lib.sfu.ca/exist/xunit/xunit" at "xunit.xql";
 import module namespace assert="http://dhil.lib.sfu.ca/exist/xunit/assert" at "assert.xql";
 
@@ -11,7 +9,7 @@ import module namespace similarity="http://dhil.lib.sfu.ca/exist/wilde-app/simil
 
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
-declare 
+declare
     %xunit:test
 function simtest:normalize() {
     (
@@ -123,7 +121,7 @@ function simtest:compression() {
     )
 };
 
-declare 
+declare
     %xunit:test
 function simtest:available() {
     assert:equals(('compression', 'jaccard', 'cosine', 'levenshtein', 'overlap'), similarity:available())
