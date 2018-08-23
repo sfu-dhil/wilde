@@ -52,7 +52,7 @@ declare function document:edition($node as node()) as xs:string {
 declare function document:region($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.region']/@content)
 };
-(: stopped here. :)
+
 declare function document:document-matches($node as node()) as node()* {
     root($node)//link[@rel='similarity']
 };
@@ -107,7 +107,6 @@ declare function document:count-translations($node as node()) as xs:integer {
   count(root($node)//div[@class='translation'])
 };
 
-(: :)
 
 declare function document:indexed-document($node as node()) as xs:string* {
   let $node := root($node)//meta[@name="index.document"]

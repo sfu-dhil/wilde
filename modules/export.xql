@@ -7,14 +7,14 @@ declare namespace export="http://dhil.lib.sfu.ca/exist/wilde-app/export";
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace json="http://www.json.org";
 
-declare option output:method "text";
-declare option output:media-type "text/csv";
-
 import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace kwic="http://exist-db.org/xquery/kwic";
 import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
 import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
 import module namespace index="http://dhil.lib.sfu.ca/exist/wilde-app/index" at "index.xql";
+
+declare option output:method "text";
+declare option output:media-type "text/csv";
 
 declare function export:search() {
     let $query := request:get-parameter('query', '')
