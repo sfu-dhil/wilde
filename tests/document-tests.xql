@@ -426,9 +426,33 @@ function doctest:indexed-document() {
 
 declare
     %xunit:test
+function doctest:indexed-document-dupe() {
+    (
+        let $doc := <html><head><meta name="index.document" content="foo"/><meta name="index.document" content="bar"/></head><body></body></html>
+        return (
+        assert:equals(('foo'), doc:indexed-document($doc)),
+        assert:count(1, doc:indexed-document($doc//body))
+        )
+    )
+};
+
+declare
+    %xunit:test
 function doctest:indexed-paragraph() {
     (
         let $doc := <html><head><meta name="index.paragraph" content="foo"/></head><body></body></html>
+        return (
+        assert:equals(('foo'), doc:indexed-paragraph($doc)),
+        assert:count(1, doc:indexed-paragraph($doc//body))
+        )
+    )
+};
+
+declare
+    %xunit:test
+function doctest:indexed-paragraph-dupe() {
+    (
+        let $doc := <html><head><meta name="index.paragraph" content="foo"/><meta name="index.paragraph" content="bar"/></head><body></body></html>
         return (
         assert:equals(('foo'), doc:indexed-paragraph($doc)),
         assert:count(1, doc:indexed-paragraph($doc//body))
