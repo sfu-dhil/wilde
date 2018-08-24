@@ -1,4 +1,4 @@
 [submodule "docs"]
 	path = docs
-	url = git@github.com:sfu-dhil/wilde-docs.git
+	url = https://github.com/sfu-dhil/wilde-docs.git
 	branch = master
