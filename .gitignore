@@ -1,4 +1,5 @@
-build/
-resources/lib
-wilde.xpr
-docs/build
+/build
+/resources/lib
+/wilde.xpr
+/docs/build
+/wilde-new.xpr
