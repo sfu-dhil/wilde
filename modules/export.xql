@@ -11,7 +11,6 @@ import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" a
 import module namespace kwic="http://exist-db.org/xquery/kwic";
 import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
 import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
-import module namespace index="http://dhil.lib.sfu.ca/exist/wilde-app/index" at "index.xql";
 
 declare option output:method "text";
 declare option output:media-type "text/csv";
@@ -21,7 +20,7 @@ declare function export:search() {
     let $page := request:get-parameter('p', 1)
     let $hits := collection:search($query)
 
-    let $headers := (     
+    let $headers := (
       <row>
           <item>ID</item>
           <item>Title</item>
@@ -31,7 +30,7 @@ declare function export:search() {
           <item>Found {count($hits)} results for search query {$query}.</item>
         </row>
     )
-    
+
     let $body := for $hit in $hits
         let $did := document:id($hit)
         let $title := document:title($hit)
@@ -44,12 +43,12 @@ declare function export:search() {
                     <item>{$title}</item>
                     <item>{$node//text()}</item>
                 </row>
-    
+
     return ($headers, $body)
 };
 
 declare function export:volume() {
-    let $headers := 
+    let $headers :=
         <row>
             <item>Id</item>
             <item>Date</item>
@@ -60,7 +59,6 @@ declare function export:volume() {
             <item>Region</item>
             <item>City</item>
             <item>Language</item>
-            <item>Status</item>
         </row>
 
     let $body := for $document in collection:documents()
@@ -75,14 +73,13 @@ declare function export:volume() {
             <item>{document:region($document)}</item>
             <item>{document:city($document)}</item>
             <item>{document:language($document)}</item>
-            <item>{document:status($document)}</item>
         </row>
-        
+
     return ($headers, $body)
 };
 
 declare function export:matching-paragraphs() {
-    let $headers := 
+    let $headers :=
         <row>
             <item>Source Id</item>
             <item>Source date</item>
@@ -98,9 +95,9 @@ declare function export:matching-paragraphs() {
             <item>Target language</item>
             <item>Match</item>
         </row>
-    
+
     let $documents := collection:documents()
-    let $body := 
+    let $body :=
         for $link in $documents//xhtml:a[contains(@class, 'similarity')]
         let $target := collection:fetch($link/@data-document/string())
         order by document:date($link), document:date($target), $link/@data-similarity descending
@@ -123,12 +120,12 @@ declare function export:matching-paragraphs() {
             <item>{document:language($target)}</item>
             <item>{$link/@data-similarity/string()}</item>
         </row>
-        
+
     return ($headers, $body)
 };
 
 declare function export:matching() {
-    let $headers := 
+    let $headers :=
         <row>
             <item>Source Id</item>
             <item>Source date</item>
@@ -140,9 +137,9 @@ declare function export:matching() {
             <item>Target region</item>
             <item>Match</item>
         </row>
-    
+
     let $documents := collection:documents()
-    let $body := 
+    let $body :=
         for $link in $documents//xhtml:link[@rel='similarity']
         let $target := collection:fetch($link/@href/string())
         order by document:date($link), document:date($target), $link/@data-similarity descending
@@ -161,7 +158,64 @@ declare function export:matching() {
             <item>{document:region($target)}</item>
             <item>{$link/@data-similarity/string()}</item>
         </row>
-        
+
+    return ($headers, $body)
+};
+
+declare function export:signatures() {
+    let $headers :=
+        <row>
+            <item>Id</item>
+            <item>Date</item>
+            <item>Publisher</item>
+            <item>Country</item>
+            <item>City</item>
+            <item>Language</item>
+            <item>Signature</item>
+        </row>
+
+    let $documents := collection:documents()
+    let $body :=
+        for $p in $documents//xhtml:p[@class='signature']
+        return
+        <row>
+            <item>{document:id($p)}</item>
+            <item>{document:date($p)}</item>
+            <item>{document:publisher($p)}</item>
+            <item>{document:region($p)}</item>
+            <item>{document:city($p)}</item>
+            <item>{document:language($p)}</item>
+            <item>{$p/text()}</item>
+        </row>
+
+    return ($headers, $body)
+};
+
+declare function export:bibliography() {
+    let $headers :=
+        <row>
+            <item>Id</item>
+            <item>Date</item>
+            <item>Publisher</item>
+            <item>Country</item>
+            <item>City</item>
+            <item>Language</item>
+        </row>
+
+    let $documents := collection:documents()
+    let $body :=
+        for $doc in $documents
+        return
+        <row>
+            <item>{document:id($doc)}</item>
+            <item>{document:date($doc)}</item>
+            <item>{document:publisher($doc)}</item>
+            <item>{document:region($doc)}</item>
+            <item>{document:city($doc)}</item>
+            <item>{document:language($doc)}</item>
+            <item>{$doc/text()}</item>
+        </row>
+
     return ($headers, $body)
 };
 
@@ -177,14 +231,14 @@ declare function local:rows2csv($rows) {
 };
 
 let $functionName := request:get-attribute('function')
-let $function := 
+let $function :=
     try {
         function-lookup(QName("http://dhil.lib.sfu.ca/exist/wilde-app/export", $functionName), 0)
     } catch * {
         ()
     }
-    
-return    
+
+return
 if(exists($function)) then
     let $rows := $function()
     return local:rows2csv($rows)

@@ -7,7 +7,7 @@
     <license>GNU-LGPL</license>
     <copyright>true</copyright>
     <type>application</type>
-    <target>wilde</target>
+    <target>wilde-new</target>
     <prepare>pre-install.xql</prepare>
     <finish/>
 <deployed>2018-06-28T10:50:26.921-07:00</deployed>
