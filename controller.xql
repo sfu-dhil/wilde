@@ -23,25 +23,16 @@ else if ($exist:path eq "/") then
         <redirect url="index.html"/>
     </dispatch>
     
-else if(ends-with($exist:resource, ".html") and not(contains($exist:path, '/pages/'))) then
-    <dispatch>
-        <forward url="{$exist:controller}/pages/{$exist:resource}"/>
-    </dispatch>
-    
 else if (ends-with($exist:resource, ".html")) then
     (: the html page is run through view.xql to expand templates :)
-    <dispatch>
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <view>
             <forward url="{$exist:controller}/modules/view.xql"/>
-        </view> { 
-            if(request:get-server-name() != 'localhost') then
-        		<error-handler>
-        			<forward url="{$exist:controller}/error-page.html" method="get"/>
-        			<forward url="{$exist:controller}/modules/view.xql"/>
-        		</error-handler>
-        	else
-        	   ()
-        }
+        </view>
+		<error-handler>
+			<forward url="{$exist:controller}/error-page.html" method="get"/>
+			<forward url="{$exist:controller}/modules/view.xql"/>
+		</error-handler>
     </dispatch>
 
 else if (ends-with($exist:resource, ".gexf")) then
