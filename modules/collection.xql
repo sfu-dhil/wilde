@@ -18,6 +18,7 @@ declare default element namespace "http://www.w3.org/1999/xhtml";
  :)
 declare function collection:collection() as node()* {
     collection($config:data-root || '/reports')
+   
 };
 
 declare function collection:graph($filename as xs:string) as node() {
@@ -25,7 +26,7 @@ declare function collection:graph($filename as xs:string) as node() {
     ()
   else
     let $path := $config:graph-root || '/' || $filename
-    return 
+    return
       if(doc-available($path)) then
         doc($path)
       else
@@ -34,16 +35,16 @@ declare function collection:graph($filename as xs:string) as node() {
 
 declare function collection:graph-list() as node()* {
     let $collection := collection($config:graph-root)
-    return 
-        for $doc in $collection  
+    return
+        for $doc in $collection
         let $uri := xs:anyURI($config:graph-root || util:document-name($doc))
-        let $null := 
+        let $null :=
           if('application/xml' != xmldb:get-mime-type($uri)) then
             xmldb:set-mime-type($uri, 'application/xml')
           else
-            ()          
+            ()
         where fn:ends-with(util:document-name($doc), '.gexf')
-        order by util:document-name($doc)        
+        order by util:document-name($doc)
         return $doc
 };
 
@@ -58,7 +59,7 @@ declare function collection:fetch($id as xs:string) as node() {
     return
       if($document) then
         $document
-      else 
+      else
         <html>
           <head>
             <title>Cannot find {$id}.</title>
@@ -81,7 +82,7 @@ declare function collection:paragraph($doc-id as xs:string, $par-id as xs:string
 };
 
 (:~
- : Fetch the next document by date and publisher from the collection, or 
+ : Fetch the next document by date and publisher from the collection, or
  : an empty node if there isn't a next document for the publisher.
  : @param $document The document to find the next one.
  : @return Node representing the document.
@@ -89,22 +90,22 @@ declare function collection:paragraph($doc-id as xs:string, $par-id as xs:string
 declare function collection:next($document) as node()? {
   let $publisher := document:publisher($document)
   let $date := document:date($document)
-  
-  let $documents := 
+
+  let $documents :=
     for $doc in collection($config:data-root)/html[.//meta[@name='dc.publisher' and @content=$publisher]]
     order by document:date($doc), document:id($doc)
     return $doc
-  
+
   let $idx := functx:index-of-node($documents, $document)
-  return 
+  return
     if($idx lt count($documents)) then
       $documents[$idx + 1]
-    else 
+    else
       ()
 };
 
 (:~
- : Fetch the previous document by date and publisher from the collection, or 
+ : Fetch the previous document by date and publisher from the collection, or
  : an empty node if there isn't a previous document for the publisher.
  : @param $document The document to find the previous one.
  : @return Node representing the document.
@@ -112,17 +113,17 @@ declare function collection:next($document) as node()? {
 declare function collection:previous($document) as node()? {
   let $publisher := document:publisher($document)
   let $date := document:date($document)
-  
-  let $documents := 
+
+  let $documents :=
     for $doc in collection($config:data-root)/html[.//meta[@name='dc.publisher' and @content=$publisher]]
     order by document:date($doc), document:id($doc)
     return $doc
-  
+
   let $idx := functx:index-of-node($documents, $document)
-  return 
+  return
     if($idx ge 2) then
       $documents[$idx - 1]
-    else 
+    else
       ()
 };
 
@@ -148,7 +149,7 @@ declare function collection:documents() as node()* {
  :)
 declare function collection:documents($name as xs:string, $value as xs:string) as node()* {
     let $collection := collection($config:data-root)[.//meta[@name=$name and @content=$value]]
-    return 
+    return
         for $doc in $collection
         order by document:region($doc), document:publisher($doc), document:date($doc)
         return $doc
@@ -161,7 +162,7 @@ declare function collection:documents($name as xs:string, $value as xs:string) a
 declare function collection:publishers() as xs:string* {
     for $publisher in distinct-values(collection($config:data-root)//meta[@name='dc.publisher']/@content)
     order by $publisher
-    return $publisher    
+    return $publisher
 };
 
 (:~
@@ -171,7 +172,7 @@ declare function collection:publishers() as xs:string* {
 declare function collection:regions() as xs:string* {
     for $region in distinct-values(collection($config:data-root)//meta[@name='dc.region']/@content)
     order by $region
-    return $region    
+    return $region
 };
 
 declare function collection:regions($publisher as xs:string) as xs:string* {
@@ -186,7 +187,7 @@ declare function collection:regions($publisher as xs:string) as xs:string* {
 declare function collection:languages() as xs:string* {
     for $language in distinct-values(collection($config:data-root)//meta[@name='dc.language']/@content)
     order by $language
-    return $language    
+    return $language
 };
 
 declare function collection:languages($publisher as xs:string) as xs:string* {
@@ -201,7 +202,7 @@ declare function collection:languages($publisher as xs:string) as xs:string* {
 declare function collection:sources() as xs:string* {
     for $source in distinct-values(collection($config:data-root)//meta[@name='dc.source']/@content)
     order by $source
-    return $source    
+    return $source
 };
 
 (:~
@@ -228,9 +229,9 @@ declare function collection:search($query as xs:string) as node()* {
     if(empty($query) or $query = '') then
         ()
     else
-        for $hit in collection($config:data-root)//div[@id="original"]/p[ft:query(., $query)]
+        for $hit in collection($config:data-root)//div[@id="original"]//p[ft:query(., $query)]
         order by ft:score($hit) descending
-        return $hit        
+        return $hit
 };
 
 (:~

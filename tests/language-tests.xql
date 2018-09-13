@@ -11,24 +11,28 @@ declare default element namespace "http://www.w3.org/1999/xhtml";
 
 declare
     %xunit:test
-function langtest:code2lang() {
+function langtest:lang2code() {
     (
-        assert:equals((), lang:code2lang(())),
-        assert:equals('English', lang:code2lang('en')),
-        assert:equals(('English', 'German'), lang:code2lang(('en', 'de'))),
-        assert:equals(('English', 'German'), lang:code2lang(('de', 'en'))),
-        assert:equals('Unknown code foo', lang:code2lang('foo'))
+        assert:equals((), lang:lang2code(())),
+        assert:equals('en', lang:lang2code('English')),
+        assert:equals('fr', lang:lang2code('French')),
+        assert:equals(('de', 'en'), lang:lang2code(('English', 'German'))),       
+        assert:equals(('de', 'en'), lang:lang2code(('German', 'English'))),
+        assert:equals(('es', 'fr', 'it'), lang:lang2code(('French', 'Italian', 'Spanish'))),        
+        assert:equals('Unknown name foo', lang:lang2code('foo'))
     )
 };
 
 declare
     %xunit:test
-function langtest:lang2code() {
+function langtest:code2lang() {
     (
-        assert:equals((), lang:lang2code(())),
-        assert:equals('en', lang:lang2code('English')),
-        assert:equals(('de', 'en'), lang:lang2code(('English', 'German'))),
-        assert:equals(('de', 'en'), lang:lang2code(('German', 'English'))),
-        assert:equals('Unknown name foo', lang:lang2code('foo'))
+        assert:equals((), lang:code2lang(())), 
+        assert:equals('English', lang:code2lang('en')),
+        assert:equals('French', lang:code2lang('fr')),
+        assert:equals(('English', 'German'), lang:code2lang(('en', 'de'))),       
+        assert:equals(('English', 'German'), lang:code2lang(('de', 'en'))),
+        assert:equals(('French', 'Italian', 'Spanish'), lang:code2lang(('fr', 'it', 'es'))),
+        assert:equals('Unknown code foo', lang:code2lang('foo'))        
     )
 };

@@ -111,7 +111,7 @@ return
                             {count($test/testcase[fail])} failed assertions.
                             {count($test/testcase[error])} errors.
                         </li>
-            }</ol>
+            } </ol>
             {local:render-errors($results)}
             {local:render-fails($results)}
             {local:render-skipped($results)}

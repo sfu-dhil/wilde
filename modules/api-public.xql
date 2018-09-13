@@ -22,22 +22,21 @@ declare function api:documents() {
     let $documents := collection:documents()
     for $document in $documents
         return
-            <document id="{document:id($document)}" 
-               title="{document:title($document)}" 
-               status="{document:status($document)}" 
+            <document id="{document:id($document)}"
+               title="{document:title($document)}"
                index-document="{document:indexed-document($document)}"
                index-paragraph="{document:indexed-paragraph($document)}" />
 };
 
 declare function api:graph-data() {
   let $documents := collection:documents()
-  
-  return 
+
+  return
   <root> {
     for $document in $documents
-      return 
-        if(count(document:similar-documents($document)) eq 0) then 
-          () 
+      return
+        if(count(document:similar-documents($document)) eq 0) then
+          ()
         else
           <node id="{document:id($document)}" label="{document:publisher($document)}\n{document:date($document)}" group="{document:region($document)}" />
   } {
@@ -55,17 +54,17 @@ declare function api:graph-data() {
 
 declare function api:publishers() {
     for $publisher in collection:publishers()
-    return <json:value>{$publisher}</json:value> 
+    return <json:value>{$publisher}</json:value>
 };
 
 declare function api:regions() {
     for $region in collection:regions()
-    return <json:value>{$region}</json:value> 
+    return <json:value>{$region}</json:value>
 };
 
 declare function api:languages() {
     for $language in collection:languages()
-    return <json:value>{lang:code2lang($language)}</json:value> 
+    return <json:value>{lang:code2lang($language)}</json:value>
 };
 
 declare function api:cities() {
@@ -79,14 +78,14 @@ declare function api:sources() {
 };
 
 let $functionName := request:get-attribute('function')
-let $function := 
+let $function :=
     try {
         function-lookup(QName("http://dhil.lib.sfu.ca/exist/wilde-app/api-public", $functionName), 0)
     } catch * {
         ()
     }
 
-return    
+return
 if(exists($function)) then
     <root> { $function() } </root>
 else

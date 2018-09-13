@@ -52,7 +52,7 @@ declare function document:edition($node as node()) as xs:string {
 declare function document:region($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.region']/@content)
 };
-(: stopped here. :)
+
 declare function document:document-matches($node as node()) as node()* {
     root($node)//link[@rel='similarity']
 };
@@ -64,10 +64,10 @@ declare function document:paragraph-matches($node as node()) as node()* {
 declare function document:city($node as node()) as xs:string {
   let $cities := root($node)//meta[@name='dc.region.city']/@content
   return
-    if(count($cities) > 1) then
+    if(count($cities) >= 1) then
       string($cities[1])
     else
-      string(root($node)//meta[@name='dc.region.city']/@content)
+      ''
 };
 
 declare function document:source($node as node()) as xs:string* {
@@ -107,11 +107,10 @@ declare function document:count-translations($node as node()) as xs:integer {
   count(root($node)//div[@class='translation'])
 };
 
-(: :)
 
-declare function document:indexed-document($node as node()) as xs:string* {
+declare function document:indexed-document($node as node()) as xs:string {
   let $node := root($node)//meta[@name="index.document"]
-  return if($node) then $node/@content else "No"
+  return if($node) then $node[1]/@content else "No"
 };
 
 declare function document:similar-documents($node as node()) as node()* {
@@ -120,9 +119,9 @@ declare function document:similar-documents($node as node()) as node()* {
     return $node
 };
 
-declare function document:indexed-paragraph($node as node()) as xs:string* {
+declare function document:indexed-paragraph($node as node()) as xs:string {
   let $node := root($node)//meta[@name="index.paragraph"]
-  return if($node) then $node/@content else "No"
+  return if($node) then $node[1]/@content else "No"
 };
 
 declare function document:similar-paragraphs($node as node()) as node()* {

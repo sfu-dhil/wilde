@@ -384,7 +384,7 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
     let $similarities := document:similar-documents($model('document'))
     return
         if(count($similarities) = 0) then
-            ()
+            (<i>None found</i>)
         else
             <ul> {
                 for $link in $similarities
@@ -625,14 +625,16 @@ declare function app:measure($node as node(), $model as map(*)) {
           else 
             0
         } </dd>
+        <dt>lengths</dt>
+        <dd>first passage: {string-length($a)}, second passage: {string-length($b)}</dd>
         <dt>cosine</dt>
-        <dd>{similarity:similarity("cosine", $c1, $c2)}</dd>
+        <dd>{similarity:similarity("cosine", $a, $b)}</dd>
         <dt>jaccard</dt>
-        <dd>{similarity:similarity("jaccard", $c1, $c2)}</dd>
+        <dd>{similarity:similarity("jaccard", $a, $b)}</dd>
         <dt>overlap</dt>
-        <dd>{similarity:similarity("overlap", $c1, $c2)}</dd>
+        <dd>{similarity:similarity("overlap", $a, $b)}</dd>
         <dt>compression</dt>
-        <dd>{similarity:similarity("compression", $c1, $c2)}</dd>
+        <dd>{similarity:similarity("compression", $a, $b)}</dd>
         <dt>first</dt>
         <dd id='first'>{$a}</dd>
         <dt>second</dt>
