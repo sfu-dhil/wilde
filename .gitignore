@@ -2,3 +2,4 @@ build/
 resources/lib
 wilde.xpr
 docs/build
+.DS_Store
