@@ -100,11 +100,11 @@ declare function document:language($node as node()) as xs:string {
 };
 
 declare function document:translations($node as node()) as xs:string* {
-  root($node)//div[@class='translation']/@lang/string()
+  root($node)//div[@class='translated']/@lang/string()
 };
 
 declare function document:count-translations($node as node()) as xs:integer {
-  count(root($node)//div[@class='translation'])
+  count(root($node)//div[@class='translated'])
 };
 
 
