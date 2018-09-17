@@ -153,13 +153,16 @@ body {
 
 .newspaper-masthead {
   border-bottom: 3px solid #333333;
-  margin-top: 70px;
+  margin-top: 40px;
+  margin-bottom: 2em;
   text-align: center; }
   .newspaper-masthead h1 {
-    font-size: 60px; }
+    font-size: 60px;
+    margin-bottom: 46px; }
   .newspaper-masthead .issue-date {
     border-top: 3px solid #333333;
     font-family: 'Encode Sans Condensed';
-    font-weight: 700; }
+    font-weight: 700;
+    padding: 13px 0 12px; }
 
 /*# sourceMappingURL=style.css.map */
