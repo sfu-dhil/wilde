@@ -141,14 +141,14 @@ body {
 #content {
   flex-grow: 1; }
 
-#footer {
+.footer {
   background-color: #333333;
   color: #F9F7F1; }
-  #footer a {
+  .footer a {
     color: #F9F7F1; }
-    #footer a:link, #footer a:visited {
+    .footer a:link, .footer a:visited {
       color: #F9F7F1; }
-    #footer a:active, #footer a:focus, #footer a:hover {
+    .footer a:active, .footer a:focus, .footer a:hover {
       color: #94CFC9; }
 
 .newspaper-masthead {
