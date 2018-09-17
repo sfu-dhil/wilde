@@ -1,5 +1,7 @@
 @import 'color';
 @import 'typography';
+@import 'mixins';
+
 
 // Start original style.css
 del{
@@ -148,28 +150,28 @@ span.cross-head {
 }
 
 /* Sticky footer styles */
-html {
-  position: relative;
-  min-height: 100%;
-}
+// html {
+//   position: relative;
+//   min-height: 100%;
+// }
 
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 80px;
-}
+// body {
+//   /* Margin bottom by footer height */
+//   margin-bottom: 80px;
+// }
 
 .spacer {
   height: 40px;
 }
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 80px;
-  background-color: #f5f5f5;
-}
+// .footer {
+//   position: absolute;
+//   bottom: 0;
+//   width: 100%;
+//   /* Set the fixed height of the footer here */
+//   height: 80px;
+//   background-color: #f5f5f5;
+// }
 
 .footer > .container {
   margin: 20px;
@@ -183,7 +185,22 @@ body {
 // Start Newspaper styling
 body {
   background-color: $color_white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
+
+#content {
+  flex-grow: 1;
+}
+
+#footer {
+  background-color: $color_black;
+  color: $color_white;
+
+  @include link($color_white, $color_green);
+}
+
 
 // Start front page
 .newspaper-masthead {
@@ -205,6 +222,9 @@ body {
   }
 }
 // End front page
+
+
+
 
 
 
