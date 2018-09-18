@@ -188,6 +188,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  font-family: 'Encode Sans';
 }
 
 #content {
@@ -204,10 +205,16 @@ body {
 
 // start header
 .navbar-default .navbar-collapse,
-.navbar-default .navbar-form {
+.navbar-default .navbar-form,
+.dropdown-menu {
   background-color: $color_black;
   color: $color_white;
   @include link($color_white, $color_green);
+}
+
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li>a:focus {
+  color: $color_green;
 }
 
 
