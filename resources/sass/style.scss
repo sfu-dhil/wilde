@@ -227,5 +227,23 @@ body {
 
 
 
-
 //end newspaper styling
+
+
+
+#comparalator {
+    position: fixed;
+    top: 40vh;
+    width: 200px;
+    height: 200px;
+    background-color: #ddd;
+    padding: 0 1em 1em 1em;
+}
+
+.comparalator-text {
+    clear: both;
+}
+
+.comparalator-clear {
+    float: right;
+}
