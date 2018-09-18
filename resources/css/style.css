@@ -176,6 +176,9 @@ body {
     .dropdown-menu a:hover {
       color: #94CFC9; }
 
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus,
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
   color: #94CFC9; }
