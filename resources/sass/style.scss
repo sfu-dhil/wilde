@@ -243,6 +243,12 @@ body {
 // End front page
 
 
+dt {
+  margin-top: 1em;
+  &:first-child {
+    margin-top: 0;
+  }
+}
 
 
 
