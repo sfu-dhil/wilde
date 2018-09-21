@@ -85,7 +85,7 @@ d3.json("https://gist.githubusercontent.com/catherineomega/0c048a632020c8f91dc46
     .attr("class", "boundary")
     .attr("d", path);
 
-d3.tsv("rest_777.txt")
+d3.tsv("resources/d3/rest_777.txt")
   .row(function(d) {
     return {
       permalink: d.permalink,
@@ -190,7 +190,7 @@ d3.select(self.frameElement).style("height", height + "px");
 
 // load and display the cities
 var g = svg.append("g");
-d3.csv("cities.csv", function(error, data) {
+d3.csv("resources/d3_data/cities.csv", function(error, data) {
   g.selectAll("circle")
     .data(data)
     .enter()
