@@ -85,7 +85,7 @@ d3.json("https://gist.githubusercontent.com/catherineomega/0c048a632020c8f91dc46
     .attr("class", "boundary")
     .attr("d", path);
 
-d3.tsv("resources/d3/rest_777.txt")
+d3.tsv("resources/d3/rest_777.tsv")
   .row(function(d) {
     return {
       permalink: d.permalink,
