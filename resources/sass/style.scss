@@ -262,10 +262,19 @@ dt {
 
 
 .vertical-divider {
+  &:after {
+    clear: both;
+    content: " ";
+    display: block;
+    height: 0;
+    visibility: hidden;
+  }
+  
   .col-sm-3,
   .col-sm-4,
   .col-md-6,
   .col-md-8 {
+    display: inline;
     &:not(:first-child)::after{
       background: $color_black;
       bottom: 0;
