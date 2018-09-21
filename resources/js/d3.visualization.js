@@ -211,4 +211,4 @@
         .style("fill", "red");
     });
   });
-})(jQuery, Cookies);
+})(jQuery, cookies);
