@@ -2,7 +2,7 @@
   $(window).ready(function() {
 
     console.log("ready");
-    
+
     var width = 900,
         height = 450;
 
@@ -214,4 +214,4 @@
         .style("fill", "red");
     });
   });
-})(jQuery, cookies);
+})(jQuery, Cookies);
