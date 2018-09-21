@@ -128,9 +128,6 @@
 });
 
 
-
-
-
 var displaySites = function(data) {
   var sites = svg.selectAll(".site")
       .data(data, function(d) {
@@ -193,7 +190,6 @@ var displaySites = function(data) {
         t = +b.property("min");
       }
 
-
       updateSlider(t);
 
     }, myTimerInterval);
@@ -210,7 +206,6 @@ var displaySites = function(data) {
     mySlider.value(new_value);
     // d3.select('#slider3').dispatchEvent('click');
     // moveHandle(new_value);
-
   }
 
 
@@ -236,4 +231,4 @@ var displaySites = function(data) {
       .attr("r", 5)
       .style("fill", "red");
   });
-  </script>
+</script>
