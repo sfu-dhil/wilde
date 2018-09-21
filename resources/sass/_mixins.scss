@@ -1,3 +1,7 @@
+@import 'variables';
+
+
+
 @mixin link($color, $hover_color) {
   a {
     color: $color;
@@ -11,5 +15,23 @@
     &:hover {
       color: $hover_color;
     }
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{$tablet-width}) {
+    @content;
+  }
+}
+
+@mixin tablet-only {
+  @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$desktop-width}) {
+    @content;
   }
 }
