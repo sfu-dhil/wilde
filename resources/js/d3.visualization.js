@@ -1,4 +1,3 @@
-(function ($, cookies) {
   $(window).ready(function() {
 
     console.log("ready");
@@ -214,4 +213,3 @@
         .style("fill", "red");
     });
   });
-})(jQuery, Cookies);
