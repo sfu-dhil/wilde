@@ -219,19 +219,15 @@ dt {
   dt:first-child {
     margin-top: 0; }
 
-.vertical-divider {
-  display: flex; }
-  .vertical-divider:after {
-    clear: both;
-    content: " ";
-    display: block;
-    height: 0;
-    visibility: hidden; }
-  .vertical-divider .col-sm-3,
-  .vertical-divider .col-sm-4,
-  .vertical-divider .col-md-6,
-  .vertical-divider .col-md-8 {
-    display: inline; }
+@media (min-width: 768px) {
+  .vertical-divider {
+    display: flex; }
+    .vertical-divider:after {
+      clear: both;
+      content: " ";
+      display: block;
+      height: 0;
+      visibility: hidden; }
     .vertical-divider .col-sm-3:not(:first-child)::after,
     .vertical-divider .col-sm-4:not(:first-child)::after,
     .vertical-divider .col-md-6:not(:first-child)::after,
@@ -244,8 +240,7 @@ dt {
       margin-left: -17px;
       position: absolute;
       top: 0;
-      width: 2px; }
-
+      width: 2px; } }
 #comparalator {
   position: fixed;
   top: 40vh;

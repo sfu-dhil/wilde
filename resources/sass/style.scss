@@ -261,32 +261,33 @@ dt {
 }
 
 
-.vertical-divider {
-  display: flex;
+@include tablet {
+  .vertical-divider {
+    display: flex;
 
-  &:after {
-    clear: both;
-    content: " ";
-    display: block;
-    height: 0;
-    visibility: hidden;
-  }
-
-  .col-sm-3,
-  .col-sm-4,
-  .col-md-6,
-  .col-md-8 {
-    display: inline;
-    &:not(:first-child)::after{
-      background: $color_black;
-      bottom: 0;
+    &:after {
+      clear: both;
       content: " ";
-      margin-top: 20px;
-      margin-bottom: 30px;
-      margin-left: -17px;
-      position: absolute;
-      top: 0;
-      width: 2px;
+      display: block;
+      height: 0;
+      visibility: hidden;
+    }
+
+    .col-sm-3,
+    .col-sm-4,
+    .col-md-6,
+    .col-md-8 {
+      &:not(:first-child)::after{
+        background: $color_black;
+        bottom: 0;
+        content: " ";
+        margin-top: 20px;
+        margin-bottom: 30px;
+        margin-left: -17px;
+        position: absolute;
+        top: 0;
+        width: 2px;
+      }
     }
   }
 }
