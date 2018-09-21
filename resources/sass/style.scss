@@ -193,6 +193,7 @@ body {
 
 #content {
   flex-grow: 1;
+  padding-bottom: 6em;
 }
 
 .footer {
@@ -204,6 +205,10 @@ body {
 
 
 // start header
+.navbar {
+  border-left: 0;
+  border-right: 0;
+}
 .navbar-default .navbar-collapse,
 .navbar-default .navbar-form,
 .dropdown-menu {
