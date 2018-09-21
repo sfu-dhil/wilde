@@ -216,29 +216,32 @@ dt {
   dt:first-child {
     margin-top: 0; }
 
-.vertical-divider:after {
-  clear: both;
-  content: " ";
-  display: block;
-  height: 0;
-  visibility: hidden; }
-.vertical-divider .col-sm-3,
-.vertical-divider .col-sm-4,
-.vertical-divider .col-md-6,
-.vertical-divider .col-md-8 {
-  display: inline; }
-  .vertical-divider .col-sm-3:not(:first-child)::after,
-  .vertical-divider .col-sm-4:not(:first-child)::after,
-  .vertical-divider .col-md-6:not(:first-child)::after,
-  .vertical-divider .col-md-8:not(:first-child)::after {
-    background: #333333;
-    bottom: 0;
+.vertical-divider {
+  display: flex; }
+  .vertical-divider:after {
+    clear: both;
     content: " ";
-    height: 100%;
-    margin-left: -15px;
-    position: absolute;
-    top: 0;
-    width: 2px; }
+    display: block;
+    height: 0;
+    visibility: hidden; }
+  .vertical-divider .col-sm-3,
+  .vertical-divider .col-sm-4,
+  .vertical-divider .col-md-6,
+  .vertical-divider .col-md-8 {
+    display: inline; }
+    .vertical-divider .col-sm-3:not(:first-child)::after,
+    .vertical-divider .col-sm-4:not(:first-child)::after,
+    .vertical-divider .col-md-6:not(:first-child)::after,
+    .vertical-divider .col-md-8:not(:first-child)::after {
+      background: #333333;
+      bottom: 0;
+      content: " ";
+      margin-top: 30px;
+      margin-bottom: 30px;
+      margin-left: -15px;
+      position: absolute;
+      top: 0;
+      width: 2px; }
 
 #comparalator {
   position: fixed;

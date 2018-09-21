@@ -262,6 +262,8 @@ dt {
 
 
 .vertical-divider {
+  display: flex;
+
   &:after {
     clear: both;
     content: " ";
@@ -279,7 +281,8 @@ dt {
       background: $color_black;
       bottom: 0;
       content: " ";
-      height: 100%;
+      margin-top: 30px;
+      margin-bottom: 30px;
       margin-left: -15px;
       position: absolute;
       top: 0;
