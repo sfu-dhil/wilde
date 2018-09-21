@@ -233,9 +233,14 @@ body {
   margin-bottom: 2em;
   text-align: center;
 
+
   h1 {
-    font-size: 60px;
+    font-size: 40px;
     margin-bottom: 46px;
+
+    @include tablet {
+      font-size: 60px;
+    }  
   }
 
   .issue-date {
