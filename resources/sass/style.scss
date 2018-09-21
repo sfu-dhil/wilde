@@ -240,7 +240,7 @@ body {
 
     @include tablet {
       font-size: 60px;
-    }  
+    }
   }
 
   .issue-date {
@@ -260,6 +260,23 @@ dt {
   }
 }
 
+
+.vertical-divider {
+  .col-sm-3,
+  .col-sm-4,
+  .col-md-6,
+  .col-md-8 {
+    &:not(:first-child)::after{
+      background: $color_black;
+      bottom: 0;
+      content: " ";
+      margin-left: -10px;
+      position: absolute;
+      top: 0;
+      width: 2px;
+    }
+  }
+}
 
 
 //end newspaper styling
