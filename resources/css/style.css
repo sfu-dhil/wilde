@@ -197,6 +197,10 @@ body {
 .navbar-default .navbar-nav > li > a:focus {
   color: #94CFC9; }
 
+a.front-page {
+  color: #94CFC9;
+  font-weight: 700; }
+
 .newspaper-masthead {
   border-bottom: 3px solid #333333;
   margin-top: 40px;
