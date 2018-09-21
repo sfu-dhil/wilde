@@ -198,8 +198,8 @@ body {
   color: #94CFC9; }
 
 a.front-page {
-  color: #94CFC9;
-  font-weight: 700; }
+  color: #94CFC9 !important;
+  font-weight: 500; }
 
 .newspaper-masthead {
   border-bottom: 3px solid #333333;
