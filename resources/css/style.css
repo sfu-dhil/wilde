@@ -137,7 +137,7 @@ span.cross-head {
   height: 40px; }
 
 .footer > .container {
-  margin: 20px;
+  margin: 20px auto;
   padding-right: 15px;
   padding-left: 15px; }
 
