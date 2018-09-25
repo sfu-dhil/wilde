@@ -25,7 +25,7 @@
     "jsdiff": "http://ejohn.org/files/jsdiff.js",
     "js-url": "^2.3.1",
     "vis": "^4.17.0",
-    "gexf-js": "git@github.com:ubermichael/gexf-js",
+    "gexf-js": "https://github.com/ubermichael/gexf-js.git",
     "bootswatch": "bootswatch#3.3.7"
   }
 }

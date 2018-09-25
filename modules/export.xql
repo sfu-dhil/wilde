@@ -167,7 +167,7 @@ declare function export:signatures() {
         <row>
             <item>Id</item>
             <item>Date</item>
-            <item>Publisher</item>
+            <item>Newspaper Title</item>
             <item>Country</item>
             <item>City</item>
             <item>Language</item>
@@ -196,7 +196,7 @@ declare function export:bibliography() {
         <row>
             <item>Id</item>
             <item>Date</item>
-            <item>Publisher</item>
+            <item>Newspaper Title</item>
             <item>Country</item>
             <item>City</item>
             <item>Language</item>
