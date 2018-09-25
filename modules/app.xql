@@ -225,6 +225,31 @@ declare function app:browse-region($node as node(), $model as map(*)) as node() 
         } </ul>
 };
 
+declare function app:browse-city($node as node(), $model as map(*)) as node() {
+  let $collection := collection:documents()
+  let $city := request:get-parameter('city', false())
+  return
+    if($city) then
+      let $docs := collection:documents('dc.region.city', $city)
+      return <ul> {
+        for $document in $docs
+        order by document:title($document)
+        return <li>{app:link-view(document:id($document), document:title($document))}</li>
+      } </ul>
+    else
+      let $cities := $collection//xhtml:meta[@name="dc.region.city"]/@content
+      return
+        <ul> {
+          for $city in distinct-values($cities)
+          let $count := local:count($cities, $city)
+          order by $city
+          return <li data-city="{$city}" data-count="{$count}">
+              <a href="?city={$city}">{$city}</a>: 
+              {$count}
+            </li>
+        } </ul>
+};
+
 declare function app:count-documents($node as node(), $model as map(*), $name, $value) as xs:integer {
     if(empty($name) and empty($value)) then
         count(collection:documents())
