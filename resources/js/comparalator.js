@@ -9,6 +9,11 @@
 // @supportURL catherine_winters@sfu.ca
 // ==/UserScript==
 
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
+
 // Actual code follows:
 $(window).ready(function() {
     console.log("starting comparalator.");
