@@ -23,8 +23,9 @@ $(window).ready(function() {
 
 $(document).on('click', '.comparealator-add', function() {
   $('.selected-text').unwrap();
-  if (window.getSelection) { // all modern browsers and IE9+
-    var selectedText = window.getSelection();
+  var selectedText = window.getSelection();
+
+  if (selectedText) {
     // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
     // var selectedTextPos = selectedTextRange.getBoundingClientRect();
     // console.log(selectedTextPos);
@@ -35,7 +36,7 @@ $(document).on('click', '.comparealator-add', function() {
 
     $('[data-toggle="tooltip"]').tooltip() // reinitialize tooltips
 
-    selectedTextString = selectedText.toString();
+    // selectedTextString = selectedText.toString();
   }
 });
 
