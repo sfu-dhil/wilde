@@ -25,7 +25,7 @@ $(document).on('click', '.comparealator-add', function() {
 
 });
 
-$(document).on('click', '#original', function() {
+$(document).on('click', '#original, .selected-text', function() {
   $('.selected-text').unwrap();
 });
 
