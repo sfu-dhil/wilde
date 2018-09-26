@@ -122,7 +122,7 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
                     <td>{ 
                       string-join(lang:code2lang(collection:languages($publisher)), ', ')
                     }</td>
-                    <td>{local:count($publishers, $publisher)}</td>
+                    <td>{ local:count($publishers, $publisher) }</td>
                 </tr>
             }</tbody>
         </table>

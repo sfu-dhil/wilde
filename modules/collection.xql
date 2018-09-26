@@ -8,6 +8,7 @@ module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection";
 import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace functx='http://www.functx.com';
 import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
+import module namespace console="http://exist-db.org/xquery/console";
 
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
@@ -176,8 +177,9 @@ declare function collection:regions() as xs:string* {
 };
 
 declare function collection:regions($publisher as xs:string) as xs:string* {
-  let $nodes := collection:collection()//head[meta[@name='dc.publisher' and @content=$publisher]]/meta[@name='dc.region']/@content
-  return distinct-values($nodes)
+    let $heads := collection:collection()//head[meta[@name='dc.publisher'][@content=$publisher]]    
+    let $regions := $heads//meta[@name='dc.region']/@content/string()
+    return distinct-values($regions)
 };
 
 (:~
@@ -191,8 +193,9 @@ declare function collection:languages() as xs:string* {
 };
 
 declare function collection:languages($publisher as xs:string) as xs:string* {
-  let $nodes := collection:collection()//head[meta[@name='dc.publisher' and @content=$publisher]]/meta[@name='dc.language']/@content
-  return distinct-values($nodes)
+    let $heads := collection:collection()//head[meta[@name='dc.publisher'][@content=$publisher]]    
+    let $languages := $heads//meta[@name='dc.language']/@content/string()
+    return distinct-values($languages)
 };
 
 (:~
@@ -216,10 +219,10 @@ declare function collection:cities() as xs:string* {
 };
 
 declare function collection:cities($publisher as xs:string) as xs:string* {
-  let $nodes := collection:collection()//head[meta[@name='dc.publisher' and @content=$publisher]]/meta[@name='dc.region.city']/@content
-  return distinct-values($nodes)
+    let $heads := collection:collection()//head[meta[@name='dc.publisher'][@content=$publisher]]    
+    let $cities := $heads//meta[@name='dc.region.city']/@content/string()
+    return distinct-values($cities)
 };
-
 
 (:~
  : Search the collection for the query string.
