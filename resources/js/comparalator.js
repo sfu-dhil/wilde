@@ -77,7 +77,7 @@ function getSelectionText() {
         // var selectedTextPos = selectedTextRange.getBoundingClientRect();
         // console.log(selectedTextPos);
 
-        $(selectedText).wrap('<span class="selected-text" data-toggle="tooltip" title="selected text" data-placement="top auto" />');
+        $(selectedText).wrap('<span class="selected-text" data-toggle="tooltip" title="selected text" data-placement="top auto"></span>');
         $('[data-toggle="tooltip"]').tooltip()// reinitialize
 
         selectedTextString = selectedText.toString();
