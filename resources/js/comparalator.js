@@ -35,6 +35,7 @@ $(document).on('click', '.comparealator-add', function() {
 
 $(document).on('mouseup', '#original', function() {
     console.log("moused up");
+    console.log("selectedText: " + getSelectionText());
 });
 
 
