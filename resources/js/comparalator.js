@@ -11,10 +11,9 @@
 
 // Actual code follows:
 $(window).ready(function() {
-    $('body').append('<div id="comparalator"></div>');
-    $('#comparalator').append('<div class="top"><h3>Comparalator</h3></div><div class="bottom"><button class="comparalator-add">Compare selected text</button></div>');
-    $('#comparalator .top').append('<div class="comparalator-text comparalator-text-1"><span data-toggle="tooltip" title="Empty">Text 1</span><button class="comparalator-clear">X</button></div>');
-    $('#comparalator .top').append('<div class="comparalator-text comparalator-text-2"><span data-toggle="tooltip" title="Empty">Text 2</span><button class="comparalator-clear">X</button></div>');
+    console.log("starting comparalator.");
+
+    startComparalator();
 });
 
 $(document).on('click', '.comparealator-add', function() {
@@ -34,6 +33,20 @@ $(document).on('click', '.comparealator-add', function() {
     }
 });
 
+$(document).on('mouseup', '#original', function() {
+    console.log("moused up");
+});
+
+
+
+function startComparalator() {
+    if ($('#comparalator').length == 0) {
+        $('body').append('<div id="comparalator"></div>');
+        $('#comparalator').append('<div class="top"><h3>Comparalator</h3></div><div class="bottom"><button class="comparalator-add">Compare selected text</button></div>');
+        $('#comparalator .top').append('<div class="comparalator-text comparalator-text-1"><span data-toggle="tooltip" title="Empty">Text 1</span><button class="comparalator-clear">X</button></div>');
+        $('#comparalator .top').append('<div class="comparalator-text comparalator-text-2"><span data-toggle="tooltip" title="Empty">Text 2</span><button class="comparalator-clear">X</button></div>');
+    }
+});
 
 
 
