@@ -16,26 +16,27 @@ $(function () {
 
 // Actual code follows:
 $(window).ready(function() {
-    console.log("starting comparalator.");
+  console.log("starting comparalator.");
 
-    startComparalator();
+  startComparalator();
 });
 
 $(document).on('click', '.comparealator-add', function() {
-    var selectedText = "";
-    selectedText = getSelectionText();
-    if (selectedText != "") {
-        console.log(getSelectionText());
+  $('.selected-text').unwrap();
+  if (window.getSelection) { // all modern browsers and IE9+
+    var selectedText = window.getSelection();
+    // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
+    // var selectedTextPos = selectedTextRange.getBoundingClientRect();
+    // console.log(selectedTextPos);
+    var highlight = window.getSelection(),
+      spn = $('<span class="selected-text" data-toggle="tooltip" title="selected text" data-placement="top auto"></span>')[0],
+      range = highlight.getRangeAt(0);
+    range.surroundContents(spn);
 
-        // test if comparalator1 is already set.
+    $('[data-toggle="tooltip"]').tooltip() // reinitialize tooltips
 
-        // if not, set it.
-
-        // test if comparalator2 is already set.
-    }
-    else {
-        console.log("No text selected");
-    }
+    selectedTextString = selectedText.toString();
+  }
 });
 
 $(document).on('mouseup', '#original', function() {
@@ -71,20 +72,6 @@ function resetComparalator2() {
 
 function getSelectionText() {
     var selectedTextString = ""
-    $('.selected-text').unwrap();
-    if (window.getSelection) { // all modern browsers and IE9+
-        var selectedText = window.getSelection();
-        // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
-        // var selectedTextPos = selectedTextRange.getBoundingClientRect();
-        // console.log(selectedTextPos);
-        var highlight = window.getSelection(),
-          spn = $('<span class="selected-text" data-toggle="tooltip" title="selected text" data-placement="top auto"></span>')[0],
-          range = highlight.getRangeAt(0);
-        range.surroundContents(spn);
 
-        $('[data-toggle="tooltip"]').tooltip() // reinitialize tooltips
-
-        selectedTextString = selectedText.toString();
-    }
     return selectedTextString;
 }
