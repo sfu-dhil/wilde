@@ -412,4 +412,7 @@ use.stroke {
   position: relative;
   z-index: 100; }
 
+th.header {
+  cursor: pointer; }
+
 /*# sourceMappingURL=style.css.map */
