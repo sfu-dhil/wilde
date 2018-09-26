@@ -46,7 +46,7 @@ function startComparalator() {
         $('#comparalator .top').append('<div class="comparalator-text comparalator-text-1"><span data-toggle="tooltip" title="Empty">Text 1</span><button class="comparalator-clear">X</button></div>');
         $('#comparalator .top').append('<div class="comparalator-text comparalator-text-2"><span data-toggle="tooltip" title="Empty">Text 2</span><button class="comparalator-clear">X</button></div>');
     }
-});
+}
 
 
 
