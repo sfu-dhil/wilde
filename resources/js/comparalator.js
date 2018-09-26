@@ -71,6 +71,7 @@ function resetComparalator2() {
 
 function getSelectionText() {
     var selectedTextString = ""
+    $('.selected-text').unwrap();
     if (window.getSelection) { // all modern browsers and IE9+
         var selectedText = window.getSelection();
         // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
@@ -84,9 +85,6 @@ function getSelectionText() {
         $('[data-toggle="tooltip"]').tooltip() // reinitialize tooltips
 
         selectedTextString = selectedText.toString();
-    }
-    else {
-      $('.selected-text').unwrap();
     }
     return selectedTextString;
 }
