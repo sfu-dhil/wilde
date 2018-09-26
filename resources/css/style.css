@@ -415,4 +415,7 @@ use.stroke {
 th.header {
   cursor: pointer; }
 
+.selected-text {
+  color: red; }
+
 /*# sourceMappingURL=style.css.map */

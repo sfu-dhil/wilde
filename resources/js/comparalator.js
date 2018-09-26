@@ -39,7 +39,7 @@ $(document).on('click', '.comparealator-add', function() {
 });
 
 $(document).on('mouseup', '#original', function() {
-    console.log("moused up");
+    // console.log("moused up");
     console.log("selectedText: " + getSelectionText());
 });
 
@@ -73,11 +73,17 @@ function getSelectionText() {
     var selectedTextString = ""
     if (window.getSelection) { // all modern browsers and IE9+
         var selectedText = window.getSelection();
-        var selectedTextRange = selectedText.getRangeAt(0); //get the text range
-        var selectedTextPos = selectedTextRange.getBoundingClientRect();
-        console.log(selectedTextPos);
+        // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
+        // var selectedTextPos = selectedTextRange.getBoundingClientRect();
+        // console.log(selectedTextPos);
+
+        selectedText.wrap('<span class="selected-text" data-toggle="tooltip" title="selected text" data-placement="top auto" />');
+        $('[data-toggle="tooltip"]').tooltip()// reinitialize
 
         selectedTextString = selectedText.toString();
+    }
+    else {
+      $('.selected-text').unwrap();
     }
     return selectedTextString;
 }
