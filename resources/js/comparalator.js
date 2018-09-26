@@ -22,27 +22,28 @@ $(window).ready(function() {
 });
 
 $(document).on('click', '.comparealator-add', function() {
-  $('.selected-text').unwrap();
-  var selectedText = window.getSelection();
 
-  if (selectedText) {
-    // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
-    // var selectedTextPos = selectedTextRange.getBoundingClientRect();
-    // console.log(selectedTextPos);
-    var highlight = window.getSelection(),
-      spn = $('<span class="selected-text" data-toggle="tooltip" title="selected text" data-placement="top auto"></span>')[0],
-      range = highlight.getRangeAt(0);
-    range.surroundContents(spn);
-
-    $('[data-toggle="tooltip"]').tooltip() // reinitialize tooltips
-
-    // selectedTextString = selectedText.toString();
-  }
 });
 
 $(document).on('mouseup', '#original', function() {
     // console.log("moused up");
-    console.log("selectedText: " + getSelectionText());
+    // console.log("selectedText: " + getSelectionText());
+    $('.selected-text').unwrap();
+    var selectedText = window.getSelection();
+
+    if (selectedText) {
+      // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
+      // var selectedTextPos = selectedTextRange.getBoundingClientRect();
+      // console.log(selectedTextPos);
+      var highlight = window.getSelection(),
+        spn = $('<span class="selected-text" data-toggle="tooltip" title="selected text" data-placement="top auto"></span>')[0],
+        range = highlight.getRangeAt(0);
+      range.surroundContents(spn);
+
+      $('[data-toggle="tooltip"]').tooltip() // reinitialize tooltips
+
+      // selectedTextString = selectedText.toString();
+    }
 });
 
 
@@ -70,9 +71,9 @@ function resetComparalator2() {
     console.log("Cleared text 2");
 }
 
-
-function getSelectionText() {
-    var selectedTextString = ""
-
-    return selectedTextString;
-}
+//
+// function getSelectionText() {
+//     var selectedTextString = ""
+//
+//     return selectedTextString;
+// }
