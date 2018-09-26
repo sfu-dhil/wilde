@@ -65,9 +65,14 @@ function resetComparalator2() {
 
 
 function getSelectionText() {
-    var selectedText = ""
+    var selectedTextString = ""
     if (window.getSelection) { // all modern browsers and IE9+
-        selectedText = window.getSelection().toString()
+        var selectedText = window.getSelection();
+        var selectedTextRange = selectedText.getRangeAt(0); //get the text range
+        var selectedTextPos = selectedTextRange.getBoundingClientRect();
+        console.log(selectedTextPos);
+
+        selectedTextString = selectedText.toString();
     }
-    return selectedText
+    return selectedTextString;
 }
