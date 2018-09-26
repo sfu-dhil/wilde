@@ -27,8 +27,7 @@ $(document).on('click', '.comparealator-add', function() {
 
 $(document).on('click', '#original', function() {
   $('.selected-text').unwrap();
-
-}
+});
 
 
 $(document).on('mouseup', '#original', function() {
