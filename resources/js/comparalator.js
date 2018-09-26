@@ -25,10 +25,15 @@ $(document).on('click', '.comparealator-add', function() {
 
 });
 
+$(document).on('click', '#original', function() {
+  $('.selected-text').unwrap();
+
+}
+
+
 $(document).on('mouseup', '#original', function() {
     // console.log("moused up");
     // console.log("selectedText: " + getSelectionText());
-    $('.selected-text').unwrap();
     var selectedText = window.getSelection();
 
     if (selectedText) {
