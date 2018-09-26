@@ -9,13 +9,8 @@
 // @supportURL catherine_winters@sfu.ca
 // ==/UserScript==
 
-// The following line is for greasemonkey only.
-if(typeof $ == 'undefined'){ var $ = window.jQuery; }
-
 // Actual code follows:
-$(document).ready(function() {
-    console.log( "Greasemonkey ready!" );
-
+$(window).ready(function() {
     $('body').append('<div id="comparalator"></div>');
     $('#comparalator').append('<div class="top"><h3>Comparalator</h3></div><div class="bottom"><button class="comparalator-add">Compare selected text</button></div>');
     $('#comparalator .top').append('<div class="comparalator-text comparalator-text-1"><span data-toggle="tooltip" title="Empty">Text 1</span><button class="comparalator-clear">X</button></div>');

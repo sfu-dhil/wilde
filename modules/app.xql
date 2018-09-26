@@ -31,7 +31,7 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
             <thead>
                 <tr>
                     <th>Date</th><th>Newspaper</th><th>Region</th><th>City</th><th>Language</th>
-                    <th>Document Matches</th><th>Paragraph Matches</th<th>Words</th>
+                    <th>Document Matches</th><th>Paragraph Matches</th><th>Words</th>
                 </tr>
             </thead>
             <tbody>{
