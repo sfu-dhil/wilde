@@ -76,9 +76,12 @@ function getSelectionText() {
         // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
         // var selectedTextPos = selectedTextRange.getBoundingClientRect();
         // console.log(selectedTextPos);
+        var highlight = window.getSelection(),
+          spn = $('<span class="selected-text" data-toggle="tooltip" title="selected text" data-placement="top auto"></span>')[0],
+          range = highlight.getRangeAt(0);
+        range.surroundContents(spn);
 
-        $(window.getSelection()).wrap('<span class="selected-text" data-toggle="tooltip" title="selected text" data-placement="top auto"></span>');
-        $('[data-toggle="tooltip"]').tooltip()// reinitialize
+        $('[data-toggle="tooltip"]').tooltip() // reinitialize tooltips
 
         selectedTextString = selectedText.toString();
     }
