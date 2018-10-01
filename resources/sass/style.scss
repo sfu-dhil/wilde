@@ -190,7 +190,7 @@ body {
   flex-direction: column;
   font-family: 'Encode Sans';
 
-  @include link($color_red, $color_red);
+  @include link($color_red, $color_red_dark);
 }
 
 #content {
