@@ -217,6 +217,10 @@ body {
   @include link($color_white, $color_green);
 }
 
+.dropdown-menu {
+  border-color: $color_green;
+}
+
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:hover,
 .navbar-default .navbar-nav > .open > a:focus,
