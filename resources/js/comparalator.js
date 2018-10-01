@@ -10,7 +10,7 @@
 // ==/UserScript==
 
 $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
+  $('[data-toggle="tooltip1"]').tooltip()
 })
 
 
@@ -25,26 +25,33 @@ $(document).on('click', '.comparealator-add', function() {
 
 });
 
-$(document).on('click', '#original, .selected-text', function() {
-  $('.selected-text').unwrap();
+$(document).on('mousedown', '#original, .selected-text', function() {
+  console.log("unwrapping");
+
+  unwrapSelectedText();
 });
 
 
 $(document).on('mouseup', '#original', function() {
     // console.log("moused up");
     // console.log("selectedText: " + getSelectionText());
+
     var selectedText = window.getSelection();
 
     if (selectedText) {
+      console.log("selectedText: " + selectedText);
+
       // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
       // var selectedTextPos = selectedTextRange.getBoundingClientRect();
       // console.log(selectedTextPos);
       var highlight = window.getSelection(),
-        spn = $('<span class="selected-text" data-toggle="tooltip" title="selected text" data-placement="top auto"></span>')[0],
+        spn = $('<span class="selected-text" data-toggle="tooltip1" title="selected text" data-placement="top auto"></span>')[0],
         range = highlight.getRangeAt(0);
       range.surroundContents(spn);
 
-      $('[data-toggle="tooltip"]').tooltip() // reinitialize tooltips
+      $('[data-toggle="tooltip1"]').tooltip({
+        title: "this is selected text",
+        html: true}); // reinitialize tooltips
 
       // selectedTextString = selectedText.toString();
     }
@@ -53,12 +60,21 @@ $(document).on('mouseup', '#original', function() {
 
 
 function startComparalator() {
+  if ($('.panel-metadata').length > 0) {
     if ($('#comparalator').length == 0) {
-        $('body').append('<div id="comparalator"></div>');
-        $('#comparalator').append('<div class="top"><h3>Comparalator</h3></div><div class="bottom"><button class="comparalator-add">Compare selected text</button></div>');
-        $('#comparalator .top').append('<div class="comparalator-text comparalator-text-1"><span data-toggle="tooltip" title="Empty">Text 1</span><button class="comparalator-clear">X</button></div>');
-        $('#comparalator .top').append('<div class="comparalator-text comparalator-text-2"><span data-toggle="tooltip" title="Empty">Text 2</span><button class="comparalator-clear">X</button></div>');
+      $('body').append('<div id="comparalator"></div>');
+      $('#comparalator').append('<div class="top"><h3>Comparalator</h3></div><div class="bottom"><button class="comparalator-add">Compare selected text</button></div>');
+      $('#comparalator .top').append('<div class="comparalator-text comparalator-text-1"><span data-toggle="tooltip" title="Empty">Text 1</span><button class="comparalator-clear">X</button></div>');
+      $('#comparalator .top').append('<div class="comparalator-text comparalator-text-2"><span data-toggle="tooltip" title="Empty">Text 2</span><button class="comparalator-clear">X</button></div>');
     }
+  }
+}
+
+function unwrapSelectedText() {
+  $('.selected-text').each(function() {
+    var text = $(this).text();
+    $(this).replaceWith(text);
+  });
 }
 
 
