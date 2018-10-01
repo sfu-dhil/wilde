@@ -168,6 +168,9 @@ body {
     .footer a:active, .footer a:focus, .footer a:hover {
       color: #94CFC9; }
 
+#navbar-collapse-1 .container {
+  padding: 0; }
+
 .navbar {
   border-left: 0;
   border-right: 0; }
@@ -204,7 +207,8 @@ body {
   display: flex;
   width: 100%; }
   .navbar-nav > li:first-child {
-    flex-grow: 1; }
+    flex-grow: 1;
+    padding-left: 0; }
 
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:hover,
