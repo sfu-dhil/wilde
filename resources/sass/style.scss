@@ -189,6 +189,8 @@ body {
   display: flex;
   flex-direction: column;
   font-family: 'Encode Sans';
+
+  @include link($color_red, $color_red);
 }
 
 #content {
@@ -219,6 +221,7 @@ body {
 
 .dropdown-menu {
   border-color: $color_green;
+  border: 0;
 }
 
 .navbar-nav {

@@ -1,430 +1,79 @@
-@import url("https://fonts.googleapis.com/css?family=Encode+Sans+Condensed:700");
-@import url("https://fonts.googleapis.com/css?family=Encode+Sans:400,500");
-h1,
-h2,
-h3,
-h4,
-h5 {
-  font-family: 'Encode Sans Condensed';
-  font-weight: 700; }
-
-h2 {
-  font-size: 34px; }
-
-h3 {
-  font-size: 24px; }
-
-p {
-  hyphens: auto; }
-
-del {
-  text-decoration: none;
-  background: #fcc; }
-
-ins {
-  text-decoration: none;
-  background: #ccf; }
-
-strong.match {
-  background-color: yellow;
-  font-weight: normal; }
-
-div.paragraph-compare {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid lightgrey; }
-
-td a {
-  white-space: nowrap; }
-
-body {
-  font-size: 16px; }
-
-body div.overlay {
-  display: none; }
-
-body.saving div.overlay {
-  display: block;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background-color: rgba(64, 64, 64, 0.5); }
-
-p.heading {
-  font-weight: bold; }
-
-p.signature {
-  font-style: italic; }
-
-/* table sorter styles */
-th.headerSortDown:after {
-  content: " \2193"; }
-
-th.headerSortUp:after {
-  content: " \2191"; }
-
-/* editor styles */
-p.doc-info {
-  text-align: right; }
-
-.doc-source {
-  font-style: italic; }
-
-td.dissimilar {
-  color: #bbb; }
-
-td.similar {
-  font-weight: bold; }
-
-li.levenshtein {
-  font-weight: bold; }
-
-li.cosine {
-  font-style: italic; }
-
-tr.reference span.number {
-  display: inline-block;
-  padding-right: 20px;
-  float: left; }
-
-tr.reference a.ref {
-  display: inline-block;
-  width: 80%;
-  float: left; }
-
-table.search-results td.previous {
-  text-align: right; }
-
-table.search-results td.hi {
-  text-align: center; }
-
-table.search-results td.next {
-  text-align: left; }
-
-/* Erik added rules */
-kbd {
-  color: black;
-  background-color: #eee; }
-
-blockquote.similarity {
-  margin: 0 0 20px 40px;
-  font-size: 14px; }
-
-/* Home page carousel */
-.carousel-caption {
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 10px; }
-
-/* images with captions */
-figure {
-  margin: 1em 40px; }
-
-figcaption {
-  text-align: center;
-  font-style: italic; }
-
-/* cross headers */
-span.cross-head {
-  display: block;
-  text-transform: uppercase;
-  padding-top: 5px;
-  padding-bottom: 5px; }
-
-/* Sticky footer styles */
-.spacer {
-  height: 40px; }
-
-.footer > .container {
-  margin: 20px auto;
-  padding-right: 15px;
-  padding-left: 15px; }
-
-body {
-  background-color: #F9F7F1;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  font-family: 'Encode Sans'; }
-
-#content {
-  flex-grow: 1;
-  padding-bottom: 6em; }
-
-.footer {
-  background-color: #333333;
-  color: #F9F7F1; }
-  .footer a {
-    color: #F9F7F1; }
-    .footer a:link, .footer a:visited {
-      color: #F9F7F1; }
-    .footer a:active, .footer a:focus, .footer a:hover {
-      color: #94CFC9; }
-
-.navbar {
-  border-left: 0;
-  border-right: 0; }
-
-.navbar-default .navbar-collapse,
-.navbar-default .navbar-form,
-.dropdown-menu {
-  background-color: #333333;
-  color: #F9F7F1; }
-  .navbar-default .navbar-collapse a,
-  .navbar-default .navbar-form a,
-  .dropdown-menu a {
-    color: #F9F7F1; }
-    .navbar-default .navbar-collapse a:link, .navbar-default .navbar-collapse a:visited,
-    .navbar-default .navbar-form a:link,
-    .navbar-default .navbar-form a:visited,
-    .dropdown-menu a:link,
-    .dropdown-menu a:visited {
-      color: #F9F7F1; }
-    .navbar-default .navbar-collapse a:active, .navbar-default .navbar-collapse a:focus, .navbar-default .navbar-collapse a:hover,
-    .navbar-default .navbar-form a:active,
-    .navbar-default .navbar-form a:focus,
-    .navbar-default .navbar-form a:hover,
-    .dropdown-menu a:active,
-    .dropdown-menu a:focus,
-    .dropdown-menu a:hover {
-      color: #94CFC9; }
-
-.dropdown-menu {
-  border-color: #94CFC9; }
-
-.navbar-nav {
-  display: flex;
-  width: 100%; }
-  .navbar-nav > li:first-child {
-    flex-grow: 1; }
-
-.navbar-default .navbar-nav > .open > a,
-.navbar-default .navbar-nav > .open > a:hover,
-.navbar-default .navbar-nav > .open > a:focus,
-.navbar-default .navbar-nav > li > a:hover,
-.navbar-default .navbar-nav > li > a:focus {
-  color: #94CFC9; }
-
-a.front-page {
-  color: #94CFC9 !important;
-  font-weight: 500; }
-
-.newspaper-masthead {
-  border-bottom: 3px solid #333333;
-  margin-top: 40px;
-  margin-bottom: 2em;
-  text-align: center; }
-  .newspaper-masthead h1 {
-    font-size: 40px;
-    margin-bottom: 46px; }
-    @media (min-width: 768px) {
-      .newspaper-masthead h1 {
-        font-size: 60px; } }
-  .newspaper-masthead .issue-date {
-    border-top: 3px solid #333333;
-    font-family: 'Encode Sans Condensed';
-    font-weight: 700;
-    padding: 13px 0 12px; }
-
-dt {
-  margin-top: 1em; }
-  dt:first-child {
-    margin-top: 0; }
-
-@media (min-width: 768px) {
-  .vertical-divider {
-    display: flex; }
-    .vertical-divider:after {
-      clear: both;
-      content: " ";
-      display: block;
-      height: 0;
-      visibility: hidden; }
-    .vertical-divider .col-sm-3:not(:first-child)::after,
-    .vertical-divider .col-sm-4:not(:first-child)::after,
-    .vertical-divider .col-md-6:not(:first-child)::after,
-    .vertical-divider .col-md-8:not(:first-child)::after {
-      background: #333333;
-      bottom: 0;
-      content: " ";
-      margin-top: 20px;
-      margin-bottom: 30px;
-      margin-left: -17px;
-      position: absolute;
-      top: 0;
-      width: 2px; } }
-#comparalator {
-  position: fixed;
-  top: 40vh;
-  width: 200px;
-  height: 200px;
-  background-color: #ddd;
-  padding: 0 1em 1em 1em; }
-
-.comparalator-text {
-  clear: both; }
-
-.comparalator-clear {
-  float: right; }
-
-use.stroke {
-  stroke: #333333;
-  stroke-width: 1px; }
-
-.stroke {
-  fill: none;
-  stroke: #333333;
-  /* stroke-width: 3px; */
-  stroke-width: 0; }
-
-.fill {
-  fill: #f9f7f1; }
-
-.graticule {
-  fill: none;
-  stroke: #777;
-  /* stroke-width: .5px; */
-  stroke-opacity: .5;
-  stroke-width: 0; }
-
-.land {
-  fill: #333333; }
-
-.boundary {
-  fill: none;
-  /* stroke: #fff;
-  stroke-width: .5px; */
-  stroke-width: 0; }
-
-#tooltip {
-  position: absolute;
-  text-align: center;
-  padding: 20px;
-  margin: 10px;
-  font: 12px sans-serif;
-  background: lightsteelblue;
-  border: 1px;
-  border-radius: 2px;
-  pointer-events: none; }
-
-#tooltip h4 {
-  margin: 0;
-  font-size: 14px; }
-
-#tooltip {
-  background: rgba(0, 0, 0, 0.9);
-  border: 1px solid grey;
-  border-radius: 5px;
-  font-size: 12px;
-  width: auto;
-  padding: 4px;
-  color: white;
-  opacity: 0; }
-
-#tooltip table {
-  table-layout: fixed; }
-
-#tooltip tr td {
-  padding: 0;
-  margin: 0; }
-
-#tooltip tr td:nth-child(1) {
-  width: 50px; }
-
-#tooltip tr td:nth-child(2) {
-  text-align: center; }
-
-.country {
-  fill: #B7B6B2;
-  stroke-width: 1px;
-  stroke: #B7B6B2; }
-
-.newspaper-countries {
-  fill: #CBC9C5;
-  stroke: #fff;
-  stroke-width: .5px; }
-
-.d3-slider {
-  position: relative;
-  font-family: Verdana,Arial,sans-serif;
-  font-size: 1.1em;
-  border: 1px solid #aaaaaa;
-  z-index: 2; }
-
-.d3-slider-horizontal {
-  height: .8em; }
-
-.d3-slider-range {
-  background: #2980b9;
-  left: 0px;
-  right: 0px;
-  height: 0.8em;
-  position: absolute; }
-
-.d3-slider-range-vertical {
-  background: #2980b9;
-  left: 0px;
-  right: 0px;
-  position: absolute;
-  top: 0; }
-
-.d3-slider-vertical {
-  width: .8em;
-  height: 100px; }
-
-.d3-slider-handle {
-  position: absolute;
-  width: 1.2em;
-  height: 1.2em;
-  border: 1px solid #d3d3d3;
-  border-radius: 4px;
-  background: #eee;
-  background: linear-gradient(to bottom, #eee 0%, #ddd 100%);
-  z-index: 3; }
-
-.d3-slider-handle:hover {
-  border: 1px solid #999999; }
-
-.d3-slider-horizontal .d3-slider-handle {
-  top: -.3em;
-  margin-left: -.6em; }
-
-.d3-slider-axis {
-  position: relative;
-  z-index: 1; }
-
-.d3-slider-axis-bottom {
-  top: .8em; }
-
-.d3-slider-axis-right {
-  left: .8em; }
-
-.d3-slider-axis path {
-  stroke-width: 0;
-  fill: none; }
-
-.d3-slider-axis line {
-  fill: none;
-  stroke: #aaa;
-  shape-rendering: crispEdges; }
-
-.d3-slider-axis text {
-  font-size: 11px; }
-
-.d3-slider-vertical .d3-slider-handle {
-  left: -.25em;
-  margin-left: 0;
-  margin-bottom: -.6em; }
-
-.slider-wrapper button {
-  position: relative;
-  z-index: 100; }
-
-th.header {
-  cursor: pointer; }
-
-.selected-text {
-  color: red; }
-
-/*# sourceMappingURL=style.css.map */
+/*
+Error: Undefined variable: "$color_red".
+        on line 193 of sass/style.scss, in `link'
+        from line 193 of sass/style.scss
+
+188:   min-height: 100vh;
+189:   display: flex;
+190:   flex-direction: column;
+191:   font-family: 'Encode Sans';
+192: 
+193:   @include link($color_red, $color_red);
+194: }
+195: 
+196: #content {
+197:   flex-grow: 1;
+198:   padding-bottom: 6em;
+
+Backtrace:
+sass/style.scss:193:in `link'
+sass/style.scss:193
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/script/tree/variable.rb:49:in `_perform'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/script/tree/node.rb:58:in `perform'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:357:in `block (2 levels) in visit_mixin'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:357:in `map'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:357:in `block in visit_mixin'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/stack.rb:98:in `block in with_mixin'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/stack.rb:115:in `with_frame'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/stack.rb:98:in `with_mixin'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:349:in `visit_mixin'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/base.rb:36:in `visit'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:160:in `block in visit'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/stack.rb:79:in `block in with_base'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/stack.rb:115:in `with_frame'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/stack.rb:79:in `with_base'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:160:in `visit'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:433:in `block (2 levels) in visit_rule'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:433:in `map'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:433:in `block in visit_rule'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:181:in `with_environment'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:431:in `visit_rule'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/base.rb:36:in `visit'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:160:in `block in visit'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/stack.rb:79:in `block in with_base'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/stack.rb:115:in `with_frame'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/stack.rb:79:in `with_base'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:160:in `visit'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/base.rb:52:in `map'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/base.rb:52:in `visit_children'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:169:in `block in visit_children'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:181:in `with_environment'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:168:in `visit_children'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/base.rb:36:in `block in visit'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:188:in `visit_root'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/base.rb:36:in `visit'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:159:in `visit'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:8:in `visit'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/root_node.rb:36:in `css_tree'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/engine.rb:381:in `_render_with_sourcemap'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/engine.rb:298:in `render_with_sourcemap'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/plugin/compiler.rb:492:in `update_stylesheet'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/plugin/compiler.rb:209:in `each'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/plugin/compiler.rb:473:in `on_file_changed'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/plugin/compiler.rb:331:in `block in watch'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/vendor/listen/lib/listen/listener.rb:252:in `call'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/vendor/listen/lib/listen/listener.rb:252:in `on_change'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/vendor/listen/lib/listen/listener.rb:290:in `block in initialize_adapter'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/vendor/listen/lib/listen/adapter.rb:254:in `call'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/vendor/listen/lib/listen/adapter.rb:254:in `report_changes'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/vendor/listen/lib/listen/adapter.rb:323:in `poll_changed_directories'
+/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/vendor/listen/lib/listen/adapter.rb:299:in `block in start_poller'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: Undefined variable: \"$color_red\".\A         on line 193 of sass/style.scss, in `link'\A         from line 193 of sass/style.scss\A \A 188:   min-height: 100vh;\A 189:   display: flex;\A 190:   flex-direction: column;\A 191:   font-family: 'Encode Sans';\A 192: \A 193:   @include link($color_red, $color_red);\A 194: }\A 195: \A 196: #content {\A 197:   flex-grow: 1;\A 198:   padding-bottom: 6em;"; }
