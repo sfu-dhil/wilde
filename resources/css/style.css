@@ -246,8 +246,10 @@ a.front-page {
     padding: 13px 0 12px; }
 
 .article img {
-  width: 100%;
-  height: auto; }
+  border: 1px solid #979797;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  height: auto;
+  width: 100%; }
 
 dt {
   margin-top: 1em; }
