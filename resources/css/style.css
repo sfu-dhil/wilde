@@ -255,7 +255,8 @@ a.front-page {
     mix-blend-mode: multiply; }
   .article .caption {
     font-size: 0.8em;
-    text-align: right; }
+    text-align: right;
+    margin: 0.5em 0; }
 
 dt {
   margin-top: 1em; }
