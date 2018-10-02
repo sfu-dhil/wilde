@@ -247,6 +247,8 @@ a.front-page {
 
 .article {
   margin-bottom: 2em; }
+  .article h3 {
+    margin-top: 0; }
   .article img {
     border: 1px solid #979797;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
@@ -254,10 +256,12 @@ a.front-page {
     width: 100%; }
     .article img.multiply {
       mix-blend-mode: multiply; }
-  .article .caption {
-    font-size: 0.8em;
-    text-align: right;
-    margin: 0.5em 0; }
+    .article img + .caption {
+      font-size: 0.8em;
+      text-align: right;
+      margin: 0.5em 0; }
+    .article img + h3 {
+      margin-top: 1em; }
 
 dt {
   margin-top: 1em; }
