@@ -245,6 +245,10 @@ a.front-page {
     font-weight: 700;
     padding: 13px 0 12px; }
 
+.article img {
+  width: 100%;
+  height: auto; }
+
 dt {
   margin-top: 1em; }
   dt:first-child {
