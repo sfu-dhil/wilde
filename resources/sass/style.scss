@@ -283,13 +283,18 @@ a.front-page {
 }
 
 .article {
-  margin-bottom: 1em;
+  margin-bottom: 2em;
 
   img {
     border: 1px solid #979797;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
     height: auto;
     width: 100%;
+  }
+
+  .img-caption {
+    font-size: 0.8em;
+    text-align: right;
   }
 }
 // End front page
