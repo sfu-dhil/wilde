@@ -251,8 +251,9 @@ a.front-page {
     border: 1px solid #979797;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
     height: auto;
-    width: 100%;
-    mix-blend-mode: multiply; }
+    width: 100%; }
+    .article img.multiply {
+      mix-blend-mode: multiply; }
   .article .caption {
     font-size: 0.8em;
     text-align: right;

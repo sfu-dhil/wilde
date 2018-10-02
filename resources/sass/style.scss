@@ -290,7 +290,10 @@ a.front-page {
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
     height: auto;
     width: 100%;
-    mix-blend-mode: multiply;
+
+    &.multiply {
+      mix-blend-mode: multiply;
+    }
   }
 
   .caption {
