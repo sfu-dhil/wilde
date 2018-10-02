@@ -285,10 +285,10 @@ a.front-page {
 .article {
   margin-bottom: 2em;
 
-  h3 {
-    margin-top: 0;
-  }
-  
+  // h3 {
+  //   margin-top: 0;
+  // }
+
   img {
     border: 1px solid #979797;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
@@ -305,9 +305,9 @@ a.front-page {
       margin: 0.5em 0;
     }
 
-    + h3 {
-      margin-top: 1em;
-    }
+    // + h3 {
+    //   margin-top: 1em;
+    // }
   }
 }
 // End front page
