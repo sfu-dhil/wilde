@@ -254,8 +254,10 @@ body {
 
 @include tablet-only {
   .navbar-nav > li {
-    padding-left: 0;
-    padding-right: 0;
+    a {
+      padding-left: 0;
+      padding-right: 0;
+    }
 
     .caret {
       display: none;
