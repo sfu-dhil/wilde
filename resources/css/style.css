@@ -222,6 +222,12 @@ body {
     .navbar-nav > li:first-child {
       flex-grow: 1;
       padding-left: 0; } }
+@media (min-width: 768px) and (max-width: 1023px) {
+  .navbar-nav > li {
+    padding-left: 0;
+    padding-right: 0; }
+    .navbar-nav > li .caret {
+      display: none; } }
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:hover,
 .navbar-default .navbar-nav > .open > a:focus,
