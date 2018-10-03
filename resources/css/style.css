@@ -225,8 +225,8 @@ body {
   .navbar-nav > li a {
     padding-left: 1em;
     padding-right: 0; }
-    .navbar-nav > li a:first-child {
-      padding-left: 0; }
+  .navbar-nav > li:first-child a {
+    padding-left: 0; }
   .navbar-nav > li .caret {
     display: none; } }
 .navbar-default .navbar-nav > .open > a,
