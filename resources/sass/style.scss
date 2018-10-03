@@ -214,8 +214,7 @@ body {
 }
 
 .navbar {
-  border-left: 0;
-  border-right: 0;
+  border: 0;
 }
 
 .navbar-header,
@@ -226,6 +225,14 @@ body {
   color: $color_white;
   @include link($color_white, $color_green);
 }
+
+.navbar-default .navbar-collapse {
+  border: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+}
+
 
 .dropdown-menu {
   border-color: $color_green;

@@ -172,8 +172,7 @@ body {
   padding: 0; }
 
 .navbar {
-  border-left: 0;
-  border-right: 0; }
+  border: 0; }
 
 .navbar-header,
 .navbar-default .navbar-collapse,
@@ -205,6 +204,12 @@ body {
     .dropdown-menu a:focus,
     .dropdown-menu a:hover {
       color: #94CFC9; }
+
+.navbar-default .navbar-collapse {
+  border: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 100; }
 
 .dropdown-menu {
   border-color: #94CFC9;
