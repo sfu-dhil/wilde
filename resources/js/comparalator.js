@@ -10,8 +10,8 @@
 // ==/UserScript==
 
 $(function () {
-  $('[data-toggle="tooltip1"]').tooltip()
-  $('[data-toggle="popover"]').tooltip()
+  $('[data-toggle="tooltip1"]').tooltip();
+  $('[data-toggle="popover"]').popover();
 })
 
 
