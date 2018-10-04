@@ -233,6 +233,9 @@ a {
     padding-left: 0; }
   .navbar-nav > li .caret {
     display: none; } }
+@media (min-width: 1024px) {
+  .navbar-nav > li:first-child a {
+    padding-left: 0; } }
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:hover,
 .navbar-default .navbar-nav > .open > a:focus,

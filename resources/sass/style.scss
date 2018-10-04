@@ -271,6 +271,14 @@ body {
   }
 }
 
+@include desktop {
+  .navbar-nav > li {
+    &:first-child a {
+      padding-left: 0;
+    }
+  }
+}
+
 
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:hover,
