@@ -40,7 +40,7 @@ $(document).on('mouseup', '#original', function() {
 
   var selectedText = window.getSelection();
 
-  if (selectedText > 0) {
+  if (selectedText.length > 0) {
     console.log("selectedText: " + selectedText);
 
     // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
