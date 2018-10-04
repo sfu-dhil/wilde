@@ -26,7 +26,7 @@ $(window).ready(function() {
 //
 // });
 
-$(document).on('mousedown', '.selected-text', function() {
+$(document).on('mousedown', '#original, .selected-text', function() {
   console.log("unwrapping");
 
   unwrapSelectedText();
