@@ -51,7 +51,6 @@ $(document).on('mouseup', '#original', function() {
       range = highlight.getRangeAt(0);
     range.surroundContents(spn);
 
-    if
     $('[data-toggle="popover"]').popover('show'); // reinitialize popovers
 
     // selectedTextString = selectedText.toString();
