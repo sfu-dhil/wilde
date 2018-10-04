@@ -35,12 +35,12 @@ $(document).on('mousedown', '.selected-text', function() {
 
 $(document).on('mouseup', '#original', function() {
   $('.popover').remove();
-  // console.log("moused up");
+  console.log("moused up");
   // console.log("selectedText: " + getSelectionText());
 
   var selectedText = window.getSelection();
 
-  if (selectedText.length > 0) {
+  if (selectedText != "") {
     console.log("selectedText: " + selectedText);
 
     // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
