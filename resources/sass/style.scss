@@ -590,6 +590,12 @@ th.header {
   cursor: pointer;
 }
 
+
+// Comparalator
 .selected-text {
   color: red;
+}
+
+.tooltip {
+  user-select: none;
 }

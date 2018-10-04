@@ -472,4 +472,7 @@ th.header {
 .selected-text {
   color: red; }
 
+.tooltip {
+  user-select: none; }
+
 /*# sourceMappingURL=style.css.map */
