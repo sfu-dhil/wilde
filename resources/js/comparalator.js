@@ -34,26 +34,27 @@ $(document).on('mousedown', '#original, .selected-text', function() {
 
 
 $(document).on('mouseup', '#original', function() {
-    // console.log("moused up");
-    // console.log("selectedText: " + getSelectionText());
+  $('.popover').remove();
+  // console.log("moused up");
+  // console.log("selectedText: " + getSelectionText());
 
-    var selectedText = window.getSelection();
+  var selectedText = window.getSelection();
 
-    if (selectedText) {
-      console.log("selectedText: " + selectedText);
+  if (selectedText) {
+    console.log("selectedText: " + selectedText);
 
-      // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
-      // var selectedTextPos = selectedTextRange.getBoundingClientRect();
-      // console.log(selectedTextPos);
-      var highlight = window.getSelection(),
-        spn = $('<span class="selected-text" data-toggle="popover" title="selected text" data-placement="top auto"></span>')[0],
-        range = highlight.getRangeAt(0);
-      range.surroundContents(spn);
+    // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
+    // var selectedTextPos = selectedTextRange.getBoundingClientRect();
+    // console.log(selectedTextPos);
+    var highlight = window.getSelection(),
+      spn = $('<span class="selected-text" data-toggle="popover" title="selected text" data-placement="top auto"></span>')[0],
+      range = highlight.getRangeAt(0);
+    range.surroundContents(spn);
 
-      $('[data-toggle="popover"]').popover('show'); // reinitialize popovers
+    $('[data-toggle="popover"]').popover('show'); // reinitialize popovers
 
-      // selectedTextString = selectedText.toString();
-    }
+    // selectedTextString = selectedText.toString();
+  }
 });
 
 
@@ -63,8 +64,8 @@ function startComparalator() {
     if ($('#comparalator').length == 0) {
       $('body').append('<div id="comparalator"></div>');
       $('#comparalator').append('<div class="top"><h3>Comparalator</h3></div><div class="bottom"><button class="comparalator-add">Compare selected text</button></div>');
-      $('#comparalator .top').append('<div class="comparalator-text comparalator-text-1"><span data-toggle="popover" title="Empty">Text 1</span><button class="comparalator-clear">X</button></div>');
-      $('#comparalator .top').append('<div class="comparalator-text comparalator-text-2"><span data-toggle="popover" title="Empty">Text 2</span><button class="comparalator-clear">X</button></div>');
+      $('#comparalator .top').append('<div class="comparalator-text comparalator-text-1"><span data-toggle="tooltip" title="Empty">Text 1</span><button class="comparalator-clear">X</button></div>');
+      $('#comparalator .top').append('<div class="comparalator-text comparalator-text-2"><span data-toggle="tooltip" title="Empty">Text 2</span><button class="comparalator-clear">X</button></div>');
     }
   }
 }
