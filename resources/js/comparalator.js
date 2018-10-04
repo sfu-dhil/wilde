@@ -71,7 +71,7 @@ function startComparalator() {
 }
 
 function unwrapSelectedText() {
-  $('.selected-text').each(function() {
+  $('.selected-text').not('.popover').not('.popover .selectedtext').each(function() {
     var text = $(this).text();
     $(this).replaceWith(text);
   });
