@@ -4,23 +4,29 @@
   <div class="row">
     <div class="page-header">
       <h1>Wilde Trials International News Archive</h1>
-      <p>The complete list of news reports on Wilde’s trials is below. Each
-        column provides basic metadata about an individual report. <strike>The Matches
-        column displays, for each report, the number of matching reports and the
-        number of matching paragraphs found across the entire collection.</strike> To
-        open any report, click on its date.</p>
 
       <ul id="report-tabs" class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#" id="home-tab" role="tab" data-toggle="tab" aria-controls="all" aria-expanded="true">View all</a></li>
-        <li role="presentation"><a href="date.html" role="tab" id="profile-tab" data-toggle="tab" aria-controls="date">View by date</a></li>
-        <li role="presentation"><a href="newspaper.html" role="tab" id="profile-tab" data-toggle="tab" aria-controls="newspaper">View by newspaper</a></li>
-        <li role="presentation"><a href="region.html" role="tab" id="profile-tab" data-toggle="tab" aria-controls="region">View by region</a></li>
-        <li role="presentation"><a href="language.html" role="tab" id="profile-tab" data-toggle="tab" aria-controls="language">View by language</a></li>
+        <li role="presentation" class="active"><a href="#all" id="all-tab" role="tab" data-toggle="tab" aria-controls="all" aria-expanded="true">View all</a></li>
+        <li role="presentation"><a href="#date" role="tab" id="date-tab" data-toggle="tab" aria-controls="date">View by date</a></li>
+        <li role="presentation"><a href="#newspaper" role="tab" id="newspaper-tab" data-toggle="tab" aria-controls="newspaper">View by newspaper</a></li>
+        <li role="presentation"><a href="#region" role="tab" id="region-tab" data-toggle="tab" aria-controls="region">View by region</a></li>
+        <li role="presentation"><a href="#language" role="tab" id="language-tab" data-toggle="tab" aria-controls="language">View by language</a></li>
       </ul>
     </div>
   </div>
   <div class="row">
-    <div data-template="app:browse" />
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade" id="all">
+        <p>The complete list of news reports on Wilde’s trials is below. Each
+          column provides basic metadata about an individual report. To
+          open any report, click on its date.</p>
+        <div data-template="app:browse" />
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="date"></div>
+      <div role="tabpanel" class="tab-pane fade" id="newspaper"></div>
+      <div role="tabpanel" class="tab-pane fade" id="region"></div>
+      <div role="tabpanel" class="tab-pane fade" id="language"></div>
+    </div>
   </div>
   <script src="resources/lib/tablesorter/jquery.tablesorter.min.js"
     type="text/javascript" />
