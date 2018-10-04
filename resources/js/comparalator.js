@@ -11,6 +11,7 @@
 
 $(function () {
   $('[data-toggle="tooltip1"]').tooltip()
+  $('[data-toggle="popover"]').tooltip()
 })
 
 
@@ -45,13 +46,13 @@ $(document).on('mouseup', '#original', function() {
       // var selectedTextPos = selectedTextRange.getBoundingClientRect();
       // console.log(selectedTextPos);
       var highlight = window.getSelection(),
-        spn = $('<span class="selected-text" data-toggle="tooltip1" title="selected text" data-placement="top auto"></span>')[0],
+        spn = $('<span class="selected-text" data-toggle="popover" title="selected text" data-placement="top auto"></span>')[0],
         range = highlight.getRangeAt(0);
       range.surroundContents(spn);
 
-      $('[data-toggle="tooltip1"]').tooltip({
+      $('[data-toggle="popover"]').popover(/*{
         title: "this is selected text",
-        html: true}); // reinitialize tooltips
+        html: true}*/); // reinitialize tooltips
 
       // selectedTextString = selectedText.toString();
     }
@@ -64,8 +65,8 @@ function startComparalator() {
     if ($('#comparalator').length == 0) {
       $('body').append('<div id="comparalator"></div>');
       $('#comparalator').append('<div class="top"><h3>Comparalator</h3></div><div class="bottom"><button class="comparalator-add">Compare selected text</button></div>');
-      $('#comparalator .top').append('<div class="comparalator-text comparalator-text-1"><span data-toggle="tooltip" title="Empty">Text 1</span><button class="comparalator-clear">X</button></div>');
-      $('#comparalator .top').append('<div class="comparalator-text comparalator-text-2"><span data-toggle="tooltip" title="Empty">Text 2</span><button class="comparalator-clear">X</button></div>');
+      $('#comparalator .top').append('<div class="comparalator-text comparalator-text-1"><span data-toggle="popover" title="Empty">Text 1</span><button class="comparalator-clear">X</button></div>');
+      $('#comparalator .top').append('<div class="comparalator-text comparalator-text-2"><span data-toggle="popover" title="Empty">Text 2</span><button class="comparalator-clear">X</button></div>');
     }
   }
 }

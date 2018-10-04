@@ -189,9 +189,9 @@ body {
   display: flex;
   flex-direction: column;
   font-family: 'Encode Sans';
-
-  @include link($color_red, $color_red_dark);
 }
+
+@include link($color_red, $color_red_dark);
 
 #content {
   flex-grow: 1;
@@ -598,6 +598,7 @@ th.header {
   color: red;
 }
 
+.popover,
 .tooltip {
   user-select: none;
 }

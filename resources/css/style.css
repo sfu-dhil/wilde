@@ -147,12 +147,13 @@ body {
   display: flex;
   flex-direction: column;
   font-family: 'Encode Sans'; }
-  body a {
+
+a {
+  color: #E10000; }
+  a:link, a:visited {
     color: #E10000; }
-    body a:link, body a:visited {
-      color: #E10000; }
-    body a:active, body a:focus, body a:hover {
-      color: #960000; }
+  a:active, a:focus, a:hover {
+    color: #960000; }
 
 #content {
   flex-grow: 1;
@@ -474,6 +475,7 @@ th.header {
 .selected-text {
   color: red; }
 
+.popover,
 .tooltip {
   user-select: none; }
 
