@@ -21,12 +21,12 @@ $(window).ready(function() {
 
   startComparalator();
 });
+//
+// $(document).on('click', '.comparalator-add', function() {
+//
+// });
 
-$(document).on('click', '.comparealator-add', function() {
-
-});
-
-$(document).on('mousedown', '#original, .selected-text', function() {
+$(document).on('mousedown', '.selected-text', function() {
   console.log("unwrapping");
 
   unwrapSelectedText();
@@ -40,7 +40,7 @@ $(document).on('mouseup', '#original', function() {
 
   var selectedText = window.getSelection();
 
-  if (selectedText) {
+  if (selectedText > 0) {
     console.log("selectedText: " + selectedText);
 
     // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
@@ -51,6 +51,7 @@ $(document).on('mouseup', '#original', function() {
       range = highlight.getRangeAt(0);
     range.surroundContents(spn);
 
+    if
     $('[data-toggle="popover"]').popover('show'); // reinitialize popovers
 
     // selectedTextString = selectedText.toString();
