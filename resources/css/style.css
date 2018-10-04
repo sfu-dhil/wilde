@@ -168,10 +168,12 @@ body {
     .footer a:active, .footer a:focus, .footer a:hover {
       color: #94CFC9; }
 
-@includ tablet-only {
-  #navbar-collapse-1 .container {
-    padding: 0;
-    width: 100%; } }
+#navbar-collapse-1 .container {
+  padding: 0; }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #navbar-collapse-1 .container {
+      width: 100%; } }
+
 .navbar {
   border: 0; }
 

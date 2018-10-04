@@ -207,10 +207,10 @@ body {
 
 
 // start header
-@includ tablet-only {
-  #navbar-collapse-1 {
-    .container {
-      padding: 0;
+#navbar-collapse-1 {
+  .container {
+    padding: 0;
+    @include tablet-only {
       width: 100%;
     }
   }
