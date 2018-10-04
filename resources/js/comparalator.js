@@ -50,9 +50,7 @@ $(document).on('mouseup', '#original', function() {
         range = highlight.getRangeAt(0);
       range.surroundContents(spn);
 
-      $('[data-toggle="popover"]').popover(/*{
-        title: "this is selected text",
-        html: true}*/); // reinitialize tooltips
+      $('[data-toggle="popover"]').popover(); // reinitialize popovers
 
       // selectedTextString = selectedText.toString();
     }
