@@ -50,7 +50,7 @@ $(document).on('mouseup', '#original', function() {
         range = highlight.getRangeAt(0);
       range.surroundContents(spn);
 
-      $('[data-toggle="popover"]').popover(); // reinitialize popovers
+      $('[data-toggle="popover"]').popover('show'); // reinitialize popovers
 
       // selectedTextString = selectedText.toString();
     }
