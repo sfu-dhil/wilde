@@ -38,25 +38,28 @@ $(document).on('mouseup', '#original', function() {
   console.log("moused up");
   // console.log("selectedText: " + getSelectionText());
 
-  // var selectedText = window.getSelection();
+  var selectedText = window.getSelection();
   //
-  // if (selectedText != "") {
-  //   console.log("selectedText: " + selectedText);
-  //
-  //   // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
-  //   // var selectedTextPos = selectedTextRange.getBoundingClientRect();
-  //   // console.log(selectedTextPos);
-  //   var highlight = window.getSelection(),
-  //     spn = $('<span class="selected-text" data-toggle="popover" title="selected text" data-placement="top auto"></span>')[0],
-  //     range = highlight.getRangeAt(0);
-  //   range.surroundContents(spn);
-  //
-  //   $('[data-toggle="popover"]').popover('show'); // reinitialize popovers
-  //
-  //   // selectedTextString = selectedText.toString();
-  // }
+  if (selectedText != "") {
+    console.log("selectedText: " + selectedText);
 
-  highlight("red");
+    // var selectedTextRange = selectedText.getRangeAt(0); //get the text range
+    // var selectedTextPos = selectedTextRange.getBoundingClientRect();
+    // console.log(selectedTextPos);
+    // var highlight = window.getSelection(),
+    //   spn = $('<span class="selected-text" data-toggle="popover" title="selected text" data-placement="top auto"></span>')[0],
+    //   range = highlight.getRangeAt(0);
+    // range.surroundContents(spn);
+
+    var span = $('<span class="selected-text" data-toggle="popover" title="selected text" data-placement="top auto"></span>');
+    $('[data-toggle="popover"]').popover('show'); // reinitialize popovers
+
+    highlight("red");
+
+    // selectedTextString = selectedText.toString();
+  }
+
+
 });
 
 
