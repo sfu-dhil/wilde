@@ -28,14 +28,14 @@ $(window).ready(function() {
 
 $(document).on('mousedown', '#original, .selected-text', function() {
   console.log("unwrapping");
-  window.getSelection().removeAllRanges();
-  highlight();
+  // window.getSelection().removeAllRanges();
+  // highlight();
   // if (window.getSelection) {
   //   window.getSelection().removeAllRanges();
   // } else if (document.selection) {
   //   document.selection.empty();
   // }
-  // unwrapSelectedText();
+  unwrapSelectedText();
 });
 
 
@@ -57,15 +57,15 @@ $(document).on('mouseup', '#original', function() {
     //   range = highlight.getRangeAt(0);
     // range.surroundContents(spn);
 
-    var span = $('<span class="selected-text" data-toggle="popover" title="selected text" data-placement="top auto"></span>');
+    // var span = $('<span class="selected-text" data-toggle="popover" title="selected text" data-placement="top auto"></span>');
     $('[data-toggle="popover"]').popover('show'); // reinitialize popovers
 
     highlight("red");
+    $('#original p span').first().attr('data-toggle', "popover").attr('title', "selected text").attr('data-placement', "top auto");
+
 
     // selectedTextString = selectedText.toString();
   }
-
-
 });
 
 
@@ -117,13 +117,13 @@ function startComparalator() {
   }
 }
 
-// function unwrapSelectedText() {
-//   $('.popover').remove();
-//   $('p span').each(function() {
-//     var text = $(this).text();
-//     $(this).replaceWith(text);
-//   });
-// }
+function unwrapSelectedText() {
+  $('.popover').remove();
+  $('#original p span').each(function() {
+    var text = $(this).text();
+    $(this).replaceWith(text);
+  });
+}
 
 
 
