@@ -29,7 +29,12 @@ $(window).ready(function() {
 $(document).on('mousedown', '#original, .selected-text', function() {
   console.log("unwrapping");
 
-  unwrapSelectedText();
+  if (window.getSelection) {
+    window.getSelection().removeAllRanges();
+  } else if (document.selection) {
+    document.selection.empty();
+  }
+  //unwrapSelectedText();
 });
 
 
@@ -113,7 +118,7 @@ function startComparalator() {
 
 function unwrapSelectedText() {
   $('.popover').remove();
-  $('.selected-text').each(function() {
+  $('p span').each(function() {
     var text = $(this).text();
     $(this).replaceWith(text);
   });
