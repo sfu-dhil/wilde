@@ -28,13 +28,13 @@ $(window).ready(function() {
 
 $(document).on('mousedown', '#original, .selected-text', function() {
   console.log("unwrapping");
-
-  if (window.getSelection) {
-    window.getSelection().removeAllRanges();
-  } else if (document.selection) {
-    document.selection.empty();
-  }
-  //unwrapSelectedText();
+  window.getSelection().removeAllRanges();
+  // if (window.getSelection) {
+  //   window.getSelection().removeAllRanges();
+  // } else if (document.selection) {
+  //   document.selection.empty();
+  // }
+  // unwrapSelectedText();
 });
 
 
@@ -116,13 +116,13 @@ function startComparalator() {
   }
 }
 
-function unwrapSelectedText() {
-  $('.popover').remove();
-  $('p span').each(function() {
-    var text = $(this).text();
-    $(this).replaceWith(text);
-  });
-}
+// function unwrapSelectedText() {
+//   $('.popover').remove();
+//   $('p span').each(function() {
+//     var text = $(this).text();
+//     $(this).replaceWith(text);
+//   });
+// }
 
 
 
