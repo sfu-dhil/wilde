@@ -264,6 +264,9 @@ a.front-page {
     font-weight: 700;
     padding: 13px 0 12px; }
 
+#page-header {
+  border-bottom: 0; }
+
 .article {
   margin-bottom: 2em; }
   .article img {
