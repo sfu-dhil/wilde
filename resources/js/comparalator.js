@@ -29,6 +29,7 @@ $(window).ready(function() {
 $(document).on('mousedown', '#original, .selected-text', function() {
   console.log("unwrapping");
   window.getSelection().removeAllRanges();
+  highlight();
   // if (window.getSelection) {
   //   window.getSelection().removeAllRanges();
   // } else if (document.selection) {
@@ -68,22 +69,22 @@ $(document).on('mouseup', '#original', function() {
 });
 
 
-function makeEditableAndHighlight(colour) {
-  sel = window.getSelection();
-  if (sel.rangeCount && sel.getRangeAt) {
-    range = sel.getRangeAt(0);
-  }
-  document.designMode = "on";
-  if (range) {
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }
-  // Use HiliteColor since some browsers apply BackColor to the whole block
-  if (!document.execCommand("HiliteColor", false, colour)) {
-    document.execCommand("BackColor", false, colour);
-  }
-  document.designMode = "off";
-}
+// function makeEditableAndHighlight(colour) {
+//   sel = window.getSelection();
+//   if (sel.rangeCount && sel.getRangeAt) {
+//     range = sel.getRangeAt(0);
+//   }
+//   document.designMode = "on";
+//   if (range) {
+//     sel.removeAllRanges();
+//     sel.addRange(range);
+//   }
+//   // Use HiliteColor since some browsers apply BackColor to the whole block
+//   if (!document.execCommand("HiliteColor", false, colour)) {
+//     document.execCommand("BackColor", false, colour);
+//   }
+//   document.designMode = "off";
+// }
 
 function highlight(colour) {
   var range, sel;
