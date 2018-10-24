@@ -614,3 +614,18 @@ th.header {
 .tooltip {
   user-select: none !important;
 }
+
+
+
+
+// Charts
+#chart {
+  width: 100% !important;
+  svg {
+    width: 100% !important;
+    > rect {
+      background: rgba(0,0,0,0) !important;
+      width: 100% !important;
+    }
+  }
+}

@@ -485,4 +485,12 @@ th.header {
 .tooltip {
   user-select: none !important; }
 
+#chart {
+  width: 100% !important; }
+  #chart svg {
+    width: 100% !important; }
+    #chart svg > rect {
+      background: transparent !important;
+      width: 100% !important; }
+
 /*# sourceMappingURL=style.css.map */
