@@ -621,6 +621,11 @@ th.header {
 // Charts
 #chart {
   width: 100% !important;
+
+  div {
+    height: auto;
+    width: 100% !important;
+  }
   svg {
     width: 100% !important;
     > rect {

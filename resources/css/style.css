@@ -487,6 +487,9 @@ th.header {
 
 #chart {
   width: 100% !important; }
+  #chart div {
+    height: auto;
+    width: 100% !important; }
   #chart svg {
     width: 100% !important; }
     #chart svg > rect {
