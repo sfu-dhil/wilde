@@ -122,7 +122,7 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
                     <td>{ 
                       string-join(lang:code2lang(collection:languages($publisher)), ', ')
                     }</td>
-                    <td>{local:count($publishers, $publisher)}</td>
+                    <td>{ local:count($publishers, $publisher) }</td>
                 </tr>
             }</tbody>
         </table>
@@ -220,6 +220,31 @@ declare function app:browse-region($node as node(), $model as map(*)) as node() 
           order by $region
           return <li data-region="{$region}" data-count="{$count}">
               <a href="?region={$region}">{$region}</a>: 
+              {$count}
+            </li>
+        } </ul>
+};
+
+declare function app:browse-city($node as node(), $model as map(*)) as node() {
+  let $collection := collection:documents()
+  let $city := request:get-parameter('city', false())
+  return
+    if($city) then
+      let $docs := collection:documents('dc.region.city', $city)
+      return <ul> {
+        for $document in $docs
+        order by document:title($document)
+        return <li>{app:link-view(document:id($document), document:title($document))}</li>
+      } </ul>
+    else
+      let $cities := $collection//xhtml:meta[@name="dc.region.city"]/@content
+      return
+        <ul> {
+          for $city in distinct-values($cities)
+          let $count := local:count($cities, $city)
+          order by $city
+          return <li data-city="{$city}" data-count="{$count}">
+              <a href="?city={$city}">{$city}</a>: 
               {$count}
             </li>
         } </ul>
