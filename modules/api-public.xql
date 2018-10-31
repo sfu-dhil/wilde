@@ -6,6 +6,7 @@ declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare namespace api="http://dhil.lib.sfu.ca/exist/wilde-app/api-public";
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace json="http://www.json.org";
+declare namespace request="http://exist-db.org/xquery/request";
 
 declare option output:method "json";
 declare option output:media-type "text/javascript";
@@ -14,7 +15,6 @@ import module namespace login="http://exist-db.org/xquery/login" at "resource:or
 import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
 import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
-import module namespace index="http://dhil.lib.sfu.ca/exist/wilde-app/index" at "index.xql";
 import module namespace app="http://dhil.lib.sfu.ca/exist/wilde-app/templates" at "app.xql";
 import module namespace lang="http://dhil.lib.sfu.ca/exist/wilde-app/lang" at "lang.xql";
 
@@ -68,8 +68,21 @@ declare function api:languages() {
 };
 
 declare function api:cities() {
-  for $city in collection:cities()
-  return <json:value>{$city}</json:value>
+  let $file := $config:data-root || '/cities.csv'
+  let $raw := util:binary-doc($file)
+  let $csv := util:binary-to-string($raw)
+  let $lines := tokenize($csv,'\n')
+  let $head := tokenize($lines[1], ',')
+  let $body := remove($lines,1)
+  let $q := request:get-parameter('q', false())
+
+  for $row in $body
+    let $fields := tokenize($row, ',')
+    return
+      if($q and $fields[1] != $q) then
+        ()
+      else
+        <city name="{$fields[1]}" reports="{$fields[2]}" latitude="{$fields[3]}" longitude="{$fields[4]}" />
 };
 
 declare function api:sources() {
