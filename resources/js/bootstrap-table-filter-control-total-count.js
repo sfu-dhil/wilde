@@ -219,7 +219,7 @@
                     }
                     // var valueCount = counts[fieldValue];
 
-                    formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue);
+                    var formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue);
 
                     uniqueValues[formattedValue + " (" + allValues[fieldValue] + ")"] = fieldValue;
 
