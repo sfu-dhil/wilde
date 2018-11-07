@@ -27,7 +27,7 @@ declare function app:link-view($id as xs:string, $content) as node() {
 declare function app:browse($node as node(), $model as map(*)) as node() {
     let $documents := collection:documents()
     return
-        <table class='table table-striped table-hover table-condensed' id="tbl-browser">
+        <table class='table table-striped table-hover table-condensed' id="tbl-browser" data-toggle="table" data-filter-control="true" data-filter-show-clear="true">
             <thead>
                 <tr>
                     <th>Date</th><th>Newspaper</th><th>Region</th><th>City</th><th>Language</th>
@@ -245,7 +245,7 @@ declare function app:browse-city($node as node(), $model as map(*)) as node() {
           let $count := local:count($cities, $city)
           order by $city
           return <li data-city="{$city}" data-count="{$count}">
-              <a href="?city={$city}">{$city}</a>: 
+              <a href="?city={$city}">{$city}</a>:
               {$count}
             </li>
         } </ul>
