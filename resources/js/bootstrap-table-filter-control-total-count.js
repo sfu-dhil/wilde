@@ -211,7 +211,7 @@
                     var fieldValue = data[i][field],
                         formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue);
 
-                    allValues.push(fieldValue);
+                    allValues[fieldValue]++;
                     // var valueCount = counts[fieldValue];
 
                     uniqueValues[formattedValue] = fieldValue;
