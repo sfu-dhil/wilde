@@ -27,7 +27,7 @@ declare function app:link-view($id as xs:string, $content) as node() {
 declare function app:browse($node as node(), $model as map(*)) as node() {
     let $documents := collection:documents()
     return
-        <table class='table table-striped table-hover table-condensed' id="tbl-browser" data-toggle="table" data-filter-control="true" data-filter-show-clear="true" data-search="true" data-show-export="true" data-click-to-select="true" data-total-field='total'>
+        <table class='table table-striped table-hover table-condensed' id="tbl-browser" data-toggle="table" data-filter-control="true" data-filter-show-clear="true" data-search="true" data-show-export="true" data-click-to-select="true" data-pagination="true" data-total-field='total'>
             <thead>
                 <tr>
                     <th data-field="date" data-filter-control="select" data-sortable="true">Date</th>
