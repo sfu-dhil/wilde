@@ -212,10 +212,10 @@
                         valueCount = 10;
 
                     uniqueValues[formattedValue] = fieldValue;
-                    console.log(uniqueValues[formattedValue]);
+                    // console.log(uniqueValues[formattedValue]);
                 }
 
-                console.log("all: " + uniqueValues);
+                console.log("all: " + JSON.stringify(uniqueValues));
 
                 for (var key in uniqueValues) {
                     addOptionToSelectControl(selectControl, uniqueValues[key], key);
