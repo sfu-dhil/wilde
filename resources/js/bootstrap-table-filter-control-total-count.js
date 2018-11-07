@@ -201,17 +201,21 @@
             if (isColumnSearchableViaSelect(column) && isFilterDataNotGiven(column) && hasSelectControlElement(selectControl)) {
                 if (selectControl.get(selectControl.length - 1).options.length === 0) {
                     //Added the default option
-                    addOptionToSelectControl(selectControl, '', 'All');
+                    addOptionToSelectControl(selectControl, '', 'All'); // Customized for Wilde: "All" instead of a blank option.
                 }
 
                 var uniqueValues = {};
                 for (var i = 0; i < z; i++) {
                     //Added a new value
                     var fieldValue = data[i][field],
-                        formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue);
+                        formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue),
+                        valueCount = 10;
 
                     uniqueValues[formattedValue] = fieldValue;
+                    console.log(uniqueValues[formattedValue]);
                 }
+
+                console.log("all: " + uniqueValues);
 
                 for (var key in uniqueValues) {
                     addOptionToSelectControl(selectControl, uniqueValues[key], key);
