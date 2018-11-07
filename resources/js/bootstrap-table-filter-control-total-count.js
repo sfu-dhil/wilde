@@ -224,7 +224,7 @@
                 console.log(JSON.stringify(allValues));
 
                 for (var key in uniqueValues) {
-                    addOptionToSelectControl(selectControl, uniqueValues[key] + " (" + allValues[uniqueValues[key]] + ")", key);
+                    addOptionToSelectControl(selectControl, uniqueValues[key], key  + " (" + allValues[uniqueValues[key]] + ")");
                 }
 
                 sortSelectControl(selectControl);
