@@ -222,12 +222,9 @@
                     var formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue);
 
                     uniqueValues[formattedValue + " (" + allValues[fieldValue] + ")"] = fieldValue;
-
-                    // console.log("total number of " + fieldValue + ": " + data.filter(value => that.header.formatters[j] === fieldValue).length);
                 }
 
-                // console.log("all: " + JSON.stringify(data));
-                // console.log(JSON.stringify(allValues));
+                console.log(JSON.stringify(allValues));
 
                 for (var key in uniqueValues) {
                     addOptionToSelectControl(selectControl, uniqueValues[key], key);
