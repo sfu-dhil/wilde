@@ -19,6 +19,7 @@
   "dependencies": {
     "jquery": "jquery#^1.12.4",
     "bootstrap": "bootstrap#^3.3.7",
+    "bootstrap-table": "*",
     "js-cookie": "js-cookie/js-cookie#^2.1.3",
     "google-diff-match-patch-js": "^1.0.0",
     "tablesorter": "*",
