@@ -215,7 +215,7 @@
                     // console.log(uniqueValues[formattedValue]);
                 }
 
-                console.log("all: " + JSON.stringify(uniqueValues));
+                console.log("all: " + JSON.stringify(data));
 
                 for (var key in uniqueValues) {
                     addOptionToSelectControl(selectControl, uniqueValues[key], key);
