@@ -211,17 +211,14 @@
                     var fieldValue = data[i][field];
 
                     if (allValues[fieldValue] == null) {
-                        // console.log("it's null.");
                         allValues[fieldValue] = 1;
                     }
                     else {
                         allValues[fieldValue] = 1 + allValues[fieldValue];
                     }
-                    // var valueCount = counts[fieldValue];
 
-                    var formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue);
-
-                    uniqueValues[formattedValue + " (" + allValues[fieldValue] + ")"] = fieldValue;
+                    var formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue) + " (" + allValues[fieldValue] + ")";
+                    uniqueValues[formattedValue] = fieldValue;
                 }
 
                 console.log(JSON.stringify(allValues));
