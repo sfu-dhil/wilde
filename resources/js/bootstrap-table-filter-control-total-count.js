@@ -217,7 +217,9 @@
                         allValues[fieldValue] = 1 + allValues[fieldValue];
                     }
 
-                    var formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue).replace(/<(?:.|\n)*?>/gm, '');
+                    var formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue);
+                    formattedValue = formattedValue.replace(/<(?:.|\n)*?>/gm, '');
+                    
                     uniqueValues[formattedValue] = fieldValue;
                 }
 
