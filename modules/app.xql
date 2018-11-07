@@ -45,7 +45,7 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
                 for $document in $documents
                 return <tr>
                     <td>{app:link-view(document:id($document)), 'View')}</td>
-                    <td>{app:document:date($document)}</td>
+                    <td>{document:date($document)}</td>
                     <td>{document:publisher($document)}</td>
                     <td>{document:region($document)}</td>
                     <td>{document:city($document)}</td>
