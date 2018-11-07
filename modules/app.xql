@@ -30,14 +30,14 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
         <table class='table table-striped table-hover table-condensed' id="tbl-browser" data-toggle="table" data-filter-control="true" data-filter-show-clear="true" data-search="true" data-show-export="true" data-click-to-select="true">
             <thead>
                 <tr>
-                    <th data-filter-control="select" data-sortable="true">Date</th>
-                    <th data-filter-control="select" data-sortable="true">Newspaper</th>
-                    <th data-filter-control="select" data-sortable="true">Region</th>
-                    <th data-filter-control="select" data-sortable="true">City</th>
-                    <th data-filter-control="select" data-sortable="true">Language</th>
-                    <th>Document Matches</th>
-                    <th>Paragraph Matches</th>
-                    <th>Words</th>
+                    <th data-field="date" data-filter-control="select" data-sortable="true">Date</th>
+                    <th data-field="newspaper" data-filter-control="select" data-sortable="true">Newspaper</th>
+                    <th data-field="region" data-filter-control="select" data-sortable="true">Region</th>
+                    <th data-field="city" data-filter-control="select" data-sortable="true">City</th>
+                    <th data-field="language" data-filter-control="select" data-sortable="true">Language</th>
+                    <th data-field="document-matches" data-sortable="true">Document Matches</th>
+                    <th data-field="paragraph-matches" data-sortable="true">Paragraph Matches</th>
+                    <th data-field="words" data-sortable="true">Words</th>
                 </tr>
             </thead>
             <tbody>{
