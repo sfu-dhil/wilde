@@ -212,6 +212,7 @@
                         formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue);
 
                     if (allValues[fieldValue] == null) {
+                        console.log("it's null.");
                         allValues[fieldValue] = 1;
                     }
                     else {
