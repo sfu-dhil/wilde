@@ -213,7 +213,7 @@
 
                     uniqueValues[formattedValue] = fieldValue;
 
-                    console.log("total number of " + fieldValue + ": " + data.filter(value => fieldValue === fieldValue).length);
+                    console.log("total number of " + fieldValue + ": " + data.filter(value => that.header.formatters[j] === fieldValue).length);
                 }
 
                 // console.log("all: " + JSON.stringify(data));
