@@ -212,7 +212,7 @@
                         valueCount = 10;
 
                     uniqueValues[formattedValue] = fieldValue;
-                    console.log(that.header.formatters[j]);
+                    console.log(that.header);
                     // console.log("total number of " + fieldValue + ": " + data.filter(value => that.header.formatters[j] === fieldValue).length);
                 }
 
