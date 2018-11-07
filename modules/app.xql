@@ -30,6 +30,7 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
         <table class='table table-striped table-hover table-condensed' id="tbl-browser" data-toggle="table" data-filter-control="true" data-filter-show-clear="true" data-search="true" data-show-export="true" data-click-to-select="true" data-total-field='total'>
             <thead>
                 <tr>
+                    <th></th>
                     <th data-field="date" data-filter-control="select" data-sortable="true">Date</th>
                     <th data-field="newspaper" data-filter-control="select" data-sortable="true">Newspaper</th>
                     <th data-field="region" data-filter-control="select" data-sortable="true">Region</th>
@@ -43,7 +44,8 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
             <tbody>{
                 for $document in $documents
                 return <tr>
-                    <td>{app:link-view(document:id($document), string(document:date($document)))}</td>
+                    <td>{app:link-view(document:id($document)), 'View')}</td>
+                    <td>{app:document:date($document)}</td>
                     <td>{document:publisher($document)}</td>
                     <td>{document:region($document)}</td>
                     <td>{document:city($document)}</td>
