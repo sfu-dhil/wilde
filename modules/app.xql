@@ -27,11 +27,17 @@ declare function app:link-view($id as xs:string, $content) as node() {
 declare function app:browse($node as node(), $model as map(*)) as node() {
     let $documents := collection:documents()
     return
-        <table class='table table-striped table-hover table-condensed' id="tbl-browser" data-toggle="table" data-filter-control="true" data-filter-show-clear="true">
+        <table class='table table-striped table-hover table-condensed' id="tbl-browser" data-toggle="table" data-filter-control="true" data-filter-show-clear="true" data-search="true" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
             <thead>
                 <tr>
-                    <th>Date</th><th>Newspaper</th><th>Region</th><th>City</th><th>Language</th>
-                    <th>Document Matches</th><th>Paragraph Matches</th><th>Words</th>
+                    <th data-filter-control="select" data-sortable="true">Date</th>
+                    <th data-filter-control="select" data-sortable="true">Newspaper</th>
+                    <th data-filter-control="select" data-sortable="true">Region</th>
+                    <th data-filter-control="select" data-sortable="true">City</th>
+                    <th data-filter-control="select" data-sortable="true">Language</th>
+                    <th>Document Matches</th>
+                    <th>Parag <ph Matches</th>
+                    <th>Words</th>
                 </tr>
             </thead>
             <tbody>{
