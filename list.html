@@ -63,6 +63,8 @@
     };
 
     function drawChart() {
+      console.log("loading chart.");
+
       var $dateItems = $("li[data-date]");
       if($dateItems.length === 0) {
         return;
@@ -73,7 +75,7 @@
       data.addColumn('string', 'Date');
       //data.addColumn('number', 'Article Count');
       languages.forEach(function(language) {
-        data.addColumn('number', language);
+        data.addColumn('number', language); 
       });
 
       data.addColumn({type: 'string', role: 'annotation'});
