@@ -211,7 +211,7 @@
                         formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue),
                         valueCount = 10;
 
-                    uniqueValues[formattedValue] = fieldValue;
+                    uniqueValues[formattedValue + "(" + valueCount + ")"] = fieldValue;
 
                     // console.log("total number of " + fieldValue + ": " + data.filter(value => that.header.formatters[j] === fieldValue).length);
                 }
