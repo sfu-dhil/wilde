@@ -212,10 +212,12 @@
                         valueCount = 10;
 
                     uniqueValues[formattedValue] = fieldValue;
-                    // console.log(uniqueValues[formattedValue]);
+
+                    console.log("total number: " + data.filter(value => value.language === fieldValue).length);
                 }
 
-                console.log("all: " + JSON.stringify(data));
+                // console.log("all: " + JSON.stringify(data));
+                console.log(JSJON.stringify(uniqueValues));
 
                 for (var key in uniqueValues) {
                     addOptionToSelectControl(selectControl, uniqueValues[key], key);
