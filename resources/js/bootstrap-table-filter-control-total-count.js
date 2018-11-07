@@ -205,19 +205,22 @@
                 }
 
                 var uniqueValues = {};
+                var countValues = {};
                 for (var i = 0; i < z; i++) {
                     //Added a new value
                     var fieldValue = data[i][field],
-                        formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue),
-                        valueCount = 10;
+                        formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue);
 
-                    uniqueValues[formattedValue + "(" + valueCount + ")"] = fieldValue;
+                    allValues.push(fieldValue);
+                    // var valueCount = counts[fieldValue];
+
+                    uniqueValues[formattedValue] = fieldValue;
 
                     // console.log("total number of " + fieldValue + ": " + data.filter(value => that.header.formatters[j] === fieldValue).length);
                 }
 
                 // console.log("all: " + JSON.stringify(data));
-                console.log(JSON.stringify(uniqueValues));
+                console.log(JSON.stringify(allValues));
 
                 for (var key in uniqueValues) {
                     addOptionToSelectControl(selectControl, uniqueValues[key], key);
