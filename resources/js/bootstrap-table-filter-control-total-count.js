@@ -217,14 +217,14 @@
                         allValues[fieldValue] = 1 + allValues[fieldValue];
                     }
 
-                    var formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue) + " (" + allValues[fieldValue] + ")";
+                    var formattedValue = $.fn.bootstrapTable.utils.calculateObjectValue(that.header, that.header.formatters[j], [fieldValue, data[i], i], fieldValue);
                     uniqueValues[formattedValue] = fieldValue;
                 }
 
                 console.log(JSON.stringify(allValues));
 
                 for (var key in uniqueValues) {
-                    addOptionToSelectControl(selectControl, uniqueValues[key], key);
+                    addOptionToSelectControl(selectControl, allValues[uniqueValues[key]] + " (" + allValues[uniqueValues[key]][key] + ")" , key);
                 }
 
                 sortSelectControl(selectControl);
