@@ -36,7 +36,7 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
                     <th data-filter-control="select" data-sortable="true">City</th>
                     <th data-filter-control="select" data-sortable="true">Language</th>
                     <th>Document Matches</th>
-                    <th>Parag <ph Matches</th>
+                    <th>Paragraph Matches</th>
                     <th>Words</th>
                 </tr>
             </thead>
