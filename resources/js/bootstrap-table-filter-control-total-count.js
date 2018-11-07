@@ -205,7 +205,7 @@
                 }
 
                 var uniqueValues = {};
-                var countValues = {};
+                var allValues = {};
                 for (var i = 0; i < z; i++) {
                     //Added a new value
                     var fieldValue = data[i][field],
