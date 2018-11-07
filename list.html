@@ -44,7 +44,14 @@
   <script type="text/javascript"> $(document).ready(function(){ $("#tbl-browser").tablesorter(); }); </script> -->
   <script type="text/javascript" src="resources/js/list.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
   <script type="text/javascript">
+    // total count of rows displayed
+    $('#tbl-browser').on('load-success.bs.table', function () {
+    	console.log($('#tbl-browser').bootstrapTable('getOptions').totalRows)
+    });
+
+    // Google chart
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawChart);
 
