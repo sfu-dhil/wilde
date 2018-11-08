@@ -16,6 +16,15 @@
   /* IE9 Compat Modes */
   src: local("Encode Sans Medium"), local("EncodeSans-Medium"), url("../fonts/encode-sans-v2-latin-500.eot?#iefix") format("embedded-opentype"), url("../fonts/encode-sans-v2-latin-500.woff2") format("woff2"), url("../fonts/encode-sans-v2-latin-500.woff") format("woff"), url("../fonts/encode-sans-v2-latin-500.ttf") format("truetype"), url("../fonts/encode-sans-v2-latin-500.svg#EncodeSans") format("svg");
   /* Legacy iOS */ }
+/* encode-sans-condensed-regular - latin */
+@font-face {
+  font-family: 'Encode Sans Condensed';
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/encode-sans-condensed-v2-latin-regular.eot");
+  /* IE9 Compat Modes */
+  src: local("Encode Sans Condensed Regular"), local("EncodeSansCondensed-Regular"), url("../fonts/encode-sans-condensed-v2-latin-regular.eot?#iefix") format("embedded-opentype"), url("../fonts/encode-sans-condensed-v2-latin-regular.woff2") format("woff2"), url("../fonts/encode-sans-condensed-v2-latin-regular.woff") format("woff"), url("../fonts/encode-sans-condensed-v2-latin-regular.ttf") format("truetype"), url("../fonts/encode-sans-condensed-v2-latin-regular.svg#EncodeSansCondensed") format("svg");
+  /* Legacy iOS */ }
 /* encode-sans-condensed-700 - latin */
 @font-face {
   font-family: 'Encode Sans Condensed';
@@ -30,7 +39,7 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: 'Encode Sans Condensed Bold', sans-serif;
+  font-family: 'Encode Sans Condensed', sans-serif;
   font-weight: 700; }
 
 h2 {
