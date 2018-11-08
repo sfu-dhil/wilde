@@ -1,6 +1,33 @@
-@import url('https://fonts.googleapis.com/css?family=Encode+Sans+Condensed:700');
-@import url('https://fonts.googleapis.com/css?family=Encode+Sans:400,500');
+// @import url('https://fonts.googleapis.com/css?family=Encode+Sans+Condensed:700');
+// @import url('https://fonts.googleapis.com/css?family=Encode+Sans:400,500');
 
+
+/* encode-sans-regular - latin */
+@font-face {
+  font-family: 'Encode Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/encode-sans-v2-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local('Encode Sans Regular'), local('EncodeSans-Regular'),
+       url('../fonts/encode-sans-v2-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/encode-sans-v2-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../fonts/encode-sans-v2-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/encode-sans-v2-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/encode-sans-v2-latin-regular.svg#EncodeSans') format('svg'); /* Legacy iOS */
+}
+/* encode-sans-500 - latin */
+@font-face {
+  font-family: 'Encode Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: url('../fonts/encode-sans-v2-latin-500.eot'); /* IE9 Compat Modes */
+  src: local('Encode Sans Medium'), local('EncodeSans-Medium'),
+       url('../fonts/encode-sans-v2-latin-500.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/encode-sans-v2-latin-500.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../fonts/encode-sans-v2-latin-500.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/encode-sans-v2-latin-500.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/encode-sans-v2-latin-500.svg#EncodeSans') format('svg'); /* Legacy iOS */
+}
 
 
 h1,
