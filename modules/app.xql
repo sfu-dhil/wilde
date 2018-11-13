@@ -31,13 +31,13 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
             <thead>
                 <tr>
                     <th></th>
-                    <th data-field="date" data-filter-control="select" data-sortable="true">Date</th>
-                    <th data-field="newspaper" data-filter-control="select" data-sortable="true">Newspaper</th>
-                    <th data-field="region" data-filter-control="select" data-sortable="true">Region</th>
-                    <th data-field="city" data-filter-control="select" data-sortable="true">City</th>
-                    <th data-field="language" data-filter-control="select" data-sortable="true">Language</th>
-                    <th data-field="document-matches" data-sortable="true">Document Matches</th>
-                    <th data-field="paragraph-matches" data-sortable="true">Paragraph Matches</th>
+                    <th data-field="date" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Date</th>
+                    <th data-field="newspaper" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Newspaper</th>
+                    <th data-field="region" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Region</th>
+                    <th data-field="city" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">City</th>
+                    <th data-field="language" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Language</th>
+                    <th data-field="document-matches" data-sortable="true">Document <br/>Matches</th>
+                    <th data-field="paragraph-matches" data-sortable="true">Paragraph <br/>Matches</th>
                     <th data-field="words" data-sortable="true">Words</th>
                 </tr>
             </thead>

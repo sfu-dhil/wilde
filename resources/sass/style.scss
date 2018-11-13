@@ -184,7 +184,10 @@ span.cross-head {
 
 // Start Newspaper styling
 body {
+  /* Rectangle 3: */
   background-color: $color_white;
+  // background-image: radial-gradient(50% 186%, #F9F7F1 86%, #EAE8E3 100%);
+  // background-position: fixed;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -303,9 +306,23 @@ a.front-page {
   h1 {
     font-size: 40px;
     margin-bottom: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 
     @include tablet {
       font-size: 60px;
+    }
+
+    img {
+      display: none;
+      margin: 0 0.25em;
+    }
+    @include tablet {
+      img {
+        display: inline;
+      }
     }
   }
 
@@ -633,4 +650,27 @@ th.header {
       width: 100% !important;
     }
   }
+}
+
+
+// Table sorting
+.table > caption + thead > tr:first-child > th,
+.table > colgroup + thead > tr:first-child > th,
+.table > thead:first-child > tr:first-child > th,
+.table > caption + thead > tr:first-child > td,
+.table > colgroup + thead > tr:first-child > td,
+.table > thead:first-child > tr:first-child > td {
+  vertical-align: top;
+}
+
+.fixed-table-container thead th .sortable {
+  background-position: right 12px !important;
+}
+
+.no-filter-control {
+  display: none;
+}
+
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+  background: #EAE8E3;
 }

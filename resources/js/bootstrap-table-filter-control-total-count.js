@@ -605,26 +605,26 @@
                     [value, item, i], value);
                 }
 
-                if($.inArray(key, that.header.fields) !== -1 ) {
-                    if(typeof value === 'string' || typeof value === 'number') {
+                if ($.inArray(key, that.header.fields) !== -1) {
+                    if (typeof value === 'string' || typeof value === 'number') {
                         if (thisColumn.filterStrictSearch) {
-                            if(value.toString().toLowerCase() === fval.toString().toLowerCase()) {
-                                return true;
+                            if (value.toString().toLowerCase() !== fval.toString().toLowerCase()) {
+                                return false;
                             }
                         } else if (thisColumn.filterStartsWithSearch) {
-                            if((value + '').toLowerCase().indexOf(fval) === 0) {
-                                return true;
+                            if ((value + '').toLowerCase().indexOf(fval) !== 0) {
+                                return false;
                             }
                         } else {
-                            if((value + '').toLowerCase().indexOf(fval) !== -1) {
-                                return true;
+                            if ((value + '').toLowerCase().indexOf(fval) === -1) {
+                                return false;
                             }
                         }
                     }
                 }
             }
 
-            return false;
+            return true;
         }) : that.data;
     };
 
@@ -664,11 +664,13 @@
         // may be different from the previous search).  As a work around
         // we're manually appending some text to bootrap's searchText field
         // to guarantee that it will perform a search again when we call this.onSearch(event)
-        this.searchText += "randomText";
+        // this.searchText += "randomText";
 
         this.options.pageNumber = 1;
         this.EnableControls(false);
-        this.onSearch(event);
+        // this.onSearch(event);
+        this.initSearch();
+        this.updatePagination();
         this.trigger('column-search', $field, text);
     };
 
