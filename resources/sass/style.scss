@@ -205,7 +205,7 @@ body {
   background-color: $color_black;
   color: $color_white;
 
-  @include link($color_white, $color_green);
+  @include link($color_white, $color_blue_light);
 }
 
 
@@ -229,19 +229,19 @@ body {
 .dropdown-menu {
   background-color: $color_black;
   color: $color_white;
-  @include link($color_white, $color_green);
+  @include link($color_white, $color_blue_light);
 }
 
 .navbar-default .navbar-collapse {
   border: 0;
   position: fixed;
   width: 100%;
-  z-index: 100;
+  z-index: 1900;
 }
 
 
 .dropdown-menu {
-  border-color: $color_green;
+  border-color: f;
   border: 0;
 }
 
@@ -288,11 +288,11 @@ body {
 .navbar-default .navbar-nav > .open > a:focus,
 .navbar-default .navbar-nav>li>a:hover,
 .navbar-default .navbar-nav>li>a:focus {
-  color: $color_green;
+  color: $color_blue_light;
 }
 
 a.front-page {
-  color: $color_green !important;
+  color: $color_blue_light !important;
   font-weight: 500;
 }
 
@@ -679,46 +679,192 @@ th.header {
 
 
 /** Styles for TIMESERIES */
+// .timeseries {
+//   width: 100%;
+//   padding: 2% 0;
+// }
+// .circ {
+//   fill: #D35400;
+//   opacity: 0.6;
+//   stroke: rgba(211, 84, 0, 0.7);
+//   stroke-width: 5px;
+// }
+// .domain {
+//   display: none;
+// }
+// .axis path, .axis line {
+//   fill: none;
+//   stroke: #000;
+//   shape-rendering: crispEdges;
+// }
+// .axis text {
+//   font-size: 12px;
+// }
+// .tick line {
+//   stroke: #d5d5d5;
+//   opacity: 0.7;
+// }
+// .brush .extent {
+//   stroke: #fff;
+//   fill-opacity: .125;
+//   shape-rendering: crispEdges;
+// }
+// .clear-brush {
+//   display: none;
+// }
+// .brush-control {
+//   padding: .5%;
+//   width: 100%;
+//   text-align: center;
+// }
+// .brush-info {
+//   display: inline-block;
+//   font-size: 14px;
+// }
 
-.timeseries {
-  width: 100%;
-  padding: 2% 0;
+
+// Styles for stacked chart
+.stacked-chart-container {
+  position: relative;
 }
-.circ {
-  fill: #D35400;
-  opacity: 0.6;
-  stroke: rgba(211, 84, 0, 0.7);
-  stroke-width: 5px;
+
+.stacked-chart-container .controls {
+  position: absolute;
+  top: 24px;
+  left: 18px;
 }
-.domain {
-  display: none;
+
+.stacked-chart .clickable {
+  cursor: pointer;
 }
-.axis path, .axis line {
+
+.stacked-chart-container .tooltip {
+  position: absolute;
+  font-size: 13px;
+  white-space: nowrap;
+  border: 1px solid black;
+  background-color: white;
+  pointer-events: none;
+  border-radius: 5px;
+  // display: none;
+  // opacity: 1;
+
+  padding: inherit;
+  th, td {
+    padding: 1px;
+  }
+  // filter: alpha(opacity=1);
+}
+
+.stacked-chart-container .tooltip-wrapper {
+  position: relative;
+  padding: 6px;
+}
+
+.stacked-chart-container .tooltip-wrapper:before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 10px solid;
+  border-color: black transparent transparent transparent;
+}
+
+.stacked-chart-container .tooltip-wrapper:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  bottom: -19px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 10px solid;
+  border-color: white transparent transparent transparent;
+}
+
+.stacked-chart-container .tooltip-table {
+  text-align: right;
+}
+
+.stacked-chart path,
+.stacked-chart line,
+.stacked-chart rect {
+  shape-rendering: crispEdges;
+}
+
+.stacked-chart text {
+  font: 10px sans-serif;
+}
+
+.stacked-chart .axis path,
+.stacked-chart .axis line {
   fill: none;
   stroke: #000;
-  shape-rendering: crispEdges;
 }
-.axis text {
-  font-size: 12px;
+
+.stacked-chart .series-english {
+  fill: $color_red;
 }
-.tick line {
-  stroke: #d5d5d5;
-  opacity: 0.7;
+
+.stacked-chart .series-french {
+  fill: $color_blue;
 }
-.brush .extent {
-  stroke: #fff;
-  fill-opacity: .125;
-  shape-rendering: crispEdges;
+
+.stacked-chart .series-spanish {
+  fill: $color_yellow;
 }
-.clear-brush {
-  display: none;
+
+.stacked-chart .series-italian {
+  fill: $color_green;
 }
-.brush-control {
-  padding: .5%;
-  width: 100%;
-  text-align: center;
+
+.stacked-chart .grid-lines {
+  fill: none;
+  stroke: lightgrey;
 }
-.brush-info {
-  display: inline-block;
-  font-size: 14px;
+
+.stacked-chart .layer rect {
+  opacity: 0.8;
+  transition: opacity 0.5s ease;
+}
+
+.stacked-chart .layer rect.highlighted {
+  opacity: 1;
+}
+
+.stacked-chart .overlay {
+  opacity: 0;
+}
+
+.stacked-chart .series-box {
+  stroke-width: 2px;
+}
+
+.stacked-chart .series-english .series-box {
+  stroke: $color_red;
+}
+
+.stacked-chart .series-french .series-box {
+  stroke: $color_blue;
+}
+
+.stacked-chart .series-spanish .series-box {
+  stroke: $color_yellow;
+}
+
+.stacked-chart .series-italian .series-box {
+  stroke: $color_green;
+}
+
+.stacked-chart .disabled .series-box {
+  fill-opacity: 0;
+}
+
+.stacked-chart .series-label {
+  fill: black;
+  text-anchor: end;
+  alignment-baseline: central;
 }

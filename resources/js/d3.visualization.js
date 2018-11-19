@@ -3,8 +3,8 @@
     // console.log("ready");
 
     //start timeseries
-    var data = [{'value': 1380854103662},{'value': 1363641921283}];
-    timeseries('timeseries', data, true);
+    // var data = [{'value': 1380854103662},{'value': 1363641921283}];
+    // timeseries('timeseries', data, true);
     // End timeseries
 
 
