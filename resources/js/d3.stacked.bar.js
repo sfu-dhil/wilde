@@ -101,7 +101,7 @@ var xAxis = d3.svg.axis()
     // .ticks(numSamples)
     .tickFormat(function (d) {
   		return all_days[d];
-  	});
+  	})
     .orient("bottom");
 
 var yAxis = d3.svg.axis()
