@@ -13,7 +13,7 @@ $('#languages li').each(function(i) {
   var num_it = $(this).data('it');
 
   date = i;
-  
+
   // var pair = {"x": date, "y": num_en};
   dates_en.push({"x":date,"y":num_en});
   dates_fr.push({"x":date,"y":num_fr});
@@ -70,7 +70,7 @@ var chartMode = "stacked",
     legendMargin = 20,
     legendX = containerWidth - legendSeriesBoxWidth - legendMargin,
     legendY = legendMargin,
-    tooltipTemplate = _.template("<table><% _.each(bars, function (bar) { %><tr><td><%= bar.name %></td><td><%= bar.value %></td></tr><% }); %></table>"),
+    tooltipTemplate = _.template("<table><% _.each(bars, function (bar) { %><tr><td><%= bar.name %></td><td><%= Math.round(bar.value) %></td></tr><% }); %></table>"),
     overlayTopPadding = 20,
     tooltipBottomMargin = 12;
 
