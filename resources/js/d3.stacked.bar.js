@@ -5,13 +5,15 @@ var dates_it = [];
 
 var num_dates = $('#languages li').length;
 
-$('#languages li').each(function() {
+$('#languages li').each(function(i) {
   var date = $(this).data('date');
   var num_en = $(this).data('en');
   var num_fr = $(this).data('fr');
   var num_es = $(this).data('es');
   var num_it = $(this).data('it');
 
+  date = i;
+  
   // var pair = {"x": date, "y": num_en};
   dates_en.push({"x":date,"y":num_en});
   dates_fr.push({"x":date,"y":num_fr});
