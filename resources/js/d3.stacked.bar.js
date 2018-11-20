@@ -20,7 +20,7 @@ $('#languages li').each(function() {
 var language_by_day = [{"name": "English", "values": dates_en}, {"name": "French", "values": dates_fr}, {"name": "Spanish", "values": dates_es}, {"name": "Italian", "values": dates_it}];
 
 
-// console.log(JSON.stringify(dates_english));
+console.log(JSON.stringify(language_by_day));
 
 
 // Start stacked bar chart
