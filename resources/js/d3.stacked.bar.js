@@ -35,8 +35,9 @@ var seriesNames = ["Italian", "Spanish", "French", "English"],
     }),
     stack = d3.layout.stack().values(function (d) { return d.values; });
 
-// stack(bar_chart_data);
-stack(language_by_day);
+bar_chart_data = language_by_day;
+
+stack(bar_chart_data);
 
 // console.log(JSON.stringify(bar_chart_data));
 
