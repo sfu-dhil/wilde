@@ -3,6 +3,8 @@ var dates_fr = [];
 var dates_es = [];
 var dates_it = [];
 
+var num_dates = $('#languages li').length;
+
 $('#languages li').each(function() {
   var date = $(this).data('date');
   var num_en = $(this).data('en');
@@ -35,6 +37,7 @@ var seriesNames = ["Italian", "Spanish", "French", "English"],
     }),
     stack = d3.layout.stack().values(function (d) { return d.values; });
 
+numSamples = num_dates;
 bar_chart_data = language_by_day;
 
 stack(bar_chart_data);
