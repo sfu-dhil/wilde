@@ -94,7 +94,7 @@ var heightScale = d3.scale.linear()
 
 var xAxis = d3.svg.axis()
     .scale(xScale) //binsScale)
-    .ticks(numSamples)
+    // .ticks(numSamples)
     .orient("bottom");
 
 var yAxis = d3.svg.axis()
