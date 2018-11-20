@@ -209,7 +209,7 @@ legendSeries.append("rect")
 
 legendSeries.append("text")
     .attr("class", "series-label")
-    // .attr("x", legendSeriesLabelX)
+    .attr("x", legendSeriesLabelX)
     .attr("y", legendSeriesLabelY)
     .text(String);
 
