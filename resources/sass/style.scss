@@ -752,6 +752,9 @@ th.header {
   padding: inherit;
   th, td {
     padding: 1px;
+    &:first-of-type {
+      padding-right: 4px;
+    }
   }
   // filter: alpha(opacity=1);
 }
@@ -806,19 +809,19 @@ th.header {
 }
 
 .stacked-chart .series-english {
-  fill: $color_red;
+  fill: $color_english;
 }
 
 .stacked-chart .series-french {
-  fill: $color_blue;
+  fill: $color_french;
 }
 
 .stacked-chart .series-spanish {
-  fill: $color_yellow;
+  fill: $color_spanish;
 }
 
 .stacked-chart .series-italian {
-  fill: $color_green;
+  fill: $color_italian;
 }
 
 .stacked-chart .grid-lines {
@@ -844,19 +847,19 @@ th.header {
 }
 
 .stacked-chart .series-english .series-box {
-  stroke: $color_red;
+  stroke: $color_english;
 }
 
 .stacked-chart .series-french .series-box {
-  stroke: $color_blue;
+  stroke: $color_french;
 }
 
 .stacked-chart .series-spanish .series-box {
-  stroke: $color_yellow;
+  stroke: $color_spanish;
 }
 
 .stacked-chart .series-italian .series-box {
-  stroke: $color_green;
+  stroke: $color_italian;
 }
 
 .stacked-chart .disabled .series-box {

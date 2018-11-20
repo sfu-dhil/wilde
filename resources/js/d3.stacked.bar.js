@@ -1,3 +1,17 @@
+var language_by_day = [];
+var dates_english = [];
+
+$('#languages li').each(function() {
+  var date = $(this).data('date');
+  var num_en = $(this).data('en');
+
+  // var pair = {"x": date, "y": num_en};
+  dates_english.push({"x":date,"y":num_en});
+});
+
+console.log(JSON.stringify(dates_english));
+
+
 // Start stacked bar chart
 var seriesNames = ["Italian", "Spanish", "French", "English"],
     numSamples = 22,
@@ -12,7 +26,7 @@ var seriesNames = ["Italian", "Spanish", "French", "English"],
 
 stack(bar_chart_data);
 
-console.log(JSON.stringify(bar_chart_data));
+// console.log(JSON.stringify(bar_chart_data));
 
 var chartMode = "stacked",
     numEnabledSeries = numSeries,

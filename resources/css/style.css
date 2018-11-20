@@ -720,6 +720,9 @@ th.header {
 .stacked-chart-container .tooltip th, .stacked-chart-container .tooltip td {
   padding: 1px;
 }
+.stacked-chart-container .tooltip th:first-of-type, .stacked-chart-container .tooltip td:first-of-type {
+  padding-right: 4px;
+}
 
 .stacked-chart-container .tooltip-wrapper {
   position: relative;
@@ -775,7 +778,7 @@ th.header {
 }
 
 .stacked-chart .series-french {
-  fill: #4799B7;
+  fill: #2B6BA3;
 }
 
 .stacked-chart .series-spanish {
@@ -813,7 +816,7 @@ th.header {
 }
 
 .stacked-chart .series-french .series-box {
-  stroke: #4799B7;
+  stroke: #2B6BA3;
 }
 
 .stacked-chart .series-spanish .series-box {
