@@ -5,8 +5,12 @@ var dates_it = [];
 
 var num_dates = $('#languages li').length;
 
+var all_days = [];
+
 $('#languages li').each(function(i) {
   var date = $(this).data('date');
+  all_days.push(date);
+
   var num_en = $(this).data('en');
   var num_fr = $(this).data('fr');
   var num_es = $(this).data('es');
@@ -95,6 +99,9 @@ var heightScale = d3.scale.linear()
 var xAxis = d3.svg.axis()
     .scale(xScale) //binsScale)
     // .ticks(numSamples)
+    .tickFormat(function (d) {
+  		return all_days[d];
+  	});
     .orient("bottom");
 
 var yAxis = d3.svg.axis()
