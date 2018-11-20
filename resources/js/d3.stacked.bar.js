@@ -1,15 +1,26 @@
-var language_by_day = [];
-var dates_english = [];
+var dates_en = [];
+var dates_fr = [];
+var dates_es = [];
+var dates_it = [];
 
 $('#languages li').each(function() {
   var date = $(this).data('date');
   var num_en = $(this).data('en');
+  var num_fr = $(this).data('fr');
+  var num_es = $(this).data('es');
+  var num_it = $(this).data('it');
 
   // var pair = {"x": date, "y": num_en};
-  dates_english.push({"x":date,"y":num_en});
+  dates_en.push({"x":date,"y":num_en});
+  dates_fr.push({"x":date,"y":num_fr});
+  dates_es.push({"x":date,"y":num_es});
+  dates_it.push({"x":date,"y":num_it});
 });
 
-console.log(JSON.stringify(dates_english));
+var language_by_day = [{"name": "English", "values": dates_en}, {"name": "French", "values": dates_fr}, {"name": "Spanish", "values": dates_es}, {"name": "Italian", "values": dates_it}];
+
+
+// console.log(JSON.stringify(dates_english));
 
 
 // Start stacked bar chart
@@ -24,7 +35,8 @@ var seriesNames = ["Italian", "Spanish", "French", "English"],
     }),
     stack = d3.layout.stack().values(function (d) { return d.values; });
 
-stack(bar_chart_data);
+// stack(bar_chart_data);
+stack(language_by_day);
 
 // console.log(JSON.stringify(bar_chart_data));
 
