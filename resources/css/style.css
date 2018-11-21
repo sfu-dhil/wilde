@@ -774,11 +774,11 @@ th.header {
 }
 
 .stacked-chart .series-english {
-  fill: #E10000;
+  fill: #F9292E;
 }
 
 .stacked-chart .series-french {
-  fill: #2B6BA3;
+  fill: #2B4DA9;
 }
 
 .stacked-chart .series-spanish {
@@ -795,8 +795,8 @@ th.header {
 }
 
 .stacked-chart .layer rect {
-  opacity: 0.8;
-  transition: opacity 0.5s ease;
+  opacity: 0.6;
+  transition: opacity 0.25s ease;
 }
 
 .stacked-chart .layer rect.highlighted {
@@ -812,11 +812,11 @@ th.header {
 }
 
 .stacked-chart .series-english .series-box {
-  stroke: #E10000;
+  stroke: #F9292E;
 }
 
 .stacked-chart .series-french .series-box {
-  stroke: #2B6BA3;
+  stroke: #2B4DA9;
 }
 
 .stacked-chart .series-spanish .series-box {
