@@ -234,6 +234,10 @@ a:active, a:focus, a:hover {
   color: #960000;
 }
 
+a.btn {
+  color: #F9F7F1;
+}
+
 #content {
   flex-grow: 1;
   padding-bottom: 6em;
@@ -443,6 +447,7 @@ dt:first-child {
   }
 }
 #comparalator {
+  display: none;
   position: fixed;
   top: 40vh;
   width: 200px;

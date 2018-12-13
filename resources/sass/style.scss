@@ -196,6 +196,10 @@ body {
 
 @include link($color_red, $color_red_dark);
 
+a.btn {
+  color: $color_white;
+}
+
 #content {
   flex-grow: 1;
   padding-bottom: 6em;
@@ -414,20 +418,21 @@ dt {
 
 
 #comparalator {
-    position: fixed;
-    top: 40vh;
-    width: 200px;
-    height: 200px;
-    background-color: #ddd;
-    padding: 0 1em 1em 1em;
+  display: none;
+  position: fixed;
+  top: 40vh;
+  width: 200px;
+  height: 200px;
+  background-color: #ddd;
+  padding: 0 1em 1em 1em;
 }
 
 .comparalator-text {
-    clear: both;
+  clear: both;
 }
 
 .comparalator-clear {
-    float: right;
+  float: right;
 }
 
 
