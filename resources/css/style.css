@@ -234,6 +234,10 @@ a:active, a:focus, a:hover {
   color: #960000;
 }
 
+a.btn {
+  color: #F9F7F1;
+}
+
 #content {
   flex-grow: 1;
   padding-bottom: 6em;
