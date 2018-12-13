@@ -9,7 +9,7 @@ declare namespace json="http://www.json.org";
 declare namespace request="http://exist-db.org/xquery/request";
 
 declare option output:method "json";
-declare option output:media-type "text/javascript";
+declare option output:media-type "application/json";
 
 import module namespace login="http://exist-db.org/xquery/login" at "resource:org/exist/xquery/modules/persistentlogin/login.xql";
 import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";

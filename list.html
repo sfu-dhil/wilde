@@ -3,23 +3,112 @@
   data-template-with="templates/page.html" xmlns="http://www.w3.org/1999/xhtml">
   <div class="row">
     <div class="page-header">
-      <h1>Wilde Trials International News Archive</h1>
-      <p>The complete list of news reports on Wilde’s trials is below. Each
-        column provides basic metadata about an individual report. The Matches
-        column displays, for each report, the number of matching reports and the
-        number of matching paragraphs found across the entire collection. To
-        open any report, click on its date.</p>
-      
-      <p>You can also browse the entire collection of reports by <a
-        href="date.html">date</a>, <a href="newspaper.html">newspaper</a>, <a
-          href="region.html">region</a>, or <a href="language.html">language</a>.</p>      
+      <h1>News reports</h1>
+      <!-- <p>Introductory text goes here.</p> -->
+
+      <!-- <ul id="report-tabs" class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#all" id="all-tab" role="tab" data-toggle="tab" aria-controls="all" aria-expanded="true">View all</a></li>
+        <li role="presentation"><a href="#date" role="tab" id="date-tab" data-toggle="tab" aria-controls="date">View by date</a></li>
+        <li role="presentation"><a href="#newspaper" role="tab" id="newspaper-tab" data-toggle="tab" aria-controls="newspaper">View by newspaper</a></li>
+        <li role="presentation"><a href="#region" role="tab" id="region-tab" data-toggle="tab" aria-controls="region">View by region</a></li>
+        <li role="presentation"><a href="#language" role="tab" id="language-tab" data-toggle="tab" aria-controls="language">View by language</a></li>
+      </ul> -->
     </div>
   </div>
   <div class="row">
-    <div data-template="app:browse" />
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade active in" id="all" aria-labelledby="all-tab">
+        <p>The complete list of news reports on Wilde’s trials is below. Each
+          column provides basic metadata about an individual report.</p>
+        <div id="chart"></div>
+        <div data-template="app:browse" />
+      </div>
+      <!-- <div role="tabpanel" class="tab-pane fade" id="date" aria-labelledby="date-tab">
+
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="newspaper" aria-labelledby="newspaper-tab">
+
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="region" aria-labelledby="region-tab"></div>
+      <div role="tabpanel" class="tab-pane fade" id="language" aria-labelledby="language-tab"></div> -->
+    </div>
   </div>
-  <script src="resources/lib/tablesorter/jquery.tablesorter.min.js"
-    type="text/javascript" />
-  <script> $(document).ready(function(){ $("#tbl-browser").tablesorter(); });
+  <link rel="stylesheet" type="text/css" href="resources/lib/bootstrap-table/dist/bootstrap-table.min.css" />
+  <script type="text/javascript" src="resources/lib/bootstrap-table/dist/bootstrap-table.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="resources/lib/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.css" />
+  <!-- <script type="text/javascript" src="resources/lib/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script> -->
+  <script type="text/javascript" src="resources/js/bootstrap-table-filter-control-total-count.js"></script>
+
+  <!-- <script type="text/javascript" src="resources/lib/tablesorter/jquery.tablesorter.min.js"></script>
+  <script type="text/javascript"> $(document).ready(function(){ $("#tbl-browser").tablesorter(); }); </script> -->
+  <script type="text/javascript" src="resources/js/list.js"></script>
+  <script type="text/javascript" src="//www.gstatic.com/charts/loader.js"></script>
+
+  <script type="text/javascript">
+    // total count of rows displayed
+    // $('#tbl-browser').on('load-success.bs.table', function () {
+    // 	console.log($('#tbl-browser').bootstrapTable('getOptions').totalRows)
+    // });
+
+    // Google chart
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    var annotations = {
+      '1895-04-03': ['Libel trial', 'The beginning of the criminal libel trial, initiated by Oscar Wilde against the Marquis of Queensbury.'],
+      '1895-04-26': ['First criminal trial', 'The beginning of the first criminal trial against Oscar Wilde and Alfred Taylor for "gross indecency."'],
+      '1895-05-23': ['Second criminal trial', 'The beginning of the second criminal trial against Oscar Wilde for "gross indecency."'],
+      '1895-05-25': ['Oscar Wilde Convicted', 'Oscar Wilde convicted of "gross indecency" and given a two-year prison sentence with hard labour.'],
+    };
+
+    function drawChart() {
+      console.log("loading chart.");
+
+      var $dateItems = $("li[data-date]");
+      if($dateItems.length === 0) {
+        return;
+      }
+      var languages = $("#languages").data('languages').toLowerCase().split(',');
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Date');
+      //data.addColumn('number', 'Article Count');
+      languages.forEach(function(language) {
+        data.addColumn('number', language);
+      });
+
+      data.addColumn({type: 'string', role: 'annotation'});
+      data.addColumn({type: 'string', role: 'annotationText'});
+
+      $dateItems.each(function(index,$item) {
+        var $this = $(this);
+        var date = $(this).data('date');
+        var item = [];
+        item.push(date);
+        // item.push($this.data('count'));
+        languages.forEach(function(language){
+          item.push($this.data(language));
+        });
+
+        if(date in annotations) {
+          item.push(annotations[date][0])
+          item.push(annotations[date][1]);
+        } else {
+          item.push(null);
+          item.push(null);
+        }
+        data.addRow(item);
+      });
+
+      var options = {
+        title: 'Articles by Day',
+        curveType: 'function',
+        legend: { position: 'bottom' }
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart'));
+      chart.draw(data, options);
+    }
   </script>
 </div>
