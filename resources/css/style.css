@@ -443,6 +443,7 @@ dt:first-child {
   }
 }
 #comparalator {
+  display: none;
   position: fixed;
   top: 40vh;
   width: 200px;
