@@ -12,12 +12,18 @@
     <condition>
       <resourcecount when="greater" count="0" refid="console-usages" />
     </condition>
-  </fail>  
-  
-  <target depends="docs,bower" name="xar">
+  </fail>
+
+  <target depends="cache-list,docs,bower" name="xar">
     <mkdir dir="${build.dir}" />
     <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/*,wilde.xpr" />
   </target>
+  
+  <target name="cache-list">
+    <get src="http://localhost:8000/exist/wilde/list-nocache.html"
+          dest="list.html"/>
+  </target>
+  
   <target name="docs">
     <exec dir="docs" executable="make">
       <arg value="clean" />
@@ -26,6 +32,7 @@
       <arg value="html" />
     </exec>
   </target>
+  
   <target name="bower">
     <exec executable="bower">
       <arg value="install" />

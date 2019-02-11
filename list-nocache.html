@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div data-template="templates:surround" data-template-at="content"
+  data-template-with="templates/page.html" xmlns="http://www.w3.org/1999/xhtml">
+  <div class="row">
+    <div class="page-header">
+      <h1>News reports</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade active in" id="all">
+        <p>The complete list of news reports on Wilde’s trials is below. Each
+          column provides basic metadata about an individual report.</p>
+        <div id="chart"></div>
+        <div data-template="app:browse" />
+      </div>
+    </div>
+  </div>
+  <link rel="stylesheet" type="text/css" href="resources/lib/bootstrap-table/dist/bootstrap-table.min.css" />
+  <script type="text/javascript" src="resources/lib/bootstrap-table/dist/bootstrap-table.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="resources/lib/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.css" />
+  <!-- <script type="text/javascript" src="resources/lib/bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script> -->
+  <script type="text/javascript" src="resources/js/bootstrap-table-filter-control-total-count.js"></script>
+
+  <!-- <script type="text/javascript" src="resources/lib/tablesorter/jquery.tablesorter.min.js"></script>
+  <script type="text/javascript"> $(document).ready(function(){ $("#tbl-browser").tablesorter(); }); </script> -->
+  <script type="text/javascript" src="resources/js/list.js"></script>
+
+</div>
