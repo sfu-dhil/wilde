@@ -17,27 +17,37 @@ if ($exist:path eq '') then
     <dispatch>
         <redirect url="{request:get-uri()}/index.html"/>
     </dispatch>
-    
+
 else if ($exist:path eq "/") then
     <dispatch>
         <redirect url="index.html"/>
     </dispatch>
-    
+
+else if($exist:path eq "/list.html") then
+    <dispatch>
+        <cache-control cache="yes"/>
+    </dispatch>
+  
 else if (ends-with($exist:resource, ".html")) then
     (: the html page is run through view.xql to expand templates :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <view>
             <forward url="{$exist:controller}/modules/view.xql"/>
-        </view>
-		<error-handler>
-			<forward url="{$exist:controller}/error-page.html" method="get"/>
-			<forward url="{$exist:controller}/modules/view.xql"/>
-		</error-handler>
+        </view> {
+          if(request:get-hostname() ne "localhost") then                      
+            <error-handler>
+        			<forward url="{$exist:controller}/error-page.html" method="get"/>
+        			<forward url="{$exist:controller}/modules/view.xql"/>
+        		</error-handler>
+        	else 
+        	  ()
+      }
+
     </dispatch>
 
 else if (ends-with($exist:resource, ".gexf")) then
   collection:graph($exist:resource)
-    
+
 else if(contains($exist:path, "/export/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/modules/export.xql">
