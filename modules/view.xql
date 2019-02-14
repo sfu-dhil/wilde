@@ -16,7 +16,7 @@ import module namespace app="http://dhil.lib.sfu.ca/exist/wilde-app/templates" a
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 
-declare option output:method "xhtml";
+declare option output:method "xhtml5";
 declare option output:media-type "text/html";
 
 
