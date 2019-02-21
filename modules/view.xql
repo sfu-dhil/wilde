@@ -7,8 +7,8 @@ xquery version "3.0";
 
 import module namespace templates="http://exist-db.org/xquery/templates";
 
-(: 
- : The following modules provide functions which will be called by the 
+(:
+ : The following modules provide functions which will be called by the
  : templating.
  :)
 import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
@@ -16,8 +16,9 @@ import module namespace app="http://dhil.lib.sfu.ca/exist/wilde-app/templates" a
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 
-declare option output:method "html5";
+declare option output:method "xhtml5";
 declare option output:media-type "text/html";
+
 
 let $config := map {
     $templates:CONFIG_APP_ROOT := $config:app-root,

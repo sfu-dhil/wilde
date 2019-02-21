@@ -6,61 +6,11 @@
         </div>
         <div data-template="app:compare-documents"/>
     </div>
-    <script type="text/javascript">
-        function normalize(string) {
-          var lower = string.toLowerCase();
-          var lbs = lower.replace(/(\r\n|\n|\r)/gm," ");
-          var clean = lbs.replace(/\s+/g, ' ');
-          return clean;
-        }
-        
-        function htmlize(diffs) {
-          var html = [];
-          var pattern_amp = /&amp;/g;
-          var pattern_lt = /&lt;/g;
-          var pattern_gt = /&gt;/g;
-          var pattern_para = /\n/g;
-          
-          for (var x = 0; x &lt; diffs.length; x++) {
-            var op = diffs[x][0];    // Operation (insert, delete, equal)
-            var text = diffs[x][1];
-            switch (op) {
-              case DIFF_INSERT:
-                html[x] = '&lt;ins&gt;' + text + '&lt;/ins&gt;';
-                break;
-              case DIFF_DELETE:
-                html[x] = '&lt;del&gt;' + text + '&lt;/del&gt;';
-                break;
-              case DIFF_EQUAL:
-                html[x] = '&lt;span&gt;' + text + '&lt;/span&gt;';
-                break;
-            }
-          }
-          return html.join('');
-        };        
-        
-        $(document).ready(function(){
-          var dmp = new diff_match_patch();
-          
-          $("div.paragraph-compare").each(function(){
-            var $this = $(this);
-            var a = normalize($this.find('.paragraph-a').text());
-            var b = normalize($this.find('.paragraph-b').text());
-            var $d = $this.find('.paragraph-d');
-    
-            if( ! b) {
-              $d.html("No similar paragraph.");
-            } else {
-              var diff = dmp.diff_main(a, b);
-              dmp.diff_cleanupSemantic(diff);
-              var html = htmlize(diff);            
-              $d.html(html);
-              $d.append("&lt;br/&gt;Match: " + $this.data('score'));        
-            }
-          });
-        });
+    <script type="text/javascript"> 
+
     </script>
     <script type="text/javascript" src="resources/lib/js-url/url.min.js"/>
     <script type="text/javascript" src="resources/js/view.js"/>
+    <script type="text/javascript" src="resources/js/page/compare.js"></script>
     <script type="text/javascript" src="resources/lib/google-diff-match-patch-js/diff_match_patch.js"/>
 </div>

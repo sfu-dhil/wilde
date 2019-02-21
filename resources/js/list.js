@@ -32,3 +32,4 @@ $('.nav-tabs a').click(function (e) {
 //     // console.log(whatChanged + " !!! " + changedTo);
 //   }
 // });
+//   onAll: function (whatChanged, changedTo) {

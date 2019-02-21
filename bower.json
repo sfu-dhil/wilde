@@ -28,6 +28,9 @@
     "vis": "^4.17.0",
     "gexf-js": "https://github.com/ubermichael/gexf-js.git",
     "bootswatch": "bootswatch#3.3.7",
-    "timeseries": "https://github.com/mlvl/timeseries.git"
+    "timeseries": "https://github.com/mlvl/timeseries.git",
+    "moment": "momentjs#^2.23.0",
+    "underscore": "^1.9.1",
+    "open-sans-fontface": "^1.4.2"
   }
 }
