@@ -30,6 +30,7 @@
     "bootswatch": "bootswatch#3.3.7",
     "timeseries": "https://github.com/mlvl/timeseries.git",
     "moment": "momentjs#^2.23.0",
-    "underscore": "^1.9.1"
+    "underscore": "^1.9.1",
+    "open-sans-fontface": "^1.4.2"
   }
 }
