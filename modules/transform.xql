@@ -53,7 +53,7 @@ declare function tx:document($nodes as node()*) as node()* {
                           else () 
                         }
                         <a href='view.html?f={document:id($document)}#{$paragraph/@id}'>{document:title($document)}</a> 
-                        ({format-number($node/@data-similarity, "###.#%")}%)<br/>
+                        ({format-number($node/@data-similarity, "###.#%")}% {$node/@data-type/string()})<br/>
                         <a href='compare.html?a={document:id($node)}&amp;b={$node/@data-document}'>Compare two documents</a>
                     </blockquote>
                 else

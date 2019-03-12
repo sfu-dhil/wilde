@@ -423,7 +423,11 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
             <ul> {
                 for $link in $similarities
                 let $doc := collection:fetch($link/@href)
-                return <li class="{$link/@class}">{app:link-view($link/@href, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
+                return 
+                    <li class="{$link/@class}">
+                        {app:link-view($link/@href, document:title($doc))} 
+                        ({format-number($link/@data-similarity, "###.#%")}% { $link/@data-type/string() })
+                    </li>
             } </ul>
 };
 
@@ -436,7 +440,10 @@ declare function app:paragraph-similarities($node as node(), $model as map(*)) a
             <ul> {
                 for $link in $similarities
                 let $doc := collection:fetch($link/@data-document)
-                return <li class="{$link/@class}">{app:link-view($link/@data-document, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
+                return 
+                    <li class="{$link/@class}">
+                        {app:link-view($link/@data-document, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)
+                    </li>
             } </ul>
 };
 
