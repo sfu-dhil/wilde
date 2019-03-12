@@ -310,13 +310,24 @@ a.front-page {
   h1 {
     font-size: 40px;
     margin-bottom: 46px;
-    display: inline-flex;
     align-items: center;
     justify-content: center;
     line-height: 1;
+    span {
+      display: block;
+      &:first-child {
+        margin-right: 0.3em;
+      }
+    }
 
     @include tablet {
       font-size: 60px;
+      display: inline-flex;
+      span {
+        &:first-child {
+          margin-right: 0;
+        }
+      }
     }
 
     img {
@@ -875,4 +886,12 @@ th.header {
   fill: black;
   text-anchor: end;
   alignment-baseline: central;
+}
+
+
+
+// sidebar
+.panel-default > .panel-heading {
+  background-color: $color_beige;
+  font-weight: bold;
 }

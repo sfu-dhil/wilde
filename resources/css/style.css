@@ -365,14 +365,23 @@ a.front-page {
 .newspaper-masthead h1 {
   font-size: 40px;
   margin-bottom: 46px;
-  display: inline-flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
 }
+.newspaper-masthead h1 span {
+  display: block;
+}
+.newspaper-masthead h1 span:first-child {
+  margin-right: 0.3em;
+}
 @media (min-width: 768px) {
   .newspaper-masthead h1 {
     font-size: 60px;
+    display: inline-flex;
+  }
+  .newspaper-masthead h1 span:first-child {
+    margin-right: 0;
   }
 }
 .newspaper-masthead h1 img {
@@ -840,6 +849,11 @@ th.header {
   fill: black;
   text-anchor: end;
   alignment-baseline: central;
+}
+
+.panel-default > .panel-heading {
+  background-color: #EAE8E3;
+  font-weight: bold;
 }
 
 /*# sourceMappingURL=style.css.map */
