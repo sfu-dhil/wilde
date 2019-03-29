@@ -22,7 +22,13 @@ declare function tx:document($nodes as node()*) as node()* {
                 
             case element(p) return
                 if($query = '') then
-                    element { local-name($node) } { $node/@*, tx:document($node/node()) }
+                    element { local-name($node) } { 
+                            $node/@*, 
+                            tx:document($node/node()[local-name() != 'a']),
+                            for $a in $node/node()[local-name() = 'a']
+                            order by number($a/@data-similarity) descending
+                            return tx:document($a)
+                        }
                 else
                     let $hits := ft:query($node, $query)
                     return 

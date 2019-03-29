@@ -536,9 +536,9 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
 
     let $lang := $da//div[@id='original']/@lang
 
-    let $pa := $da//div[@id='original']//p[not(@class='heading')]
-    let $pb := $db//div[@lang=$lang]//p[not(@class='heading')]
-
+    let $pa := $da//div[@lang='en']//p[not(@class='heading')]
+    let $pb := $db//div[@lang='en']//p[not(@class='heading')]
+       
     return
       <div>
         <div class='row'>

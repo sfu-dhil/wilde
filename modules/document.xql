@@ -58,7 +58,7 @@ declare function document:document-matches($node as node()) as node()* {
 };
 
 declare function document:paragraph-matches($node as node()) as node()* {
-    root($node)//div[@id='original']//a[contains(@class, 'similarity')]
+    root($node)//a[contains(@class, 'similarity')]
 };
 
 declare function document:city($node as node()) as xs:string {
