@@ -34,7 +34,7 @@ declare function document:path($node as node()) as xs:string {
 };
 
 declare function document:word-count($node as node()) as xs:string {
-    string(root($node)//meta[@name='wr.wordcount']/@content)
+    string(root($node)//meta[@name='wr.word-count']/@content)
 };
 
 declare function document:date($node as node()) as xs:string {
@@ -58,7 +58,7 @@ declare function document:document-matches($node as node()) as node()* {
 };
 
 declare function document:paragraph-matches($node as node()) as node()* {
-    root($node)//div[@id='original']//a[contains(@class, 'similarity')]
+    root($node)//a[contains(@class, 'similarity')]
 };
 
 declare function document:city($node as node()) as xs:string {
@@ -100,11 +100,11 @@ declare function document:language($node as node()) as xs:string {
 };
 
 declare function document:translations($node as node()) as xs:string* {
-  root($node)//div[@class='translated']/@lang/string()
+  root($node)//div[@id='translation']/@lang/string()
 };
 
 declare function document:count-translations($node as node()) as xs:integer {
-  count(root($node)//div[@class='translated'])
+  count(root($node)//div[@od='translation'])
 };
 
 
