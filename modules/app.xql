@@ -30,7 +30,6 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
         <table class='table table-striped table-hover table-condensed' id="tbl-browser" data-toggle="table" data-filter-control="true" data-filter-show-clear="true" data-search="true" data-trim-on-search="false" data-show-export="true" data-click-to-select="true" data-total-field='total'>
             <thead>
                 <tr>
-                    <th></th>
                     <th data-field="date" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Date</th>
                     <th data-field="newspaper" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Newspaper</th>
                     <th data-field="region" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Region</th>
@@ -44,8 +43,7 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
             <tbody>{
                 for $document in $documents
                 return <tr>
-                    <td>{app:link-view(document:id($document), 'View')}</td>
-                    <td>{document:date($document)}</td>
+                    <td>{app:link-view(document:id($document), document:date($document))}</td>
                     <td>{document:publisher($document)}</td>
                     <td>{document:region($document)}</td>
                     <td>{document:city($document)}</td>
@@ -423,7 +421,11 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
             <ul> {
                 for $link in $similarities
                 let $doc := collection:fetch($link/@href)
-                return <li class="{$link/@class}">{app:link-view($link/@href, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
+                return 
+                    <li class="{$link/@class}">
+                        {app:link-view($link/@href, document:title($doc))} 
+                        ({format-number($link/@data-similarity, "###.#%")}% { $link/@data-type/string() })
+                    </li>
             } </ul>
 };
 
@@ -436,7 +438,10 @@ declare function app:paragraph-similarities($node as node(), $model as map(*)) a
             <ul> {
                 for $link in $similarities
                 let $doc := collection:fetch($link/@data-document)
-                return <li class="{$link/@class}">{app:link-view($link/@data-document, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)</li>
+                return 
+                    <li class="{$link/@class}">
+                        {app:link-view($link/@data-document, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)
+                    </li>
             } </ul>
 };
 
@@ -531,9 +536,9 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
 
     let $lang := $da//div[@id='original']/@lang
 
-    let $pa := $da//div[@id='original']//p[not(@class='heading')]
-    let $pb := $db//div[@lang=$lang]//p[not(@class='heading')]
-
+    let $pa := $da//div[@lang='en']//p[not(@class='heading')]
+    let $pb := $db//div[@lang='en']//p[not(@class='heading')]
+       
     return
       <div>
         <div class='row'>

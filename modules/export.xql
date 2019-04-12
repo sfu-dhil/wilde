@@ -15,6 +15,51 @@ import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/documen
 declare option output:method "text";
 declare option output:media-type "text/csv";
 
+declare function export:vsm-docs() {
+
+    let $headers := (
+        <row>
+            <item>source</item>
+            <item>destination</item>
+            <item>similarity</item>
+            <item>type</item>
+        </row>
+    )
+    
+    let $body := for $link in collection:documents()//link[@data-type='vsm']
+    return <row>
+        <item>https://dhil.lib.sfu.ca/wilde/view.html?f={document:id($link)}</item>
+        <item>https://dhil.lib.sfu.ca/wilde/view.html?f={$link/@href/string()}</item>
+        <item>{$link/@data-similarity/string()}</item>
+        <item>{$link/@data-type/string()}</item>        
+    </row>
+
+    return ($headers, $body)
+};
+
+declare function export:vsm-ps() {
+
+    let $headers := (
+        <row>
+            <item>source</item>
+            <item>destination</item>
+            <item>similarity</item>
+            <item>type</item>
+        </row>
+    )
+    
+    let $body := for $link in collection:documents()//a[@data-type='vsm']
+    return <row>
+        <item>https://dhil.lib.sfu.ca/wilde/view.html?f={document:id($link)}#{$link/parent::p/@id/string()}</item>
+        <item>https://dhil.lib.sfu.ca/wilde/view.html?f={$link/@href/string()}#{$link/@data-paragraph/string()}</item>
+        <item>{$link/@data-similarity/string()}</item>
+        <item>{$link/@data-type/string()}</item>        
+    </row>
+
+    return ($headers, $body)
+};
+
+
 declare function export:search() {
     let $query := request:get-parameter('query', '')
     let $page := request:get-parameter('p', 1)
