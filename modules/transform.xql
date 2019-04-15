@@ -1,6 +1,3 @@
-(:~
- : I don't think this module is used at all. 
- :)
 xquery version "3.0";
 
 module namespace tx = "http://dhil.lib.sfu.ca/exist/wilde-app/transform";
@@ -25,36 +22,38 @@ declare function tx:matches($node, $type) {
 };
 
 declare function tx:paragraph($node as node()) as node() {
-    let $id := $node/@id/string()    
+    let $id := $node/@id/string()
+    let $match-count := count($node/a)    
     
     return 
-    <div class="container">
         <div class="row">
-            <div class="col-sm-1">
-                controls
-            </div>
-            <div class='col-sm-11'>
+            <div class="col-sm-2"> {
+                if($match-count gt 0) then 
+                        <a class="btn btn-primary" onclick="$('#{$id}_matches').toggle();">
+                            {$match-count} match{ if ($match-count gt 1) then 'es' else ''}
+                        </a>
+                    else
+                        "No matches"
+            } </div>
+            <div class='col-sm-10'>
                 <p id="{$node/@id}">
                     { tx:document($node/node()[local-name() != 'a']) }
                 </p>
         
-                <div>
+                <div id="{$id}_matches" class='similarity'>
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active"><a href="#{$id}_exact" aria-controls="home" role="tab" data-toggle="tab">Exact</a></li>
                         <li role="presentation"><a href="#{$id}_lev" aria-controls="home" role="tab" data-toggle="tab">Levenshtein</a></li>
                         <li role="presentation"><a href="#{$id}_cos" aria-controls="home" role="tab" data-toggle="tab">Cosine</a></li>
-                        <li role="presentation"><a href="#{$id}_vsm" aria-controls="home" role="tab" data-toggle="tab">VSM</a></li>
                     </ul>
                     
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="{$id}_exact"> { tx:matches($node, "exact")} </div>
                         <div role="tabpanel" class="tab-pane" id="{$id}_lev"> { tx:matches($node, "lev")} </div>
                         <div role="tabpanel" class="tab-pane" id="{$id}_cos"> { tx:matches($node, "cos")} </div>
-                        <div role="tabpanel" class="tab-pane" id="{$id}_vsm"> { tx:matches($node, "vsm")} </div>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 };
 
@@ -84,28 +83,12 @@ declare function tx:document($nodes as node()*) as node()* {
                         let $document := collection:fetch($node/@data-document)
                         let $paragraph := $document//p[@id = $node/@data-paragraph]
                         return
-                            <blockquote
-                                class='similarity'>
+                            <blockquote>
                                 <p>{string($paragraph[1])}</p>
-                                {
-                                    if (count($paragraph) ne 1) then
-                                        <div>
-                                            <b>DUPLICATE.</b>
-                                            {
-                                                for $p in $paragraph
-                                                return
-                                                    <div>
-                                                        {$node/@data-paragraph/string()}::{document:id($p)} - {$p/@id/string()} - {string($p)}</div>
-                                            }
-                                        </div>
-                                    else
-                                        ()
-                                }
-                                <a
-                                    href='view.html?f={document:id($document)}#{$paragraph/@id}'>{document:title($document)}</a>
-                                ({format-number($node/@data-similarity, "###.#%")}% {$node/@data-type/string()})<br/>
-                                <a
-                                    href='compare.html?a={document:id($node)}&amp;b={$node/@data-document}'>Compare two documents</a>
+                                <a href='view.html?f={document:id($document)}#{$paragraph/@id}'>
+                                    {document:title($document)}
+                                </a> ({format-number($node/@data-similarity, "###.#%")}%) <br/>
+                                <a href='compare.html?a={document:id($node)}&amp;b={$node/@data-document}'>Compare two documents</a>
                             </blockquote>
                     else
                         $node

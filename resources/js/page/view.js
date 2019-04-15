@@ -5,7 +5,7 @@
       e.preventDefault()
       cookies.set('similarity', 'shown');
     }
-    $('blockquote.similarity').show();
+    $('div.similarity').show();
     $('#pm-show').hide();
     $('#pm-hide').show();
   }
@@ -15,7 +15,7 @@
       e.preventDefault()
       cookies.set('similarity', 'hidden');
     }
-    $('blockquote.similarity').hide();
+    $('div.similarity').hide();
     $('#pm-hide').hide();
     $('#pm-show').show();
   }
