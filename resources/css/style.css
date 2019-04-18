@@ -221,7 +221,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  font-family: "Encode Sans";
+  font: "Encode Sans", sans-serif;
 }
 
 a {
@@ -236,6 +236,15 @@ a:active, a:focus, a:hover {
 
 a.btn {
   color: #F9F7F1;
+  background-color: #960000;
+  border-color: #170000;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-group.open .dropdown-toggle.btn-primary {
+  background-color: #E10000;
+  border-color: #960000;
 }
 
 #content {
@@ -365,14 +374,23 @@ a.front-page {
 .newspaper-masthead h1 {
   font-size: 40px;
   margin-bottom: 46px;
-  display: inline-flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
 }
+.newspaper-masthead h1 span {
+  display: block;
+}
+.newspaper-masthead h1 span:first-child {
+  margin-right: 0.3em;
+}
 @media (min-width: 768px) {
   .newspaper-masthead h1 {
     font-size: 60px;
+    display: inline-flex;
+  }
+  .newspaper-masthead h1 span:first-child {
+    margin-right: 0;
   }
 }
 .newspaper-masthead h1 img {
@@ -413,11 +431,14 @@ a.front-page {
   margin: 0.5em 0;
 }
 
-dt {
-  margin-top: 1em;
+dt,
+dd {
+  margin-bottom: 1em;
 }
-dt:first-child {
-  margin-top: 0;
+
+.dl-horizontal {
+  width: 100%;
+  float: left;
 }
 
 @media (min-width: 768px) {
@@ -447,7 +468,6 @@ dt:first-child {
   }
 }
 #comparalator {
-  display: none;
   position: fixed;
   top: 40vh;
   width: 200px;
@@ -655,9 +675,28 @@ th.header {
 .selected-text {
   color: red;
 }
+.popover .selected-text {
+  color: white;
+}
 
 .popover,
 .tooltip {
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
+  user-select: none !important;
+}
+.popover *,
+.tooltip * {
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
   user-select: none !important;
 }
 
@@ -674,6 +713,10 @@ th.header {
 #chart svg > rect {
   background: rgba(0, 0, 0, 0) !important;
   width: 100% !important;
+}
+
+table option {
+  font-weight: 400;
 }
 
 .table > caption + thead > tr:first-child > th,
@@ -698,20 +741,27 @@ th.header {
 }
 
 /** Styles for TIMESERIES */
+#languages {
+  display: none !important;
+}
+
 .stacked-chart-container {
   position: relative;
+  margin-bottom: 20px;
 }
-
 .stacked-chart-container .controls {
   position: absolute;
-  top: 24px;
+  top: 0px;
   left: 18px;
 }
-
-.stacked-chart .clickable {
+.stacked-chart-container .clickable {
   cursor: pointer;
 }
+.stacked-chart-container .legend-background {
+  fill: #F9F7F1 !important;
+}
 
+.map-wrapper .tooltip,
 .stacked-chart-container .tooltip {
   position: absolute;
   font-size: 13px;
@@ -722,18 +772,24 @@ th.header {
   border-radius: 5px;
   padding: inherit;
 }
-.stacked-chart-container .tooltip th, .stacked-chart-container .tooltip td {
+.map-wrapper .tooltip th, .map-wrapper .tooltip td,
+.stacked-chart-container .tooltip th,
+.stacked-chart-container .tooltip td {
   padding: 1px;
 }
-.stacked-chart-container .tooltip th:first-of-type, .stacked-chart-container .tooltip td:first-of-type {
+.map-wrapper .tooltip th:first-of-type, .map-wrapper .tooltip td:first-of-type,
+.stacked-chart-container .tooltip th:first-of-type,
+.stacked-chart-container .tooltip td:first-of-type {
   padding-right: 4px;
 }
 
+.map-wrapper .tooltip-wrapper,
 .stacked-chart-container .tooltip-wrapper {
   position: relative;
   padding: 6px;
 }
 
+.map-wrapper .tooltip-wrapper:before,
 .stacked-chart-container .tooltip-wrapper:before {
   content: "";
   position: absolute;
@@ -746,6 +802,7 @@ th.header {
   border-color: black transparent transparent transparent;
 }
 
+.map-wrapper .tooltip-wrapper:after,
 .stacked-chart-container .tooltip-wrapper:after {
   content: "";
   position: absolute;
@@ -840,6 +897,25 @@ th.header {
   fill: black;
   text-anchor: end;
   alignment-baseline: central;
+}
+
+.panel-default > .panel-heading {
+  background-color: #EAE8E3;
+  font-weight: bold;
+}
+
+.map-wrapper {
+  position: relative;
+}
+.map-wrapper .tooltip {
+  position: absolute;
+}
+
+.report-view .tab-pane.active .tab-pane.active {
+  background-color: #fff;
+}
+.report-view blockquote {
+  border-left: 1px solid #eee;
 }
 
 /*# sourceMappingURL=style.css.map */
