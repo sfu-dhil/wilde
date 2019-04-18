@@ -1,3 +1,6 @@
+// we do this here because eXist doesn't like that it's not valid XML.
+$(document).ready(function() {
+
 var dates_en = [];
 var dates_fr = [];
 var dates_es = [];
@@ -28,20 +31,20 @@ $('#languages li').each(function(i) {
 var language_by_day = [{"name": "English", "values": dates_en}, {"name": "French", "values": dates_fr}, {"name": "Spanish", "values": dates_es}, {"name": "Italian", "values": dates_it}];
 
 
-console.log(JSON.stringify(language_by_day));
+// console.log(JSON.stringify(language_by_day));
 
 
 // Start stacked bar chart
 var seriesNames = ["Italian", "Spanish", "French", "English"],
-    numSamples = 22,
-    numSeries = seriesNames.length,
-    bar_chart_data = seriesNames.map(function (name) {
-        return {
-            name: name,
-            values: bumpLayer(numSamples, 0.1)
-        };
-    }),
-    stack = d3.layout.stack().values(function (d) { return d.values; });
+  numSamples = 22,
+  numSeries = seriesNames.length,
+  bar_chart_data = seriesNames.map(function (name) {
+    return {
+      name: name,
+      values: bumpLayer(numSamples, 0.1)
+    };
+  }),
+  stack = d3.layout.stack().values(function (d) { return d.values; });
 
 numSamples = num_dates;
 bar_chart_data = language_by_day;
@@ -51,34 +54,34 @@ stack(bar_chart_data);
 // console.log(JSON.stringify(bar_chart_data));
 
 var chartMode = "stacked",
-    numEnabledSeries = numSeries,
-    lastHoveredBarIndex,
-    containerWidth = $(".js-stacked-chart-container").width(),
-    containerHeight = 500,
-    margin = {top: 80, right: 30, bottom: 20, left: 30},
-    width = containerWidth - margin.left - margin.right,
-    height = containerHeight - margin.top - margin.bottom,
-    widthPerStack = width / numSamples,
-    animationDuration = 400,
-    delayBetweenBarAnimation = 10,
-    numYAxisTicks = 8,
-    maxStackY = d3.max(bar_chart_data, function (series) { return d3.max(series.values, function (d) { return d.y0 + d.y; }); }),
-    paddingBetweenLegendSeries = 5,
-    legendSeriesBoxX = 0,
-    legendSeriesBoxY = 0,
-    legendSeriesBoxWidth = 15,
-    legendSeriesBoxHeight = 15,
-    legendSeriesHeight = legendSeriesBoxHeight + paddingBetweenLegendSeries,
-    legendSeriesLabelX = -5,
-    legendSeriesLabelY = legendSeriesBoxHeight / 2,
-    legendMargin = 20,
-    legendX = containerWidth - legendSeriesBoxWidth - legendMargin,
-    legendY = legendMargin,
-    tooltipTemplate = _.template("<table><% _.each(bars, function (bar) { %><tr><td><%= bar.name %></td><td><%= Math.round(bar.value) %></td></tr><% }); %></table>"),
-    overlayTopPadding = 20,
-    tooltipBottomMargin = 12;
+  numEnabledSeries = numSeries,
+  lastHoveredBarIndex,
+  containerWidth = $(".js-stacked-chart-container").width(),
+  containerHeight = 300,
+  margin = {top: 40, right: 30, bottom: 20, left: 30},
+  width = containerWidth - margin.left - margin.right,
+  height = containerHeight - margin.top - margin.bottom,
+  widthPerStack = width / numSamples,
+  animationDuration = 400,
+  delayBetweenBarAnimation = 10,
+  numYAxisTicks = 8,
+  maxStackY = d3.max(bar_chart_data, function (series) { return d3.max(series.values, function (d) { return d.y0 + d.y; }); }),
+  paddingBetweenLegendSeries = 5,
+  legendSeriesBoxX = 0,
+  legendSeriesBoxY = 0,
+  legendSeriesBoxWidth = 15,
+  legendSeriesBoxHeight = 15,
+  legendSeriesHeight = legendSeriesBoxHeight + paddingBetweenLegendSeries,
+  legendSeriesLabelX = -5,
+  legendSeriesLabelY = legendSeriesBoxHeight / 2,
+  legendMargin = 20,
+  legendX = containerWidth - legendSeriesBoxWidth - legendMargin,
+  legendY = legendMargin,
+  tooltipTemplate = _.template("<table><% _.each(bars, function (bar) { %><tr><td><%= bar.name %></td><td><%= Math.round(bar.value) %></td></tr><% }); %></table>"),
+  overlayTopPadding = 20,
+  tooltipBottomMargin = 12;
 
-    console.log("width: " + width);
+  // console.log("width: " + width);
 
 var binsScale = d3.scale.ordinal()
     .domain(d3.range(numSamples))
@@ -198,10 +201,19 @@ svg.append("rect")
     .on("mousemove", showTooltip)
     .on("mouseout", hideTooltip);
 
-var legendSeries = svg.append("g")
+var legend = svg.append("g")
     .attr("class", "legend")
-    .attr("transform", "translate(" + legendX + "," + legendY + ")")
-    .selectAll("g").data(seriesNames.reverse())
+    .attr("transform", "translate(" + legendX + "," + legendY + ")");
+
+var legendBackground = legend.append("rect")
+    .attr("class", "legend-background")
+    // .attr("transform", "translate(" + legendX + "," + legendY + ")")
+    .attr("x", '-60px')
+    .attr("y", 0)
+    .attr("width", '80px')
+    .attr("height", '90px');
+
+var legendSeries = legend.selectAll("g").data(seriesNames.reverse())
         .enter().append("g")
             .attr("class", legendSeriesClass)
             .attr("transform", function (d, i) { return "translate(0," + (i * legendSeriesHeight) + ")"; })
@@ -521,7 +533,6 @@ function bumpLayer(n, o) {
 }
 
 
-// we do this here because eXist doesn't like that it's not valid XML.
-$(document).ready(function() {
+
   $('.js-stacked-chart-container .controls label:first-of-type').find('input').attr('checked', 'true');
 });

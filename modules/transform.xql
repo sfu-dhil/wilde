@@ -10,73 +10,81 @@ declare namespace xhtml = 'http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
 declare function tx:matches($node, $type) {
-    let $matches := 
+    let $matches :=
         for $a in $node/a[@data-type=$type]
         order by $a/@data-similarity descending
         return $a
 
     return if(count($matches) gt 0) then
         tx:document($matches)
-    else 
-        <p>No matches found.</p>
+    else
+        <blockquote><p>No matches found.</p></blockquote>
 };
 
 declare function tx:paragraph($node as node()) as node() {
     let $id := $node/@id/string()
-    let $match-count := count($node/a)    
-    
-    return 
-        <div class="row">
+    let $match-count := count($node/a)
+
+    return
+        <div class="row matches matches-{$match-count}">
             <div class="col-sm-2"> {
-                if($match-count gt 0) then 
-                        <a class="btn btn-primary" onclick="$('#{$id}_matches').toggle();">
+                if($match-count gt 0) then
+                        <a class="btn btn-primary" onclick="$('#{$id}_matches').toggle();" title="Show matches">
                             {$match-count} match{ if ($match-count gt 1) then 'es' else ''}
                         </a>
                     else
-                        "No matches"
+                        ""
             } </div>
             <div class='col-sm-10'>
                 <p id="{$node/@id}">
                     { tx:document($node/node()[local-name() != 'a']) }
                 </p>
-        
-                <div id="{$id}_matches" class='similarity'>
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#{$id}_exact" aria-controls="home" role="tab" data-toggle="tab">Exact</a></li>
-                        <li role="presentation"><a href="#{$id}_lev" aria-controls="home" role="tab" data-toggle="tab">Levenshtein</a></li>
-                        <li role="presentation"><a href="#{$id}_cos" aria-controls="home" role="tab" data-toggle="tab">Cosine</a></li>
-                    </ul>
-                    
+                <div id="{$id}_matches" class='similarity'> {
+                  if($match-count gt 0) then
+                      <ul class="nav nav-tabs" role="tablist">
+                          <li role="presentation" class="active"><a href="#{$id}_exact" aria-controls="home" role="tab" data-toggle="tab">Exact</a></li>
+                          <li role="presentation"><a href="#{$id}_lev" aria-controls="home" role="tab" data-toggle="tab">Levenshtein</a></li>
+                          <li role="presentation"><a href="#{$id}_cos" aria-controls="home" role="tab" data-toggle="tab">Cosine</a></li>
+                      </ul>
+                  else
+                    ""
+                  }
+                  {
+                  if($match-count gt 0) then
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="{$id}_exact"> { tx:matches($node, "exact")} </div>
                         <div role="tabpanel" class="tab-pane" id="{$id}_lev"> { tx:matches($node, "lev")} </div>
                         <div role="tabpanel" class="tab-pane" id="{$id}_cos"> { tx:matches($node, "cos")} </div>
-                    </div>
-                </div>
+                   </div>
+                  else
+                    ""
+                  }
+               </div>
+
             </div>
     </div>
 };
 
 declare function tx:document($nodes as node()*) as node()* {
     let $query := request:get-parameter('query', '')
-    
+
     for $node in $nodes
     return
         typeswitch ($node)
             case text()
                 return
                     $node
-            
+
             case element(p)
                 return tx:paragraph($node)
-                
+
             case element(exist:match)
                 return
                     <strong
                         class='match'>
                         {tx:document($node/node())}
                     </strong>
-            
+
             case element(a)
                 return
                     if (contains($node/@class, 'similarity')) then

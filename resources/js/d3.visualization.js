@@ -1,4 +1,4 @@
-  $(window).ready(function() {
+  $(document).ready(function() {
 
     // console.log("ready");
 
@@ -12,8 +12,8 @@
 
     // Start map
 
-    var width = 900,
-        height = 450;
+    var width = $('#content').width(),
+        height = 550;
 
     var color = d3.scale.category10();
 
@@ -33,9 +33,10 @@
 
     var graticule = d3.geo.graticule();
 
-    var svg = d3.select("#content").append("svg")
+    var svg = d3.select("#content").append("div").attr("class","map-wrapper").append("svg")
       .attr("width", width)
-      .attr("height", height);
+      .attr("height", height)
+      .attr("class", "city-map");
 
     svg.append("defs").append("path")
       .datum({type: "Sphere"})
@@ -143,22 +144,22 @@
         .remove();
     };
 
-    var minDateUnix = moment('2014-07-01', "YYYY MM DD").unix();
-    var maxDateUnix = moment('2015-07-21', "YYYY MM DD").unix();
-    var secondsInDay = 60 * 60 * 24;
+    // var minDateUnix = moment('2014-07-01', "YYYY MM DD").unix();
+    // var maxDateUnix = moment('2015-07-21', "YYYY MM DD").unix();
+    // var secondsInDay = 60 * 60 * 24;
 
-    var mySliderStart = minDateUnix;
-    var mySliderEnd = maxDateUnix;
+    var mySliderStart = 18950401;
+    var mySliderEnd = 18950615;
     var mySlider = d3.slider()
       .axis(true)
       .min(mySliderStart)
       .max(mySliderEnd)
-      .step(secondsInDay)
+      .step(1)
       .on("slide", function(evt, value) {
         var newData = _(site_data).filter( function(site) {
           return site.created_at < value;
         })
-        console.log("New set size ", newData.length);
+        // console.log("New set size ", newData.length);
 
         displaySites(newData);
     });
@@ -176,7 +177,8 @@
       clearInterval(myTimer);
       myTimer = setInterval (function() {
         var b = mySlider;
-        var t = (mySlider.value() + 100000) % (mySliderEnd + 1);
+        // var t = (mySlider.value() + 100000) % (mySliderEnd + 1);
+        var t = (mySlider.value()) % (mySliderEnd + 1);
         if (t == 0) {
           t = +b.property("min");
         }
@@ -187,7 +189,7 @@
     });
     d3.select("#slider-pause").on("click", function() {
       clearInterval(myTimer);
-      updateSlider(1415000000);
+      // updateSlider(1415000000);
     });
     // timer end
 
@@ -202,24 +204,60 @@
 
     d3.select(self.frameElement).style("height", height + "px");
 
+    var tooltip = d3.select('.map-wrapper').append('div').attr('class', 'tooltip js-tooltip');
+    // d3.select('.map-wrapper .tooltip').append('div').attr('tooltip-wrapper');
+
+    // todo: get the largest number of reports for this function.
+    var length = 123,
+      color = d3.scale.linear().domain([1,length])
+        .interpolate(d3.interpolateHcl)
+        .range([d3.rgb("#FFC4BA"), d3.rgb('#F9292E')]);
+
     // load and display the cities
     var g = svg.append("g");
-    d3.csv("resources/d3_data/cities.csv", function(error, data) {
+    // d3.csv("resources/d3_data/cities.csv", function(error, data) {
+    // d3.json("api/cities?q=", function(error, data) {
+    d3.csv("resources/d3_data/wilde_cities_no_countries.csv", function(error, data) {
+      // console.log(data);
       g.selectAll("circle")
         .data(data)
         .enter()
         .append("a")
-    	  .attr("xlink:href", function(d) {
-    		  return "https://www.google.com/search?q="+d.city;}
-    	  )
+    	  // .attr("xlink:href", function(d) {
+    		//   return "https://www.google.com/search?q="+d.city;}
+    	  // )
         .append("circle")
         .attr("cx", function(d) {
-          return projection([d.lon, d.lat])[0];
+          return projection([d.longitude, d.latitude])[0];
         })
         .attr("cy", function(d) {
-          return projection([d.lon, d.lat])[1];
+          return projection([d.longitude, d.latitude])[1];
         })
         .attr("r", 5)
-        .style("fill", "red");
+        .style("fill", function(d) {
+          return color([d.reports]);
+        })
+        .on('mouseover', function(d) {
+          var mouse = d3.mouse(svg.node()).map(function(d) {
+            return parseInt(d);
+          });
+          tooltip.classed('hidden', false)
+            // .attr('style', 'opacity: 1;')
+          //   .css({
+          //     top:  margin.top  + highestBinBarHeight() - tooltip.outerHeight(),
+          //     left: margin.left + mouse[1] - (tooltip.outerWidth() / 2),
+          //     opacity: 1,
+          //     // filter: alpha(opacity=1)
+          // }).fadeIn();
+          // console.log($('.map-wrapper .tooltip').width());
+          tooltip.classed('hidden', false)
+            .attr('style', 'left:' + (mouse[0] - $('.map-wrapper .tooltip').width() / 2) + 'px; top:' + (mouse[1] - 45) + 'px; opacity: 1;')
+            .html('<div class="tooltip-wrapper">' + d.name + " (" + d.reports + " reports)</div>");
+          tooltip.classed('hidden', false)
+            .attr('style', 'left:' + (mouse[0] - $('.map-wrapper .tooltip').width() / 2) + 'px; top:' + (mouse[1] - 45) + 'px; opacity: 1;')
+        })
+        .on('mouseout', function() {
+          tooltip.classed('hidden', true).attr('style', 'opacity: 0;');
+        });
     });
   });
