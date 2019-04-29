@@ -9,6 +9,10 @@ import module namespace document = "http://dhil.lib.sfu.ca/exist/wilde-app/docum
 declare namespace xhtml = 'http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
+declare function tx:count-matches($node, $type) {
+    count($node/a[@data-type=$type])
+};
+
 declare function tx:matches($node, $type) {
     let $matches :=
         for $a in $node/a[@data-type=$type]
@@ -42,9 +46,9 @@ declare function tx:paragraph($node as node()) as node() {
                 <div id="{$id}_matches" class='similarity'> {
                   if($match-count gt 0) then
                       <ul class="nav nav-tabs" role="tablist">
-                          <li role="presentation" class="active"><a href="#{$id}_exact" aria-controls="home" role="tab" data-toggle="tab">Exact</a></li>
-                          <li role="presentation"><a href="#{$id}_lev" aria-controls="home" role="tab" data-toggle="tab">Levenshtein</a></li>
-                          <li role="presentation"><a href="#{$id}_cos" aria-controls="home" role="tab" data-toggle="tab">Cosine</a></li>
+                          <li role="presentation" class="active"><a href="#{$id}_exact" aria-controls="home" role="tab" data-toggle="tab">Exact ({tx:count-matches($node, 'exact')})</a></li>
+                          <li role="presentation"><a href="#{$id}_lev" aria-controls="home" role="tab" data-toggle="tab">Levenshtein ({tx:count-matches($node, 'lev')})</a></li>
+                          <li role="presentation"><a href="#{$id}_cos" aria-controls="home" role="tab" data-toggle="tab">Cosine ({tx:count-matches($node, 'cos')})</a></li>
                       </ul>
                   else
                     ""
