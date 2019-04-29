@@ -200,6 +200,11 @@ a.btn {
   color: $color_white;
   background-color: $color_red_dark;
   border-color: darken($color_red_dark, 25%);
+
+  &:active {
+    background-color: $color_red;
+    border-color: $color_red_dark;
+  }
 }
 
 .btn-primary:hover,
@@ -526,10 +531,10 @@ use.stroke {
 	color:white;
 	opacity:0;
 }
-#tooltip table{
+#tooltip table {
 	table-layout:fixed;
 }
-#tooltip tr td{
+#tooltip tr td {
 	padding:0;
 	margin:0;
 }
@@ -968,13 +973,91 @@ table option {
     //     background-color: inherit;
     //   }
     // }
+    padding-top: 0.25em;
+
+    &.viewing-matches {
+      background-color: $color_beige;
+
+    }
+    &:hover {
+      // p {
+        background-color: $color_beige;
+      // }
+      .active {
+        position: relative;
+        // border-bottom: 0;
+      }
+      .active .active {
+        background-color: $color_white;
+        border-bottom: 1px solid $color_white;
+      }
+    }
   }
 
-  .tab-pane.active .tab-pane.active {
-    background-color: #fff;
+  .nav-tabs {
+    a {
+      border-color: lighten($color_light_grey, 50%);
+    }
+
+    > li  {
+      background-color: transparent;
+
+    }
+  }
+  .nav-tabs > li.active  {
+    // background-color: transparent;
+    position: relative;
+
+    > a,
+    > a:hover
+    > a:focus {
+      // border-color: lighten($color_light_grey, 50%);
+      // or: #b3b3b3;
+      border-bottom: 0;
+    }
+  }
+  .tab-pane {
+    margin-bottom: 0.5em;
+    &.active {
+      padding: 0.25em 0.5em 0 0.25em;
+      border: 1px solid  lighten($color_light_grey, 50%);
+      border-top: 0;
+      background-color: #fff;
+      overflow: hidden;
+      // tabs inside tabs.
+      .tab-pane.active {
+        background-color: #fff;
+        padding: inherit;
+        border-color: lighten($color_light_grey, 50%);
+        border-top: 0;
+        border-bottom: 1px solid lighten($color_light_grey, 50%);
+
+      }
+    }
   }
 
   blockquote {
     border-left: 1px solid #eee;
+    font-size: 1em;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 0;
   }
+}
+
+
+.nav-tabs {
+  border-bottom: 1px solid lighten($color_light_grey, 50%);
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus,
+.nav-tabs > li > a:hover {
+   border-color: lighten($color_light_grey, 50%);
+}
+
+.tab-content li.active {
+  bottom: -1px;
+}
+
+.comparison-links {
+  font-size: 1em;
 }
