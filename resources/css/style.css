@@ -239,6 +239,10 @@ a.btn {
   background-color: #960000;
   border-color: #170000;
 }
+a.btn:active {
+  background-color: #E10000;
+  border-color: #960000;
+}
 
 .btn-primary:hover,
 .btn-primary:focus,
@@ -911,11 +915,75 @@ table option {
   position: absolute;
 }
 
+.report-view .row.matches {
+  padding-top: 0.25em;
+}
+.report-view .row.matches.viewing-matches {
+  background-color: #EAE8E3;
+}
+.report-view .row.matches:hover {
+  background-color: #EAE8E3;
+}
+.report-view .row.matches:hover .active {
+  position: relative;
+}
+.report-view .row.matches:hover .active .active {
+  background-color: #F9F7F1;
+  border-bottom: 1px solid #F9F7F1;
+}
+.report-view .nav-tabs a {
+  border-color: #b3b3b3;
+}
+.report-view .nav-tabs > li {
+  background-color: transparent;
+}
+.report-view .nav-tabs > li.active {
+  position: relative;
+}
+.report-view .nav-tabs > li.active > a,
+.report-view .nav-tabs > li.active > a:hover > a:focus {
+  border-bottom: 0;
+}
+.report-view .tab-pane {
+  margin-bottom: 0.5em;
+}
+.report-view .tab-pane.active {
+  padding: 0.25em 0.5em 0 0.25em;
+  border: 1px solid #b3b3b3;
+  border-top: 0;
+  background-color: #fff;
+  overflow: hidden;
+}
 .report-view .tab-pane.active .tab-pane.active {
   background-color: #fff;
+  padding: inherit;
+  border-color: #b3b3b3;
+  border-top: 0;
+  border-bottom: 1px solid #b3b3b3;
 }
 .report-view blockquote {
   border-left: 1px solid #eee;
+  font-size: 1em;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-bottom: 0;
+}
+
+.nav-tabs {
+  border-bottom: 1px solid #b3b3b3;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus,
+.nav-tabs > li > a:hover {
+  border-color: #b3b3b3;
+}
+
+.tab-content li.active {
+  bottom: -1px;
+}
+
+.comparison-links {
+  font-size: 1em;
 }
 
 /*# sourceMappingURL=style.css.map */
