@@ -1061,3 +1061,67 @@ table option {
 .comparison-links {
   font-size: 1em;
 }
+
+
+// next/previous report at top of screen
+.report-navigation {
+  // width: 100%;
+  div {
+    font-size: 15px;
+    line-height: 1.25em;
+    &:last-child {
+      text-align: right;
+    }
+  }
+}
+
+
+// both sidebar panels on Reports
+.panel-metadata,
+.panel-document-matches {
+  font-size: 15px;
+  line-height: 1.3em;
+}
+
+
+// metadata panel on Reports
+.panel-metadata {
+  dl,
+  dt,
+  dd {
+    margin-bottom: 0;
+  }
+
+  dl {
+    width: 100%;
+    // float: left;
+    display: flex;
+
+    &.vertical {
+      display: block;
+      margin: 1em 0;
+
+      dd {
+        margin-left: 2em;
+      }
+    }
+  }
+
+  dt {
+    margin-right: 0.5em;
+  }
+}
+
+// document matches panel on reports
+.panel-document-matches {
+  ul {
+    padding-left: 1em;
+    margin: 0;
+  }
+}
+
+.report-translation-help {
+  font-size: 15px;
+  line-height: 1.3em;
+  margin-bottom: 1.5em;
+}

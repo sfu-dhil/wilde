@@ -986,4 +986,49 @@ table option {
   font-size: 1em;
 }
 
+.report-navigation div {
+  font-size: 15px;
+  line-height: 1.25em;
+}
+.report-navigation div:last-child {
+  text-align: right;
+}
+
+.panel-metadata,
+.panel-document-matches {
+  font-size: 15px;
+  line-height: 1.3em;
+}
+
+.panel-metadata dl,
+.panel-metadata dt,
+.panel-metadata dd {
+  margin-bottom: 0;
+}
+.panel-metadata dl {
+  width: 100%;
+  display: flex;
+}
+.panel-metadata dl.vertical {
+  display: block;
+  margin: 1em 0;
+}
+.panel-metadata dl.vertical dd {
+  margin-left: 2em;
+}
+.panel-metadata dt {
+  margin-right: 0.5em;
+}
+
+.panel-document-matches ul {
+  padding-left: 1em;
+  margin: 0;
+}
+
+.report-translation-help {
+  font-size: 15px;
+  line-height: 1.3em;
+  margin-bottom: 1.5em;
+}
+
 /*# sourceMappingURL=style.css.map */
