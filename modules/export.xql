@@ -11,54 +11,10 @@ import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" a
 import module namespace kwic="http://exist-db.org/xquery/kwic";
 import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
 import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
+import module namespace lang="http://dhil.lib.sfu.ca/exist/wilde-app/lang" at "lang.xql";
 
 declare option output:method "text";
 declare option output:media-type "text/csv";
-
-declare function export:vsm-docs() {
-
-    let $headers := (
-        <row>
-            <item>source</item>
-            <item>destination</item>
-            <item>similarity</item>
-            <item>type</item>
-        </row>
-    )
-    
-    let $body := for $link in collection:documents()//link[@data-type='vsm']
-    return <row>
-        <item>https://dhil.lib.sfu.ca/wilde/view.html?f={document:id($link)}</item>
-        <item>https://dhil.lib.sfu.ca/wilde/view.html?f={$link/@href/string()}</item>
-        <item>{$link/@data-similarity/string()}</item>
-        <item>{$link/@data-type/string()}</item>        
-    </row>
-
-    return ($headers, $body)
-};
-
-declare function export:vsm-ps() {
-
-    let $headers := (
-        <row>
-            <item>source</item>
-            <item>destination</item>
-            <item>similarity</item>
-            <item>type</item>
-        </row>
-    )
-    
-    let $body := for $link in collection:documents()//a[@data-type='vsm']
-    return <row>
-        <item>https://dhil.lib.sfu.ca/wilde/view.html?f={document:id($link)}#{$link/parent::p/@id/string()}</item>
-        <item>https://dhil.lib.sfu.ca/wilde/view.html?f={$link/@href/string()}#{$link/@data-paragraph/string()}</item>
-        <item>{$link/@data-similarity/string()}</item>
-        <item>{$link/@data-type/string()}</item>        
-    </row>
-
-    return ($headers, $body)
-};
-
 
 declare function export:search() {
     let $query := request:get-parameter('query', '')
@@ -261,6 +217,60 @@ declare function export:bibliography() {
             <item>{$doc/text()}</item>
         </row>
 
+    return ($headers, $body)
+};
+
+declare function export:gephi-documents() {
+    let $headers := 
+        <row>
+            <item>ID</item>
+            <item>Label</item>
+            <item>Language</item>
+            <item>Region</item>
+            <item>City</item>
+        </row>
+        
+    let $documents := collection:documents()
+    let $body := 
+        for $doc in $documents
+        where count(document:document-matches($doc)) > 0
+        return
+            <row>
+                <item>{document:id($doc)}</item>
+                <item>{document:title($doc)}</item>  
+                <item>{lang:code2lang(document:language($doc))}</item>
+                <item>{document:region($doc)}</item>
+                <item>{document:city($doc)}</item>
+            </row>
+            
+    return ($headers, $body)
+};
+
+declare function export:gephi-document-matches() {
+    let $headers := 
+        <row>
+            <item>Source</item>
+            <item>Target</item>
+            <item>Type</item>
+            <item>Match Type</item>
+            <item>Weight</item>
+        </row>
+        
+    let $documents := collection:documents()
+    let $body := 
+        for $doc in $documents
+        where count(document:document-matches($doc)) > 0
+        for $link in document:document-matches($doc)
+              (:<link href="rnm_1443" class="similarity cos" rel="similarity" data-similarity="0.9758894820754566" data-type="cos"/>:)        
+            return
+                <row>
+                    <item>{document:id($doc)}</item>
+                    <item>{$link/@href/string()}</item>  
+                    <item>Undirected</item>
+                    <item>{$link/@data-type/string()}</item>
+                    <item>{$link/@data-similarity/string()}</item>
+                </row>
+            
     return ($headers, $body)
 };
 
