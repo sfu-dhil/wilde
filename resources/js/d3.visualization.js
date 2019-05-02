@@ -148,58 +148,58 @@
     // var maxDateUnix = moment('2015-07-21', "YYYY MM DD").unix();
     // var secondsInDay = 60 * 60 * 24;
 
-    var mySliderStart = 18950401;
-    var mySliderEnd = 18950615;
-    var mySlider = d3.slider()
-      .axis(true)
-      .min(mySliderStart)
-      .max(mySliderEnd)
-      .step(1)
-      .on("slide", function(evt, value) {
-        var newData = _(site_data).filter( function(site) {
-          return site.created_at < value;
-        })
-        // console.log("New set size ", newData.length);
-
-        displaySites(newData);
-    });
-    d3.select('#slider3').call(mySlider);
-
-
-
-    // timer start
-    var myTimer;
-    var myTimerDuration = 5000; // 5 seconds
-    var myTimerInterval = 300;
-
-
-    d3.select("#slider-play").on("click", function() {
-      clearInterval(myTimer);
-      myTimer = setInterval (function() {
-        var b = mySlider;
-        // var t = (mySlider.value() + 100000) % (mySliderEnd + 1);
-        var t = (mySlider.value()) % (mySliderEnd + 1);
-        if (t == 0) {
-          t = +b.property("min");
-        }
-
-        updateSlider(t);
-
-      }, myTimerInterval);
-    });
-    d3.select("#slider-pause").on("click", function() {
-      clearInterval(myTimer);
-      // updateSlider(1415000000);
-    });
-    // timer end
+    // var mySliderStart = 18950401;
+    // var mySliderEnd = 18950615;
+    // var mySlider = d3.slider()
+    //   .axis(true)
+    //   .min(mySliderStart)
+    //   .max(mySliderEnd)
+    //   .step(1)
+    //   .on("slide", function(evt, value) {
+    //     var newData = _(site_data).filter( function(site) {
+    //       return site.created_at < value;
+    //     })
+    //     // console.log("New set size ", newData.length);
+    //
+    //     displaySites(newData);
+    // });
+    // d3.select('#slider3').call(mySlider);
+    //
+    //
+    //
+    // // timer start
+    // var myTimer;
+    // var myTimerDuration = 5000; // 5 seconds
+    // var myTimerInterval = 300;
 
 
-    function updateSlider(new_value) {
-      console.log("setting slider value to " + new_value);
-      mySlider.value(new_value);
-      // d3.select('#slider3').dispatchEvent('click');
-      // moveHandle(new_value);
-    }
+    // d3.select("#slider-play").on("click", function() {
+    //   clearInterval(myTimer);
+    //   myTimer = setInterval (function() {
+    //     var b = mySlider;
+    //     // var t = (mySlider.value() + 100000) % (mySliderEnd + 1);
+    //     var t = (mySlider.value()) % (mySliderEnd + 1);
+    //     if (t == 0) {
+    //       t = +b.property("min");
+    //     }
+    //
+    //     updateSlider(t);
+    //
+    //   }, myTimerInterval);
+    // });
+    // d3.select("#slider-pause").on("click", function() {
+    //   clearInterval(myTimer);
+    //   // updateSlider(1415000000);
+    // });
+    // // timer end
+    //
+    //
+    // function updateSlider(new_value) {
+    //   console.log("setting slider value to " + new_value);
+    //   mySlider.value(new_value);
+    //   // d3.select('#slider3').dispatchEvent('click');
+    //   // moveHandle(new_value);
+    // }
 
 
     d3.select(self.frameElement).style("height", height + "px");
@@ -223,9 +223,9 @@
         .data(data)
         .enter()
         .append("a")
-    	  // .attr("xlink:href", function(d) {
-    		//   return "https://www.google.com/search?q="+d.city;}
-    	  // )
+    	  .attr("xlink:href", function(d) {
+    		  return "list.html?&search=" + d.name;
+    	  })
         .append("circle")
         .attr("cx", function(d) {
           return projection([d.longitude, d.latitude])[0];
@@ -258,6 +258,6 @@
         })
         .on('mouseout', function() {
           tooltip.classed('hidden', true).attr('style', 'opacity: 0;');
-        });
+        })
     });
   });
