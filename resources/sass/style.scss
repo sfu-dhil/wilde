@@ -1125,3 +1125,8 @@ table option {
   line-height: 1.3em;
   margin-bottom: 1.5em;
 }
+
+
+.page-header {
+  border-bottom: 1px solid lighten($color_light_grey, 50%);
+}

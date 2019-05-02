@@ -1031,4 +1031,8 @@ table option {
   margin-bottom: 1.5em;
 }
 
+.page-header {
+  border-bottom: 1px solid #b3b3b3;
+}
+
 /*# sourceMappingURL=style.css.map */
