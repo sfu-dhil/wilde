@@ -29,7 +29,7 @@ declare function tx:paragraph($node as node()) as node() {
         <div class="row matches matches-{$match-count}">
             <div class="col-sm-2"> {
                 if($match-count gt 0) then
-                        <a class="btn btn-primary" onclick="$('#{$id}_matches').toggle();" title="Show matches">
+                        <a class="btn btn-primary" onclick="$(this).parent().parent().toggleClass('viewing-matches'); $('#{$id}_matches').toggle();" title="Show matches">
                             {$match-count} match{ if ($match-count gt 1) then 'es' else ''}
                         </a>
                     else
@@ -93,10 +93,12 @@ declare function tx:document($nodes as node()*) as node()* {
                         return
                             <blockquote>
                                 <p>{string($paragraph[1])}</p>
-                                <a href='view.html?f={document:id($document)}#{$paragraph/@id}'>
-                                    {document:title($document)}
-                                </a> ({format-number($node/@data-similarity, "###.#%")}%) <br/>
-                                <a href='compare.html?a={document:id($node)}&amp;b={$node/@data-document}'>Compare two documents</a>
+                                <div class="comparison-links">
+                                  <a href='view.html?f={document:id($document)}#{$paragraph/@id}'>
+                                      {document:title($document)}
+                                  </a> ({format-number($node/@data-similarity, "###.#%")}%) <br/>
+                                  <a href='compare.html?a={document:id($node)}&amp;b={$node/@data-document}'>Compare two documents</a>
+                                </div>
                             </blockquote>
                     else
                         $node

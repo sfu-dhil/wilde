@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
     <div data-template="app:load">
+
+      <div class="row report-navigation">
+          <div class="col-sm-6">
+            <strong>Previous report</strong><br />
+            <span data-template="app:doc-previous"/>
+          </div>
+          <div class="col-sm-6">
+            <strong>Next report</strong><br />
+            <span data-template="app:doc-next"/>
+          </div>
+      </div>
+
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-header">
@@ -12,13 +24,13 @@
         </div>
         <div class="row report-view">
             <div class="col-sm-8">
-              <p>This report was originally published in <span data-template="app:doc-language"/>. Machine translations
+              <p class="report-translation-help">This report was originally published in <span data-template="app:doc-language"/>. Machine translations
                 may be available in other languages.</p>
               <div data-template="app:doc-translation-tabs"></div>
               <div data-template="app:doc-translations"></div>
             </div>
             <div class="col-sm-4">
-                <div class="panel panel-default">
+                <!-- <div class="panel panel-default">
                     <div class="panel-heading">Navigation</div>
                     <div class="panel-body">
                         <dl>
@@ -32,35 +44,45 @@
                             </dd>
                         </dl>
                     </div>
-                </div>
+                </div> -->
                 <div class="panel panel-default panel-metadata">
                     <div class="panel-heading">Metadata</div>
                     <div class="panel-body">
                       <dl>
-                            <dt>Newspaper</dt>
+                            <dt>Newspaper: </dt>
                             <dd>
                                 <span data-template="app:doc-publisher"/>
                                 <span data-template="app:doc-edition"/>
                             </dd>
-                            <dt>Date published</dt>
+                        </dl>
+                        <dl>
+                            <dt>Date published: </dt>
                             <dd>
                                 <span data-template="app:doc-date"/>
                             </dd>
-                            <dt>Region</dt>
+                          </dl>
+                          <dl>
+                            <dt>Region: </dt>
                             <dd>
                                 <span data-template="app:doc-region"/>, <span data-template="app:doc-city"/>
                             </dd>
-                            <dt>Original Language</dt>
+                          </dl>
+                          <dl>
+                            <dt>Original Language: </dt>
                             <dd>
                                 <span data-template="app:doc-language"/>
                             </dd>
-                            <dt>Sources</dt>
+                          </dl>
+                          <dl class="vertical">
+                            <dt>Sources: </dt>
                             <dd data-template="app:doc-source"></dd>
-
-                            <dt>Facsimile</dt>
+                          </dl>
+                          <dl>
+                            <dt>Facsimile: </dt>
                             <dd data-template="app:doc-facsimile"></dd>
-
-                            <dt>Word count</dt>
+                          </dl>
+                          <dl>
+                            <dt>Word count: </dt>
                             <dd>
                                 <span data-template="app:doc-word-count"/>
                             </dd>

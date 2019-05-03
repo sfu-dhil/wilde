@@ -1,12 +1,32 @@
-var hash = window.location.hash;
-hash && $('ul.nav a[href="' + hash + '"]').tab('show');
+// var hash = window.location.hash;
+// hash && $('ul.nav a[href="' + hash + '"]').tab('show');
+//
+// $('.nav-tabs a').click(function (e) {
+//   $(this).tab('show');
+//   var scrollmem = $('body').scrollTop();
+//   window.location.hash = this.hash;
+//   $('html,body').scrollTop(scrollmem);
+// });
 
-$('.nav-tabs a').click(function (e) {
-  $(this).tab('show');
-  var scrollmem = $('body').scrollTop();
-  window.location.hash = this.hash;
-  $('html,body').scrollTop(scrollmem);
+
+$(".bootstrap-table").on('change','.search input',function () { alert('helo'); });
+
+$(document).keyup(function(event) {
+    if ($(".search input").is(":focus") && event.key == "Enter") {
+      // Do work
+      console.log("third time's the charm");
+    }
 });
+
+$('.search input.form-control').each(function(i) {
+  console.log(i)
+});
+
+$('.search input.form-control').change(function() {
+  var new_search_value = $(this).val();
+  console.log(new_search_value);
+});
+
 
 // debugging bootstraptable.
 // console.log("Started.");
