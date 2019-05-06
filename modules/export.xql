@@ -94,6 +94,7 @@ declare function export:matching-paragraphs() {
             <item>Target region</item>
             <item>Target city</item>
             <item>Target language</item>
+            <item>Match type</item>
             <item>Match</item>
         </row>
 
@@ -119,6 +120,7 @@ declare function export:matching-paragraphs() {
             <item>{document:region($target)}</item>
             <item>{document:city($target)}</item>
             <item>{document:language($target)}</item>
+            <item>{$link/@data-type/string()}</item>
             <item>{$link/@data-similarity/string()}</item>
         </row>
 
@@ -136,6 +138,7 @@ declare function export:matching() {
             <item>Target date</item>
             <item>Target paper</item>
             <item>Target region</item>
+            <item>Match type</item>
             <item>Match</item>
         </row>
 
@@ -157,6 +160,7 @@ declare function export:matching() {
             <item>{document:date($target)}</item>
             <item>{document:publisher($target)}</item>
             <item>{document:region($target)}</item>
+            <item>{$link/@data-type/string()}</item>
             <item>{$link/@data-similarity/string()}</item>
         </row>
 

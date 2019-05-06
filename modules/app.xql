@@ -414,19 +414,46 @@ declare function app:paragraph-indexed($node as node(), $model as map(*)) as xs:
 
 declare function app:document-similarities($node as node(), $model as map(*)) as node()* {
     let $similarities := document:similar-documents($model('document'))
+    let $cosines := $similarities[@data-type='cos']
+    let $levens := $similarities[@data-type='lev']
+    
     return
         if(count($similarities) = 0) then
             (<i>None found</i>)
         else
-            <ul> {
-                for $link in $similarities
-                let $doc := collection:fetch($link/@href)
-                return
-                    <li class="{$link/@class}">
-                        {app:link-view($link/@href, document:title($doc))}
-                        ({format-number($link/@data-similarity, "###.#%")}% { $link/@data-type/string() })
-                    </li>
-            } </ul>
+            <div>
+                <div class='panel-heading'>Levenshtein Matches</div> 
+                <div class='panel-body'>{
+                    if(count($levens) = 0) then
+                        <i>None found</i>
+                    else 
+                        <ul> {
+                            for $link in $levens
+                            let $doc := collection:fetch($link/@href)
+                            order by $link/@data-similarity descending
+                            return
+                                <li class="{$link/@class}">
+                                    {app:link-view($link/@href, document:title($doc))} - {format-number($link/@data-similarity, "###.#%")}%
+                                </li>
+                        } </ul>
+                }</div>
+                <div class='panel-heading'>Cosine Matches</div> 
+                <div class='panel-body'>{
+                    if(count($cosines) = 0) then
+                        <i>None found</i>
+                    else 
+                        <ul> {
+                            for $link in $cosines
+                            let $doc := collection:fetch($link/@href)
+                            order by $link/@data-similarity descending
+                            return
+                                <li class="{$link/@class}">
+                                    {app:link-view($link/@href, document:title($doc))} - {format-number($link/@data-similarity, "###.#%")}%
+                                </li>
+                        } </ul>
+                }
+                </div>
+        </div>
 };
 
 declare function app:paragraph-similarities($node as node(), $model as map(*)) as node()* {
