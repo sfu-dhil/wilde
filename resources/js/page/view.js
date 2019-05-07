@@ -32,4 +32,11 @@
       matching_hide(null);
     }
   });
+
+
+  // $('.row.matches').each(function() {
+  //   var num_matches = $(this).find('blockquote').each(function() {
+  //   });
+  // });
+
 })(jQuery, Cookies);

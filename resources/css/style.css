@@ -918,6 +918,9 @@ table option {
 .report-view .row.matches {
   padding-top: 0.25em;
 }
+.report-view .row.matches:last-child {
+  padding-bottom: 0.5em;
+}
 .report-view .row.matches.viewing-matches {
   background-color: #EAE8E3;
 }
@@ -939,6 +942,7 @@ table option {
 }
 .report-view .nav-tabs > li.active {
   position: relative;
+  bottom: -1px;
 }
 .report-view .nav-tabs > li.active > a,
 .report-view .nav-tabs > li.active > a:hover > a:focus {

@@ -22,7 +22,7 @@ declare function tx:matches($node, $type) {
     return if(count($matches) gt 0) then
         tx:document($matches)
     else
-        <blockquote><p>No matches found.</p></blockquote>
+        <blockquote class="no-matches-found"><p>No matches found.</p></blockquote>
 };
 
 declare function tx:paragraph($node as node()) as node() {
@@ -95,7 +95,7 @@ declare function tx:document($nodes as node()*) as node()* {
                         let $document := collection:fetch($node/@data-document)
                         let $paragraph := $document//p[@id = $node/@data-paragraph]
                         return
-                            <blockquote>
+                            <blockquote class="matches-found">
                                 <p>{string($paragraph[1])}</p>
                                 <div class="comparison-links">
                                   <a href='view.html?f={document:id($document)}#{$paragraph/@id}'>
