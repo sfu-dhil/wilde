@@ -973,6 +973,10 @@ table option {
     //     background-color: inherit;
     //   }
     // }
+
+    &:last-child {
+      padding-bottom: 0.5em;
+    }
     padding-top: 0.25em;
 
     &.viewing-matches {
@@ -1001,13 +1005,11 @@ table option {
 
     > li  {
       background-color: transparent;
-
     }
   }
   .nav-tabs > li.active  {
-    // background-color: transparent;
     position: relative;
-
+    bottom: -1px;
     > a,
     > a:hover
     > a:focus {
