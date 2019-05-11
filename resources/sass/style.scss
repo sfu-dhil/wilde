@@ -196,7 +196,10 @@ body {
 
 @include link($color_red, $color_red_dark);
 
-a.btn {
+a.btn,
+input.btn,
+a.btn-primary,
+input.btn-primary {
   color: $color_white;
   background-color: $color_red_dark;
   border-color: darken($color_red_dark, 25%);
@@ -448,29 +451,53 @@ dd {
 
 
 
-#comparalator {
-  // display: none;
-  position: fixed;
-  top: 40vh;
-  width: 200px;
-  height: 200px;
-  background-color: #ddd;
-  padding: 0 1em 1em 1em;
-}
-
-.comparalator-text {
-  clear: both;
-}
-
-.comparalator-clear {
-  float: right;
-}
+// #comparalator {
+//   // display: none;
+//   position: fixed;
+//   top: 40vh;
+//   width: 200px;
+//   height: 200px;
+//   background-color: #ddd;
+//   padding: 0 1em 1em 1em;
+// }
+//
+// .comparalator-text {
+//   clear: both;
+// }
+//
+// .comparalator-clear {
+//   float: right;
+// }
 
 
 
 
 
 // D3 map
+//
+.map-wrapper {
+//   display: inline-block;
+//   position: relative;
+//   width: 100%;
+//   padding-bottom: 100%;
+//   vertical-align: top;
+//   overflow: hidden;
+  svg {
+    max-width: 100%;
+  }
+}
+#city-map {
+  // display: inline-block;
+  // position: absolute;
+  // top: 0;
+  // left: 0;
+  max-width: 100%;
+}
+
+
+
+
+
 use.stroke {
   stroke: #333333;
   stroke-width: 1px
@@ -521,7 +548,7 @@ use.stroke {
 	margin:0;
 	font-size:14px;
 }
-#tooltip{
+#tooltip {
 	background:rgba(0,0,0,0.9);
 	border:1px solid grey;
 	border-radius:5px;
@@ -530,9 +557,11 @@ use.stroke {
 	padding:4px;
 	color:white;
 	opacity:0;
-}
-#tooltip table {
-	table-layout:fixed;
+  // max-height: 100px;
+
+  table {
+	   table-layout:fixed;
+   }
 }
 #tooltip tr td {
 	padding:0;
@@ -567,7 +596,7 @@ use.stroke {
 }
 
 .d3-slider-horizontal {
-    height: .8em;
+  height: .8em;
 }
 
 .d3-slider-range {
@@ -587,23 +616,23 @@ use.stroke {
 }
 
 .d3-slider-vertical {
-    width: .8em;
-    height: 100px;
+  width: .8em;
+  height: 100px;
 }
 
 .d3-slider-handle {
-    position: absolute;
-    width: 1.2em;
-    height: 1.2em;
-    border: 1px solid #d3d3d3;
-    border-radius: 4px;
-    background: #eee;
-    background: linear-gradient(to bottom, #eee 0%, #ddd 100%);
-    z-index: 3;
+  position: absolute;
+  width: 1.2em;
+  height: 1.2em;
+  border: 1px solid #d3d3d3;
+  border-radius: 4px;
+  background: #eee;
+  background: linear-gradient(to bottom, #eee 0%, #ddd 100%);
+  z-index: 3;
 }
 
 .d3-slider-handle:hover {
-    border: 1px solid #999999;
+  border: 1px solid #999999;
 }
 
 .d3-slider-horizontal .d3-slider-handle {
@@ -1131,4 +1160,15 @@ table option {
 
 .page-header {
   border-bottom: 1px solid lighten($color_light_grey, 50%);
+}
+
+
+
+// measure.html / Compare page
+#measure-results {
+  display: none;
+
+  &.visible {
+    display: block;
+  }
 }

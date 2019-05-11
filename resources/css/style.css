@@ -50,6 +50,8 @@ h5 {
 
 h2 {
   font-size: 34px;
+  margin-top: 1.5em;
+  margin-bottom: 1em;
 }
 
 h3 {
@@ -234,12 +236,18 @@ a:active, a:focus, a:hover {
   color: #960000;
 }
 
-a.btn {
+a.btn,
+input.btn,
+a.btn-primary,
+input.btn-primary {
   color: #F9F7F1;
   background-color: #960000;
   border-color: #170000;
 }
-a.btn:active {
+a.btn:active,
+input.btn:active,
+a.btn-primary:active,
+input.btn-primary:active {
   background-color: #E10000;
   border-color: #960000;
 }
@@ -471,21 +479,12 @@ dd {
     width: 2px;
   }
 }
-#comparalator {
-  position: fixed;
-  top: 40vh;
-  width: 200px;
-  height: 200px;
-  background-color: #ddd;
-  padding: 0 1em 1em 1em;
+.map-wrapper svg {
+  max-width: 100%;
 }
 
-.comparalator-text {
-  clear: both;
-}
-
-.comparalator-clear {
-  float: right;
+#city-map {
+  max-width: 100%;
 }
 
 use.stroke {
@@ -550,7 +549,6 @@ use.stroke {
   color: white;
   opacity: 0;
 }
-
 #tooltip table {
   table-layout: fixed;
 }
@@ -1037,6 +1035,13 @@ table option {
 
 .page-header {
   border-bottom: 1px solid #b3b3b3;
+}
+
+#measure-results {
+  display: none;
+}
+#measure-results.visible {
+  display: block;
 }
 
 /*# sourceMappingURL=style.css.map */

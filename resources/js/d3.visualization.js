@@ -13,7 +13,7 @@
     // Start map
 
     var width = $('#content').width(),
-        height = 550;
+        height = $('#content').width() / 2;
 
     var color = d3.scale.category10();
 
@@ -34,9 +34,13 @@
     var graticule = d3.geo.graticule();
 
     var svg = d3.select("#content").append("div").attr("class","map-wrapper").append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("class", "city-map");
+      // .attr("width", width)
+      // .attr("height", height)
+      // .attr("x","0")
+      // .attr("y", "0")
+      .attr("class", "city-map")
+      .attr('viewBox', '0 0 ' + width + ' ' + height)
+      .attr('preserveAspectRatio', "xMidYMid meet");
 
     svg.append("defs").append("path")
       .datum({type: "Sphere"})
@@ -100,23 +104,21 @@
         .attr("class", "boundary")
         .attr("d", path);
 
-    d3.tsv("resources/d3_data/rest_777.txt")
-      .row(function(d) {
-        return {
-          permalink: d.permalink,
-          lat: parseFloat(d.lat),
-          lng: parseFloat(d.long),
-          city: d.city,
-          created_at: moment(d.created_at,"YYYY-MM-DD HH:mm:ss").unix()
-        };
-      })
-      .get(function(err, rows) {
-        if (err) return console.error(err);
-
-        window.window.site_data = rows;
-      });
-
-
+    // d3.tsv("resources/d3_data/rest_777.txt")
+    //   .row(function(d) {
+    //     return {
+    //       permalink: d.permalink,
+    //       lat: parseFloat(d.lat),
+    //       lng: parseFloat(d.long),
+    //       city: d.city,
+    //       created_at: moment(d.created_at,"YYYY-MM-DD HH:mm:ss").unix()
+    //     };
+    //   })
+    //   .get(function(err, rows) {
+    //     if (err) return console.error(err);
+    //
+    //     window.window.site_data = rows;
+    //   });
     });
 
 
@@ -202,7 +204,7 @@
     // }
 
 
-    d3.select(self.frameElement).style("height", height + "px");
+    // d3.select(self.frameElement).style("height", height + "px");
 
     var tooltip = d3.select('.map-wrapper').append('div').attr('class', 'tooltip js-tooltip');
     // d3.select('.map-wrapper .tooltip').append('div').attr('tooltip-wrapper');
