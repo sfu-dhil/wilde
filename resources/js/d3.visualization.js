@@ -1,24 +1,55 @@
-  $(document).ready(function() {
+// function responsivefy(svg) {
+//     // get container + svg aspect ratio
+//     var container = d3.select(svg.node().parentNode),
+//         width = parseInt(svg.style("width")),
+//         height = parseInt(svg.style("height")),
+//         aspect = width / height;
+//
+//     // add viewBox and preserveAspectRatio properties,
+//     // and call resize so that svg resizes on inital page load
+//     svg.attr("viewBox", "0 0 " + width + " " + height)
+//         .attr("perserveAspectRatio", "xMinYMid")
+//         .call(resize);
+//
+//     // to register multiple listeners for same event type,
+//     // you need to add namespace, i.e., 'click.foo'
+//     // necessary if you call invoke this function for multiple svgs
+//     // api docs: https://github.com/mbostock/d3/wiki/Selections#on
+//     d3.select(window).on("resize." + container.attr("id"), resize);
+//
+//     // get width of container and resize svg to fit it
+//     function resize() {
+//         var targetWidth = parseInt(container.style("width"));
+//         svg.attr("width", targetWidth);
+//         svg.attr("height", Math.round(targetWidth / aspect));
+//     }
+//
+//     console.log("resizing: " + width + "/" + height);
+//
+// }
 
-    // console.log("ready");
+function resizeMap() {
+  console.log("resizing");
+  var new_width = $('#content').width() - 30,
+      new_height = new_width / 2;
+  $('.map-wrapper svg').attr('width', new_width)
+                       .attr('height', new_height)
+                       .attr('viewBox', '0 0 ' + new_width + ' ' + new_height);
+}
 
-    //start timeseries
-    // var data = [{'value': 1380854103662},{'value': 1363641921283}];
-    // timeseries('timeseries', data, true);
-    // End timeseries
+$(window).resize(function() {
+  resizeMap();
+});
 
-
-
-
-    // Start map
-
-    var width = $('#content').width(),
-        height = $('#content').width() / 2;
+$(document).ready(function() {
+  console.log("loaded map javascript");
+    var width = 1160;//$('#content').width(),
+        height = width / 2;
 
     var color = d3.scale.category10();
 
     var projection = d3.geo.bromley()
-      .scale(180)
+      .scale(170)
       .translate([width / 2, height / 2])
       .center([0, 15]) // set centre to further North
       .precision(.1);
@@ -33,14 +64,16 @@
 
     var graticule = d3.geo.graticule();
 
-    var svg = d3.select("#content").append("div").attr("class","map-wrapper").append("svg")
+    // var svg = d3.select("#content").append("div").attr("class","map-wrapper").append("svg")
+    var svg = d3.select(".map-wrapper").append("svg")
       // .attr("width", width)
       // .attr("height", height)
       // .attr("x","0")
       // .attr("y", "0")
-      .attr("class", "city-map")
+      // .attr("class", "city-map")
       .attr('viewBox', '0 0 ' + width + ' ' + height)
       .attr('preserveAspectRatio', "xMidYMid meet");
+      // .call(responsivefy);
 
     svg.append("defs").append("path")
       .datum({type: "Sphere"})

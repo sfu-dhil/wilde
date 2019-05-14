@@ -475,24 +475,24 @@ dd {
 
 // D3 map
 //
-.map-wrapper {
-//   display: inline-block;
-//   position: relative;
-//   width: 100%;
-//   padding-bottom: 100%;
-//   vertical-align: top;
-//   overflow: hidden;
-  svg {
-    max-width: 100%;
-  }
-}
-#city-map {
-  // display: inline-block;
-  // position: absolute;
-  // top: 0;
-  // left: 0;
-  max-width: 100%;
-}
+// .map-wrapper {
+// //   display: inline-block;
+// //   position: relative;
+// //   width: 100%;
+// //   padding-bottom: 100%;
+// //   vertical-align: top;
+// //   overflow: hidden;
+//   svg {
+//     max-width: 100%;
+//   }
+// }
+// #city-map {
+//   // display: inline-block;
+//   // position: absolute;
+//   // top: 0;
+//   // left: 0;
+//   max-width: 100%;
+// }
 
 
 
@@ -976,14 +976,13 @@ table option {
 }
 
 .map-wrapper {
+  svg {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  // tooltips on map
   position: relative;
   .tooltip {
-    // color: #222;
-    // background-color: #fff;
-    // padding: .5em;
-    // text-shadow: #f5f5f5 0 1px 0;
-    // border-radius: 2px;
-    // opacity: 0.9;
     position: absolute;
   }
 }

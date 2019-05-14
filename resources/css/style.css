@@ -479,14 +479,6 @@ dd {
     width: 2px;
   }
 }
-.map-wrapper svg {
-  max-width: 100%;
-}
-
-#city-map {
-  max-width: 100%;
-}
-
 use.stroke {
   stroke: #333333;
   stroke-width: 1px;
@@ -908,6 +900,10 @@ table option {
 
 .map-wrapper {
   position: relative;
+}
+.map-wrapper svg {
+  margin-left: auto;
+  margin-right: auto;
 }
 .map-wrapper .tooltip {
   position: absolute;
