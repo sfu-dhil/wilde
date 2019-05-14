@@ -33,7 +33,7 @@
 
     var graticule = d3.geo.graticule();
 
-    var svg = d3.select("#content").append("div").attr("class","map-wrapper").append("svg")
+    var svg = d3.select(".map-wrapper").append("svg")
       .attr("width", width)
       .attr("height", height)
       .attr("class", "city-map");
