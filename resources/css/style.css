@@ -479,6 +479,17 @@ dd {
     width: 2px;
   }
 }
+.map-wrapper {
+  position: relative;
+}
+.map-wrapper svg {
+  margin-left: auto;
+  margin-right: auto;
+}
+.map-wrapper .tooltip {
+  position: absolute;
+}
+
 use.stroke {
   stroke: #333333;
   stroke-width: 1px;
@@ -782,7 +793,6 @@ table option {
   position: relative;
   padding: 6px;
 }
-
 .map-wrapper .tooltip-wrapper:before,
 .stacked-chart-container .tooltip-wrapper:before {
   content: "";
@@ -795,7 +805,6 @@ table option {
   border: 10px solid;
   border-color: black transparent transparent transparent;
 }
-
 .map-wrapper .tooltip-wrapper:after,
 .stacked-chart-container .tooltip-wrapper:after {
   content: "";
@@ -818,13 +827,11 @@ table option {
 .stacked-chart rect {
   shape-rendering: crispEdges;
 }
-
 .stacked-chart text {
   font: 10px sans-serif;
 }
-
-.stacked-chart .axis path,
-.stacked-chart .axis line {
+.stacked-chart path,
+.stacked-chart line {
   fill: none;
   stroke: #000;
 }
@@ -896,17 +903,6 @@ table option {
 .panel-default > .panel-heading {
   background-color: #EAE8E3;
   font-weight: bold;
-}
-
-.map-wrapper {
-  position: relative;
-}
-.map-wrapper svg {
-  margin-left: auto;
-  margin-right: auto;
-}
-.map-wrapper .tooltip {
-  position: absolute;
 }
 
 .report-view .row.matches {

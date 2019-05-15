@@ -30,8 +30,24 @@
 
 function resizeMap() {
   console.log("resizing");
-  var new_width = $('#content').width() - 30,
+  var new_width = $('#content').width() - 1,
       new_height = new_width / 2;
+
+  console.log(new_width);
+
+  // Sometimes when scaling the window, the content width doesn't have time to
+  // catch up and it sets the svg width greater than the window size.
+  // This overrides that.
+  if ($(window).width() < new_width) {
+    new_width = $(window).width() - 30;
+    console.log('Window is wider than content. Resizing content.' + new_width);
+    $('#content').width(new_width);
+  }
+  else {
+    $('#content').css('width', '');
+  }
+  new_height = new_width / 2;
+
   $('.map-wrapper svg').attr('width', new_width)
                        .attr('height', new_height)
                        .attr('viewBox', '0 0 ' + new_width + ' ' + new_height);
@@ -237,10 +253,8 @@ $(document).ready(function() {
     // }
 
 
-    // d3.select(self.frameElement).style("height", height + "px");
-
+    // We add the tooltip elements here because Xquery doesn't like it.
     var tooltip = d3.select('.map-wrapper').append('div').attr('class', 'tooltip js-tooltip');
-    // d3.select('.map-wrapper .tooltip').append('div').attr('tooltip-wrapper');
 
     // todo: get the largest number of reports for this function.
     var length = 123,
@@ -250,8 +264,6 @@ $(document).ready(function() {
 
     // load and display the cities
     var g = svg.append("g");
-    // d3.csv("resources/d3_data/cities.csv", function(error, data) {
-    // d3.json("api/cities?q=", function(error, data) {
     d3.csv("resources/d3_data/wilde_cities_no_countries.csv", function(error, data) {
       // console.log(data);
       g.selectAll("circle")
@@ -276,20 +288,36 @@ $(document).ready(function() {
           var mouse = d3.mouse(svg.node()).map(function(d) {
             return parseInt(d);
           });
-          tooltip.classed('hidden', false)
-            // .attr('style', 'opacity: 1;')
-          //   .css({
-          //     top:  margin.top  + highestBinBarHeight() - tooltip.outerHeight(),
-          //     left: margin.left + mouse[1] - (tooltip.outerWidth() / 2),
-          //     opacity: 1,
-          //     // filter: alpha(opacity=1)
-          // }).fadeIn();
-          // console.log($('.map-wrapper .tooltip').width());
+          //
+          // var this_node = svg.node().map(function(d) {
+          //   return parseInt(d);
+          // });
+          //
+          console.log(mouse);
+
+          var x = d3.mouse(this)[0];
+          var y = d3.mouse(this)[1];
+          console.log(x + " " + y);
+
+          // The magic function.
+          // function getScreenCoords(x, y, ctm) {
+          //   var xn = ctm.e + x*ctm.a + y*ctm.c;
+          //   var yn = ctm.f + x*ctm.b + y*ctm.d;
+          //   return { x: xn, y: yn };
+          // }
+          //
+          // var circle = document.getElementById(this),
+          // cx = +circle.getAttribute('cx'),
+          // cy = +circle.getAttribute('cy'),
+          // ctm = circle.getCTM(),
+          // coords = getScreenCoords(cx, cy, ctm);
+          // console.log(coords.x, coords.y); // shows coords relative to my svg container
+
           tooltip.classed('hidden', false)
             .attr('style', 'left:' + (mouse[0] - $('.map-wrapper .tooltip').width() / 2) + 'px; top:' + (mouse[1] - 45) + 'px; opacity: 1;')
             .html('<div class="tooltip-wrapper">' + d.name + " (" + d.reports + " reports)</div>");
-          tooltip.classed('hidden', false)
-            .attr('style', 'left:' + (mouse[0] - $('.map-wrapper .tooltip').width() / 2) + 'px; top:' + (mouse[1] - 45) + 'px; opacity: 1;')
+          // tooltip.classed('hidden', false)
+          //   .attr('style', 'left:' + (mouse[0] - $('.map-wrapper .tooltip').width() / 2) + 'px; top:' + (mouse[1] - 45) + 'px; opacity: 1;')
         })
         .on('mouseout', function() {
           tooltip.classed('hidden', true).attr('style', 'opacity: 0;');

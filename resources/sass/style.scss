@@ -474,7 +474,21 @@ dd {
 
 
 // D3 map
-//
+
+// Makes the map responsive.
+.map-wrapper {
+  svg {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  // tooltips on map
+  position: relative;
+  .tooltip {
+    position: absolute;
+  }
+}
+// end map resizing
+
 // .map-wrapper {
 // //   display: inline-block;
 // //   position: relative;
@@ -851,56 +865,59 @@ table option {
   // filter: alpha(opacity=1);
 }
 
-.map-wrapper .tooltip-wrapper,
-.stacked-chart-container .tooltip-wrapper {
-  position: relative;
-  padding: 6px;
+.map-wrapper,
+.stacked-chart-container {
+  .tooltip-wrapper {
+    position: relative;
+    padding: 6px;
+
+    &:before {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 10px solid;
+      border-color: black transparent transparent transparent;
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      bottom: -19px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 10px solid;
+      border-color: white transparent transparent transparent;
+    }
+  }
 }
 
-.map-wrapper .tooltip-wrapper:before,
-.stacked-chart-container .tooltip-wrapper:before {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 0;
-  bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 10px solid;
-  border-color: black transparent transparent transparent;
-}
-
-.map-wrapper .tooltip-wrapper:after,
-.stacked-chart-container .tooltip-wrapper:after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 0;
-  bottom: -19px;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 10px solid;
-  border-color: white transparent transparent transparent;
-}
-
+// Tooltips on stacked bar chart only.
 .stacked-chart-container .tooltip-table {
   text-align: right;
 }
 
-.stacked-chart path,
-.stacked-chart line,
-.stacked-chart rect {
-  shape-rendering: crispEdges;
-}
+.stacked-chart {
+  path,
+  line,
+  rect {
+    shape-rendering: crispEdges;
+  }
 
-.stacked-chart text {
-  font: 10px sans-serif;
-}
+  text {
+    font: 10px sans-serif;
+  }
 
-.stacked-chart .axis path,
-.stacked-chart .axis line {
-  fill: none;
-  stroke: #000;
+  path,
+  line {
+    fill: none;
+    stroke: #000;
+  }
 }
 
 .stacked-chart .series-english {
@@ -966,6 +983,7 @@ table option {
   text-anchor: end;
   alignment-baseline: central;
 }
+// end stacked chart
 
 
 
@@ -975,17 +993,6 @@ table option {
   font-weight: bold;
 }
 
-.map-wrapper {
-  svg {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  // tooltips on map
-  position: relative;
-  .tooltip {
-    position: absolute;
-  }
-}
 
 
 
