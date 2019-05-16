@@ -28,10 +28,12 @@
 //
 // }
 
+var aspect_ratio = 2;
+
 function resizeMap() {
   console.log("resizing");
   var new_width = $('#content').width() - 1,
-      new_height = new_width / 2;
+      new_height = new_width / aspect_ratio;
 
   console.log(new_width);
 
@@ -46,8 +48,8 @@ function resizeMap() {
   else {
     $('#content').css('width', '');
   }
-  new_height = new_width / 2;
 
+  new_height = new_width / aspect_ratio;
   $('.map-wrapper svg').attr('width', new_width)
                        .attr('height', new_height)
                        .attr('viewBox', '0 0 ' + new_width + ' ' + new_height);
@@ -60,7 +62,7 @@ $(window).resize(function() {
 $(document).ready(function() {
   console.log("loaded map javascript");
     var width = 1160;//$('#content').width(),
-        height = width / 2;
+        height = width / aspect_ratio;
 
     var color = d3.scale.category10();
 
@@ -131,9 +133,9 @@ $(document).ready(function() {
           else {
             return "country";
           }
-        })
+        });
         // .attr("id", function(d) { return d.id;})
-        //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
+        // .style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
         // .style("fill", "#B7B6B2" )
         // .on('mouseover', function(d, i) {
         //   var currentCountry = this;
@@ -143,9 +145,9 @@ $(document).ready(function() {
         //   // console.log(countries[i].properties);
         // })
         // .on('mouseout', function(d, i) {
-        //   d3.select(this).classed("newspaper-country").style({
-        //    'fill': '#CBC9C5'
-        //   });
+        //   d3.select(this).classed("newspaper-country") //.style({
+        //   //  'fill': '#CBC9C5'
+        //   // });
         // });
 
       svg.insert("path", ".graticule")
@@ -253,7 +255,7 @@ $(document).ready(function() {
     // }
 
 
-    // We add the tooltip elements here because Xquery doesn't like it.
+    // We aappenddd the tooltip elements here because Xquery doesn't like it.
     var tooltip = d3.select('.map-wrapper').append('div').attr('class', 'tooltip js-tooltip');
 
     // todo: get the largest number of reports for this function.
@@ -295,29 +297,43 @@ $(document).ready(function() {
           //
           console.log(mouse);
 
-          var x = d3.mouse(this)[0];
-          var y = d3.mouse(this)[1];
+          var x = mouse[0];
+          var y = mouse[1];
           console.log(x + " " + y);
 
-          // The magic function.
+          // var svg_original_width = $('.map-wrapper svg').attr('viewBox').split(/\s+|,/)[2],
+          //     svg_original_height = $('.map-wrapper svg')
+          //     wrapper_current_width = $('.map-wrapper').width(),
+          //     wrapper_current_height = $('.map-wrapper').height(),.attr('viewBox').split(/\s+|,/)[3],
+          //     scaled_width = x / svg_original_width * wrapper_current_width,
+          //     scaled_height = y / svg_original_height * wrapper_current_height;
+          // console.log(scaled_width);
+
+          var cursor_x = (window.Event) ? event.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
+          var cursor_y = (window.Event) ? event.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
+          console.log(cursor_x + " " + cursor_y);
+
+
+          // // The magic function.
           // function getScreenCoords(x, y, ctm) {
           //   var xn = ctm.e + x*ctm.a + y*ctm.c;
           //   var yn = ctm.f + x*ctm.b + y*ctm.d;
           //   return { x: xn, y: yn };
           // }
-          //
-          // var circle = document.getElementById(this),
+          // //
+          // var circle = this,
           // cx = +circle.getAttribute('cx'),
           // cy = +circle.getAttribute('cy'),
           // ctm = circle.getCTM(),
           // coords = getScreenCoords(cx, cy, ctm);
           // console.log(coords.x, coords.y); // shows coords relative to my svg container
-
+          // console.log('current tooltip dimensions: ' + $('.map-wrapper .tooltip').width() + ", " + $('.map-wrapper .tooltip').height());
           tooltip.classed('hidden', false)
-            .attr('style', 'left:' + (mouse[0] - $('.map-wrapper .tooltip').width() / 2) + 'px; top:' + (mouse[1] - 45) + 'px; opacity: 1;')
+            .attr('style', 'left:' + (cursor_x - $('.map-wrapper .tooltip').width()) + 'px; top:' + (cursor_y - 180) + 'px; opacity: 1;')
             .html('<div class="tooltip-wrapper">' + d.name + " (" + d.reports + " reports)</div>");
-          // tooltip.classed('hidden', false)
-          //   .attr('style', 'left:' + (mouse[0] - $('.map-wrapper .tooltip').width() / 2) + 'px; top:' + (mouse[1] - 45) + 'px; opacity: 1;')
+          tooltip.classed('hidden', false)
+            .attr('style', 'left:' + (cursor_x - $('.map-wrapper .tooltip').width()) + 'px; top:' + (cursor_y - 180) + 'px; opacity: 1;')
+            .html('<div class="tooltip-wrapper">' + d.name + " (" + d.reports + " reports)</div>");
         })
         .on('mouseout', function() {
           tooltip.classed('hidden', true).attr('style', 'opacity: 0;');

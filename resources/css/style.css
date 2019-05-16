@@ -483,6 +483,7 @@ dd {
   position: relative;
 }
 .map-wrapper svg {
+  display: block;
   margin-left: auto;
   margin-right: auto;
 }
@@ -579,6 +580,9 @@ use.stroke {
   fill: #CBC9C5;
   stroke: #fff;
   stroke-width: 0.5px;
+}
+.newspaper-countries:hover {
+  fill: #d5d3d0;
 }
 
 .d3-slider {
