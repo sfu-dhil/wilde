@@ -50,6 +50,8 @@ h5 {
 
 h2 {
   font-size: 34px;
+  margin-top: 1.5em;
+  margin-bottom: 1em;
 }
 
 h3 {
@@ -234,12 +236,18 @@ a:active, a:focus, a:hover {
   color: #960000;
 }
 
-a.btn {
+a.btn,
+input.btn,
+a.btn-primary,
+input.btn-primary {
   color: #F9F7F1;
   background-color: #960000;
   border-color: #170000;
 }
-a.btn:active {
+a.btn:active,
+input.btn:active,
+a.btn-primary:active,
+input.btn-primary:active {
   background-color: #E10000;
   border-color: #960000;
 }
@@ -471,21 +479,16 @@ dd {
     width: 2px;
   }
 }
-#comparalator {
-  position: fixed;
-  top: 40vh;
-  width: 200px;
-  height: 200px;
-  background-color: #ddd;
-  padding: 0 1em 1em 1em;
+.map-wrapper {
+  position: relative;
 }
-
-.comparalator-text {
-  clear: both;
+.map-wrapper svg {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
-
-.comparalator-clear {
-  float: right;
+.map-wrapper .tooltip {
+  position: absolute;
 }
 
 use.stroke {
@@ -550,7 +553,6 @@ use.stroke {
   color: white;
   opacity: 0;
 }
-
 #tooltip table {
   table-layout: fixed;
 }
@@ -578,6 +580,9 @@ use.stroke {
   fill: #CBC9C5;
   stroke: #fff;
   stroke-width: 0.5px;
+}
+.newspaper-countries:hover {
+  fill: #d5d3d0;
 }
 
 .d3-slider {
@@ -792,7 +797,6 @@ table option {
   position: relative;
   padding: 6px;
 }
-
 .map-wrapper .tooltip-wrapper:before,
 .stacked-chart-container .tooltip-wrapper:before {
   content: "";
@@ -805,7 +809,6 @@ table option {
   border: 10px solid;
   border-color: black transparent transparent transparent;
 }
-
 .map-wrapper .tooltip-wrapper:after,
 .stacked-chart-container .tooltip-wrapper:after {
   content: "";
@@ -828,13 +831,11 @@ table option {
 .stacked-chart rect {
   shape-rendering: crispEdges;
 }
-
 .stacked-chart text {
   font: 10px sans-serif;
 }
-
-.stacked-chart .axis path,
-.stacked-chart .axis line {
+.stacked-chart path,
+.stacked-chart line {
   fill: none;
   stroke: #000;
 }
@@ -906,13 +907,6 @@ table option {
 .panel-default > .panel-heading {
   background-color: #EAE8E3;
   font-weight: bold;
-}
-
-.map-wrapper {
-  position: relative;
-}
-.map-wrapper .tooltip {
-  position: absolute;
 }
 
 .report-view .row.matches {
@@ -1037,6 +1031,13 @@ table option {
 
 .page-header {
   border-bottom: 1px solid #b3b3b3;
+}
+
+#measure-results {
+  display: none;
+}
+#measure-results.visible {
+  display: block;
 }
 
 /*# sourceMappingURL=style.css.map */
