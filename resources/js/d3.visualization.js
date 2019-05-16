@@ -1,24 +1,73 @@
-  $(document).ready(function() {
+// function responsivefy(svg) {
+//     // get container + svg aspect ratio
+//     var container = d3.select(svg.node().parentNode),
+//         width = parseInt(svg.style("width")),
+//         height = parseInt(svg.style("height")),
+//         aspect = width / height;
+//
+//     // add viewBox and preserveAspectRatio properties,
+//     // and call resize so that svg resizes on inital page load
+//     svg.attr("viewBox", "0 0 " + width + " " + height)
+//         .attr("perserveAspectRatio", "xMinYMid")
+//         .call(resize);
+//
+//     // to register multiple listeners for same event type,
+//     // you need to add namespace, i.e., 'click.foo'
+//     // necessary if you call invoke this function for multiple svgs
+//     // api docs: https://github.com/mbostock/d3/wiki/Selections#on
+//     d3.select(window).on("resize." + container.attr("id"), resize);
+//
+//     // get width of container and resize svg to fit it
+//     function resize() {
+//         var targetWidth = parseInt(container.style("width"));
+//         svg.attr("width", targetWidth);
+//         svg.attr("height", Math.round(targetWidth / aspect));
+//     }
+//
+//     console.log("resizing: " + width + "/" + height);
+//
+// }
 
-    // console.log("ready");
+var aspect_ratio = 2;
 
-    //start timeseries
-    // var data = [{'value': 1380854103662},{'value': 1363641921283}];
-    // timeseries('timeseries', data, true);
-    // End timeseries
+function resizeMap() {
+  console.log("resizing");
+  var new_width = $('#content').width() - 1,
+      new_height = new_width / aspect_ratio;
 
+  console.log(new_width);
 
+  // Sometimes when scaling the window, the content width doesn't have time to
+  // catch up and it sets the svg width greater than the window size.
+  // This overrides that.
+  if ($(window).width() < new_width) {
+    new_width = $(window).width() - 30;
+    console.log('Window is wider than content. Resizing content.' + new_width);
+    $('#content').width(new_width);
+  }
+  else {
+    $('#content').css('width', '');
+  }
 
+  new_height = new_width / aspect_ratio;
+  $('.map-wrapper svg').attr('width', new_width)
+                       .attr('height', new_height)
+                       .attr('viewBox', '0 0 ' + new_width + ' ' + new_height);
+}
 
-    // Start map
+$(window).resize(function() {
+  resizeMap();
+});
 
-    var width = $('#content').width(),
-        height = 550;
+$(document).ready(function() {
+  console.log("loaded map javascript");
+    var width = 1160;//$('#content').width(),
+        height = width / aspect_ratio;
 
     var color = d3.scale.category10();
 
     var projection = d3.geo.bromley()
-      .scale(180)
+      .scale(170)
       .translate([width / 2, height / 2])
       .center([0, 15]) // set centre to further North
       .precision(.1);
@@ -33,10 +82,16 @@
 
     var graticule = d3.geo.graticule();
 
+    // var svg = d3.select("#content").append("div").attr("class","map-wrapper").append("svg")
     var svg = d3.select(".map-wrapper").append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("class", "city-map");
+      // .attr("width", width)
+      // .attr("height", height)
+      // .attr("x","0")
+      // .attr("y", "0")
+      // .attr("class", "city-map")
+      .attr('viewBox', '0 0 ' + width + ' ' + height)
+      .attr('preserveAspectRatio', "xMidYMid meet");
+      // .call(responsivefy);
 
     svg.append("defs").append("path")
       .datum({type: "Sphere"})
@@ -78,9 +133,9 @@
           else {
             return "country";
           }
-        })
+        });
         // .attr("id", function(d) { return d.id;})
-        //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
+        // .style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
         // .style("fill", "#B7B6B2" )
         // .on('mouseover', function(d, i) {
         //   var currentCountry = this;
@@ -90,9 +145,9 @@
         //   // console.log(countries[i].properties);
         // })
         // .on('mouseout', function(d, i) {
-        //   d3.select(this).classed("newspaper-country").style({
-        //    'fill': '#CBC9C5'
-        //   });
+        //   d3.select(this).classed("newspaper-country") //.style({
+        //   //  'fill': '#CBC9C5'
+        //   // });
         // });
 
       svg.insert("path", ".graticule")
@@ -100,23 +155,21 @@
         .attr("class", "boundary")
         .attr("d", path);
 
-    d3.tsv("resources/d3_data/rest_777.txt")
-      .row(function(d) {
-        return {
-          permalink: d.permalink,
-          lat: parseFloat(d.lat),
-          lng: parseFloat(d.long),
-          city: d.city,
-          created_at: moment(d.created_at,"YYYY-MM-DD HH:mm:ss").unix()
-        };
-      })
-      .get(function(err, rows) {
-        if (err) return console.error(err);
-
-        window.window.site_data = rows;
-      });
-
-
+    // d3.tsv("resources/d3_data/rest_777.txt")
+    //   .row(function(d) {
+    //     return {
+    //       permalink: d.permalink,
+    //       lat: parseFloat(d.lat),
+    //       lng: parseFloat(d.long),
+    //       city: d.city,
+    //       created_at: moment(d.created_at,"YYYY-MM-DD HH:mm:ss").unix()
+    //     };
+    //   })
+    //   .get(function(err, rows) {
+    //     if (err) return console.error(err);
+    //
+    //     window.window.site_data = rows;
+    //   });
     });
 
 
@@ -202,10 +255,8 @@
     // }
 
 
-    d3.select(self.frameElement).style("height", height + "px");
-
+    // We aappenddd the tooltip elements here because Xquery doesn't like it.
     var tooltip = d3.select('.map-wrapper').append('div').attr('class', 'tooltip js-tooltip');
-    // d3.select('.map-wrapper .tooltip').append('div').attr('tooltip-wrapper');
 
     // todo: get the largest number of reports for this function.
     var length = 123,
@@ -215,8 +266,6 @@
 
     // load and display the cities
     var g = svg.append("g");
-    // d3.csv("resources/d3_data/cities.csv", function(error, data) {
-    // d3.json("api/cities?q=", function(error, data) {
     d3.csv("resources/d3_data/wilde_cities_no_countries.csv", function(error, data) {
       // console.log(data);
       g.selectAll("circle")
@@ -241,20 +290,50 @@
           var mouse = d3.mouse(svg.node()).map(function(d) {
             return parseInt(d);
           });
+          //
+          // var this_node = svg.node().map(function(d) {
+          //   return parseInt(d);
+          // });
+          //
+          console.log(mouse);
+
+          var x = mouse[0];
+          var y = mouse[1];
+          console.log(x + " " + y);
+
+          // var svg_original_width = $('.map-wrapper svg').attr('viewBox').split(/\s+|,/)[2],
+          //     svg_original_height = $('.map-wrapper svg')
+          //     wrapper_current_width = $('.map-wrapper').width(),
+          //     wrapper_current_height = $('.map-wrapper').height(),.attr('viewBox').split(/\s+|,/)[3],
+          //     scaled_width = x / svg_original_width * wrapper_current_width,
+          //     scaled_height = y / svg_original_height * wrapper_current_height;
+          // console.log(scaled_width);
+
+          var cursor_x = (window.Event) ? event.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
+          var cursor_y = (window.Event) ? event.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
+          console.log(cursor_x + " " + cursor_y);
+
+
+          // // The magic function.
+          // function getScreenCoords(x, y, ctm) {
+          //   var xn = ctm.e + x*ctm.a + y*ctm.c;
+          //   var yn = ctm.f + x*ctm.b + y*ctm.d;
+          //   return { x: xn, y: yn };
+          // }
+          // //
+          // var circle = this,
+          // cx = +circle.getAttribute('cx'),
+          // cy = +circle.getAttribute('cy'),
+          // ctm = circle.getCTM(),
+          // coords = getScreenCoords(cx, cy, ctm);
+          // console.log(coords.x, coords.y); // shows coords relative to my svg container
+          // console.log('current tooltip dimensions: ' + $('.map-wrapper .tooltip').width() + ", " + $('.map-wrapper .tooltip').height());
           tooltip.classed('hidden', false)
-            // .attr('style', 'opacity: 1;')
-          //   .css({
-          //     top:  margin.top  + highestBinBarHeight() - tooltip.outerHeight(),
-          //     left: margin.left + mouse[1] - (tooltip.outerWidth() / 2),
-          //     opacity: 1,
-          //     // filter: alpha(opacity=1)
-          // }).fadeIn();
-          // console.log($('.map-wrapper .tooltip').width());
-          tooltip.classed('hidden', false)
-            .attr('style', 'left:' + (mouse[0] - $('.map-wrapper .tooltip').width() / 2) + 'px; top:' + (mouse[1] - 45) + 'px; opacity: 1;')
+            .attr('style', 'left:' + (cursor_x - $('.map-wrapper .tooltip').width()) + 'px; top:' + (cursor_y - 180) + 'px; opacity: 1;')
             .html('<div class="tooltip-wrapper">' + d.name + " (" + d.reports + " reports)</div>");
           tooltip.classed('hidden', false)
-            .attr('style', 'left:' + (mouse[0] - $('.map-wrapper .tooltip').width() / 2) + 'px; top:' + (mouse[1] - 45) + 'px; opacity: 1;')
+            .attr('style', 'left:' + (cursor_x - $('.map-wrapper .tooltip').width()) + 'px; top:' + (cursor_y - 180) + 'px; opacity: 1;')
+            .html('<div class="tooltip-wrapper">' + d.name + " (" + d.reports + " reports)</div>");
         })
         .on('mouseout', function() {
           tooltip.classed('hidden', true).attr('style', 'opacity: 0;');

@@ -416,17 +416,17 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
     let $similarities := document:similar-documents($model('document'))
     let $cosines := $similarities[@data-type='cos']
     let $levens := $similarities[@data-type='lev']
-    
+
     return
         if(count($similarities) = 0) then
             (<i>None found</i>)
         else
             <div>
-                <div class='panel-heading'>Levenshtein Matches</div> 
+                <div class='panel-heading'>Levenshtein Matches</div>
                 <div class='panel-body'>{
                     if(count($levens) = 0) then
                         <i>None found</i>
-                    else 
+                    else
                         <ul> {
                             for $link in $levens
                             let $doc := collection:fetch($link/@href)
@@ -437,11 +437,11 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
                                 </li>
                         } </ul>
                 }</div>
-                <div class='panel-heading'>Cosine Matches</div> 
+                <div class='panel-heading'>Cosine Matches</div>
                 <div class='panel-body'>{
                     if(count($cosines) = 0) then
                         <i>None found</i>
-                    else 
+                    else
                         <ul> {
                             for $link in $cosines
                             let $doc := collection:fetch($link/@href)
@@ -683,8 +683,8 @@ declare function app:measure($node as node(), $model as map(*)) {
     let $d := string:getLevenshteinDistance($a, $b)
     let $m := max((string-length($a), string-length($b)))
 
-    return 
-        <dl class='dl-horizontal'>
+    return <div id="measure-results">
+      <dl class='dl-horizontal'>
         <dt>levenshtein</dt>
         <dd>{
           if($c1 and $c2) then
@@ -692,6 +692,11 @@ declare function app:measure($node as node(), $model as map(*)) {
           else
             0
         } </dd>
+        </dl>
+        <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#advanced" aria-expanded="false" aria-controls="advanced">
+          Advanced
+        </button>
+        <dl class="collapse" id="advanced">
         <dt>lengths</dt>
         <dd>first passage: {string-length($a)}, second passage: {string-length($b)}</dd>
         <dt>cosine</dt>
@@ -709,6 +714,7 @@ declare function app:measure($node as node(), $model as map(*)) {
         <dt>difference</dt>
         <dd id='difference'></dd>
     </dl>
+    </div>
 };
 
 declare
