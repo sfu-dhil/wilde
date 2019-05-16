@@ -683,7 +683,8 @@ declare function app:measure($node as node(), $model as map(*)) {
     let $d := string:getLevenshteinDistance($a, $b)
     let $m := max((string-length($a), string-length($b)))
 
-    return <dl class='dl-horizontal'>
+    return 
+        <dl class='dl-horizontal'>
         <dt>levenshtein</dt>
         <dd>{
           if($c1 and $c2) then
