@@ -909,6 +909,9 @@ table option {
   font-weight: bold;
 }
 
+.report-view .btn {
+  width: 95px;
+}
 .report-view .row.matches {
   padding-top: 0.25em;
 }

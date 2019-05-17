@@ -196,6 +196,7 @@ body {
 
 @include link($color_red, $color_red_dark);
 
+// buttons
 a.btn,
 input.btn,
 a.btn-primary,
@@ -1002,6 +1003,9 @@ table option {
 
 // Reports page
 .report-view {
+  .btn {
+    width: 95px;
+  }
   .row.matches {
     // background-color: blue;
     // &:hover {
