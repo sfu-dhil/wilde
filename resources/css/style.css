@@ -262,6 +262,17 @@ input.btn-primary:active {
 #content {
   flex-grow: 1;
   padding-bottom: 6em;
+  width: 100%;
+}
+#content .row {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+@media (min-width: 1024px) {
+  #content .row {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .footer {
@@ -724,6 +735,19 @@ th.header {
   width: 100% !important;
 }
 
+.x.axis {
+  visibility: hidden;
+}
+@media (min-width: 768px) {
+  .x.axis {
+    visibility: visible;
+  }
+}
+
+.mobile-overflow {
+  overflow-x: scroll;
+}
+
 table option {
   font-weight: 400;
 }
@@ -909,6 +933,9 @@ table option {
   font-weight: bold;
 }
 
+.report-view .btn {
+  width: 95px;
+}
 .report-view .row.matches {
   padding-top: 0.25em;
 }
