@@ -264,6 +264,11 @@ input.btn-primary:active {
   padding-bottom: 6em;
   width: 100%;
 }
+@media (min-width: 1024px) {
+  #content {
+    width: 970px;
+  }
+}
 #content .row {
   padding-left: 0.5em;
   padding-right: 0.5em;

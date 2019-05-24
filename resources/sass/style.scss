@@ -223,6 +223,10 @@ input.btn-primary {
   padding-bottom: 6em;
   width: 100%;
 
+  @include desktop {
+    width: 970px;
+  }
+
   .row {
     padding-left: 0.5em;
     padding-right: 0.5em;
