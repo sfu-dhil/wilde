@@ -221,6 +221,17 @@ input.btn-primary {
 #content {
   flex-grow: 1;
   padding-bottom: 6em;
+  width: 100%;
+
+  .row {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+
+    @include desktop {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
 }
 
 .footer {
@@ -750,8 +761,21 @@ th.header {
   }
 }
 
+.x.axis {
+  visibility: hidden;
+  // &:nth-child(3n+2) {
+  //   visibility: visible;
+  // }
+  @include tablet() {
+    visibility: visible;
+  }
+}
+
 
 // Table sorting
+.mobile-overflow {
+  overflow-x: scroll;
+}
 table option {
   font-weight: 400;
 }
