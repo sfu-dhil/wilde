@@ -20,7 +20,7 @@
   </target>
 
   <target name="cache-list">
-    <get src="https://dhil.lib.sfu.ca/wilde/list-nocache.html"
+    <get src="http://localhost:8080/exist/wilde/list-nocache.html"
           dest="list.html"/>
   </target>
 
