@@ -433,7 +433,8 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
                             order by $link/@data-similarity descending
                             return
                                 <li class="{$link/@class}">
-                                    {app:link-view($link/@href, document:title($doc))} - {format-number($link/@data-similarity, "###.#%")}%
+                                    {app:link-view($link/@href, document:title($doc))} - {format-number($link/@data-similarity, "###.#%")}% <br/>
+                                    <a href='compare-docs.html?a={document:id($model('document'))}&amp;b={document:id($doc)}'>Compare</a>
                                 </li>
                         } </ul>
                 }</div>
@@ -448,7 +449,8 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
                             order by $link/@data-similarity descending
                             return
                                 <li class="{$link/@class}">
-                                    {app:link-view($link/@href, document:title($doc))} - {format-number($link/@data-similarity, "###.#%")}%
+                                    {app:link-view($link/@href, document:title($doc))} - {format-number($link/@data-similarity, "###.#%")}% <br/>
+                                    <a href='compare-docs.html?a={document:id($model('document'))}&amp;b={document:id($doc)}'>Compare</a>
                                 </li>
                         } </ul>
                 }
@@ -554,7 +556,7 @@ declare function local:find-similar($measure as xs:string, $p as node()+, $q as 
     return $matches[1]
 };
 
-declare function app:compare-documents($node as node(), $model as map(*)) {
+declare function app:compare-paragraphs($node as node(), $model as map(*)) {
     let $a := request:get-parameter('a', '')
     let $b := request:get-parameter('b', '')
 
@@ -590,6 +592,43 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
                     <div class='col-sm-4 paragraph-d'> </div>
                 </div>
             }
+    </div>
+};
+
+declare function app:compare-documents($node as node(), $model as map(*)) {
+    let $a := request:get-parameter('a', '')
+    let $b := request:get-parameter('b', '')
+
+    let $da := collection:fetch($a)
+    let $db := collection:fetch($b)
+
+    let $lang := $da//div[@id='original']/@lang
+
+    let $pa := $da//div[@lang='en']//p[not(@class='heading')]
+    let $pb := $db//div[@lang='en']//p[not(@class='heading')]
+
+    return
+      <div>
+        <div class='row'>
+            <div class='col-sm-4'>
+                {app:link-view($a, document:title($da))}
+            </div>
+            <div class='col-sm-4'>
+                {app:link-view($b, document:title($db))}
+            </div>
+            <div class='col-sm-4'>Difference</div>
+        </div>
+        <div class='row'>
+            <div class='col-sm-4' id="doc_a"> {
+                $pa
+            }
+            </div>
+            <div class='col-sm-4' id="doc_b"> {
+                $pb
+            }
+            </div>
+            <div class='col-sm-4' id="diff"></div>
+        </div>
     </div>
 };
 

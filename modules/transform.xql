@@ -101,7 +101,7 @@ declare function tx:document($nodes as node()*) as node()* {
                                   <a href='view.html?f={document:id($document)}#{$paragraph/@id}'>
                                       {document:title($document)}
                                   </a> ({format-number($node/@data-similarity, "###.#%")}%) <br/>
-                                  <a href='compare.html?a={document:id($node)}&amp;b={$node/@data-document}'>Compare two documents</a>
+                                  <a href='compare.html?a={document:id($node)}&amp;b={$node/@data-document}'>Compare Paragraphs</a> | <a href='compare-docs.html?a={document:id($node)}&amp;b={$node/@data-document}'>Compare Documents</a>
                                 </div>
                             </blockquote>
                     else
