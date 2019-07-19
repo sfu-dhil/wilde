@@ -616,7 +616,10 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
             <div class='col-sm-4'>
                 {app:link-view($b, document:title($db))}
             </div>
-            <div class='col-sm-4'>Difference</div>
+            <div class='col-sm-4'>
+                Highlighted Differences <br/>
+                {format-number($da//link[@href=document:id($db)]/@data-similarity, "###.#%")}% Similar
+            </div>
         </div>
         <div class='row'>
             <div class='col-sm-4' id="doc_a"> {
