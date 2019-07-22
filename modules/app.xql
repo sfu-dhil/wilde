@@ -606,7 +606,8 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
 
     let $pa := $da//div[@lang='en']//p[not(@class='heading')]
     let $pb := $db//div[@lang='en']//p[not(@class='heading')]
-
+    let $measure := ($da//link[@href=document:id($db)]/@data-similarity)[1]
+    
     return
       <div>
         <div class='row'>
@@ -618,7 +619,7 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
             </div>
             <div class='col-sm-4'>
                 Highlighted Differences <br/>
-                {format-number($da//link[@href=document:id($db)]/@data-similarity, "###.#%")}% Similar
+                {format-number($measure, "###.#%")}% Similar
             </div>
         </div>
         <div class='row'>
