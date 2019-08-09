@@ -133,12 +133,11 @@ blockquote.similarity {
 
 /* images with captions */
 figure {
-    margin: 1em 40px;
+    margin: 1em 0;
 }
 
 figcaption {
     text-align: center;
-    font-style: italic;
 }
 
 /* cross headers */
@@ -419,7 +418,8 @@ a.front-page {
 
 dt,
 dd {
-  margin-bottom: 1em;
+  margin-bottom: 0.25em;
+  text-align: left;
   // &:first-child {
   //   margin-top: 0;
   // }
