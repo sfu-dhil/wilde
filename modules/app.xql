@@ -829,10 +829,10 @@ declare function app:graph-list($node as node(), $model as map(*)) as node() {
   <dl>{
     for $graph in collection:graph-list()
     return (
-      <dt>{graph:title($graph)}</dt>,
+      <dt><a href="graph.html?f={graph:filename($graph)}">{graph:title($graph)}</a></dt>,
       <dd>
-        {graph:description($graph)}<br/>
-        <a href="graph.html?f={graph:filename($graph)}">View</a>
+        {graph:description($graph)}<br/>        
+        {graph:modified($graph)}
       </dd>
       )
   }</dl>
@@ -852,4 +852,39 @@ declare function app:graph-view($node as node(), $model as map(*)) as node() {
     let $f := request:get-parameter('f', '')
     return
       <iframe src="gefx.html#{$f}" style="width: 100%; height: 700px;" />
+};
+
+declare function app:gallery($node as node(), $model as map(*)) as node() {
+
+    let $filenames := collection:image-list()
+    let $rows := count($filenames) idiv 4
+
+    return 
+        <div> {
+            for $row in 1 to $rows return
+                <div class="row"> {
+                    for $col in 1 to 4 return
+                    let $index := $row * 4 + $col
+                    let $filename := $filenames[$index]
+                    let $title := substring-before($filename, ' - ')
+                    let $date := substring-after(substring-before($filename, '.'), ' - ')
+                    return
+                    if($index <= count($filenames)) then
+                        <div class="col-xs-6 col-md-3">                
+                            <div class="thumbnail">
+                                <div class="img-container">
+                                    <a href="#imgModal" data-toggle="modal" data-title="{$title}" data-date="{$date}" data-target="#imgModal" data-img="images/{$filename}">
+                                        <img src="thumbs/{$filename}" class="img-thumbnail"/>
+                                    </a>
+                                </div>
+                                <div class="caption">                    
+                                    <i>{$title}</i><br/>
+                                    {$date}
+                                </div>
+                            </div>
+                        </div>
+                    else
+                        ()
+                } </div>
+        } </div>
 };

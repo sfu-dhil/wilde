@@ -1072,4 +1072,30 @@ table option {
   display: block;
 }
 
+/* Image gallery styles. */
+.img-container {
+    height: 160px;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.thumbnail .caption {
+    margin-top: 10px;
+}
+
+.modal {
+    top: 50px;
+    margin-bottom: 20px;
+}
+
+#modalImage {
+    max-width: 100%;
+}
+
+.modal-dialog {
+    width: auto;
+    max-width: 75vw;
+    max-height: 75vh;
+}
+
 /*# sourceMappingURL=style.css.map */

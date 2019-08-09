@@ -40,6 +40,10 @@ declare variable $config:data-root := '/db/apps/wilde-data/data';
 
 declare variable $config:graph-root := '/db/apps/wilde-data/data/graphs';
 
+declare variable $config:thumb-root := '/db/apps/wilde-data/data/thumbs';
+
+declare variable $config:image-root := '/db/apps/wilde-data/data/images';
+
 (:
     Default string metric.
 :)

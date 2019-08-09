@@ -9,6 +9,8 @@ import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" a
 import module namespace functx='http://www.functx.com';
 import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
 
+import module namespace console="http://exist-db.org/xquery/console";
+
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
@@ -37,15 +39,17 @@ declare function collection:graph-list() as node()* {
     let $collection := collection($config:graph-root)
     return
         for $doc in $collection
-        let $uri := xs:anyURI($config:graph-root || util:document-name($doc))
-        let $null :=
-          if('application/xml' != xmldb:get-mime-type($uri)) then
-            xmldb:set-mime-type($uri, 'application/xml')
-          else
-            ()
         where fn:ends-with(util:document-name($doc), '.gexf')
         order by util:document-name($doc)
         return $doc
+};
+
+declare function collection:image-list() as xs:string* {
+    let $collection := collection($config:thumb-root)
+    return 
+        for $doc in $collection
+        order by util:document-name($doc)
+        return xmldb:decode(util:document-name($doc))
 };
 
 (:~

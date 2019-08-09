@@ -2,6 +2,8 @@ xquery version "3.1";
 
 import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "modules/collection.xql";
 
+import module namespace console="http://exist-db.org/xquery/console";
+
 declare namespace exist="http://exist.sourceforge.net/NS/exist";
 declare namespace request="http://exist-db.org/xquery/request";
 
@@ -30,7 +32,7 @@ else if($exist:path eq "/list.html") then
   
 else if (ends-with($exist:resource, ".html")) then
     (: the html page is run through view.xql to expand templates :)
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+    <dispatch>
         <view>
             <forward url="{$exist:controller}/modules/view.xql"/>
         </view> 
@@ -40,21 +42,37 @@ else if (ends-with($exist:resource, ".gexf")) then
   collection:graph($exist:resource)
 
 else if(contains($exist:path, "/export/")) then
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+    <dispatch>
         <forward url="{$exist:controller}/modules/export.xql">
             <set-attribute name="function" value="{substring-after($exist:path, '/export/')}"/>
         </forward>
     </dispatch>
 
 else if(contains($exist:path, "/api/")) then
-    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+    <dispatch>
         <forward url="{$exist:controller}/modules/api-public.xql">
             <set-attribute name="function" value="{substring-after($exist:path, '/api/')}"/>
         </forward>
     </dispatch>
 
+else if(contains($exist:path, "/thumbs/")) then
+    <dispatch>
+        <forward url="{$exist:controller}/modules/image.xql">
+            <set-attribute name="filename" value="{$exist:resource}"/>
+            <set-attribute name="type" value="thumb"/>
+        </forward>
+    </dispatch>
+
+else if(contains($exist:path, "/images/")) then
+    <dispatch>
+        <forward url="{$exist:controller}/modules/image.xql">
+            <set-attribute name="filename" value="{$exist:resource}"/>
+            <set-attribute name="type" value="image"/>
+        </forward>
+    </dispatch>
+    
 else
     (: everything else is passed through :)
-    <dispatch>
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <cache-control cache="yes"/>
     </dispatch>
