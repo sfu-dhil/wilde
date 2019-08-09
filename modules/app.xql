@@ -778,23 +778,30 @@ declare function app:measure($node as node(), $model as map(*)) {
 
     let $d := string:getLevenshteinDistance($a, $b)
     let $m := max((string-length($a), string-length($b)))
+    
+    let $lev :=
+        if($c1 and $c2) then
+            1 - $d div $m
+          else
+            0
+    let $cos := similarity:similarity("cosine", $a, $b)
 
     return <div id="measure-results">
       <dl class='dl-horizontal'>
         <dt>Word lengths</dt>
         <dd>First passage: {string-length($a)}, Second passage: {string-length($b)}</dd>
         <dt>Levenshtein</dt>
-        <dd>{
-          if($c1 and $c2) then
-            1 - $d div $m
-          else
-            0
-        } </dd>
+        <dd>{format-number($lev, "###.#%")}%</dd>
         <dt>Cosine</dt>
-        <dd>{similarity:similarity("cosine", $a, $b)}</dd>
+        <dd>{format-number($cos, "###.#%")}%</dd>
         <dt>Difference</dt>
         <dd id='difference'></dd>
-    </dl>
+      </dl>
+      
+      <div class="hidden">
+        <div id='first'>{$a}</div>
+        <div id='second'>{$b}</div>
+      </div>
     </div>
 };
 
