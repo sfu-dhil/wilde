@@ -3,8 +3,6 @@ xquery version "3.0";
 import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
 
-import module namespace console="http://exist-db.org/xquery/console";
-
 let $filename := request:get-attribute('filename')
 let $type := request:get-attribute('type')
 

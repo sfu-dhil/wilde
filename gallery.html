@@ -2,13 +2,11 @@
 <div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround"
   data-template-with="templates/page.html" data-template-at="content">
 
-
   <div class="row">
     <div class="col-sm-12">
       <h1>Gallery</h1>
     </div>
   </div>
-
 
   <div class="row">
     <div data-template="app:gallery"/>
@@ -38,18 +36,14 @@
     // <![CDATA[
     (function($){
       $(document).ready(function(){
-        console.log("ready");
         
-        $('#imgModal').on('show.bs.modal', function (event) {
-          console.log("clicked!");
-          
+        $('#imgModal').on('show.bs.modal', function (event) {          
           var $button = $(event.relatedTarget) // Button that triggered the modal
           var $modal = $(this)
           
           $modal.find('#modalTitle').text($button.data('title'))
           $modal.find("#paperTitle").text($button.data('title'))
           $modal.find("#paperDate").text($button.data('date'))
-          console.log($button);
           $modal.find("#modalImage").attr('src', $button.data('img'))          
         })          
       });
