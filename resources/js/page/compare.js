@@ -46,7 +46,7 @@ function normalize(string) {
               dmp.diff_cleanupSemantic(diff);
               var html = htmlize(diff);            
               $d.html(html);
-              $d.append("<br/>Match: " + $this.data('score'));        
+              $d.append("<br/>Match: " + $this.data('score') + " Levenshtein");        
             }
           });
         });

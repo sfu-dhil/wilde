@@ -27,7 +27,9 @@ declare function app:link-view($id as xs:string, $content) as node() {
 declare function app:browse($node as node(), $model as map(*)) as node() {
     let $documents := collection:documents()
     return
-        <table class='table table-striped table-hover table-condensed' id="tbl-browser" data-toggle="table" data-filter-control="true" data-filter-show-clear="true" data-search="true" data-trim-on-search="false" data-show-export="true" data-click-to-select="true" data-total-field="total" data-addrbar="true">
+        <table class='table table-striped table-hover table-condensed' id="tbl-browser" data-toggle="table" data-filter-control="true" 
+            data-filter-show-clear="false" data-search="true" data-trim-on-search="false" data-show-export="false" data-click-to-select="true" 
+            data-total-field="total" data-addrbar="true">
             <thead>
                 <tr>
                     <th data-field="date" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Date</th>
@@ -532,8 +534,17 @@ declare function app:search-summary($node as node(), $model as map(*)) {
         <p>
           Found {count($model('hits'))} for search
           query <kbd>{$model('query')}</kbd>.
-          <a href="export/search?query={$model('query')}" class='btn btn-default pull-right'>Export Results</a>
         </p>
+};
+
+declare function app:search-export($node as node(), $model as map(*)) {
+    let $query := request:get-parameter('query', false())
+    
+    return    
+        if($query) then
+            <a href="export/search?query={$model('query')}" class='btn btn-primary'>Export Results</a>
+        else
+            ()
 };
 
 declare function app:search-paginate($node as node(), $model as map(*)) {
@@ -612,14 +623,16 @@ declare function app:compare-paragraphs($node as node(), $model as map(*)) {
       <div>
         <div class='row'>
             <div class='col-sm-4'>
-                Original paragraph in <br/>
-                {app:link-view($a, document:title($da))}
+                <b>Original paragraph in <br/>
+                {app:link-view($a, document:title($da))}</b>
             </div>
             <div class='col-sm-4'>
-                Most similar paragraph from <br/>
-                {app:link-view($b, document:title($db))}
+                <b>Most similar paragraph from <br/>
+                {app:link-view($b, document:title($db))}</b>
             </div>
-            <div class='col-sm-4'>Difference</div>
+            <div class='col-sm-4'>
+                <b>Difference</b>
+            </div>
         </div> {
             for $other at $i in $pa
                 let $q := local:find-similar("levenshtein", $pb, $other)
@@ -652,14 +665,14 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
       <div>
         <div class='row'>
             <div class='col-sm-4'>
-                {app:link-view($a, document:title($da))}
+                <b>{app:link-view($a, document:title($da))}</b>
             </div>
             <div class='col-sm-4'>
-                {app:link-view($b, document:title($db))}
+                <b>{app:link-view($b, document:title($db))}</b>
             </div>
             <div class='col-sm-4'>
-                Highlighted Differences <br/>
-                {format-number($measure, "###.#%")}% Similar
+                <b>Highlighted Differences</b> <br/>
+                {format-number($measure, "###.#%")}% Levenshtein 
             </div>
         </div>
         <div class='row'>
@@ -768,33 +781,18 @@ declare function app:measure($node as node(), $model as map(*)) {
 
     return <div id="measure-results">
       <dl class='dl-horizontal'>
-        <dt>levenshtein</dt>
+        <dt>Word lengths</dt>
+        <dd>First passage: {string-length($a)}, Second passage: {string-length($b)}</dd>
+        <dt>Levenshtein</dt>
         <dd>{
           if($c1 and $c2) then
             1 - $d div $m
           else
             0
         } </dd>
-        </dl>
-        <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#advanced" aria-expanded="false" aria-controls="advanced">
-          Advanced
-        </button>
-        <dl class="collapse" id="advanced">
-        <dt>lengths</dt>
-        <dd>first passage: {string-length($a)}, second passage: {string-length($b)}</dd>
-        <dt>cosine</dt>
+        <dt>Cosine</dt>
         <dd>{similarity:similarity("cosine", $a, $b)}</dd>
-        <dt>jaccard</dt>
-        <dd>{similarity:similarity("jaccard", $a, $b)}</dd>
-        <dt>overlap</dt>
-        <dd>{similarity:similarity("overlap", $a, $b)}</dd>
-        <dt>compression</dt>
-        <dd>{similarity:similarity("compression", $a, $b)}</dd>
-        <dt>first</dt>
-        <dd id='first'>{$a}</dd>
-        <dt>second</dt>
-        <dd id='second'>{$b}</dd>
-        <dt>difference</dt>
+        <dt>Difference</dt>
         <dd id='difference'></dd>
     </dl>
     </div>
