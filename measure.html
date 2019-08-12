@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround"
+    data-template-with="templates/page.html" data-template-at="content">
     <div class="row">
         <div class="page-header">
             <h1>Compare</h1>
         </div>
+        <p>To compare passages from any two news reports from the collection, enter them into the
+            two fields below and select the Measure button. The text-comparison tool will produce a
+            text similarity score and highlight the differences between the two texts. </p>
     </div>
-  <p>To compare any two news reports from the collection, enter them into the
-    two fields below and click the Measure button. The text-comparison tool will produce
-    a text similarity score using a number of different measures and will also
-    highlight the differences between the two texts.</p>
-  <form accept-charset="utf-8" method="post">
+    <form accept-charset="utf-8" method="post">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="c1">First passage</label>
-                    <textarea class="form-control" rows="6" cols="40" name="c1" id="c1" data-template="app:measure-textarea" data-template-name="c1"></textarea>
+                    <textarea class="form-control" rows="6" cols="40" name="c1" id="c1"
+                        data-template="app:measure-textarea" data-template-name="c1"/>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="c2">Second passage</label>
-                    <textarea class="form-control" rows="6" cols="40" name="c2" id="c2" data-template="app:measure-textarea" data-template-name="c2"></textarea>
+                    <textarea class="form-control" rows="6" cols="40" name="c2" id="c2"
+                        data-template="app:measure-textarea" data-template-name="c2"/>
                 </div>
             </div>
         </div>
@@ -34,8 +36,9 @@
 
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="clean" value="yes" data-template="templates:form-control"/> Ignore Punctuation &amp; Accents
-                    </label>
+                        <input type="checkbox" name="clean" value="yes"
+                            data-template="templates:form-control"/> Ignore Punctuation &amp;
+                        Accents </label>
                 </div>
             </div>
         </div>
@@ -43,7 +46,8 @@
     <div class="row">
         <span data-template="app:measure"/>
     </div>
-    <script type="text/javascript" src="resources/lib/google-diff-match-patch-js/diff_match_patch.js"/>
-    <script type="text/javascript" src="resources/js/page/measure.js"></script>
+    <script type="text/javascript"
+        src="resources/lib/google-diff-match-patch-js/diff_match_patch.js"/>
+    <script type="text/javascript" src="resources/js/page/measure.js"/>
     <!-- <script type="text/javascript" src="resources/js/page/measure-results.js"></script> -->
 </div>
