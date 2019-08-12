@@ -46,8 +46,9 @@ declare function collection:image-list() as xs:string* {
     let $collection := collection($config:thumb-root)
     return 
         for $doc in $collection
-        order by util:document-name($doc)
-        return xmldb:decode(util:document-name($doc))
+        let $filename := xmldb:decode(util:document-name($doc))
+        order by $filename
+        return $filename
 };
 
 (:~

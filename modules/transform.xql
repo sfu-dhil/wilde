@@ -39,7 +39,7 @@ declare function tx:paragraph($node as node()) as node() {
                     else
                         ""
             } </div>
-            <div class='col-sm-8'>
+            <div class='col-sm-6'>
                 <p id="{$node/@id}" class="text-justify">
                     { tx:document($node/node()[local-name() != 'a']) }
                 </p>
@@ -64,7 +64,7 @@ declare function tx:paragraph($node as node()) as node() {
                     ""
                   }
                </div>
-
+                <div class="col-sm-2"></div>
             </div>
     </div>
 };

@@ -866,7 +866,7 @@ declare function app:gallery($node as node(), $model as map(*)) as node() {
 
     return 
         <div> {
-            for $row in 1 to $rows return
+            for $row in 0 to $rows return
                 <div class="row"> {
                     for $col in 1 to 4 return
                     let $index := $row * 4 + $col
