@@ -862,20 +862,27 @@ declare function app:graph-view($node as node(), $model as map(*)) as node() {
 declare function app:gallery($node as node(), $model as map(*)) as node() {
 
     let $filenames := collection:image-list()
-    let $rows := count($filenames) idiv 4
+    let $cols := 3
+    let $col-size := 'col-sm-' || (12 idiv $cols)
+    let $rows := count($filenames) idiv $cols
+    let $metadata := collection:image-meta()
 
     return 
         <div> {
             for $row in 0 to $rows return
                 <div class="row"> {
-                    for $col in 1 to 4 return
-                    let $index := $row * 4 + $col
+                    for $col in 1 to $cols return
+                    let $index := $row * $cols + $col
                     let $filename := $filenames[$index]
-                    let $title := substring-before($filename, ' - ')
-                    let $date := substring-after(substring-before($filename, '.'), ' - ')
+                    let $meta := $metadata//div[@data-filename=$filename]
+                    
+                    let $title := if($meta) then $meta/@data-title/string() else ""
+                    let $date := if($meta) then $meta/@data-date/string() else ""
+                    let $descr := if($meta/node()/text()) then $meta/node() else <p>{$filename}</p>
+                    
                     return
                     if($index <= count($filenames)) then
-                        <div class="col-xs-6 col-md-3">                
+                        <div class="col-xs-12 {$col-size}">                
                             <div class="thumbnail">
                                 <div class="img-container">
                                     <a href="#imgModal" data-toggle="modal" data-title="{$title}" data-date="{$date}" data-target="#imgModal" data-img="images/{$filename}">
@@ -883,8 +890,11 @@ declare function app:gallery($node as node(), $model as map(*)) as node() {
                                     </a>
                                 </div>
                                 <div class="caption">                    
-                                    <i>{$title}</i><br/>
-                                    {$date}
+                                    <div class='title'>
+                                        <i>{$title}</i><br/>
+                                        {$date}<br/>
+                                        {$descr}
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>

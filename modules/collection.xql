@@ -51,6 +51,10 @@ declare function collection:image-list() as xs:string* {
         return $filename
 };
 
+declare function collection:image-meta() as node() {
+    doc($config:data-root || '/images.xml')
+};
+
 (:~
  : Fetch a document from the collection.
  : @param $id the string ID of the document to fetch
