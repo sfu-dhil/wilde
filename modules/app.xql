@@ -616,8 +616,8 @@ declare function app:compare-paragraphs($node as node(), $model as map(*)) {
 
     let $lang := $da//div[@id='original']/@lang
 
-    let $pa := $da//div[@lang='en']//p[not(@class='heading')]
-    let $pb := $db//div[@lang='en']//p[not(@class='heading')]
+    let $pa := $da//div[@id='original']//p[not(@class='heading')]
+    let $pb := $db//div[@id='original']//p[not(@class='heading')]
 
     return
       <div>
@@ -657,15 +657,15 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
 
     let $lang := $da//div[@id='original']/@lang
 
-    let $pa := $da//div[@lang='en']//p[not(@class='heading')]
-    let $pb := $db//div[@lang='en']//p[not(@class='heading')]
+    let $pa := $da//div[@id='original']//p[not(@class='heading')]
+    let $pb := $db//div[@id='original']//p[not(@class='heading')]
     let $link := $da//link[@href=document:id($db)][1]
     
     let $measure := $link/@data-similarity
     let $type := switch ($link/@data-type)
         case 'lev' return 'Levenshtein'
         case 'cos' return 'Cosine'
-        case 'ext' return 'Exact'
+        case 'exact' return 'Exact'
         default return 'Unknown'
     
     return
