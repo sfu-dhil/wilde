@@ -40,7 +40,7 @@ declare function tx:paragraph($node as node()) as node() {
                         ""
             } </div>
             <div class='col-sm-8'>
-                <p id="{$node/@id}" class="text-justify">
+                <p id="{$node/@id}" class="text-justify {$node/@class/string()}">
                     { tx:document($node/node()[local-name() != 'a']) }
                 </p>
                 <div id="{$id}_matches" class='similarity'> {

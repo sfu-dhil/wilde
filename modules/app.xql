@@ -659,7 +659,14 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
 
     let $pa := $da//div[@lang='en']//p[not(@class='heading')]
     let $pb := $db//div[@lang='en']//p[not(@class='heading')]
-    let $measure := ($da//link[@href=document:id($db)]/@data-similarity)[1]
+    let $link := $da//link[@href=document:id($db)][1]
+    
+    let $measure := $link/@data-similarity
+    let $type := switch ($link/@data-type)
+        case 'lev' return 'Levenshtein'
+        case 'cos' return 'Cosine'
+        case 'ext' return 'Exact'
+        default return 'Unknown'
     
     return
       <div>
@@ -672,7 +679,7 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
             </div>
             <div class='col-sm-4'>
                 <b>Highlighted Differences</b> <br/>
-                {format-number($measure, "###.#%")}% Levenshtein 
+                {if($measure) then format-number($measure, "###.#%") || "% " || $type else "Not significantly similar"} 
             </div>
         </div>
         <div class='row'>
