@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround"
+    data-template-with="templates/page.html" data-template-at="content">
     <div class="row">
-        <div class="page-header">
-            <h1> Search the collection </h1>
+        <div class="col-sm-12">
+            <div class="page-header">
+                <h1> Search the collection </h1>
+                <p>To search the entire collection of reports, create a detailed, custom query.
+                    Select the Help button for search term guidelines.</p>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -11,7 +16,8 @@
                 <div class="form-group">
                     <label class="sr-only" for="query">Search term</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="query" name="query" data-template="templates:form-control"/>
+                        <input type="text" class="form-control" id="query" name="query"
+                            data-template="templates:form-control"/>
                         <div class="input-group-btn">
                             <button class="btn btn-default" type="button">
                                 <span class="glyphicon glyphicon-search"/>
@@ -21,22 +27,19 @@
                 </div>
             </form>
         </div>
-        <div class="col-sm-12">
-            <p>To search the entire collection of reports, create a detailed, custom query. Select the Help button for search term guidelines.</p>
-        </div>
-        
+
         <div class="btn-group">
-            <a class="btn btn-primary" data-toggle='collapse' data-target='#advanced'>Help</a> 
-            <a data-template="app:search-export"></a> 
+            <a class="btn btn-primary" data-toggle="collapse" data-target="#advanced">Help</a>
+            <a data-template="app:search-export"/>
         </div>
-        
-        <dl class="dl-horizontal collapse" id='advanced'>
+
+        <dl class="dl-horizontal collapse" id="advanced">
             <dt>match any term</dt>
             <dd>
                 <kbd>wilde verdict</kbd> matches "wilde" or "verdict."</dd>
             <dt>wildcards</dt>
             <dd>
-                <kbd>crim*</kbd> matches "crime" and "criminal".<br />
+                <kbd>crim*</kbd> matches "crime" and "criminal".<br/>
                 <kbd>s?t</kbd> matches "sit" and "sat" but not "saat."</dd>
             <dt>match all terms</dt>
             <dd>
@@ -44,21 +47,21 @@
                 verdict.</dd>
             <dt>match <i>some</i> terms</dt>
             <dd>
-                <kbd>-wilde +verdict</kbd> matches paragraphs which do not contain wilde but do contain
-                verdict.</dd>
+                <kbd>-wilde +verdict</kbd> matches paragraphs which do not contain wilde but do
+                contain verdict.</dd>
             <dt>phrase</dt>
             <dd>
                 <kbd>"at the witness box"</kbd>
             </dd>
             <dt>proximity search</dt>
             <dd>
-                <kbd>"wilde queensberry"~10</kbd> matches paragraphs which contain the words wilde and
-                queensberry no more than 10 words apart.</dd>
+                <kbd>"wilde queensberry"~10</kbd> matches paragraphs which contain the words wilde
+                and queensberry no more than 10 words apart.</dd>
             <dt>fuzzy search</dt>
             <dd>
-                <kbd>persecution~</kbd> matches words which are similar to persecution.<br />
-                <kbd>persecution~0.9</kbd> matches words which are closer to persecution than <kbd>persecution~0.1</kbd>
-                would.</dd>
+                <kbd>persecution~</kbd> matches words which are similar to persecution.<br/>
+                <kbd>persecution~0.9</kbd> matches words which are closer to persecution than
+                    <kbd>persecution~0.1</kbd> would.</dd>
             <dt>boolean</dt>
             <dd>
                 <kbd>queensberry AND clarke</kbd> finds paragraphs that contain both queensberry and

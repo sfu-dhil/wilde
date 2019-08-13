@@ -31,7 +31,7 @@ declare function tx:paragraph($node as node()) as node() {
 
     return
         <div class="row matches matches-{$match-count}">
-            <div class="col-sm-4"> {
+            <div class="col-sm-3"> {
                 if($match-count gt 0) then
                         <a class="btn btn-primary" onclick="$(this).parent().parent().toggleClass('viewing-matches'); $('#{$id}_matches').toggle();" title="Show matches">
                             {$match-count} match{ if ($match-count gt 1) then 'es' else ''}
@@ -39,7 +39,7 @@ declare function tx:paragraph($node as node()) as node() {
                     else
                         ""
             } </div>
-            <div class='col-sm-6'>
+            <div class='col-sm-8'>
                 <p id="{$node/@id}" class="text-justify">
                     { tx:document($node/node()[local-name() != 'a']) }
                 </p>
@@ -64,7 +64,7 @@ declare function tx:paragraph($node as node()) as node() {
                     ""
                   }
                </div>
-                <div class="col-sm-2"></div>
+                <div class="col-sm-1"></div>
             </div>
     </div>
 };
