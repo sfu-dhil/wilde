@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround"
   data-template-with="templates/page.html" data-template-at="content">
-
+  
   <div class="row">
-    <div class="col-sm-12">
+    <div class="page-header">
       <h1>Image Gallery</h1>
       <p>In the spring of 1895, historical newspapers around the world illustrated key figures and
         scenes from Oscar Wilde’s three criminal trials. </p>
@@ -26,8 +26,6 @@
           <figure>
             <img src="" id="modalImage"/>
             <figcaption>
-              <i id="paperTitle"/><br/>
-              <span id="paperDate"/>
             </figcaption>
           </figure>
         </div>
@@ -40,13 +38,12 @@
       $(document).ready(function(){
         
         $('#imgModal').on('show.bs.modal', function (event) {          
-          var $button = $(event.relatedTarget) // Button that triggered the modal
-          var $modal = $(this)
+          var $button = $(event.relatedTarget); // Button that triggered the modal
+          var $modal = $(this);
           
-          $modal.find('#modalTitle').text($button.data('title'))
-          $modal.find("#paperTitle").text($button.data('title'))
-          $modal.find("#paperDate").text($button.data('date'))
-          $modal.find("#modalImage").attr('src', $button.data('img'))          
+          $modal.find('#modalTitle').text($button.data('title'));          
+          $modal.find('figcaption').html($button.parent().parent().find('.caption').clone());          
+          $modal.find("#modalImage").attr('src', $button.data('img'));          
         })          
       });
     })(jQuery);
