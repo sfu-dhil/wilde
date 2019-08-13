@@ -893,8 +893,8 @@ declare function app:gallery($node as node(), $model as map(*)) as node() {
                                     <div class='title'>
                                         <i>{$title}</i><br/>
                                         {$date}<br/>
-                                        {$descr}
                                     </div>                                    
+                                    {$descr}
                                 </div>
                             </div>
                         </div>
