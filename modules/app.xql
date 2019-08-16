@@ -684,11 +684,13 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
         </div>
         <div class='row'>
             <div class='col-sm-4' id="doc_a"> {
-                $pa
+                for $p in $pa
+                return <p>{$p/text()}</p>
             }
             </div>
             <div class='col-sm-4' id="doc_b"> {
-                $pb
+                for $p in $pb
+                return <p>{$p/text()}</p>
             }
             </div>
             <div class='col-sm-4' id="diff"></div>

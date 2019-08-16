@@ -11,28 +11,10 @@
             first report and purple in the second report.</p>
         <br/>
     </div>
-
-    <div class="row">
-        <div data-template="app:compare-documents"/>
-    </div>
-
-    <script type="text/javascript"> // <![CDATA[
-        function normalize(string) {
-            var lower = string.toLowerCase();
-            var lbs = lower.replace(/(\r\n|\n|\r)/gm, " ");
-            var clean = lbs.replace(/\s+/g, ' ');
-            return clean;
-        }
-
-        $(document).ready(function(){
-            var a = normalize($("#doc_a").html());
-            var b = normalize($("#doc_b").html());
-            
-            var markup = diff(a,b);
-            $("#diff").html(markup);
-        });
-    // ]]>
-    </script>
+    
+    <div data-template="app:compare-documents"/>
+    
+    <script type="text/javascript" src="resources/js/page/compare-docs.js"></script>
     <script type="text/javascript" src="resources/lib/js-url/url.min.js"/>
     <script type="text/javascript" src="resources/lib/htmldiff/dist/htmldiff.js"/>
 </div>
