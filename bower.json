@@ -31,7 +31,6 @@
     "timeseries": "https://github.com/mlvl/timeseries.git",
     "moment": "momentjs#^2.23.0",
     "underscore": "^1.9.1",
-    "open-sans-fontface": "^1.4.2",
     "htmldiff": "htmldiff-dualpane#^1.0.0",
     "d3": "3"
   }

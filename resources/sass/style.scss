@@ -4,6 +4,11 @@
 
 
 // Start original style.css
+
+body {
+  font-size: 16px;
+}
+
 del{
     text-decoration: none;
     background: #fcc;
@@ -29,24 +34,7 @@ td a {
     white-space: nowrap;
 }
 
-body {
-  font-size: 16px;
-}
-
-body div.overlay{
-    display: none;
-}
-
-body.saving div.overlay{
-    display: block;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    background-color: rgba(64, 64, 64, 0.5);
-}
-
+// Reports
 p.heading {
   font-weight: bold;
 }
@@ -55,80 +43,10 @@ p.signature {
     font-style: italic;
 }
 
-/* table sorter styles */
-
-th.headerSortDown:after{
-    content: " \2193";
-}
-
-th.headerSortUp:after{
-    content: " \2191";
-}
-
-/* editor styles */
-p.doc-info{
-    text-align: right;
-}
-
-.doc-source{
-    font-style: italic;
-}
-
-td.dissimilar{
-    color: #bbb;
-}
-td.similar{
-    font-weight: bold;
-}
-
-li.levenshtein {
-  font-weight: bold;
-}
-
-li.cosine {
-  font-style: italic;
-}
-
-tr.reference span.number{
-    display: inline-block;
-    padding-right: 20px;
-    float: left;
-}
-
-tr.reference a.ref{
-    display: inline-block;
-    width: 80%;
-    float: left;
-}
-
-table.search-results td.previous{
-    text-align: right;
-}
-
-table.search-results td.hi{
-    text-align: center;
-}
-
-table.search-results td.next{
-    text-align: left;
-}
-
-/* Erik added rules */
-
+// Search page
 kbd {
     color: black;
     background-color: #eee;
-}
-
-blockquote.similarity {
-    margin: 0 0 20px 40px;
-    font-size: 14px;
-}
-
-/* Home page carousel */
-.carousel-caption{
-    background: rgba(0,0,0,0.4);
-    border-radius: 10px;
 }
 
 /* images with captions */
@@ -148,38 +66,17 @@ span.cross-head {
     padding-bottom: 5px;
 }
 
-/* Sticky footer styles */
-// html {
-//   position: relative;
-//   min-height: 100%;
-// }
-
-// body {
-//   /* Margin bottom by footer height */
-//   margin-bottom: 80px;
-// }
-
 .spacer {
   height: 40px;
 }
-
-// .footer {
-//   position: absolute;
-//   bottom: 0;
-//   width: 100%;
-//   /* Set the fixed height of the footer here */
-//   height: 80px;
-//   background-color: #f5f5f5;
-// }
 
 .footer > .container {
   margin: 20px auto;
   padding-right: 15px;
   padding-left: 15px;
 }
+
 // End original style.css
-
-
 
 // Start Newspaper styling
 body {
@@ -277,7 +174,6 @@ input.btn-primary {
 
 
 .dropdown-menu {
-  border-color: f;
   border: 0;
 }
 
@@ -462,319 +358,10 @@ dd {
   }
 }
 
-
-//end newspaper styling
-
-
-
-// #comparalator {
-//   // display: none;
-//   position: fixed;
-//   top: 40vh;
-//   width: 200px;
-//   height: 200px;
-//   background-color: #ddd;
-//   padding: 0 1em 1em 1em;
-// }
-//
-// .comparalator-text {
-//   clear: both;
-// }
-//
-// .comparalator-clear {
-//   float: right;
-// }
-
-
-
-
-
-// D3 map
-
-// Makes the map responsive.
-.map-wrapper {
-  svg {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  // tooltips on map
-  position: relative;
-  .tooltip {
-    position: absolute;
-  }
-}
-// end map resizing
-
-// .map-wrapper {
-// //   display: inline-block;
-// //   position: relative;
-// //   width: 100%;
-// //   padding-bottom: 100%;
-// //   vertical-align: top;
-// //   overflow: hidden;
-//   svg {
-//     max-width: 100%;
-//   }
-// }
-// #city-map {
-//   // display: inline-block;
-//   // position: absolute;
-//   // top: 0;
-//   // left: 0;
-//   max-width: 100%;
-// }
-
-
-
-
-
-use.stroke {
-  stroke: #333333;
-  stroke-width: 1px
-}
-
-.stroke {
-  fill: none;
-  stroke: #333333;
-  /* stroke-width: 3px; */
-  stroke-width: 0;
-}
-
-.fill {
-  fill: #f9f7f1;
-}
-
-.graticule {
-  fill: none;
-  stroke: #777;
-  /* stroke-width: .5px; */
-  stroke-opacity: .5;
-  stroke-width: 0;
-}
-
-.land {
-  fill: #333333;
-}
-
-.boundary {
-  fill: none;
-  /* stroke: #fff;
-  stroke-width: .5px; */
-  stroke-width: 0;
-}
-
-#tooltip {
-	position: absolute;
-	text-align: center;
-	padding: 20px;
-	margin: 10px;
-	font: 12px sans-serif;
-	background: lightsteelblue;
-	border: 1px;
-	border-radius: 2px;
-	pointer-events: none;
-}
-#tooltip h4{
-	margin:0;
-	font-size:14px;
-}
-#tooltip {
-	background:rgba(0,0,0,0.9);
-	border:1px solid grey;
-	border-radius:5px;
-	font-size:12px;
-	width:auto;
-	padding:4px;
-	color:white;
-	opacity:0;
-  // max-height: 100px;
-
-  table {
-	   table-layout:fixed;
-   }
-}
-#tooltip tr td {
-	padding:0;
-	margin:0;
-}
-#tooltip tr td:nth-child(1){
-	width:50px;
-}
-#tooltip tr td:nth-child(2){
-	text-align:center;
-}
-
-.country {
-  fill: #B7B6B2;
-  stroke-width: 1px;
-  stroke: #B7B6B2;
-}
-
-.newspaper-countries {
-  fill: #CBC9C5;
-  stroke: #fff;
-  stroke-width: .5px;
-  &:hover {
-    fill: lighten(#CBC9C5, 4);
-  }
-}
-
-
-.d3-slider {
-  position: relative;
-  font-family: Verdana,Arial,sans-serif;
-  font-size: 1.1em;
-  border: 1px solid #aaaaaa;
-  z-index: 2;
-}
-
-.d3-slider-horizontal {
-  height: .8em;
-}
-
-.d3-slider-range {
-  background:#2980b9;
-  left:0px;
-  right:0px;
-  height: 0.8em;
-  position: absolute;
-}
-
-.d3-slider-range-vertical {
-  background:#2980b9;
-  left:0px;
-  right:0px;
-  position: absolute;
-  top:0;
-}
-
-.d3-slider-vertical {
-  width: .8em;
-  height: 100px;
-}
-
-.d3-slider-handle {
-  position: absolute;
-  width: 1.2em;
-  height: 1.2em;
-  border: 1px solid #d3d3d3;
-  border-radius: 4px;
-  background: #eee;
-  background: linear-gradient(to bottom, #eee 0%, #ddd 100%);
-  z-index: 3;
-}
-
-.d3-slider-handle:hover {
-  border: 1px solid #999999;
-}
-
-.d3-slider-horizontal .d3-slider-handle {
-    top: -.3em;
-    margin-left: -.6em;
-}
-
-.d3-slider-axis {
-    position: relative;
-    z-index: 1;
-}
-
-.d3-slider-axis-bottom {
-    top: .8em;
-}
-
-.d3-slider-axis-right {
-    left: .8em;
-}
-
-.d3-slider-axis path {
-    stroke-width: 0;
-    fill: none;
-}
-
-.d3-slider-axis line {
-    fill: none;
-    stroke: #aaa;
-    shape-rendering: crispEdges;
-}
-
-.d3-slider-axis text {
-    font-size: 11px;
-}
-
-.d3-slider-vertical .d3-slider-handle {
-    left: -.25em;
-    margin-left: 0;
-    margin-bottom: -.6em;
-}
-
-.slider-wrapper button {
-  position:  relative;
-  z-index: 100;
-}
-// End D3
-
-
 // tables
 th.header {
   cursor: pointer;
 }
-
-
-// Comparalator
-.selected-text {
-  color: red;
-
-  .popover & {
-    color: white;
-  }
-}
-
-.popover,
-.tooltip {
-  -webkit-user-select: none;  /* Chrome all / Safari all */
-  -moz-user-select: none;     /* Firefox all */
-  -ms-user-select: none;      /* IE 10+ */
-  user-select: none !important;
-
-  * {
-    -webkit-user-select: none;  /* Chrome all / Safari all */
-    -moz-user-select: none;     /* Firefox all */
-    -ms-user-select: none;      /* IE 10+ */
-    user-select: none !important;
-  }
-}
-
-
-
-
-// Charts
-#chart {
-  width: 100% !important;
-
-  div {
-    height: auto;
-    width: 100% !important;
-  }
-  svg {
-    width: 100% !important;
-    > rect {
-      background: rgba(0,0,0,0) !important;
-      width: 100% !important;
-    }
-  }
-}
-
-.x.axis {
-  visibility: hidden;
-  // &:nth-child(3n+2) {
-  //   visibility: visible;
-  // }
-  @include tablet() {
-    visibility: visible;
-  }
-}
-
 
 // Table sorting
 .mobile-overflow {
@@ -802,58 +389,6 @@ table option {
 
 .table-striped > tbody > tr:nth-of-type(2n+1) {
   background: #EAE8E3;
-}
-
-
-
-
-/** Styles for TIMESERIES */
-// .timeseries {
-//   width: 100%;
-//   padding: 2% 0;
-// }
-// .circ {
-//   fill: #D35400;
-//   opacity: 0.6;
-//   stroke: rgba(211, 84, 0, 0.7);
-//   stroke-width: 5px;
-// }
-// .domain {
-//   display: none;
-// }
-// .axis path, .axis line {
-//   fill: none;
-//   stroke: #000;
-//   shape-rendering: crispEdges;
-// }
-// .axis text {
-//   font-size: 12px;
-// }
-// .tick line {
-//   stroke: #d5d5d5;
-//   opacity: 0.7;
-// }
-// .brush .extent {
-//   stroke: #fff;
-//   fill-opacity: .125;
-//   shape-rendering: crispEdges;
-// }
-// .clear-brush {
-//   display: none;
-// }
-// .brush-control {
-//   padding: .5%;
-//   width: 100%;
-//   text-align: center;
-// }
-// .brush-info {
-//   display: inline-block;
-//   font-size: 14px;
-// }
-
-
-#languages {
-  display: none !important;
 }
 
 // Styles for stacked chart
@@ -898,7 +433,6 @@ table option {
   // filter: alpha(opacity=1);
 }
 
-.map-wrapper,
 .stacked-chart-container {
   .tooltip-wrapper {
     position: relative;
@@ -1026,24 +560,12 @@ table option {
   font-weight: bold;
 }
 
-
-
-
 // Reports page
 .report-view {
   .btn {
     width: 95px;
   }
   .row.matches {
-    // background-color: blue;
-    // &:hover {
-    //   background-color: red;
-    // }
-    // &.matches-0 {
-    //   &:hover {
-    //     background-color: inherit;
-    //   }
-    // }
 
     &:last-child {
       padding-bottom: 0.5em;
@@ -1055,12 +577,9 @@ table option {
 
     }
     &:hover {
-      // p {
         background-color: $color_beige;
-      // }
       .active {
         position: relative;
-        // border-bottom: 0;
       }
       .active .active {
         background-color: $color_white;
@@ -1082,10 +601,8 @@ table option {
     position: relative;
     bottom: -1px;
     > a,
-    > a:hover
+    > a:hover,
     > a:focus {
-      // border-color: lighten($color_light_grey, 50%);
-      // or: #b3b3b3;
       border-bottom: 0;
     }
   }
@@ -1097,6 +614,7 @@ table option {
       border-top: 0;
       background-color: #fff;
       overflow: hidden;
+
       // tabs inside tabs.
       .tab-pane.active {
         background-color: #fff;
@@ -1138,7 +656,6 @@ table option {
 
 // next/previous report at top of screen
 .report-navigation {
-  // width: 100%;
   div {
     font-size: 15px;
     line-height: 1.25em;
@@ -1148,14 +665,12 @@ table option {
   }
 }
 
-
 // both sidebar panels on Reports
 .panel-metadata,
 .panel-document-matches {
   font-size: 15px;
   line-height: 1.3em;
 }
-
 
 // metadata panel on Reports
 .panel-metadata {
@@ -1203,18 +718,6 @@ table option {
 .page-header {
   border-bottom: 1px solid lighten($color_light_grey, 50%);
 }
-
-
-
-// measure.html / Compare page
-#measure-results {
-  display: none;
-
-  &.visible {
-    display: block;
-  }
-}
-
 
 /* Image gallery styles. */
 .img-container {
