@@ -648,6 +648,14 @@ declare function app:compare-paragraphs($node as node(), $model as map(*)) {
     </div>
 };
 
+declare function local:measure($name as xs:string) as xs:string {
+    switch ($name)
+        case 'lev' return 'Levenshtein'
+        case 'cos' return 'Cosine'
+        case 'exact' return 'Exact'
+        default return 'Unknown'
+};
+
 declare function app:compare-documents($node as node(), $model as map(*)) {
     let $a := request:get-parameter('a', '')
     let $b := request:get-parameter('b', '')
@@ -659,14 +667,7 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
 
     let $pa := $da//div[@id='original']//p[not(@class='heading')]
     let $pb := $db//div[@id='original']//p[not(@class='heading')]
-    let $link := $da//link[@href=document:id($db)][1]
-    
-    let $measure := $link/@data-similarity
-    let $type := switch ($link/@data-type)
-        case 'lev' return 'Levenshtein'
-        case 'cos' return 'Cosine'
-        case 'exact' return 'Exact'
-        default return 'Unknown'
+    let $links := $da//link[@href=$b]
     
     return
       <div>
@@ -677,10 +678,14 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
             <div class='col-sm-4'>
                 <b>{app:link-view($b, document:title($db))}</b>
             </div>
-            <div class='col-sm-4'>
-                <b>Highlighted Differences</b> <br/>
-                {if($measure) then format-number($measure, "###.#%") || "% " || $type else "Not significantly similar"} 
-            </div>
+            <div class='col-sm-4'> 
+                <b>Highlighted Differences</b> <br/> { 
+                    if (count($links) gt 0) then
+                        for $link in $links 
+                        return 
+                            <span style="display:block;">{local:measure($link/@data-type)}: {format-number($link/@data-similarity, "###.#%")}%</span>
+                    else "Not significantly similar"
+                } </div>
         </div>
         <div class='row'>
             <div class='col-sm-4' id="doc_a"> {
