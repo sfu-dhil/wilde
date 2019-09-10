@@ -441,6 +441,10 @@ table option {
   background: #EAE8E3;
 }
 
+#languages {
+  display: none !important;
+}
+
 .stacked-chart-container {
   position: relative;
   margin-bottom: 20px;
