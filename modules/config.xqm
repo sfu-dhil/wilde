@@ -38,6 +38,8 @@ declare variable $config:app-root :=
 :)
 declare variable $config:data-root := '/db/apps/wilde-data/data';
 
+declare variable $config:report-root := '/db/apps/wilde-data/data/reports';
+
 declare variable $config:graph-root := '/db/apps/wilde-data/data/graphs';
 
 declare variable $config:thumb-root := '/db/apps/wilde-data/data/thumbs';

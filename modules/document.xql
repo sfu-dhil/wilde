@@ -3,6 +3,7 @@ xquery version "3.0";
 module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document";
 
 import module namespace functx='http://www.functx.com';
+import module namespace util="http://exist-db.org/xquery/util";
 
 import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 
@@ -30,7 +31,9 @@ declare function document:subtitle($node as node()) as xs:string {
 };
 
 declare function document:path($node as node()) as xs:string {
-  string(root($node)//meta[@name='wr.path']/@content)
+    let $full-path := util:collection-name(root($node))
+    let $path := substring-after($full-path, $config:report-root || '/')
+    return $path 
 };
 
 declare function document:word-count($node as node()) as xs:string {

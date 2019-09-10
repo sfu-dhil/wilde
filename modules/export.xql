@@ -224,10 +224,18 @@ declare function export:bibliography() {
     return ($headers, $body)
 };
 
+declare function local:paper-id($doc as node()) as xs:string {
+    let $path := document:path($doc)
+    let $parts := tokenize($path || ' ' || document:publisher($doc), '[^a-zA-Z]+')
+    let $paper-id := string-join(for $part in $parts return substring($part, 1, 1), '')
+    return $paper-id
+};
+
 declare function export:gephi-documents() {
     let $headers := 
         <row>
             <item>ID</item>
+            <item>Paper ID</item>
             <item>Label</item>
             <item>Language</item>
             <item>Region</item>
@@ -241,6 +249,7 @@ declare function export:gephi-documents() {
         return
             <row>
                 <item>{document:id($doc)}</item>
+                <item>{local:paper-id}</item>
                 <item>{document:title($doc)}</item>  
                 <item>{lang:code2lang(document:language($doc))}</item>
                 <item>{document:region($doc)}</item>
@@ -253,8 +262,12 @@ declare function export:gephi-documents() {
 declare function export:gephi-document-matches() {
     let $headers := 
         <row>
-            <item>Source</item>
-            <item>Target</item>
+            <item>Source Report Id</item>
+            <item>Source Paper Id</item>
+            <item>Source Date</item>
+            <item>Target Report Id</item>
+            <item>Target Paper Id</item>
+            <item>Target Date</item>
             <item>Type</item>
             <item>Match Type</item>
             <item>Weight</item>
@@ -265,11 +278,14 @@ declare function export:gephi-document-matches() {
         for $doc in $documents
         where count(document:document-matches($doc)) > 0
         for $link in document:document-matches($doc)
-              (:<link href="rnm_1443" class="similarity cos" rel="similarity" data-similarity="0.9758894820754566" data-type="cos"/>:)        
             return
                 <row>
                     <item>{document:id($doc)}</item>
-                    <item>{$link/@href/string()}</item>  
+                    <item>{local:paper-id($doc)}</item>
+                    <item>{document:date($doc)}</item>
+                    <item>{$link/@href/string()}</item>
+                    <item>{local:paper-id(collection:fetch($link/@href/string()))}</item>
+                    <item>{document:date(collection:fetch($link/@href/string()))}</item>
                     <item>Undirected</item>
                     <item>{$link/@data-type/string()}</item>
                     <item>{$link/@data-similarity/string()}</item>
