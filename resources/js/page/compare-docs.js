@@ -1,21 +1,27 @@
 (function ($) {
-    function normalizeText(text) {
-        return text.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ');
+
+    function normalize(string) {
+        var lower = string.toLowerCase();
+        var lbs = lower.replace(/(\r\n|\n|\r)/gm, " ");
+        var clean = lbs.replace(/\s+/g, ' ').replace(/[^a-zA-Z0-0 ]/gm, '');        
+        return clean;
     }
-    
-    function getText(selector) {
-        var $nodes = $(selector).clone().each(function () {
-            var $this = $(this);
-            $this.text(normalizeText($this.text()));
+
+    function select(selector) {
+        var html = '';
+        $(selector).children("p").each(function(){
+            html += '<p>' + normalize($(this).text()) + '</p>';
         });
-        return $nodes.html();
+        return html;
     }
-    
+
     $(document).ready(function () {
-        var a = getText("#doc_a");
-        var b = getText("#doc_b");
+        var a = select("#doc_a");
+        var b = select("#doc_b");
+        console.log(a);
+        console.log(b);
         
-        var markup = diff(a, b);
+        var markup = htmldiff(a,b);
         $("#diff").html(markup);
     });
 })(jQuery);
