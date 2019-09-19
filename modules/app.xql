@@ -542,7 +542,7 @@ declare function app:search-export($node as node(), $model as map(*)) {
     
     return    
         if($query) then
-            <a href="export/search?query={$model('query')}" class='btn btn-primary'>Export Results</a>
+            <a href="export/search.csv?query={$query}" class='btn btn-primary'>Export Results</a>
         else
             ()
 };

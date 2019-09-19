@@ -305,7 +305,12 @@ declare function local:rows2csv($rows) {
       return string-join($items, ',') || codepoints-to-string(10)
 };
 
-let $functionName := request:get-attribute('function')
+let $request := request:get-attribute('function')
+let $functionName :=
+    if(ends-with($request, '.csv')) then 
+        substring-before($request, '.csv')
+    else 
+        $request
 let $function :=
     try {
         function-lookup(QName("http://dhil.lib.sfu.ca/exist/wilde-app/export", $functionName), 0)
