@@ -4,6 +4,8 @@ module namespace app="http://dhil.lib.sfu.ca/exist/wilde-app/templates";
 
 import module namespace kwic="http://exist-db.org/xquery/kwic";
 import module namespace templates="http://exist-db.org/xquery/templates" ;
+import module namespace functx="http://www.functx.com";
+
 import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
 import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
@@ -803,7 +805,7 @@ declare function app:measure($node as node(), $model as map(*)) {
     return <div id="measure-results">
       <dl class='dl-horizontal'>
         <dt>Word lengths</dt>
-        <dd>First passage: {string-length($a)}, Second passage: {string-length($b)}</dd>
+        <dd>First passage: {functx:word-count($a)}, Second passage: {functx:word-count($b)}</dd>
         <dt>Levenshtein</dt>
         <dd>{format-number($lev, "###.#%")}%</dd>
         <dt>Cosine</dt>
