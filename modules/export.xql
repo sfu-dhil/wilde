@@ -286,6 +286,69 @@ declare function export:gephi-document-matches() {
     return ($headers, $body)
 };
 
+declare function export:gephi-papers() {
+  let $headers := 
+    <row>
+        <item>ID</item>
+        <item>Label</item>
+        <item>Language</item>
+        <item>Region</item>
+        <item>City</item>
+    </row>
+
+    let $paperIds := distinct-values(collection:collection()//meta[@name='dc.publisher.id']/@content/string())
+    let $body := 
+        for $id in $paperIds
+        let $doc := collection:documents('dc.publisher.id', $id)[1]
+        return
+            <row>
+                <item>{$id}</item>
+                <item>{document:publisher($doc)}</item>
+                <item>{lang:code2lang(document:language($doc))}</item>
+                <item>{document:region($doc)}</item>
+                <item>{document:city($doc)}</item>
+            </row>
+
+    return ($headers,$body)
+};
+
+declare function local:count-matches($source, $target) {
+    let $sourceDocs := collection:collection()//html[.//meta[@name='dc.publisher.id' and @content=$source]]
+    let $matches :=
+        for $doc in $sourceDocs
+        where $doc//link[@data-paper-id = $target and (@data-type='lev' or @data-type='exact')]
+        return 1
+    return count($matches)
+};
+
+declare function export:gephi-papers-matches() {
+    let $headers := 
+        <row>
+            <item>Source</item>
+            <item>Target</item>
+            <item>Type</item>
+            <item>Weight</item>
+        </row>
+
+    let $paperIds := distinct-values(collection:collection()//meta[@name='dc.publisher.id']/@content/string())
+
+    let $body := 
+        for $source at $sp in $paperIds
+        for $target at $tp in $paperIds
+            where $tp lt $sp
+            let $count := count(collection('/db/apps/wilde-data/data/reports')[.//meta[@name='dc.publisher.id'][@content=$source]][.//link[@data-paper-id=$target]])
+            return if ($count gt 0) then
+                <row>
+                    <item>{$source}</item>
+                    <item>{$target}</item>
+                    <item>Undirected</item>
+                    <item>{$count}</item>
+                </row>
+            else ()
+    
+    return ($headers, $body)    
+};
+
 declare function local:quote($str) {
   '"' || $str || '"'
 };
