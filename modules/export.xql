@@ -130,16 +130,18 @@ declare function export:matching-paragraphs() {
 declare function export:matching() {
     let $headers :=
         <row>
-            <item>Source Id</item>
-            <item>Source date</item>
-            <item>Source paper</item>
-            <item>Source region</item>
-            <item>Target Id</item>
-            <item>Target date</item>
-            <item>Target paper</item>
-            <item>Target region</item>
+            <item>Report Id</item>
+            <item>Report date</item>
+            <item>Report paper</item>
+            <item>Report region</item>
+            <item>Report city</item>
+            <item>Match Id</item>
+            <item>Match date</item>
+            <item>Match paper</item>
+            <item>Match region</item>
+            <item>Match city</item>
             <item>Match type</item>
-            <item>Match</item>
+            <item>Match similarity</item>
         </row>
 
     let $documents := collection:documents()
@@ -148,18 +150,17 @@ declare function export:matching() {
         let $target := collection:fetch($link/@href/string())
         order by document:date($link), document:date($target), $link/@data-similarity descending
         return
-            if((document:date($link) = document:date($target)) and (document:id($link) gt document:id($target))) then ()
-            else if(document:date($link) gt document:date($target)) then ()
-            else
         <row>
             <item>{document:id($link)}</item>
             <item>{document:date($link)}</item>
             <item>{document:publisher($link)}</item>
             <item>{document:region($link)}</item>
+            <item>{document:city($link)}</item>
             <item>{document:id($target)}</item>
             <item>{document:date($target)}</item>
             <item>{document:publisher($target)}</item>
             <item>{document:region($target)}</item>
+            <item>{document:city($target)}</item>
             <item>{$link/@data-type/string()}</item>
             <item>{$link/@data-similarity/string()}</item>
         </row>
