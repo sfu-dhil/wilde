@@ -60,8 +60,16 @@ declare function document:document-matches($node as node()) as node()* {
     root($node)//link[@rel='similarity']
 };
 
+declare function document:document-matches($node as node(), $type as xs:string) as node()* {
+    root($node)//link[@rel='similarity' and (@data-type=$type or @data-type='exact')]
+};
+
 declare function document:paragraph-matches($node as node()) as node()* {
     root($node)//a[contains(@class, 'similarity')]
+};
+
+declare function document:paragraph-matches($node as node(), $type as xs:string) as node()* {
+    root($node)//a[contains(@class, 'similarity') and (@data-type=$type or @data-type='exact')]
 };
 
 declare function document:city($node as node()) as xs:string {
