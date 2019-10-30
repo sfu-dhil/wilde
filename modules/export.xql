@@ -181,8 +181,9 @@ declare function export:signatures() {
         </row>
 
     let $documents := collection:documents()
+    let $paragraphs := $documents//xhtml:div[@id='original']//xhtml:p[@class='signature']
     let $body :=
-        for $p in $documents//xhtml:p[@class='signature']
+        for $p in $paragraphs
         return
         <row>
             <item>{document:id($p)}</item>
@@ -334,17 +335,18 @@ declare function export:gephi-papers-matches() {
 
     let $body := 
         for $source at $sp in $paperIds
-        for $target at $tp in $paperIds
-            where $tp lt $sp
-            let $count := count(collection('/db/apps/wilde-data/data/reports')[.//meta[@name='dc.publisher.id'][@content=$source]][.//link[@data-paper-id=$target]])
-            return if ($count gt 0) then
-                <row>
-                    <item>{$source}</item>
-                    <item>{$target}</item>
-                    <item>Undirected</item>
-                    <item>{$count}</item>
-                </row>
-            else ()
+            let $sourceReports := collection:documents('dc.publisher.id', $source)
+            for $target at $tp in $paperIds
+                where $tp lt $sp
+                let $count := count($sourceReports[.//link[@data-paper-id=$target]])
+                return if ($count gt 0) then
+                    <row>
+                        <item>{$source}</item>
+                        <item>{$target}</item>
+                        <item>Undirected</item>
+                        <item>{$count}</item>
+                    </row>
+                else ()
     
     return ($headers, $body)    
 };
