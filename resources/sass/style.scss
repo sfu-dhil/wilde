@@ -738,7 +738,12 @@ table option {
   height: 160px;
   text-align: center;
   margin-top: 15px;
-
+  img{
+      transform: scale(0.9);
+  }
+  &:hover img{
+      transform: scale(1);
+  }
 }
 
 .thumbnail{
