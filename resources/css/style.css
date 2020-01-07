@@ -739,6 +739,12 @@ table option {
   text-align: center;
   margin-top: 15px;
 }
+.img-container img {
+  transform: scale(0.9);
+}
+.img-container:hover img {
+  transform: scale(1);
+}
 
 .thumbnail {
   width: 100%;
