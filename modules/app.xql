@@ -900,7 +900,7 @@ declare function app:gallery($node as node(), $model as map(*)) as node() {
     let $metadata := collection:image-meta()
 
     return 
-        <div> {
+        <div class="gallery"> {
             for $row in 0 to $rows return
                 <div class="row"> {
                     for $col in 1 to $cols return
@@ -914,7 +914,7 @@ declare function app:gallery($node as node(), $model as map(*)) as node() {
                     
                     return
                     if($index <= count($filenames)) then
-                        <div class="col-xs-12 {$col-size}">                
+                        <div class="col-xs-12 {$col-size} img-tile">                
                             <div class="thumbnail">
                                 <div class="img-container">
                                     <a href="#imgModal" data-toggle="modal" data-title="{$title}" data-date="{$date}" data-target="#imgModal" data-img="images/{$filename}">
