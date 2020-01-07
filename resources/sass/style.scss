@@ -724,10 +724,25 @@ table option {
 }
 
 /* Image gallery styles. */
+
+.gallery .row{
+    display:flex;
+    flex-wrap:wrap;
+    .img-tile{
+        display:flex;
+    }
+}
+
+
 .img-container {
   height: 160px;
   text-align: center;
   margin-top: 15px;
+
+}
+
+.thumbnail{
+    width:100%;
 }
 
 .thumbnail .caption {
