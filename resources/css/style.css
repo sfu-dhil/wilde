@@ -726,10 +726,28 @@ table option {
 }
 
 /* Image gallery styles. */
+.gallery .row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.gallery .row .img-tile {
+  display: flex;
+}
+
 .img-container {
   height: 160px;
   text-align: center;
   margin-top: 15px;
+}
+.img-container img {
+  transform: scale(0.9);
+}
+.img-container:hover img {
+  transform: scale(1);
+}
+
+.thumbnail {
+  width: 100%;
 }
 
 .thumbnail .caption {
