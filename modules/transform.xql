@@ -43,26 +43,15 @@ declare function tx:paragraph($node as node()) as node() {
                 <p id="{$node/@id}" class="text-justify {$node/@class/string()}">
                     { tx:document($node/node()[local-name() != 'a']) }
                 </p>
-                <div id="{$id}_matches" class='similarity'> {
-                  if($match-count gt 0) then
-                      <ul class="nav nav-tabs" role="tablist">
-                          <li role="presentation" class="active"><a href="#{$id}_exact" aria-controls="home" role="tab" data-toggle="tab">Exact ({tx:count-matches($node, 'exact')})</a></li>
-                          <li role="presentation"><a href="#{$id}_lev" aria-controls="home" role="tab" data-toggle="tab">Levenshtein ({tx:count-matches($node, 'lev')})</a></li>
-                          <li role="presentation"><a href="#{$id}_cos" aria-controls="home" role="tab" data-toggle="tab">Cosine ({tx:count-matches($node, 'cos')})</a></li>
-                      </ul>
-                  else
-                    ""
-                  }
-                  {
-                  if($match-count gt 0) then
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="{$id}_exact"> { tx:matches($node, "exact")} </div>
+                
+                <div id="{$id}_matches" class='similarity'> 
+                    <div class="panel panel-default"> {
+                      if($match-count gt 0) then
                         <div role="tabpanel" class="tab-pane" id="{$id}_lev"> { tx:matches($node, "lev")} </div>
-                        <div role="tabpanel" class="tab-pane" id="{$id}_cos"> { tx:matches($node, "cos")} </div>
-                   </div>
-                  else
-                    ""
-                  }
+                      else
+                        ""
+                      }
+                    </div>
                </div>
                 <div class="col-sm-1"></div>
             </div>
