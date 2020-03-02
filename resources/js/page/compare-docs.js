@@ -1,9 +1,9 @@
 (function ($) {
 
     function normalize(string) {
-        var lower = string.toLowerCase();
+        var lower = string.toLowerCase().normalize('NFC');
         var lbs = lower.replace(/(\r\n|\n|\r)/gm, " ");
-        var clean = lbs.replace(/\s+/g, ' ').replace(/[^a-zA-Z0-0 ]/gm, '');        
+        var clean = lbs.replace(/\s+/g, ' ');        
         return clean;
     }
 

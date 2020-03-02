@@ -465,21 +465,6 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
             (<i>None found</i>)
         else
             <div>
-                <div class='panel-heading'>Exact Matches</div>
-                <div class='panel-body'>{
-                    if(count($exact) = 0) then
-                        <i>None found</i>
-                    else
-                        <ul> {
-                            for $link in $exact
-                            let $doc := collection:fetch($link/@href)
-                            return
-                                <li class="{$link/@class}">
-                                    {app:link-view($link/@href, document:title($doc))}<br/>
-                                    <a href='compare-docs.html?a={document:id($model('document'))}&amp;b={document:id($doc)}'>Compare</a>
-                                </li>
-                        } </ul>
-                }</div>
                 <div class='panel-heading'>Levenshtein Matches</div>
                 <div class='panel-body'>{
                     if(count($levens) = 0) then
