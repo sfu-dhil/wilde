@@ -9,29 +9,29 @@ body {
   font-size: 16px;
 }
 
-del{
-    text-decoration: none;
-    background: #fcc;
+del {
+  text-decoration: none;
+  background: #fcc;
 }
 
-ins{
-    text-decoration: none;
-    background: #ccf;
+ins {
+  text-decoration: none;
+  background: #ccf;
 }
 
-strong.match{
-    background-color: yellow;
-    font-weight: normal;
+strong.match {
+  background-color: yellow;
+  font-weight: normal;
 }
 
-div.paragraph-compare{
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid lightgrey;
+div.paragraph-compare {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid lightgrey;
 }
 
 td a {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 // Reports
@@ -40,30 +40,30 @@ p.heading {
 }
 
 p.signature {
-    font-style: italic;
+  font-style: italic;
 }
 
 // Search page
 kbd {
-    color: black;
-    background-color: #eee;
+  color: black;
+  background-color: #eee;
 }
 
 /* images with captions */
 figure {
-    margin: 1em 0;
+  margin: 1em 0;
 }
 
 figcaption {
-    text-align: center;
+  text-align: center;
 }
 
 /* cross headers */
 span.cross-head {
-    display: block;
-    text-transform: uppercase;
-    padding-top: 5px;
-    padding-bottom: 5px;
+  display: block;
+  text-transform: uppercase;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .spacer {
@@ -181,6 +181,7 @@ input.btn-primary {
   .navbar-nav {
     display: flex;
     width: 100%;
+
     > li {
       &:first-child {
         flex-grow: 1;
@@ -218,8 +219,8 @@ input.btn-primary {
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:hover,
 .navbar-default .navbar-nav > .open > a:focus,
-.navbar-default .navbar-nav>li>a:hover,
-.navbar-default .navbar-nav>li>a:focus {
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
   color: $color_blue_light;
 }
 
@@ -241,8 +242,10 @@ a.front-page {
     align-items: center;
     justify-content: center;
     line-height: 1;
+
     span {
       display: block;
+
       &:first-child {
         margin-right: 0.3em;
       }
@@ -262,6 +265,7 @@ a.front-page {
       display: none;
       margin: 0 0.25em;
     }
+
     @include tablet {
       img {
         display: inline;
@@ -290,7 +294,7 @@ a.front-page {
 
   img {
     border: 1px solid #979797;
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.50);
     height: auto;
     width: 100%;
 
@@ -309,6 +313,7 @@ a.front-page {
     // }
   }
 }
+
 // End front page
 
 
@@ -343,7 +348,7 @@ dd {
     .col-sm-4,
     .col-md-6,
     .col-md-8 {
-      &:not(:first-child)::after{
+      &:not(:first-child)::after {
         background: $color_black;
         bottom: 0;
         content: " ";
@@ -367,9 +372,11 @@ th.header {
 .mobile-overflow {
   overflow-x: scroll;
 }
+
 table option {
   font-weight: 400;
 }
+
 .table > caption + thead > tr:first-child > th,
 .table > colgroup + thead > tr:first-child > th,
 .table > thead:first-child > tr:first-child > th,
@@ -399,6 +406,7 @@ table option {
 .stacked-chart-container {
   position: relative;
   margin-bottom: 20px;
+
   .controls {
     position: absolute;
     // top: 24px;
@@ -406,6 +414,7 @@ table option {
     top: 0px;
     left: 18px;
   }
+
   .clickable {
     cursor: pointer;
   }
@@ -428,12 +437,15 @@ table option {
   // opacity: 1;
 
   padding: inherit;
+
   th, td {
     padding: 1px;
+
     &:first-of-type {
       padding-right: 4px;
     }
   }
+
   // filter: alpha(opacity=1);
 }
 
@@ -554,8 +566,8 @@ table option {
   text-anchor: end;
   alignment-baseline: central;
 }
-// end stacked chart
 
+// end stacked chart
 
 
 // sidebar
@@ -569,22 +581,27 @@ table option {
   .btn {
     width: 95px;
   }
+
   .row.matches {
 
     &:last-child {
       padding-bottom: 0.5em;
     }
+
     padding-top: 0.25em;
 
     &.viewing-matches {
       background-color: $color_beige;
 
     }
+
     &:hover {
-        background-color: $color_beige;
+      background-color: $color_beige;
+
       .active {
         position: relative;
       }
+
       .active .active {
         background-color: $color_white;
         border-bottom: 1px solid $color_white;
@@ -597,24 +614,28 @@ table option {
       border-color: lighten($color_light_grey, 50%);
     }
 
-    > li  {
+    > li {
       background-color: transparent;
     }
   }
-  .nav-tabs > li.active  {
+
+  .nav-tabs > li.active {
     position: relative;
     bottom: -1px;
+
     > a,
     > a:hover,
     > a:focus {
       border-bottom: 0;
     }
   }
+
   .tab-pane {
     margin-bottom: 0.5em;
+
     &.active {
       padding: 0.25em 0.5em 0 0.25em;
-      border: 1px solid  lighten($color_light_grey, 50%);
+      border: 1px solid lighten($color_light_grey, 50%);
       border-top: 0;
       background-color: #fff;
       overflow: hidden;
@@ -644,9 +665,10 @@ table option {
 .nav-tabs {
   border-bottom: 1px solid lighten($color_light_grey, 50%);
 }
+
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus,
 .nav-tabs > li > a:hover {
-   border-color: lighten($color_light_grey, 50%);
+  border-color: lighten($color_light_grey, 50%);
 }
 
 .tab-content li.active {
@@ -663,6 +685,7 @@ table option {
   div {
     font-size: 15px;
     line-height: 1.25em;
+
     &:last-child {
       text-align: right;
     }
@@ -686,21 +709,14 @@ table option {
 
   dl {
     width: 100%;
-    // float: left;
-    display: flex;
 
-    &.vertical {
-      display: block;
-      margin: 1em 0;
-
-      dd {
-        margin-left: 2em;
-      }
+    dd {
+      margin-left: 2em;
     }
-  }
 
-  dt {
-    margin-right: 0.5em;
+    dt {
+      margin-right: 0.5em;
+    }
   }
 }
 
@@ -725,12 +741,13 @@ table option {
 
 /* Image gallery styles. */
 
-.gallery .row{
-    display:flex;
-    flex-wrap:wrap;
-    .img-tile{
-        display:flex;
-    }
+.gallery .row {
+  display: flex;
+  flex-wrap: wrap;
+
+  .img-tile {
+    display: flex;
+  }
 }
 
 
@@ -738,16 +755,18 @@ table option {
   height: 160px;
   text-align: center;
   margin-top: 15px;
-  img{
-      transform: scale(0.9);
+
+  img {
+    transform: scale(0.9);
   }
-  &:hover img{
-      transform: scale(1);
+
+  &:hover img {
+    transform: scale(1);
   }
 }
 
-.thumbnail{
-    width:100%;
+.thumbnail {
+  width: 100%;
 }
 
 .thumbnail .caption {

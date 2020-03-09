@@ -697,16 +697,11 @@ table option {
 }
 .panel-metadata dl {
   width: 100%;
-  display: flex;
 }
-.panel-metadata dl.vertical {
-  display: block;
-  margin: 1em 0;
-}
-.panel-metadata dl.vertical dd {
+.panel-metadata dl dd {
   margin-left: 2em;
 }
-.panel-metadata dt {
+.panel-metadata dl dt {
   margin-right: 0.5em;
 }
 

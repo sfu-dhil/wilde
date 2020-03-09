@@ -350,6 +350,10 @@ declare function app:doc-date($node as node(), $model as map(*)) as xs:string {
     string(document:date($model('document')))
 };
 
+declare function app:doc-updated($node as node(), $model as map(*)) as xs:string {
+    document:updated($model('document'))
+};
+
 declare function app:doc-publisher($node as node(), $model as map(*)) as xs:string {
     document:publisher($model('document'))
 };
