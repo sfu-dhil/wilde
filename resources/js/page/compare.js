@@ -1,10 +1,12 @@
 (function ($) {
+
     function normalize(string) {
-        var lower = string.toLowerCase();
+        var lower = string.toLowerCase().normalize('NFC');
         var lbs = lower.replace(/(\r\n|\n|\r)/gm, " ");
-        var clean = lbs.replace(/\s+/g, ' ');
+        var clean = lbs.replace(/\s+/g, ' ');        
         return clean;
     }
+    
     function htmlize(diffs) {
         var html =[];
         var pattern_amp = /&amp;/g;

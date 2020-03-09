@@ -44,6 +44,14 @@ declare function document:date($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.date']/@content)
 };
 
+declare function document:updated($node as node()) as xs:string {
+    let $node := root($node)//meta[@name='dc.date.updated']
+    return if($node) then
+        $node/@content
+    else
+        ''
+};
+
 declare function document:publisher($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.publisher']/@content)
 };
