@@ -751,6 +751,12 @@ table option {
   }
 }
 
+@media (min-width: 768px) {
+  .gallery .row .col-sm-4 {
+    width:33%;
+  }
+}
+
 .img-container {
   height: 160px;
   text-align: center;

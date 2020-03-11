@@ -730,6 +730,11 @@ table option {
   width: 33.3% !important;
 }
 
+@media (min-width: 768px) {
+  .gallery .row .col-sm-4 {
+    width: 33%;
+  }
+}
 .img-container {
   height: 160px;
   text-align: center;
