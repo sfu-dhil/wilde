@@ -727,6 +727,7 @@ table option {
 }
 .gallery .row .img-tile {
   display: flex;
+  width: 33.3% !important;
 }
 
 .img-container {
