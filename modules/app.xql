@@ -65,7 +65,6 @@ declare function local:count($list, $item) as xs:integer {
 };
 
 declare function app:browse-date($node as node(), $model as map(*)) as node() {
-  let $collection := collection:documents()
   let $date := request:get-parameter('date', false())
   return
     if($date) then
@@ -76,22 +75,15 @@ declare function app:browse-date($node as node(), $model as map(*)) as node() {
         return <li>{app:link-view(document:id($document), document:title($document))} ({document:language($document)})</li>
       } </ul>
     else
+      let $collection := collection:documents()
       let $dates := $collection//xhtml:meta[@name="dc.date"]/@content
-      let $languages := distinct-values($collection//xhtml:meta[@name="dc.language"]/@content)
       return
-        <ul data-languages="{string-join($languages, ',')}" id='languages'> {
+        <ul> {
             for $date in distinct-values($dates)
             let $dateCount := count($dates[ . = $date ])
             order by $date
             return
-              <li> {
-                attribute data-date { $date },
-                attribute data-count { $dateCount },
-                for $language in $languages
-                return attribute
-                  { "data-" || $language }
-                  { count($collection//xhtml:head[./xhtml:meta[@name='dc.date'][@content=$date]][./xhtml:meta[@name='dc.language'][@content=$language]]) }
-              }
+              <li>
                 <a href="?date={$date}">{$date}</a>: { $dateCount }
               </li>
         } </ul>

@@ -177,6 +177,10 @@ input.btn-primary {
   border: 0;
 }
 
+.dropdown > a::after {
+  content: "\25BE";
+}
+
 @include tablet {
   .navbar-nav {
     display: flex;

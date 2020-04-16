@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* encode-sans-regular - latin */
 @font-face {
   font-family: "Encode Sans";
@@ -264,6 +265,10 @@ input.btn-primary:active {
 
 .dropdown-menu {
   border: 0;
+}
+
+.dropdown > a::after {
+  content: "▾";
 }
 
 @media (min-width: 768px) {
