@@ -4,6 +4,7 @@
   <property name="project.version" value="${package(version)}" />
   <property name="project.app" value="wilde" />
   <property name="build.dir" value="build" />
+  <property name="cache.base" value="http://localhost:8080/exist/wilde"/>
   <property name="report.list" value="https://dhil.lib.sfu.ca/wilde/list-nocache.html" />
 
   <fileset id="console-usages" dir="." includes="**/*.xql">
@@ -21,8 +22,13 @@
   </target>
 
   <target name="cache-list">
-    <get src="${report.list}"
-          dest="list.html"/>
+    <get src="${cache.base}/city-nocache.html" dest="city.html"/>
+    <get src="${cache.base}/date-nocache.html" dest="date.html"/>
+    <get src="${cache.base}/language-nocache.html" dest="language.html"/>
+    <get src="${cache.base}/newspaper-nocache.html" dest="newspaper.html"/>
+    <get src="${cache.base}/region-nocache.html" dest="region.html"/>
+    <get src="${cache.base}/list-nocache.html" dest="list.html"/>
+    <get src="${cache.base}/source-nocache.html" dest="source.html"/>
   </target>
 
   <target name="docs">
