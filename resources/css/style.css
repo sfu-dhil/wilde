@@ -268,7 +268,8 @@ input.btn-primary:active {
 }
 
 .dropdown > a::after {
-  content: "▾";
+  content: " ▾";
+  padding-left: 0.5em;
 }
 
 @media (min-width: 768px) {

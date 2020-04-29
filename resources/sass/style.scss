@@ -178,7 +178,8 @@ input.btn-primary {
 }
 
 .dropdown > a::after {
-  content: "\25BE";
+  content: " \25BE";
+  padding-left: 0.5em;
 }
 
 @include tablet {
