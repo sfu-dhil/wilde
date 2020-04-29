@@ -6,6 +6,11 @@
 .DS_Store
 .sass-cache
 style.css.map
-/list.html
 .idea
 .ant-targets-build.xml
+/list.html
+/city.html
+/date.html
+/language.html
+/newspaper.html
+/region.html
