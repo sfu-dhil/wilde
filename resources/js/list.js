@@ -8,15 +8,17 @@
         sortable: false,
         filterStrictSearch: false,
         filterControl: true,
-        filterDataCollector: function (fieldValue, data, formattedValue) {
-            var date = $(fieldValue).text();
-            return date;
-        },
         
         columns:[ {
             // The date field must be configured explicitly or the select widget doesn't show up.
             field: "date",
-            filterControl: "select"
+            title: "Date",
+            filterControl: "select",
+            filterDataCollector: function (fieldValue, data, formattedValue) {
+                console.log([fieldValue, data, formattedValue]);
+                var date = $(fieldValue).text();
+                return date;
+            }
         }]
     };
     
