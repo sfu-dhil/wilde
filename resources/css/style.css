@@ -733,7 +733,7 @@ table option {
 }
 .gallery .row .img-tile {
   display: flex;
-  width: 33.3% !important;
+  width: 33% !important;
 }
 
 @media (min-width: 768px) {
