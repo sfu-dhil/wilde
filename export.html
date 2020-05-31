@@ -7,6 +7,7 @@
             <p>To access different sets of bibliographical, match, and network data generated about the
                 news reports, export the UTF-8 CSV files. The first row contains header information.
                 Fields are quoted and separated by commas.</p>
+            <p>Data last updated on May 8, 2020.</p>
         </div>
     </div>
     <div class="row">
@@ -15,7 +16,7 @@
                 <a href="export/volume.csv">Volume of news</a>
             </dt>
             <dd>Export all of the metadata for all the reports as <br/>
-                <ol class="list-inline">
+                <ul>
                     <li>Id</li>
                     <li>Date</li>
                     <li>Word count</li>
@@ -25,14 +26,14 @@
                     <li>Region</li>
                     <li>City</li>
                     <li>Language</li>
-                </ol>
-                <p>In this spreadsheet only Levenshtein matches will be counted.</p>
+                </ul>
+           
             </dd>
             <dt>
                 <a href="export/matching.csv">Matching documents</a>
             </dt>
             <dd>Export all of the document-level matching data as<br/>
-                <ol class="list-inline">
+                <ul class="list-inline">
                     <li>Report Id</li>
                     <li>Report date</li>
                     <li>Report paper</li>
@@ -45,13 +46,13 @@
                     <li>Match city</li>
                     <li>Match type</li>
                     <li>Match similarity</li>
-                </ol>
+                </ul>
             </dd>
             <dt>
                 <a href="export/matching-paragraphs.csv">Matching paragraphs</a>
             </dt>
             <dd>Export all of the document-level matching data as<br/>
-                <ol class="list-inline">
+                <ul class="list-inline">
                     <li>Source Id</li>
                     <li>Source date</li>
                     <li>Source paper</li>
@@ -66,11 +67,11 @@
                     <li>Target language</li>
                     <li>Match type</li>
                     <li>Match</li>
-                </ol>
+                </ul>
             </dd>
             <dt><a href="export/signatures.csv">Signatures</a></dt>
             <dd>Export a list of signed reports as <br/>
-                <ol class="list-inline">
+                <ul class="list-inline">
                     <li>Id</li>
                     <li>Date</li>
                     <li>Newspaper Title</li>
@@ -78,18 +79,18 @@
                     <li>City</li>
                     <li>Language</li>
                     <li>Signature</li>
-                </ol>
+                </ul>
             </dd>
             <dt><a href="export/bibliography.csv">Bibliography</a></dt>
             <dd>Export a list of all reports as <br/>
-                <ol class="list-inline">
+                <ul class="list-inline">
                     <li>Id</li>
                     <li>Date</li>
                     <li>Newspaper Title</li>
                     <li>Country</li>
                     <li>City</li>
                     <li>Language</li>
-                </ol>
+                </ul>
             </dd>
         </dl>
 
@@ -97,24 +98,24 @@
         <dl>
             <dt><a href="export/gephi-documents.csv">Node Table</a></dt>
             <dd>Export a list of all documents that contain matches as <br/>
-                <ol class="list-inline">
+                <ul class="list-inline">
                     <li>ID</li>
                     <li>Label</li>
                     <li>Language</li>
                     <li>Region</li>
                     <li>City</li>
-                </ol>
+                </ul>
             </dd>
 
             <dt><a href="export/gephi-document-matches.csv">Match Table</a></dt>
             <dd>Export a list of all document-level matches as <br/>
-                <ol class="list-inline">
+                <ul class="list-inline">
                     <li>Source</li>
                     <li>Target</li>
                     <li>Type</li>
                     <li>Match Type</li>
                     <li>Weight</li>
-                </ol>
+                </ul>
             </dd>
         </dl>
         
@@ -125,23 +126,23 @@
         <dl>
             <dt><a href="export/gephi-papers.csv">Papers</a></dt>
             <dd>Export a list of newspapers as 
-            <ol class="list-inline">
+            <ul class="list-inline">
                 <li>ID</li>
                 <li>Label</li>
                 <li>Language</li>
                 <li>Region</li>
                 <li>City</li>                
-            </ol>
+            </ul>
             </dd>
             
             <dt><a href="export/gephi-papers-matches.csv">Paper Matches</a></dt>
             <dd>Export a list of paper matches showing how frequently the newspapers copied each other.
-                <ol class="list-inline">
+                <ul class="list-inline">
                     <li>Source</li>
                     <li>Target</li>
                     <li>Type</li>
                     <li>Weight</li>
-                </ol>
+                </ul>
             </dd>
         </dl>
         
