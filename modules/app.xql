@@ -412,7 +412,6 @@ declare function app:paragraph-indexed($node as node(), $model as map(*)) as xs:
 
 declare function app:document-similarities($node as node(), $model as map(*)) as node()* {
     let $similarities := document:similar-documents($model('document'))
-    let $cosines := $similarities[@data-type='cos']
     let $levens := $similarities[@data-type='lev']
     let $exact := $similarities[@data-type='exact']
 
@@ -421,7 +420,6 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
             (<i>None found</i>)
         else
             <div>
-                <div class='panel-heading'>Levenshtein Matches</div>
                 <div class='panel-body'>{
                     if(count($levens) = 0) then
                         <i>None found</i>
