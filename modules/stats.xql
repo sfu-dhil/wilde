@@ -67,8 +67,8 @@ declare function stats:count-paragraphs-with-matches() as xs:int {
 declare function stats:count-paragraph-matches() as xs:int {
   let $wc := 
     for $d in collection:documents()
-    return count($d//a[@class='similarity'])
-  return sum($wc) / 2
+    return count($d//a)
+  return sum($wc) div 2
 };
 
 (:~
