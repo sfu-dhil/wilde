@@ -39,7 +39,7 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
                     <th data-field="language" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Language</th>
                     <th data-field="document-matches" data-sortable="true">Document <br/>Matches</th>
                     <th data-field="paragraph-matches" data-sortable="true">Paragraph <br/>Matches</th>
-                    <th data-field="words" data-sortable="true">Words</th>
+                    <th data-field="words" data-sortable="true">Word Count</th>
                 </tr>
             </thead>
             <tbody>{
@@ -412,7 +412,6 @@ declare function app:paragraph-indexed($node as node(), $model as map(*)) as xs:
 
 declare function app:document-similarities($node as node(), $model as map(*)) as node()* {
     let $similarities := document:similar-documents($model('document'))
-    let $cosines := $similarities[@data-type='cos']
     let $levens := $similarities[@data-type='lev']
     let $exact := $similarities[@data-type='exact']
 
@@ -421,7 +420,6 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
             (<i>None found</i>)
         else
             <div>
-                <div class='panel-heading'>Levenshtein Matches</div>
                 <div class='panel-body'>{
                     if(count($levens) = 0) then
                         <i>None found</i>
@@ -744,10 +742,8 @@ declare function app:measure($node as node(), $model as map(*)) {
       <dl class='dl-horizontal'>
         <dt>Word counts</dt>
         <dd>First passage: {functx:word-count($a)}, Second passage: {functx:word-count($b)}</dd>
-        <dt>Levenshtein</dt>
+        <dt>Similarity</dt>
         <dd>{format-number($lev, "###.#%")}%</dd>
-        <dt>Cosine</dt>
-        <dd>{format-number($cos, "###.#%")}%</dd>
         <dt>Difference</dt>
         <dd id='difference'></dd>
       </dl>
