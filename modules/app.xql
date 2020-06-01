@@ -39,7 +39,7 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
                     <th data-field="language" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Language</th>
                     <th data-field="document-matches" data-sortable="true">Document <br/>Matches</th>
                     <th data-field="paragraph-matches" data-sortable="true">Paragraph <br/>Matches</th>
-                    <th data-field="words" data-sortable="true">Words</th>
+                    <th data-field="words" data-sortable="true">Word Count</th>
                 </tr>
             </thead>
             <tbody>{
