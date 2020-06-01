@@ -744,10 +744,8 @@ declare function app:measure($node as node(), $model as map(*)) {
       <dl class='dl-horizontal'>
         <dt>Word counts</dt>
         <dd>First passage: {functx:word-count($a)}, Second passage: {functx:word-count($b)}</dd>
-        <dt>Levenshtein</dt>
+        <dt>Similarity</dt>
         <dd>{format-number($lev, "###.#%")}%</dd>
-        <dt>Cosine</dt>
-        <dd>{format-number($cos, "###.#%")}%</dd>
         <dt>Difference</dt>
         <dd id='difference'></dd>
       </dl>
