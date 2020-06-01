@@ -94,7 +94,6 @@ declare function export:matching-paragraphs() {
             <item>Target region</item>
             <item>Target city</item>
             <item>Target language</item>
-            <item>Match type</item>
             <item>Match</item>
         </row>
 
@@ -120,7 +119,6 @@ declare function export:matching-paragraphs() {
             <item>{document:region($target)}</item>
             <item>{document:city($target)}</item>
             <item>{document:language($target)}</item>
-            <item>{$link/@data-type/string()}</item>
             <item>{$link/@data-similarity/string()}</item>
         </row>
 
@@ -140,7 +138,6 @@ declare function export:matching() {
             <item>Match paper</item>
             <item>Match region</item>
             <item>Match city</item>
-            <item>Match type</item>
             <item>Match similarity</item>
         </row>
 
@@ -161,7 +158,6 @@ declare function export:matching() {
             <item>{document:publisher($target)}</item>
             <item>{document:region($target)}</item>
             <item>{document:city($target)}</item>
-            <item>{$link/@data-type/string()}</item>
             <item>{$link/@data-similarity/string()}</item>
         </row>
 
@@ -265,7 +261,6 @@ declare function export:gephi-document-matches() {
             <item>Source</item>
             <item>Target</item>
             <item>Type</item>
-            <item>Match Type</item>
             <item>Weight</item>
         </row>
         
@@ -274,13 +269,11 @@ declare function export:gephi-document-matches() {
         for $doc in $documents
         where count(document:document-matches($doc)) > 0
         for $link in document:document-matches($doc)
-              (:<link href="rnm_1443" class="similarity cos" rel="similarity" data-similarity="0.9758894820754566" data-type="cos"/>:)        
             return
                 <row>
                     <item>{document:id($doc)}</item>
                     <item>{$link/@href/string()}</item>  
                     <item>Undirected</item>
-                    <item>{$link/@data-type/string()}</item>
                     <item>{$link/@data-similarity/string()}</item>
                 </row>
             
@@ -317,7 +310,7 @@ declare function local:count-matches($source, $target) {
     let $sourceDocs := collection:collection()//html[.//meta[@name='dc.publisher.id' and @content=$source]]
     let $matches :=
         for $doc in $sourceDocs
-        where $doc//link[@data-paper-id = $target and (@data-type='lev' or @data-type='exact')]
+        where $doc//link[@data-paper-id = $target]
         return 1
     return count($matches)
 };
