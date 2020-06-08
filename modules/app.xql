@@ -240,6 +240,11 @@ declare function app:browse-city($node as node(), $model as map(*)) as node() {
         } </ul>
 };
 
+declare function app:parameter($node as node(), $model as map(*), $name as xs:string) as xs:string {
+  let $p := request:get-parameter($name, false())
+  return serialize($p)
+};
+
 declare function app:details-city($node as node(), $model as map(*)) as node() {
   let $city := request:get-parameter('city', false())
   return
