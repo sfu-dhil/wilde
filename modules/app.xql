@@ -240,6 +240,14 @@ declare function app:browse-city($node as node(), $model as map(*)) as node() {
         } </ul>
 };
 
+declare function app:parameter($node as node(), $model as map(*), $name as xs:string) as xs:string {
+  let $p := request:get-parameter($name, false())
+  return if($name = 'language') then
+        lang:code2lang($p)
+    else
+        serialize($p)
+};
+
 declare function app:details-city($node as node(), $model as map(*)) as node() {
   let $city := request:get-parameter('city', false())
   return
@@ -621,7 +629,7 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
                     if (count($links) gt 0) then
                         for $link in $links 
                         return 
-                            <span style="display:block;">{local:measure($link/@data-type)}: {format-number($link/@data-similarity, "###.#%")}%</span>
+                            <span style="display:block;">Match: {format-number($link/@data-similarity, "###.#%")}%</span>
                     else "Not significantly similar"
                 } </div>
         </div>
