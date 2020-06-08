@@ -621,7 +621,7 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
                     if (count($links) gt 0) then
                         for $link in $links 
                         return 
-                            <span style="display:block;">{local:measure($link/@data-type)}: {format-number($link/@data-similarity, "###.#%")}%</span>
+                            <span style="display:block;">Match: {format-number($link/@data-similarity, "###.#%")}%</span>
                     else "Not significantly similar"
                 } </div>
         </div>
