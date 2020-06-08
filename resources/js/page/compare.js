@@ -48,8 +48,8 @@
                 var diff = dmp.diff_main(a, b);
                 dmp.diff_cleanupSemantic(diff);
                 var html = htmlize(diff);
-                $d.html(html);
-                $d.append("<br/>Match: " + $this.data('score') + " Levenshtein");
+                $d.html('<p>' + html + '</p>');
+                $d.append("Match: " + $this.data('score'));
             }
         });
     });
