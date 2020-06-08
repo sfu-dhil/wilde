@@ -242,7 +242,10 @@ declare function app:browse-city($node as node(), $model as map(*)) as node() {
 
 declare function app:parameter($node as node(), $model as map(*), $name as xs:string) as xs:string {
   let $p := request:get-parameter($name, false())
-  return serialize($p)
+  return if($name = 'language') then
+        lang:code2lang($p)
+    else
+        serialize($p)
 };
 
 declare function app:details-city($node as node(), $model as map(*)) as node() {
