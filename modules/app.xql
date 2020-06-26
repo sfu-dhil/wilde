@@ -85,7 +85,7 @@ declare function app:details-date($node as node(), $model as map(*)) as node() {
       return <ul> {
         for $document in $docs
         order by document:publisher($document)
-        return <li>{app:link-view(document:id($document), document:title($document))} ({document:language($document)})</li>
+        return <li>{app:link-view(document:id($document), document:title($document))} ({lang:code2lang(document:language($document))})</li>
       } </ul>
 };
 
@@ -149,7 +149,7 @@ declare function app:details-language($node as node(), $model as map(*)) as node
       let $docs := collection:documents('dc.language', $language)
       return <ul> {
         for $document in $docs
-        order by document:title($document)
+        order by document:publisher($document), document:date($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
 };
@@ -175,7 +175,7 @@ declare function app:details-region($node as node(), $model as map(*)) as node()
       let $docs := collection:documents('dc.region', $region)
       return <ul> {
         for $document in $docs
-        order by document:title($document)
+        order by document:publisher($document), document:date($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
 };
@@ -217,7 +217,7 @@ declare function app:details-source($node as node(), $model as map(*)) as node()
       let $docs := collection:documents('dc.source.' || request:get-parameter('type', 'db'), $source)
       return <ul> {
         for $document in $docs
-        order by document:title($document)
+        order by document:publisher($document), document:date($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
 };
@@ -254,7 +254,7 @@ declare function app:details-city($node as node(), $model as map(*)) as node() {
       let $docs := collection:documents('dc.region.city', $city)
       return <ul> {
         for $document in $docs
-        order by document:title($document)
+        order by document:publisher($document), document:date($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
 };
