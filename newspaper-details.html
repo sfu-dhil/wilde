@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround"
+  data-template-with="templates/page.html" data-template-at="content">
   <div class="row">
     <div class="page-header">
-      <h1>Browse by Newspaper</h1>
+      <h1>Browse by Newspaper - <span data-template="app:parameter" data-template-name="publisher"/></h1>
     </div>
   </div>
   <div class="row">
-<p> Listed below are all the news reports on Wilde’s trials that were published in one specific newspaper. Select one of the reports to navigate directly to it.</p>
+    <p> Listed below are all the news reports on Wilde’s trials that were published in <span
+        data-template="app:parameter" data-template-name="publisher"/>. Select one of the reports to
+      navigate directly to it.</p>
     <div data-template="app:details-newspaper"/>
   </div>
   <script type="text/javascript" src="resources/lib/tablesorter/jquery.tablesorter.min.js"/>
-  <script type="text/javascript" src="resources/js/page/newspaper.js"></script>
+  <script type="text/javascript" src="resources/js/page/newspaper.js"/>
 </div>

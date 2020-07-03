@@ -5,7 +5,6 @@
   <property name="project.app" value="wilde" />
   <property name="build.dir" value="build" />
   <property name="cache.base" value="http://localhost:8080/exist/wilde"/>
-  <property name="report.list" value="https://dhil.lib.sfu.ca/wilde/list-nocache.html" />
 
   <fileset id="console-usages" dir="." includes="**/*.xql">
     <contains text="console"/>

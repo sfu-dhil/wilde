@@ -39,7 +39,7 @@ declare function app:browse($node as node(), $model as map(*)) as node() {
                     <th data-field="language" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Language</th>
                     <th data-field="document-matches" data-sortable="true">Document <br/>Matches</th>
                     <th data-field="paragraph-matches" data-sortable="true">Paragraph <br/>Matches</th>
-                    <th data-field="words" data-sortable="true">Words</th>
+                    <th data-field="words" data-sortable="true">Word Count</th>
                 </tr>
             </thead>
             <tbody>{
@@ -85,7 +85,7 @@ declare function app:details-date($node as node(), $model as map(*)) as node() {
       return <ul> {
         for $document in $docs
         order by document:publisher($document)
-        return <li>{app:link-view(document:id($document), document:title($document))} ({document:language($document)})</li>
+        return <li>{app:link-view(document:id($document), document:title($document))} ({lang:code2lang(document:language($document))})</li>
       } </ul>
 };
 
@@ -149,7 +149,7 @@ declare function app:details-language($node as node(), $model as map(*)) as node
       let $docs := collection:documents('dc.language', $language)
       return <ul> {
         for $document in $docs
-        order by document:title($document)
+        order by document:publisher($document), document:date($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
 };
@@ -175,7 +175,7 @@ declare function app:details-region($node as node(), $model as map(*)) as node()
       let $docs := collection:documents('dc.region', $region)
       return <ul> {
         for $document in $docs
-        order by document:title($document)
+        order by document:publisher($document), document:date($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
 };
@@ -217,7 +217,7 @@ declare function app:details-source($node as node(), $model as map(*)) as node()
       let $docs := collection:documents('dc.source.' || request:get-parameter('type', 'db'), $source)
       return <ul> {
         for $document in $docs
-        order by document:title($document)
+        order by document:publisher($document), document:date($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
 };
@@ -240,13 +240,21 @@ declare function app:browse-city($node as node(), $model as map(*)) as node() {
         } </ul>
 };
 
+declare function app:parameter($node as node(), $model as map(*), $name as xs:string) as xs:string {
+  let $p := request:get-parameter($name, false())
+  return if($name = 'language') then
+        lang:code2lang($p)
+    else
+        serialize($p)
+};
+
 declare function app:details-city($node as node(), $model as map(*)) as node() {
   let $city := request:get-parameter('city', false())
   return
       let $docs := collection:documents('dc.region.city', $city)
       return <ul> {
         for $document in $docs
-        order by document:title($document)
+        order by document:publisher($document), document:date($document)
         return <li>{app:link-view(document:id($document), document:title($document))}</li>
       } </ul>
 };
@@ -412,7 +420,6 @@ declare function app:paragraph-indexed($node as node(), $model as map(*)) as xs:
 
 declare function app:document-similarities($node as node(), $model as map(*)) as node()* {
     let $similarities := document:similar-documents($model('document'))
-    let $cosines := $similarities[@data-type='cos']
     let $levens := $similarities[@data-type='lev']
     let $exact := $similarities[@data-type='exact']
 
@@ -421,7 +428,6 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
             (<i>None found</i>)
         else
             <div>
-                <div class='panel-heading'>Levenshtein Matches</div>
                 <div class='panel-body'>{
                     if(count($levens) = 0) then
                         <i>None found</i>
@@ -623,7 +629,7 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
                     if (count($links) gt 0) then
                         for $link in $links 
                         return 
-                            <span style="display:block;">{local:measure($link/@data-type)}: {format-number($link/@data-similarity, "###.#%")}%</span>
+                            <span style="display:block;">Match: {format-number($link/@data-similarity, "###.#%")}%</span>
                     else "Not significantly similar"
                 } </div>
         </div>
@@ -744,10 +750,8 @@ declare function app:measure($node as node(), $model as map(*)) {
       <dl class='dl-horizontal'>
         <dt>Word counts</dt>
         <dd>First passage: {functx:word-count($a)}, Second passage: {functx:word-count($b)}</dd>
-        <dt>Levenshtein</dt>
+        <dt>Similarity</dt>
         <dd>{format-number($lev, "###.#%")}%</dd>
-        <dt>Cosine</dt>
-        <dd>{format-number($cos, "###.#%")}%</dd>
         <dt>Difference</dt>
         <dd id='difference'></dd>
       </dl>

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround" data-template-with="templates/page.html" data-template-at="content">
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround"
+  data-template-with="templates/page.html" data-template-at="content">
   <div class="row">
     <div class="page-header">
-      <h1>Browse by City</h1>
+      <h1>Browse by City - <span data-template="app:parameter" data-template-name="city"/></h1>
+      <p>Below is the list of news reports on Wilde’s trials that were published from <span
+          data-template="app:parameter" data-template-name="city"/>. Select one of the reports to
+        navigate directly to it.</p>
     </div>
   </div>
   <div class="row">
