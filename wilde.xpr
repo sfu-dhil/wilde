@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="22.0">
+    <meta>
+        <filters directoryPatterns="" filePatterns="\Qwilde.xpr\E" positiveFilePatterns="" showHiddenFiles="false"/>
+        <options/>
+    </meta>
+    <projectTree name="wilde.xpr">
+        <folder path="."/>
+    </projectTree>
+</project>
