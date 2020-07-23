@@ -898,14 +898,3 @@ declare function app:gallery($node as node(), $model as map(*)) as node() {
           }
       </div>
 };
-
-declare function functx:last-day-of-month
-  ( $date as xs:anyAtomicType? )  as xs:date? {
-
-   functx:date(year-from-date(xs:date($date)),
-            month-from-date(xs:date($date)),
-            functx:days-in-month($date))
- } ;
- 
- 
-
