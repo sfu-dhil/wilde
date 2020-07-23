@@ -7,7 +7,7 @@ To compile SASS:
 
 
 I can't use ampersands in the content!
-This is an XML thing. It must be &amp; to work.
+This is an XML thing. It must be `&amp`; to work.
 
 
 How to add scripts and css on a per-page basis:
