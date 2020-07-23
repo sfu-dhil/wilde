@@ -625,12 +625,12 @@ declare function app:compare-paragraphs($node as node(), $model as map(*)) {
                 return
                   <div class='row paragraph-compare' data-score="{format-number($q/@data-similarity, "###.#%")}%">
                     <div class="col-sm-4 paragraph-a">
-                    <div class="compare-link">{$la}</div>
-                    {string($other)}</div>
+                        <div class="compare-link">{$la}</div>
+                        <div class='content'>{string($other)}</div>
+                    </div>
                     <div class="col-sm-4 paragraph-b">
-                         <div class="compare-link">{$lb}</div>
-                    {
-                      if($q) then string($q) else '—'
+                     <div class="compare-link">{$lb}</div> {
+                      if($q) then <div class='content'>{string($q)}</div> else '—'
                     } </div>
                     <div class="col-sm-4 paragraph-d" data-caption="Difference">
                     </div>
