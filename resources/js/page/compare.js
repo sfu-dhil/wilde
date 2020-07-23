@@ -38,8 +38,8 @@
         
         $("div.paragraph-compare").each(function () {
             var $this = $(this);
-            var a = normalize($this.find('.paragraph-a').text());
-            var b = normalize($this.find('.paragraph-b').text());
+            var a = normalize($this.find('.paragraph-a .content').text());
+            var b = normalize($this.find('.paragraph-b .content').text());
             var $d = $this.find('.paragraph-d');
             
             if (! b) {
