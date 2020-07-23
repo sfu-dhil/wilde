@@ -18,6 +18,14 @@
   }
 }
 
+@mixin diff-header{
+    display:block;
+    font-weight:bold;
+    margin-top:2rem;
+    margin-bottom:1rem;
+    
+}
+
 @mixin tablet {
   @media (min-width: #{$tablet-width}) {
     @content;

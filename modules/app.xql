@@ -5,7 +5,7 @@ module namespace app="http://dhil.lib.sfu.ca/exist/wilde-app/templates";
 import module namespace kwic="http://exist-db.org/xquery/kwic";
 import module namespace templates="http://exist-db.org/xquery/templates" ;
 import module namespace functx="http://www.functx.com";
-
+import module namespace map="http://www.w3.org/2005/xpath-functions/map";
 import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
 import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
@@ -18,7 +18,6 @@ import module namespace graph="http://dhil.lib.sfu.ca/exist/wilde-app/graph" at 
 declare namespace wilde="http://dhil.lib.sfu.ca/wilde";
 declare namespace string="java:org.apache.commons.lang3.StringUtils";
 declare namespace array="http://www.w3.org/2005/xpath-functions/array";
-
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
@@ -64,19 +63,55 @@ declare function local:count($list, $item) as xs:integer {
   return sum($matches)
 };
 
-declare function app:browse-date($node as node(), $model as map(*)) as node() {
+declare function app:browse-date($node as node(), $model as map(*)) as node()+ {
       let $collection := collection:documents()
-      let $dates := $collection//xhtml:meta[@name="dc.date"]/@content
+      let $dates := $collection//xhtml:meta[@name="dc.date"]/string(@content)
+      let $jDates := $dates[normalize-space(.) castable as xs:date]
+      let $distinctJDates := distinct-values($jDates)
+      let $months := distinct-values(for $date in $jDates return tokenize($date,'-')[2])
+      let $cal-header:= for $n in 1 to 7 return  <div class="cal-cell">{format-date(xs:date('2020-03-0' || $n), '[FNn]')}</div>
       return
-        <ul> {
-            for $date in distinct-values($dates)
-            let $dateCount := count($dates[ . = $date ])
-            order by $date
+        for $month in $months order by xs:integer($month) return
+            let $firstDay := xs:date('1895-' || $month || '-01')
+            let $offset := app:weekday-from-date($firstDay)
+            let $monthLength := app:last-day-of-month($month)
             return
-              <li>
-                <a href="date-details.html?date={$date}">{$date}</a>: { $dateCount }
-              </li>
-        } </ul>
+            <div>
+                <h2>{ format-date($firstDay,'[MNn]') }</h2>
+                <div class="calendar offset-{$offset}">
+                    <div class="cal-header">
+                        {$cal-header}
+                    </div>
+                    <div class="cal-body">
+                        {
+                            for $n in 1 to $monthLength
+                            let $date := string-join(('1895',$month,format-number($n,'00')),'-')
+                            let $dateCount := count($dates[matches(.,$date)])
+                            return
+                            <div class="cal-cell count-{$dateCount}" data-date="{$date}">
+                                <a href="date-details.html?date={$date}">
+                                    <span class="day">{$n}</span>
+                                    <span class="count">{$dateCount}</span>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+};
+
+
+declare function app:last-day-of-month($month as xs:string) as xs:integer{
+let $one-day := xs:dayTimeDuration('P1D')
+let $one-month := xs:yearMonthDuration('P1M')
+let $month-date := xs:date('1895-' || $month || '-01')
+    return xs:integer(day-from-date($month-date + $one-month - $one-day))
+};
+
+
+
+declare function app:weekday-from-date($date as xs:date) as xs:integer{
+    xs:integer(format-date($date, '[F0]')) + 1
 };
 
 declare function app:details-date($node as node(), $model as map(*)) as node() {
@@ -88,6 +123,8 @@ declare function app:details-date($node as node(), $model as map(*)) as node() {
         return <li>{app:link-view(document:id($document), document:title($document))} ({lang:code2lang(document:language($document))})</li>
       } </ul>
 };
+
+
 
 declare function app:browse-newspaper($node as node(), $model as map(*)) as node() {
   let $collection := collection:documents()
@@ -564,17 +601,20 @@ declare function app:compare-paragraphs($node as node(), $model as map(*)) {
 
     let $pa := $da//div[@id='original']//p[not(@class='heading')]
     let $pb := $db//div[@id='original']//p[not(@class='heading')]
+    
+    let $la := app:link-view($a, document:title($da))
+    let $lb := app:link-view($b, document:title($db))
 
     return
       <div>
-        <div class='row'>
+        <div class="row compare-header">
             <div class='col-sm-4'>
                 <b>Original paragraph in <br/>
-                {app:link-view($a, document:title($da))}</b>
+                {$la}</b>
             </div>
             <div class='col-sm-4'>
                 <b>Most similar paragraph from <br/>
-                {app:link-view($b, document:title($db))}</b>
+                {$lb}</b>
             </div>
             <div class='col-sm-4'>
                 <b>Difference</b>
@@ -584,11 +624,16 @@ declare function app:compare-paragraphs($node as node(), $model as map(*)) {
                 let $q := local:find-similar("levenshtein", $pb, $other)
                 return
                   <div class='row paragraph-compare' data-score="{format-number($q/@data-similarity, "###.#%")}%">
-                    <div class='col-sm-4 paragraph-a'>{string($other)}</div>
-                    <div class='col-sm-4 paragraph-b'> {
-                      if($q) then string($q) else ''
+                    <div class="col-sm-4 paragraph-a">
+                    <div class="compare-link">{$la}</div>
+                    {string($other)}</div>
+                    <div class="col-sm-4 paragraph-b">
+                         <div class="compare-link">{$lb}</div>
+                    {
+                      if($q) then string($q) else '—'
                     } </div>
-                    <div class='col-sm-4 paragraph-d'> </div>
+                    <div class="col-sm-4 paragraph-d" data-caption="Difference">
+                    </div>
                 </div>
             }
     </div>
@@ -821,43 +866,46 @@ declare function app:gallery($node as node(), $model as map(*)) as node() {
 
     let $filenames := collection:image-list()
     let $cols := 3
-    let $col-size := 'col-sm-' || (12 idiv $cols)
-    let $rows := count($filenames) idiv $cols
+    let $empty := count($filenames) mod $cols
     let $metadata := collection:image-meta()
-
+    let $tileCount := count($filenames) + $empty
     return 
-        <div class="gallery"> {
-            for $row in 0 to $rows return
-                <div class="row"> {
-                    for $col in 1 to $cols return
-                    let $index := $row * $cols + $col
+        <div class="gallery">{
+            for $index in  1 to $tileCount return
+                if ($index <= count($filenames)) then
                     let $filename := $filenames[$index]
                     let $meta := $metadata//div[@data-filename=$filename]
-                    
                     let $title := if($meta) then $meta/@data-title/string() else ""
                     let $date := if($meta) then $meta/@data-date/string() else ""
                     let $descr := if($meta/node()/text()) then $meta/node() else <p>{$filename}</p>
-                    
                     return
-                    if($index <= count($filenames)) then
-                        <div class="col-xs-12 {$col-size} img-tile">                
-                            <div class="thumbnail">
-                                <div class="img-container">
-                                    <a href="#imgModal" data-toggle="modal" data-title="{$title}" data-date="{$date}" data-target="#imgModal" data-img="images/{$filename}">
-                                        <img src="thumbs/{$filename}" class="img-thumbnail"/>
-                                    </a>
-                                </div>
-                                <div class="caption">                    
-                                    <div class='title'>
-                                        <i>{$title}</i><br/>
-                                        {$date}<br/>
-                                    </div>                                    
-                                    {$descr}
-                                </div>
+                    <div class="img-tile">
+                        <div class="thumbnail">
+                            <div class="img-container">
+                                <a href="#imgModal" data-toggle="modal" data-title="{$title}"  data-date="{$date}" data-target="#imgModal" data-img="images/{$filename}">
+                                    <img alt="{normalize-space(string-join($meta,''))}" src="thumbs/{$filename}" class="img-thumbnail"/>
+                                </a>
+                            </div>
+                            <div class="caption">                    
+                                <div class="title"><i>{$title}</i><br/>{$date}<br/></div>                                    
+                                {$descr}
                             </div>
                         </div>
-                    else
-                        ()
-                } </div>
-        } </div>
+                    </div>
+                    else 
+                    <div class="img-tile empty">
+                    </div>
+          }
+      </div>
 };
+
+declare function functx:last-day-of-month
+  ( $date as xs:anyAtomicType? )  as xs:date? {
+
+   functx:date(year-from-date(xs:date($date)),
+            month-from-date(xs:date($date)),
+            functx:days-in-month($date))
+ } ;
+ 
+ 
+
