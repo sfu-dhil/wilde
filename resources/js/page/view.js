@@ -26,8 +26,6 @@
 
     if (cookies.get('similarity') && cookies.get('similarity') === 'shown') {
       matching_show(null);
-      console.log("sjhowing!");
-
     } else {
       matching_hide(null);
     }

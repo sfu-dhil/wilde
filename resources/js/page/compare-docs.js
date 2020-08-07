@@ -18,9 +18,7 @@
     $(document).ready(function () {
         var a = select("#doc_a");
         var b = select("#doc_b");
-        console.log(a);
-        console.log(b);
-        
+
         var markup = htmldiff(a,b);
         $("#diff").html(markup);
     });

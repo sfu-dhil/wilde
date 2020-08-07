@@ -30,10 +30,6 @@ $('#languages li').each(function(i) {
 
 var language_by_day = [{"name": "English", "values": dates_en}, {"name": "French", "values": dates_fr}, {"name": "Spanish", "values": dates_es}, {"name": "Italian", "values": dates_it}];
 
-
-// console.log(JSON.stringify(language_by_day));
-
-
 // Start stacked bar chart
 var seriesNames = ["Italian", "Spanish", "French", "English"],
   numSamples = 22,
@@ -50,8 +46,6 @@ numSamples = num_dates;
 bar_chart_data = language_by_day;
 
 stack(bar_chart_data);
-
-// console.log(JSON.stringify(bar_chart_data));
 
 var chartMode = "stacked",
   numEnabledSeries = numSeries,
@@ -80,8 +74,6 @@ var chartMode = "stacked",
   tooltipTemplate = _.template("<table><% _.each(bars, function (bar) { %><tr><td><%= bar.name %></td><td><%= Math.round(bar.value) %></td></tr><% }); %></table>"),
   overlayTopPadding = 20,
   tooltipBottomMargin = 12;
-
-  // console.log("width: " + width);
 
 var binsScale = d3.scale.ordinal()
     .domain(d3.range(numSamples))

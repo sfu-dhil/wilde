@@ -15,7 +15,6 @@
             title: "Date",
             filterControl: "select",
             filterDataCollector: function (fieldValue, data, formattedValue) {
-                console.log([fieldValue, data, formattedValue]);
                 var date = $(fieldValue).text();
                 return date;
             }
