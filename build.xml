@@ -15,7 +15,7 @@
     </condition>
   </fail>
 
-  <target depends="cache-list,docs,bower" name="xar">
+  <target depends="cache-list,docs,yarn" name="xar">
     <mkdir dir="${build.dir}" />
     <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/*,wilde.xpr" />
   </target>
@@ -39,8 +39,8 @@
     </exec>
   </target>
 
-  <target name="bower">
-    <exec executable="bower">
+  <target name="yarn">
+    <exec executable="yarn">
       <arg value="install" />
     </exec>
   </target>
