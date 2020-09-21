@@ -21,46 +21,297 @@ declare namespace array="http://www.w3.org/2005/xpath-functions/array";
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
+
+(:
+    Build a link to a report.
+:)
 declare function app:link-view($id as xs:string, $content) as node() {
     <a href="view.html?f={$id}">{$content}</a>
 };
 
-declare function app:browse($node as node(), $model as map(*)) as node() {
-    let $documents := collection:documents()
+(:
+    Create a table showing some of the reports for navigation.
+:)
+declare function local:report-table($reports as node()*) as element() {
+    <table class='table table-striped table-hover table-condensed' id="tbl-browser">
+        <thead>
+            <tr>
+                <th data-field="date">Date</th>
+                <th data-field="newspaper" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Newspaper</th>
+                <th data-field="region" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Region</th>
+                <th data-field="city" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">City</th>
+                <th data-field="language" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Language</th>
+                <th data-field="document-matches" data-sortable="true">Document <br/>Matches</th>
+                <th data-field="paragraph-matches" data-sortable="true">Paragraph <br/>Matches</th>
+                <th data-field="words" data-sortable="true">Word Count</th>
+            </tr>
+        </thead>
+        <tbody>{
+            for $report in $reports
+            return <tr>
+                <td>{app:link-view(document:id($report), document:date($report))}</td>
+                <td>{document:publisher($report)}</td>
+                <td>{document:region($report)}</td>
+                <td>{document:city($report)}</td>
+                <td>{lang:code2lang(document:language($report))}</td>
+                <td>{count(document:document-matches($report))}</td>
+                <td>{count(document:paragraph-matches($report))}</td>
+                <td>{document:word-count($report)}</td>
+            </tr>
+        }</tbody>
+    </table>
+};
+
+(:
+    Count the items in $list that match $item and return the result.
+:)
+declare function local:count($list, $item) as xs:integer {
+  let $matches := for $i in $list
+    return if($item = $i) then 1 else 0
+  return sum($matches)
+};
+
+(:
+    Build a pagination widget to let users move from one page of results to another.
+:)
+declare function local:pagination($count as xs:int, $total as xs:int, $query as xs:string) as element() {
+    let $page := request:get-parameter('page', 1) cast as xs:int   
+    let $span := $config:pagination-window
+    let $pageSize := $config:pagination-size    
+    
+    let $pages := xs:integer($total div $pageSize)+1
+    let $start := max((1, $page - $span))
+    let $end := min(($pages, $page + $span))
+    let $next := min(($pages, $page + 1))
+    let $prev := max((1, $page - 1))
+
     return
+        <div><p>Showing {$count} reports of {$total}.</p>
+        <nav>
+            <ul class='pagination'>
+                <li><a href="?page=1{$query}">⇐</a></li>
+                <li><a href="?page={$prev}{$query}" id='prev-page'>←</a></li>
+
+                {
+                    for $pn in ($start to $end)
+                    let $selected := if($page = $pn) then 'active' else ''
+                    return <li class="{$selected}"><a href="?page={$pn}{$query}">{$pn}</a></li>
+                }
+
+                <li><a href="?page={$next}{$query}" id='next-page'>→</a></li>
+                <li><a href="?page={$pages}{$query}">⇒</a></li>
+            </ul>
+        </nav>
+        </div>
+};
+
+(:
+    Wrapper around local:pagination#3 when there is no query string.
+:)
+declare function local:pagination($count as xs:int, $total as xs:int) as element() {
+    local:pagination($count, $total, '')
+};
+
+(:
+    Find a page of reports where the metadata $name has value $content.
+:)
+declare function local:page($name, $content) {
+    let $page := request:get-parameter('page', 1) cast as xs:int   
+    let $pageSize := $config:pagination-size
+    let $documents := collection:documents($name, $content)
+    let $total := count($documents)
+    
+    let $pagination := subsequence($documents, ($page - 1) * $pageSize+1, $pageSize)
+    return map {
+        "page" := $page,
+        "count" := count($pagination),
+        "total" := $total,
+        "pagination" := $pagination
+    }
+};
+
+(:
+    Find a page of reports.
+:)
+declare function local:page() { 
+    let $page := request:get-parameter('page', 1) cast as xs:int   
+    let $pageSize := $config:pagination-size
+    let $documents := collection:documents()
+    let $total := count($documents)
+    
+    let $pagination := subsequence($documents, ($page - 1) * $pageSize+1, $pageSize)
+    return map {
+        "page" := $page,
+        "count" := count($pagination),
+        "total" := $total,
+        "pagination" := $pagination
+    }
+};
+
+(:
+    Produce a list of reports.
+:)
+declare function app:browse($node as node(), $model as map(*)) as node()* {
+    let $map := local:page()
+    
+    return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total')))
+};
+
+(:
+    Produce a list of cities and count the reports in that city.
+:)
+declare function app:browse-city($node as node(), $model as map(*)) as node() {
+  let $city := request:get-parameter('city', false())
+  return
+    let $collection := collection:documents()
+    let $cities := $collection//xhtml:meta[@name='dc.region.city']/@content
+      return
+        <ul> {
+          for $city in distinct-values($cities)
+          let $count := local:count($cities, $city)
+          order by $city
+          return <li data-city="{$city}" data-count="{$count}">
+              <a href="city-details.html?city={$city}">{$city}</a>: {$count}
+            </li>
+        } </ul>    
+};
+
+(:
+    Produce a list of reports in a city.
+:)
+declare function app:details-city($node as node(), $model as map(*)) as node()* {
+    let $city := request:get-parameter('city', false())
+    let $map := local:page('dc.region.city', $city)    
+    return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total'), '&amp;city=' || $city))
+};
+
+(:
+    Produce a list of languages used in the reports.
+:)
+declare function app:browse-language($node as node(), $model as map(*)) as node() {
+  let $collection := collection:documents()
+  let $languages := $collection//xhtml:meta[@name="dc.language"]/@content
+  return
+    <ul> {
+      for $language in distinct-values($languages)
+      let $count := local:count($languages, $language)
+      order by lang:code2lang($language)
+      return <li data-language="{lang:code2lang($language)}" data-count="{$count}">
+          <a href="language-details.html?language={$language}">{lang:code2lang($language)}</a>:
+          {$count}
+        </li>
+    } </ul>
+};
+
+(:
+    Produce a list of reports in a given language.
+:)
+declare function app:details-language($node as node(), $model as map(*)) as node()* {
+    let $language := request:get-parameter('language', false())
+    let $map := local:page('dc.language', $language)
+    return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total'), '&amp;language=' || $language))
+};
+
+(:
+    Produce a list of newspapers/publishers from the database.
+:)
+declare function app:browse-newspaper($node as node(), $model as map(*)) as node() {
+  let $collection := collection:documents()
+      let $publishers := $collection//xhtml:meta[@name="dc.publisher"]/@content
+      return
         <table class='table table-striped table-hover table-condensed' id="tbl-browser">
             <thead>
                 <tr>
-                    <th data-field="date">Date</th>
-                    <th data-field="newspaper" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Newspaper</th>
-                    <th data-field="region" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Region</th>
-                    <th data-field="city" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">City</th>
-                    <th data-field="language" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Language</th>
-                    <th data-field="document-matches" data-sortable="true">Document <br/>Matches</th>
-                    <th data-field="paragraph-matches" data-sortable="true">Paragraph <br/>Matches</th>
-                    <th data-field="words" data-sortable="true">Word Count</th>
+                   <th>Newspaper</th>
+                   <th>Region</th>
+                   <th>City</th>
+                   <th>Language</th>
+                   <th>Count</th>
                 </tr>
             </thead>
             <tbody>{
-                for $document in $documents
+              for $publisher in distinct-values($publishers)
+              order by $publisher
                 return <tr>
-                    <td>{app:link-view(document:id($document), document:date($document))}</td>
-                    <td>{document:publisher($document)}</td>
-                    <td>{document:region($document)}</td>
-                    <td>{document:city($document)}</td>
-                    <td>{lang:code2lang(document:language($document))}</td>
-                    <td>{count(document:document-matches($document))}</td>
-                    <td>{count(document:paragraph-matches($document))}</td>
-                    <td>{document:word-count($document)}</td>
+                    <td><a href="newspaper-details.html?publisher={$publisher}">{$publisher}</a></td>
+                    <td>{ collection:regions($publisher) }</td>
+                    <td>{ collection:cities($publisher) }</td>
+                    <td>{
+                      string-join(lang:code2lang(collection:languages($publisher)), ', ')
+                    }</td>
+                    <td>{ local:count($publishers, $publisher) }</td>
                 </tr>
             }</tbody>
         </table>
 };
 
-declare function local:count($list, $item) as xs:integer {
-  let $matches := for $i in $list
-    return if($item = $i) then 1 else 0
-  return sum($matches)
+(:
+    Produce a list of reports from a given newspaper/publisher.
+:)
+declare function app:details-newspaper($node as node(), $model as map(*)) as node()* {
+  let $publisher := request:get-parameter('publisher', false())
+  let $map := local:page('dc.publisher', $publisher)
+  return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total'), '&amp;publisher=' || $publisher))
+};
+
+declare function app:browse-region($node as node(), $model as map(*)) as node() {
+  let $collection := collection:documents()
+      let $regions := $collection//xhtml:meta[@name="dc.region"]/@content
+      return
+        <ul> {
+          for $region in distinct-values($regions)
+          let $count := local:count($regions, $region)
+          order by $region
+          return <li data-region="{$region}" data-count="{$count}">
+              <a href="region-details.html?region={$region}">{$region}</a>:
+              {$count}
+            </li>
+        } </ul>
+};
+
+declare function app:details-region($node as node(), $model as map(*)) as node()* {
+  let $region := request:get-parameter('region', false())
+  let $map := local:page('dc.region', $region)
+  return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total'), '&amp;region=' || $region))
+};
+
+declare function app:browse-source($node as node(), $model as map(*)) as node() {
+  let $collection := collection:documents()
+  return
+      <div class='row'>
+        <div class='col-md-6'>
+          <h2>Databases</h2>
+            <ul> {
+              let $sources := $collection//xhtml:meta[@name="dc.source.database"]/@content
+              for $source in distinct-values($sources)
+              let $count := local:count($sources, $source)
+              order by $source
+              return <li>
+                  <a href="source-details.html?source={$source}&amp;type=database">{$source}</a>: {$count}
+                </li>
+            } </ul>
+        </div>
+        <div class='col-md-6'>
+          <h2>Institutions</h2>
+            <ul> {
+              let $sources := $collection//xhtml:meta[@name="dc.source.institution"]/@content
+              for $source in distinct-values($sources)
+              let $count := local:count($sources, $source)
+              order by $source
+              return <li>
+                  <a href="source-details.html?source={$source}&amp;type=institution">{$source}</a>: {$count}
+                </li>
+            } </ul>
+        </div>
+      </div>
+};
+
+declare function app:details-source($node as node(), $model as map(*)) as node()* {
+  let $source := request:get-parameter('source', false())
+  let $type := request:get-parameter('type', 'db')
+  let $map := local:page('dc.source.'||$type, $source)
+  
+  return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total'), '&amp;source=' || $source || '&amp;type=' || $type))
 };
 
 declare function app:browse-date($node as node(), $model as map(*)) as node()+ {
@@ -108,173 +359,14 @@ let $month-date := xs:date('1895-' || $month || '-01')
     return xs:integer(day-from-date($month-date + $one-month - $one-day))
 };
 
-
-
 declare function app:weekday-from-date($date as xs:date) as xs:integer{
     xs:integer(format-date($date, '[F0]')) + 1
 };
 
-declare function app:details-date($node as node(), $model as map(*)) as node() {
+declare function app:details-date($node as node(), $model as map(*)) as node()* {
   let $date := request:get-parameter('date', false())
-      let $docs := collection:documents('dc.date', $date)
-      return <ul> {
-        for $document in $docs
-        order by document:publisher($document)
-        return <li>{app:link-view(document:id($document), document:title($document))} ({lang:code2lang(document:language($document))})</li>
-      } </ul>
-};
-
-
-
-declare function app:browse-newspaper($node as node(), $model as map(*)) as node() {
-  let $collection := collection:documents()
-      let $publishers := $collection//xhtml:meta[@name="dc.publisher"]/@content
-      return
-        <table class='table table-striped table-hover table-condensed' id="tbl-browser">
-            <thead>
-                <tr>
-                   <th>Newspaper</th>
-                   <th>Region</th>
-                   <th>City</th>
-                   <th>Language</th>
-                   <th>Count</th>
-                </tr>
-            </thead>
-            <tbody>{
-              for $publisher in distinct-values($publishers)
-              order by $publisher
-                return <tr>
-                    <td><a href="newspaper-details.html?publisher={$publisher}">{$publisher}</a></td>
-                    <td>{ collection:regions($publisher) }</td>
-                    <td>{ collection:cities($publisher) }</td>
-                    <td>{
-                      string-join(lang:code2lang(collection:languages($publisher)), ', ')
-                    }</td>
-                    <td>{ local:count($publishers, $publisher) }</td>
-                </tr>
-            }</tbody>
-        </table>
-};
-
-declare function app:details-newspaper($node as node(), $model as map(*)) as node() {
-  let $publisher := request:get-parameter('publisher', false())
-      let $docs := collection:documents('dc.publisher', $publisher)
-      return <ul> {
-        for $document in $docs
-        order by document:date($document)
-        return <li>{app:link-view(document:id($document), document:title($document))}</li>
-      } </ul>
-};
-
-declare function app:browse-language($node as node(), $model as map(*)) as node() {
-  let $collection := collection:documents()
-      let $languages := $collection//xhtml:meta[@name="dc.language"]/@content
-      return
-        <ul> {
-          for $language in distinct-values($languages)
-          let $count := local:count($languages, $language)
-          order by $language
-          return <li data-language="{lang:code2lang($language)}" data-count="{$count}">
-              <a href="language-details.html?language={$language}">{lang:code2lang($language)}</a>:
-              {$count}
-            </li>
-        } </ul>
-};
-
-declare function app:details-language($node as node(), $model as map(*)) as node() {
-  let $language := request:get-parameter('language', false())
-      let $docs := collection:documents('dc.language', $language)
-      return <ul> {
-        for $document in $docs
-        order by document:publisher($document), document:date($document)
-        return <li>{app:link-view(document:id($document), document:title($document))}</li>
-      } </ul>
-};
-
-
-declare function app:browse-region($node as node(), $model as map(*)) as node() {
-  let $collection := collection:documents()
-      let $regions := $collection//xhtml:meta[@name="dc.region"]/@content
-      return
-        <ul> {
-          for $region in distinct-values($regions)
-          let $count := local:count($regions, $region)
-          order by $region
-          return <li data-region="{$region}" data-count="{$count}">
-              <a href="region-details.html?region={$region}">{$region}</a>:
-              {$count}
-            </li>
-        } </ul>
-};
-
-declare function app:details-region($node as node(), $model as map(*)) as node() {
-  let $region := request:get-parameter('region', false())
-      let $docs := collection:documents('dc.region', $region)
-      return <ul> {
-        for $document in $docs
-        order by document:publisher($document), document:date($document)
-        return <li>{app:link-view(document:id($document), document:title($document))}</li>
-      } </ul>
-};
-
-declare function app:browse-source($node as node(), $model as map(*)) as node() {
-  let $collection := collection:documents()
-  return
-      <div class='row'>
-        <div class='col-md-6'>
-          <h2>Databases</h2>
-            <ul> {
-              let $sources := $collection//xhtml:meta[@name="dc.source.database"]/@content
-              for $source in distinct-values($sources)
-              let $count := local:count($sources, $source)
-              order by $source
-              return <li>
-                  <a href="source-details.html?source={$source}&amp;type=database">{$source}</a>: {$count}
-                </li>
-            } </ul>
-        </div>
-        <div class='col-md-6'>
-          <h2>Institutions</h2>
-            <ul> {
-              let $sources := $collection//xhtml:meta[@name="dc.source.institution"]/@content
-              for $source in distinct-values($sources)
-              let $count := local:count($sources, $source)
-              order by $source
-              return <li>
-                  <a href="source-details.html?source={$source}&amp;type=institution">{$source}</a>: {$count}
-                </li>
-            } </ul>
-        </div>
-      </div>
-};
-
-declare function app:details-source($node as node(), $model as map(*)) as node() {
-  let $source := request:get-parameter('source', false())
-  return
-      let $docs := collection:documents('dc.source.' || request:get-parameter('type', 'db'), $source)
-      return <ul> {
-        for $document in $docs
-        order by document:publisher($document), document:date($document)
-        return <li>{app:link-view(document:id($document), document:title($document))}</li>
-      } </ul>
-};
-
-
-declare function app:browse-city($node as node(), $model as map(*)) as node() {
-  let $collection := collection:documents()
-  let $city := request:get-parameter('city', false())
-  return
-      let $cities := $collection//xhtml:meta[@name="dc.region.city"]/@content
-      return
-        <ul> {
-          for $city in distinct-values($cities)
-          let $count := local:count($cities, $city)
-          order by $city
-          return <li data-city="{$city}" data-count="{$count}">
-              <a href="city-details.html?city={$city}">{$city}</a>:
-              {$count}
-            </li>
-        } </ul>
+  let $map := local:page('dc.date', $date)
+  return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total'), '&amp;date=' || $date))
 };
 
 declare function app:parameter($node as node(), $model as map(*), $name as xs:string) as xs:string {
@@ -283,17 +375,6 @@ declare function app:parameter($node as node(), $model as map(*), $name as xs:st
         lang:code2lang($p)
     else
         serialize($p)
-};
-
-declare function app:details-city($node as node(), $model as map(*)) as node() {
-  let $city := request:get-parameter('city', false())
-  return
-      let $docs := collection:documents('dc.region.city', $city)
-      return <ul> {
-        for $document in $docs
-        order by document:publisher($document), document:date($document)
-        return <li>{app:link-view(document:id($document), document:title($document))}</li>
-      } </ul>
 };
 
 declare function app:count-documents($node as node(), $model as map(*), $name, $value) as xs:integer {

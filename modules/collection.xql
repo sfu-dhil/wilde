@@ -20,6 +20,10 @@ declare function collection:collection() as node()* {
     collection($config:data-root || '/reports') 
 };
 
+declare function collection:count() as xs:int {
+    count(collection($config:data-root || '/reports'))
+};
+
 declare function collection:graph($filename as xs:string) as node() {
   if(not(matches($filename, '^[a-zA-Z0-9% .-]*$'))) then
     ()
@@ -139,8 +143,7 @@ declare function collection:previous($document) as node()? {
  :)
 declare function collection:documents() as node()* {
     let $collection := collection:collection()
-    return
-        for $doc in $collection
+    for $doc in $collection 
         order by document:region($doc), document:publisher($doc), document:date($doc), document:id($doc)
         return $doc
 };
