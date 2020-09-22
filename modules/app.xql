@@ -48,12 +48,13 @@ declare function local:report-table($reports as node()*) as element() {
         </thead>
         <tbody>{
             for $report in $reports
-            return <tr>
+            return
+            <tr>
                 <td>{app:link-view(document:id($report), document:date($report))}</td>
-                <td>{document:publisher($report)}</td>
-                <td>{document:region($report)}</td>
-                <td>{document:city($report)}</td>
-                <td>{lang:code2lang(document:language($report))}</td>
+                <td>{app:link-details($report, 'publisher', 'newspaper')}</td>
+                <td>{app:link-details($report, 'region', 'region')}</td>
+                <td>{app:link-details($report, 'city', 'city')}</td>
+                <td>{app:link-details($report, 'language', 'language')}</td>
                 <td>{count(document:document-matches($report))}</td>
                 <td>{count(document:paragraph-matches($report))}</td>
                 <td>{document:word-count($report)}</td>
@@ -61,6 +62,36 @@ declare function local:report-table($reports as node()*) as element() {
         }</tbody>
     </table>
 };
+
+
+
+(:
+    Link to a details page ($fn-details.html) based off 
+    of a parameter ($param) in a report ($report)
+:)
+
+declare function app:link-details($report, $param, $fn) as item()* {
+
+    (: Construct the function :)
+    let $fx := function-lookup(xs:QName('document:' || $param), 1)
+    
+    (: Use the function :)
+    let $result := $fx($report)
+    
+    (: Hook in case we need to clean up the value :)
+    let $output := if ($param = 'language') then lang:code2lang($result) else $result
+    return if ($result != '') then 
+        let $query := request:get-parameter($param, false())
+        let $curr := ($query instance of xs:string and $query = $result)
+        
+        (: If you're the current thing being displayed, don't link :)
+        return if ($curr) then $output
+        
+        (: Else make a link :)
+        else <a href="{$fn}-details.html?{$param}={$result}">{$output}</a>
+    else ()
+};
+
 
 (:
     Count the items in $list that match $item and return the result.
