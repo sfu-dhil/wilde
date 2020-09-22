@@ -74,35 +74,35 @@ declare function local:count($list, $item) as xs:integer {
 (:
     Build a pagination widget to let users move from one page of results to another.
 :)
-declare function local:pagination($count as xs:int, $total as xs:int, $query as xs:string) as element() {
+declare function local:pagination($count as xs:int, $total as xs:int, $query as xs:string) as element()? {
     let $page := request:get-parameter('page', 1) cast as xs:int   
     let $span := $config:pagination-window
-    let $pageSize := $config:pagination-size    
-    
-    let $pages := xs:integer($total div $pageSize)+1
-    let $start := max((1, $page - $span))
-    let $end := min(($pages, $page + $span))
-    let $next := min(($pages, $page + 1))
-    let $prev := max((1, $page - 1))
-
-    return
-        <div><p>Showing {$count} reports of {$total}.</p>
-        <nav>
-            <ul class='pagination'>
-                <li><a href="?page=1{$query}">⇐</a></li>
-                <li><a href="?page={$prev}{$query}" id='prev-page'>←</a></li>
-
-                {
-                    for $pn in ($start to $end)
-                    let $selected := if($page = $pn) then 'active' else ''
-                    return <li class="{$selected}"><a href="?page={$pn}{$query}">{$pn}</a></li>
-                }
-
-                <li><a href="?page={$next}{$query}" id='next-page'>→</a></li>
-                <li><a href="?page={$pages}{$query}">⇒</a></li>
-            </ul>
-        </nav>
-        </div>
+    let $pageSize := $config:pagination-size
+    return 
+        if ($total > $pageSize) then
+            let $pages := xs:integer($total div $pageSize)+1
+            let $start := max((1, $page - $span))
+            let $end := min(($pages, $page + $span))
+            let $next := min(($pages, $page + 1))
+            let $prev := max((1, $page - 1))
+            return
+            <div>
+                <p>Showing {$count} reports of {$total}.</p>
+                <nav>
+                    <ul class="pagination">
+                        <li><a href="?page=1{$query}">⇐</a></li>
+                        <li><a href="?page={$prev}{$query}" id='prev-page'>←</a></li>
+                        {
+                            for $pn in ($start to $end)
+                                let $selected := if($page = $pn) then 'active' else ''
+                                return <li class="{$selected}"><a href="?page={$pn}{$query}">{$pn}</a></li>
+                        }
+                        <li><a href="?page={$next}{$query}" id='next-page'>→</a></li>
+                        <li><a href="?page={$pages}{$query}">⇒</a></li>
+                    </ul>
+                </nav>
+            </div>
+        else ()
 };
 
 (:
