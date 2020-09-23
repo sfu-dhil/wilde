@@ -41,9 +41,9 @@ declare function local:report-table($reports as node()*) as element() {
                 <th data-field="region" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Region</th>
                 <th data-field="city" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">City</th>
                 <th data-field="language" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Language</th>
-                <th data-field="document-matches" data-sortable="true">Document <br/>Matches</th>
-                <th data-field="paragraph-matches" data-sortable="true">Paragraph <br/>Matches</th>
-                <th data-field="words" data-sortable="true">Word Count</th>
+                <th data-field="document-matches" data-sortable="true" class="count">Document <br/>Matches</th>
+                <th data-field="paragraph-matches" data-sortable="true" class="count">Paragraph <br/>Matches</th>
+                <th data-field="words" data-sortable="true" class="count">Word Count</th>
             </tr>
         </thead>
         <tbody>{
@@ -55,9 +55,9 @@ declare function local:report-table($reports as node()*) as element() {
                 <td>{app:link-details($report, 'region', 'region')}</td>
                 <td>{app:link-details($report, 'city', 'city')}</td>
                 <td>{app:link-details($report, 'language', 'language')}</td>
-                <td>{count(document:document-matches($report))}</td>
-                <td>{count(document:paragraph-matches($report))}</td>
-                <td>{document:word-count($report)}</td>
+                <td class="count">{count(document:document-matches($report))}</td>
+                <td class="count">{count(document:paragraph-matches($report))}</td>
+                <td class="count">{document:word-count($report)}</td>
             </tr>
         }</tbody>
     </table>
