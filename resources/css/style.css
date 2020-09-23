@@ -50,8 +50,11 @@ h5 {
 
 h2 {
   font-size: 34px;
-  margin-top: 1.5em;
-  margin-bottom: 1em;
+  margin-top: 1em;
+  margin-bottom: 0.75em;
+}
+.row > h2:first-child {
+  margin-top: 0;
 }
 
 h3 {
@@ -62,6 +65,7 @@ p {
   hyphens: auto;
 }
 
+/* Font family taken from Bootstrap */
 body {
   font-size: 16px;
 }
@@ -475,8 +479,18 @@ table option {
   background: #EAE8E3;
 }
 
-table td:nth-child(n+1) a:not(.btn) {
-  text-decoration: none;
+table td:nth-child(n+2) a:not(.btn) {
+  color: inherit;
+}
+table td:nth-child(n+2) a:not(.btn):hover {
+  color: #960000;
+}
+table td.count {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+table th.count {
+  text-align: center;
 }
 
 #languages {
@@ -728,6 +742,9 @@ table td:nth-child(n+1) a:not(.btn) {
   line-height: 1.3em;
 }
 
+.panel-metadata .panel-body {
+  padding-top: 12px;
+}
 .panel-metadata dl,
 .panel-metadata dt,
 .panel-metadata dd {
@@ -737,10 +754,13 @@ table td:nth-child(n+1) a:not(.btn) {
   width: 100%;
 }
 .panel-metadata dl dd {
-  margin-left: 2em;
+  margin-left: 1.8em;
 }
 .panel-metadata dl dt {
   margin-right: 0.5em;
+}
+.panel-metadata dl dt:not(:first-child) {
+  margin-top: 0.4em;
 }
 
 .panel-document-matches ul {
@@ -938,13 +958,15 @@ table td:nth-child(n+1) a:not(.btn) {
   }
 }
 .browse-div + .browse-div {
-  margin-top: 5rem;
+  padding-top: 3rem;
+  margin-top: 2rem;
+  border-top: 2px solid rgba(234, 232, 227, 0.5);
 }
-@media (min-width: 1024px) {
+@media (max-width: 768px) {
   .browse-div + .browse-div {
-    padding-top: 3rem;
-    margin-top: 2rem;
-    border-top: 2px solid rgba(234, 232, 227, 0.5);
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1rem;
   }
 }
 .browse-div h3 {
@@ -952,7 +974,7 @@ table td:nth-child(n+1) a:not(.btn) {
 }
 @media (min-width: 1024px) {
   .browse-div h3 {
-    margin-top: 2rem;
+    margin-top: 1rem;
     width: 10%;
   }
 }
@@ -988,11 +1010,12 @@ ul.browse-list {
 ul.browse-list li {
   list-style-type: none;
   display: block;
-  border: 2px solid #EAE8E3;
+  border: 2px solid rgba(234, 232, 227, 0.4);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   height: 12rem;
   position: relative;
   overflow-y: hidden;
+  transition: border-color 0.25s cubic-bezier(0.79, 0.14, 0.15, 0.86);
 }
 ul.browse-list li:before {
   content: " ";
@@ -1001,40 +1024,64 @@ ul.browse-list li:before {
   height: 12rem;
   width: 100%;
   display: inline-block;
-  background: linear-gradient(#EAE8E3, #f5f4ee);
+  background-color: #EAE8E3;
   opacity: 0.4;
   z-index: -1;
   top: 0;
   transform: translateY(calc(100% - var(--height)));
-  transition: opacity 0.35s cubic-bezier(0.79, 0.14, 0.15, 0.86), transform 0.35s cubic-bezier(0.79, 0.14, 0.15, 0.86);
+  transition: opacity 0.35s cubic-bezier(0.79, 0.14, 0.15, 0.86), background-color 0.35s cubic-bezier(0.79, 0.14, 0.15, 0.86);
+}
+ul.browse-list li:hover {
+  border-color: rgba(234, 232, 227, 0.85);
 }
 ul.browse-list li:hover:before {
-  transform: translateY(0);
-  opacity: 0.3;
+  opacity: 0.85;
 }
 ul.browse-list li a {
   display: flex;
   flex-direction: column;
-  padding: 0.75rem 0.25rem;
-  justify-content: center;
+  padding: 0.25rem;
   align-content: space-between;
   font-weight: bold;
   text-transform: uppercase;
+  height: 100%;
 }
 ul.browse-list li a .name {
-  margin-top: 0.25rem;
   display: block;
   text-align: center;
+  margin: 0.75rem 0.25rem;
   width: 100%;
   color: #960000;
 }
 ul.browse-list li a .count {
   display: block;
-  margin-top: 2.5rem;
-  margin-bottom: -2.5rem;
+  padding-top: 2rem;
   text-align: center;
   font-size: 0.8em;
   color: #333333;
+}
+
+.export-fields {
+  /* Display inline flex to take content width */
+  display: inline-flex;
+  /* But at most take the full 100% */
+  max-width: 100%;
+  /* And make it scrollable if it must */
+  overflow-x: auto;
+  /* And make a monospace */
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 13px;
+  margin-top: 0.5rem;
+  padding-left: 0;
+  padding-right: 0;
+}
+.export-fields li {
+  padding: 0 1em;
+  text-align: center;
+  vertical-align: middle;
+}
+.export-fields li + li {
+  border-left: 1px dashed #CCC;
 }
 
 /*# sourceMappingURL=style.css.map */
