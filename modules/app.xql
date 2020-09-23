@@ -188,24 +188,74 @@ declare function app:browse($node as node(), $model as map(*)) as node()* {
     return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total')))
 };
 
+
+
+
+declare function app:browse-list($name as xs:string, $query as xs:string, $page as xs:string, $alphabetize as xs:boolean) as element()+{
+   let $collection := collection:documents()
+   let $values := $collection//xhtml:meta[@name = $name]/xs:string(@content)
+   let $map := map:merge(for $v in distinct-values($values) return map{$v: local:count($values, $v)})
+   let $max := math:log10(max(for $key in map:keys($map) return $map($key)))
+   let $items : = map:merge(
+        for $key in map:keys($map)
+            let $count := $map($key)
+            let $percent := (math:log10($count) div $max)
+            let $output := if ($query = 'language') then lang:code2lang($key) else $key
+            return 
+                let $node :=
+                <li data-count="{$count}" data-value="{$output}" style="--height: {$percent * 100}%">
+                    <a href="{$page}-details.html?{$query}={$key}">
+                        <span class="name">{$output}</span>
+                        <span class="count">{$count}</span>
+                    </a>
+                </li>
+                return map{$key: $node}
+         )
+   return 
+   app:browse-list($items, $alphabetize)
+};
+
+
+declare function app:browse-list($map as map(*), $alphabetize as xs:boolean){
+    if ($alphabetize) then 
+        for $n in (97 to 122) return
+            let $letter := codepoints-to-string($n)
+            let $keys := map:keys($map)[matches(.,'^' || $letter,'i')]
+            return if (exists($keys)) then 
+                <div class="browse-div alpha-browse-div">
+                    <h3>{upper-case($letter)}</h3>
+                    <div>
+                    <ul class="browse-list">
+                        {
+                            for $key in $keys 
+                            order by $map($key)//@data-value
+                            return $map($key)
+                        }
+                    </ul>
+                </div>
+            </div>
+        else ()
+   else 
+   <div class="browse-div">
+        <ul class="browse-list">{
+            for $key in map:keys($map) 
+            order by $map($key)//@data-value
+            return $map($key)
+    
+        }
+        </ul>
+   </div>
+};
+
+
 (:
     Produce a list of cities and count the reports in that city.
 :)
-declare function app:browse-city($node as node(), $model as map(*)) as node() {
-  let $city := request:get-parameter('city', false())
-  return
-    let $collection := collection:documents()
-    let $cities := $collection//xhtml:meta[@name='dc.region.city']/@content
-      return
-        <ul> {
-          for $city in distinct-values($cities)
-          let $count := local:count($cities, $city)
-          order by $city
-          return <li data-city="{$city}" data-count="{$count}">
-              <a href="city-details.html?city={$city}">{$city}</a>: {$count}
-            </li>
-        } </ul>    
+declare function app:browse-city($node as node(), $model as map(*)) as node()+ {
+   app:browse-list('dc.region.city', 'city', 'city', true()) 
 };
+
+
 
 (:
     Produce a list of reports in a city.
@@ -220,18 +270,7 @@ declare function app:details-city($node as node(), $model as map(*)) as node()* 
     Produce a list of languages used in the reports.
 :)
 declare function app:browse-language($node as node(), $model as map(*)) as node() {
-  let $collection := collection:documents()
-  let $languages := $collection//xhtml:meta[@name="dc.language"]/@content
-  return
-    <ul> {
-      for $language in distinct-values($languages)
-      let $count := local:count($languages, $language)
-      order by lang:code2lang($language)
-      return <li data-language="{lang:code2lang($language)}" data-count="{$count}">
-          <a href="language-details.html?language={$language}">{lang:code2lang($language)}</a>:
-          {$count}
-        </li>
-    } </ul>
+    app:browse-list('dc.language', 'language', 'language', false()) 
 };
 
 (:
@@ -285,19 +324,8 @@ declare function app:details-newspaper($node as node(), $model as map(*)) as nod
   return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total'), '&amp;publisher=' || $publisher))
 };
 
-declare function app:browse-region($node as node(), $model as map(*)) as node() {
-  let $collection := collection:documents()
-      let $regions := $collection//xhtml:meta[@name="dc.region"]/@content
-      return
-        <ul> {
-          for $region in distinct-values($regions)
-          let $count := local:count($regions, $region)
-          order by $region
-          return <li data-region="{$region}" data-count="{$count}">
-              <a href="region-details.html?region={$region}">{$region}</a>:
-              {$count}
-            </li>
-        } </ul>
+declare function app:browse-region($node as node(), $model as map(*)) as node()+ {
+    app:browse-list('dc.region', 'region', 'region', false()) 
 };
 
 declare function app:details-region($node as node(), $model as map(*)) as node()* {
