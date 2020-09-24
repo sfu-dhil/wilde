@@ -22,12 +22,28 @@ declare function document:title($node as node() ) as xs:string {
     return 
     if(string-length($title) gt 1) then
         $title
-    else
+    else 
         "(unknown title)" 
 };
 
 declare function document:subtitle($node as node()) as xs:string {
     string(root($node)//body/p[1])
+};
+
+declare function document:short-title($node as node()) as xs:string{
+    let $headEl := root($node)//p[matches(@class,'(^|\s*)heading(\s*|$)')][1]
+    let $headString := normalize-space($headEl)
+    return if (string-length($headString) gt 1) then
+        document:clip-string($headString)
+    else document:clip-string(document:title($node))
+};
+
+declare function document:clip-string($string as xs:string) as xs:string{
+    let $length := 20
+    return
+        if (string-length($string) <= $length)
+        then $string 
+        else substring($string, 1, $length) || '...'
 };
 
 declare function document:path($node as node()) as xs:string {

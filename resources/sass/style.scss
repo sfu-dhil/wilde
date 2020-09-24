@@ -42,6 +42,149 @@ div.paragraph-compare {
   }
 }
 
+.doc-compare-nav{
+  display:none;
+  @media (max-width: 768px){
+    display:block;
+    .list-inline{
+      margin:0 auto;
+      margin-bottom:2rem;
+      display:flex;
+      justify-content:center;
+      li{
+        width:2rem;
+        height:2rem;
+        border-radius:3rem;
+        margin: 0 1rem;
+
+
+        a{
+          display:block;
+          width:2rem;
+          height:2rem;
+          border-radius:2rem;
+          background: $color_beige;
+          transition: background-color 0.2s ease-in-out;
+          &:hover{
+            background: rgba($color_red_dark, 0.6);
+          }
+          &.active{
+            background: rgba($color_red_dark, 0.8)
+          }
+          }
+
+      }
+    }
+
+
+  }
+}
+
+
+/* Mobile friendly document comparison screen */
+.doc-compare{
+  display:flex;
+  & > div {
+    &:not(:first-child){
+      margin-left:4rem;
+    }
+
+    h3{
+      font-size:inherit;
+      margin-top:0;
+      margin-bottom:3rem;
+      line-height:1.5;
+      height: 4rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    overflow-x:hidden;
+    > div{
+      padding: 0 1rem;
+    }
+
+    /* Now a small formula for getting the slider for the columns
+    in place
+     */
+    @for $n from 1 through 2{
+      &[data-pos = '#{$n}']{
+         $left: $n * -100%;
+          @for $i from 1 through 3 {
+            $em: 5em;
+            @if ($i == 1){
+              $em: 1em
+            }
+            @if ($i == 2){
+              $em: 2.25em;
+            }
+            > div:nth-child(#{$i}){
+              transform:translateX(calc(#{$left} - #{$em}));
+            }
+        }
+      }
+
+    }
+
+    /*
+    &[data-pos = '1']{
+      > div:nth-child(1){
+        transform: translateX(calc(-100% - 1em));
+      }
+      > div:nth-child(2){
+        transform:translateX(calc(-100% - 2.25em));
+      }
+
+      > div:nth-child(3){
+        transform: translateX(calc(-100% - 5em));
+      }
+    }
+    &[data-pos ='2']{
+      > div:nth-child(1){
+        transform: translateX(calc(-200% - 1em));
+      }
+      > div:nth-child(2){
+        transform:translateX(calc(-200% - 2em));
+      }
+
+      > div:nth-child(3){
+        transform:translateX(calc(-200% - 5em));
+      }
+    } */
+
+    & > div{
+      scroll-snap-align:start;
+      min-width:100%;
+      transition: transform 0.3s ease-in-out;
+      h3{
+        margin-bottom: 1rem;
+        height:unset;
+      }
+
+    }
+
+
+  }
+}
+
+/*
+.doc-compare{
+  @media (max-width: 768px){
+    overflow:auto;
+    margin-right:15px;
+    max-height: 70vh;
+    scroll-snap-type: x mandatory;
+    .row{
+      display:flex;
+      .col-sm-4{
+        min-width:100%;
+        scroll-snap-align: start;
+        padding:0 2rem;
+      }
+    }
+  }
+}*/
+
 div.compare-link{
     display:none;
     @media (max-width: 768px){
@@ -113,10 +256,9 @@ body {
 @include link($color_red, $color_red_dark);
 
 // buttons
-a.btn,
-input.btn,
-a.btn-primary,
-input.btn-primary {
+.btn,
+.btn-primary,
+{
   color: $color_white;
   background-color: $color_red_dark;
   border-color: darken($color_red_dark, 25%);
@@ -1070,6 +1212,26 @@ ul.browse-list {
   }
 }
 
+.browse-toggle{
+  display:none;
+  &.js{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-size:90%;
+    margin-bottom: 3rem;
+    margin-top:-1rem;
+    label{
+      font-weight:bold;
+      text-transform:uppercase;
+      margin-right: .5rem;
+    }
+    select {
+      width: fit-content;
+    }
+  }
+}
+
 
 
 .export-fields{
@@ -1097,6 +1259,8 @@ ul.browse-list {
     }
   }
 }
+
+
 
 
  
