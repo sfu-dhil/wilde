@@ -33,16 +33,15 @@ declare function app:link-view($id as xs:string, $content) as node() {
     Create a table showing some of the reports for navigation.
 :)
 declare function local:report-table($reports as node()*, $param as xs:string?) as element() {
-    let $cols := ('date','publisher','region','city','language')
-    let $colsToUse := if ($param) then $cols[. != $param] else $cols
+    let $fields := ('date','publisher','region','city','language')[. != $param]
     return
     <table class="table table-striped table-hover table-condensed" id="tbl-browser">
         <thead>
             <tr>
                 <th>Title</th>
                 {
-                    for $col in $colsToUse
-                    let $name := if ($col = 'publisher') then 'Newspaper' else functx:capitalize-first($col)
+                    for $field in $fields
+                    let $name := if ($field = 'publisher') then 'Newspaper' else functx:capitalize-first($field)
                     return
                     <th>{$name}</th>
                 }
@@ -57,10 +56,10 @@ declare function local:report-table($reports as node()*, $param as xs:string?) a
             <tr>
                 <td data-name="Title">{app:link-view(document:id($report), document:short-title($report))}</td>
                 {
-                    for $col in $colsToUse
-                    let $name := if ($col='publisher') then 'newspaper' else $col
+                    for $field in $fields
+                    let $name := if ($field='publisher') then 'newspaper' else $field
                     return 
-                    <td data-name="{functx:capitalize-first($name)}">{app:link-details($report, $col, $name)}</td>
+                    <td data-name="{functx:capitalize-first($name)}">{app:link-details($report, $field, $name)}</td>
                 }
                 <td data-name="Document Matches" class="count">{count(document:document-matches($report))}</td>
                 <td data-name="Paragraph Matches" class="count">{count(document:paragraph-matches($report))}</td>
@@ -196,89 +195,88 @@ declare function app:browse($node as node(), $model as map(*)) as node()* {
 };
 
 
-
-
-declare function app:browse-list($name as xs:string, $query as xs:string, $page as xs:string, $alphabetize as xs:boolean) as element()+{
+declare function app:browse-items($name as xs:string, $query as xs:string, $page as xs:string) as map(*){
    let $collection := collection:documents()
    let $values := $collection//xhtml:meta[@name = $name]/xs:string(@content)
    let $map := map:merge(for $v in distinct-values($values) return map{$v: local:count($values, $v)})
    let $max := math:log10(max(for $key in map:keys($map) return $map($key)))
-   let $items : = map:merge(
+   return
+   map:merge(
         for $key in map:keys($map)
             let $count := $map($key)
             let $percent := (math:log10($count) div $max)
             let $output := if ($query = 'language') then lang:code2lang($key) else $key
-            return 
-                let $node :=
-                <li data-count="{$count}" data-value="{$output}" style="--height: {$percent * 100}%">
-                    <a href="{$page}-details.html?{$query}={$key}">
-                        <span class="name">{$output}</span>
-                        <span class="count">{$count}</span>
+            return
+                map{$key: 
+                    map{
+                        'count': $count,
+                        'percent': $percent,
+                        'output': $output,
+                        'query': $query,
+                        'page': $page
+                }
+            }
+    )
+};
+
+
+declare function app:browse-list($map as map(*), $append as xs:string?){
+    <div class="browse-div">        
+        <ul class="browse-list">{
+            for $key in map:keys($map) return
+                let $item := map:get($map, $key)
+                order by $item('count')
+                return
+                <li data-count="{$item('count')}" data-value="{$item('output')}" style="--height: {$item('percent') * 100}%">
+                    <a href="{$item('page')}-details.html?{$item('query')}={$key}{$append}">
+                        <span class="name">{$item('output')}</span>
+                        <span class="count">{$item('count')}</span>
                     </a>
                 </li>
-                return map{$key: $node}
-         )
-   return 
-   app:browse-list($items, $alphabetize)
-};
-
-
-declare function app:browse-list($map as map(*), $alphabetize as xs:boolean){
-<div>
- {
-    if ($alphabetize) then 
-        app:browse-alphabetize($map)
-   else 
-        <div class="browse-div">
-            <ul class="browse-list">{
-                for $key in map:keys($map) 
-                order by $map($key)//@data-value
-                return $map($key)
             }
-            </ul>
-        </div>
-  }
-  <script src="resources/js/browse.js"><!--Keep open--></script>
-</div>
-};
-
-declare function app:browse-toggle() as element()+ {
-<div class="browse-toggle">
-<label for="browse-toggle">Order by</label>
-<select name="browse-toggle" class="form-control">
-  <option value="name">Name</option>
-  <option value="count">Count</option>
-</select>
-</div>
-
+          </ul>
+   </div>
 };
 
 declare function app:browse-alphabetize($map as map(*)) as node()+{
-     for $n in (97 to 122) return
-            let $letter := codepoints-to-string($n)
-            let $keys := map:keys($map)[matches(.,'^' || $letter,'i')]
-            return if (exists($keys)) then 
-                <div class="browse-div alpha-browse-div">
-                    <h3>{upper-case($letter)}</h3>
-                    <div>
-                    <ul class="browse-list">
-                        {
-                            for $key in $keys 
-                            order by $map($key)//@data-value
-                            return $map($key)
-                        }
-                    </ul>
-                </div>
-            </div>
-        else ()
+    for $n in (97 to 122) return
+        let $letter := codepoints-to-string($n)
+        let $keys := map:keys($map)[matches(.,'^' || $letter,'i')]
+        return
+            if (exists($keys)) then 
+                let $items := map:merge(for $key in $keys return map{$key: map:get($map, $key)})
+                return
+                    <div class="browse-div alpha-browse-div">
+                        <h3>{upper-case($letter)}</h3>
+                        {app:browse-list($items,())}
+                    </div>
+            else ()
 };
+
+
+declare function app:browse-toggle() as element()+ {
+<div class="browse-toggle">
+    <label for="browse-toggle">Order by</label>
+    <select name="browse-toggle" class="form-control">
+        <option value="name">Name</option>
+        <option value="count">Count</option>
+    </select>
+</div>
+};
+
+
 
 (:
     Produce a list of cities and count the reports in that city.
 :)
 declare function app:browse-city($node as node(), $model as map(*)) as node()+ {
-   (app:browse-toggle(),
-   app:browse-list('dc.region.city', 'city', 'city', true())) 
+   let $items := app:browse-items('dc.region.city', 'city', 'city')
+   return 
+   <div>
+        {app:browse-toggle()}
+        {app:browse-alphabetize($items)}
+        <script src="resources/js/browse.js"></script>
+   </div>
 };
 
 
@@ -296,7 +294,11 @@ declare function app:details-city($node as node(), $model as map(*)) as node()* 
     Produce a list of languages used in the reports.
 :)
 declare function app:browse-language($node as node(), $model as map(*)) as node() {
-    app:browse-list('dc.language', 'language', 'language', false()) 
+    let $items := app:browse-items('dc.language', 'language', 'language')
+    return 
+    <div>
+        {app:browse-list($items,())}
+    </div>
 };
 
 (:
@@ -351,8 +353,13 @@ declare function app:details-newspaper($node as node(), $model as map(*)) as nod
 };
 
 declare function app:browse-region($node as node(), $model as map(*)) as node()+ {
-    (app:browse-toggle(),
-    app:browse-list('dc.region', 'region', 'region', false())) 
+    let $items := app:browse-items('dc.region', 'region', 'region')
+    return 
+    <div>
+        {app:browse-toggle()}
+        {app:browse-list($items,())}
+        <script src="resources/js/browse.js"></script>
+    </div>
 };
 
 declare function app:details-region($node as node(), $model as map(*)) as node()* {
@@ -363,32 +370,18 @@ declare function app:details-region($node as node(), $model as map(*)) as node()
 
 declare function app:browse-source($node as node(), $model as map(*)) as node() {
   let $collection := collection:documents()
+  let $dbs := app:browse-items('dc.source.database','source','source')
+  let $institutions := app:browse-items('dc.source.institution','source','source')
   return
-      <div class='row'>
-        <div class='col-md-6'>
+      <div>
           <h2>Databases</h2>
-            <ul> {
-              let $sources := $collection//xhtml:meta[@name="dc.source.database"]/@content
-              for $source in distinct-values($sources)
-              let $count := local:count($sources, $source)
-              order by $source
-              return <li>
-                  <a href="source-details.html?source={$source}&amp;type=database">{$source}</a>: {$count}
-                </li>
-            } </ul>
-        </div>
-        <div class='col-md-6'>
+          {
+            app:browse-list($dbs,'&amp;type=database')
+          }
           <h2>Institutions</h2>
-            <ul> {
-              let $sources := $collection//xhtml:meta[@name="dc.source.institution"]/@content
-              for $source in distinct-values($sources)
-              let $count := local:count($sources, $source)
-              order by $source
-              return <li>
-                  <a href="source-details.html?source={$source}&amp;type=institution">{$source}</a>: {$count}
-                </li>
-            } </ul>
-        </div>
+          {
+            app:browse-list($institutions,'&amp;type=institution')
+          }
       </div>
 };
 
@@ -511,16 +504,17 @@ declare function app:doc-word-count($node as node(), $model as map(*)) as xs:str
     document:word-count($model('document'))
 };
 
-declare function app:doc-date($node as node(), $model as map(*)) as xs:string {
-    string(document:date($model('document')))
+declare function app:doc-date($node as node(), $model as map(*)) as element()? {
+    app:link-details($model('document'), 'date', 'date')
 };
 
 declare function app:doc-updated($node as node(), $model as map(*)) as xs:string {
     document:updated($model('document'))
 };
 
-declare function app:doc-publisher($node as node(), $model as map(*)) as xs:string {
-    document:publisher($model('document'))
+declare function app:doc-publisher($node as node(), $model as map(*)) as element()? {
+    app:link-details($model('document'), 'publisher', 'newspaper')
+
 };
 
 declare function app:doc-edition($node as node(), $model as map(*)) as xs:string {
@@ -528,12 +522,16 @@ declare function app:doc-edition($node as node(), $model as map(*)) as xs:string
   return if(string-length($edition) gt 0) then " - " || document:edition($model('document')) else ""
 };
 
-declare function app:doc-region($node as node(), $model as map(*)) as xs:string {
-    document:region($model('document'))
+declare function app:doc-region($node as node(), $model as map(*)) as element()? {
+    app:link-details($model('document'), 'region', 'region')
 };
 
-declare function app:doc-city($ndoe as node(), $model as map(*)) as xs:string {
-    document:city($model('document'))
+declare function app:doc-city($node as node(), $model as map(*)) as element()? {
+    app:link-details($model('document'), 'city', 'city')
+};
+
+declare function app:doc-language($node as node(), $model as map(*)) as element()? {
+    app:link-details($model('document'), 'language', 'language')
 };
 
 declare function app:doc-translation-tabs($node as node(), $model as map(*)) as node()* {
@@ -574,9 +572,7 @@ declare function app:doc-content($node as node(), $model as map(*)) as node()* {
     tx:document($model('document')//body/*)
 };
 
-declare function app:doc-language($node as node(), $model as map(*)) as xs:string {
-    lang:code2lang(document:language($model('document')))
-};
+
 
 (:
 * British Library (dc.source.institution if present)
