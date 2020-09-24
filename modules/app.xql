@@ -254,11 +254,11 @@ declare function app:browse-alphabetize($map as map(*)) as node()+{
 };
 
 
-declare function app:browse-toggle() as element()+ {
+declare function app:browse-toggle($defaultName as xs:string) as element()+ {
 <div class="browse-toggle">
     <label for="browse-toggle">Order by</label>
     <select name="browse-toggle" class="form-control">
-        <option value="name">Name</option>
+        <option value="default">{$defaultName}</option>
         <option value="count">Count</option>
     </select>
 </div>
@@ -273,7 +273,7 @@ declare function app:browse-city($node as node(), $model as map(*)) as node()+ {
    let $items := app:browse-items('dc.region.city', 'city', 'city')
    return 
    <div>
-        {app:browse-toggle()}
+        {app:browse-toggle('Name')}
         {app:browse-alphabetize($items)}
         <script src="resources/js/browse.js"></script>
    </div>
@@ -356,7 +356,7 @@ declare function app:browse-region($node as node(), $model as map(*)) as node()+
     let $items := app:browse-items('dc.region', 'region', 'region')
     return 
     <div>
-        {app:browse-toggle()}
+        {app:browse-toggle('Name')}
         {app:browse-list($items,())}
         <script src="resources/js/browse.js"></script>
     </div>
@@ -393,21 +393,36 @@ declare function app:details-source($node as node(), $model as map(*)) as node()
   return (local:report-table($map('pagination'),'source'), local:pagination($map('count'), $map('total'), '&amp;source=' || $source || '&amp;type=' || $type))
 };
 
+
+
 declare function app:browse-date($node as node(), $model as map(*)) as node()+ {
       let $collection := collection:documents()
       let $dates := $collection//xhtml:meta[@name="dc.date"]/string(@content)
-      let $jDates := $dates[normalize-space(.) castable as xs:date]
+      let $calendars := app:browse-calendar($dates)
+      let $script := <script src="resources/js/browse.js"></script>
+      return (app:browse-toggle('Date'), $calendars, $script)
+};
+
+
+declare function app:browse-calendar($dates as xs:string*){
+let $jDates := $dates[normalize-space(.) castable as xs:date]
       let $distinctJDates := distinct-values($jDates)
       let $months := distinct-values(for $date in $jDates return tokenize($date,'-')[2])
-      let $cal-header:= for $n in 1 to 7 return  <div class="cal-cell">{format-date(xs:date('2020-03-0' || $n), '[FNn]')}</div>
+      let $cal-header:= 
+            for $n in 1 to 7 return
+                <div class="cal-cell">
+                    <span class="month-text">{format-date(xs:date('2020-03-0' || $n), '[FNn]')}</span>
+                </div>
+            
       return
         for $month in $months order by xs:integer($month) return
             let $firstDay := xs:date('1895-' || $month || '-01')
             let $offset := app:weekday-from-date($firstDay)
             let $monthLength := app:last-day-of-month($month)
+            let $monthName := format-date($firstDay,'[MNn]')
             return
-            <div>
-                <h2>{ format-date($firstDay,'[MNn]') }</h2>
+            <div class="browse-div">
+                <h2>{ $monthName  }</h2>
                 <div class="calendar offset-{$offset}">
                     <div class="cal-header">
                         {$cal-header}
@@ -419,8 +434,8 @@ declare function app:browse-date($node as node(), $model as map(*)) as node()+ {
                             let $dateCount := count($dates[matches(.,$date)])
                             return
                             <div class="cal-cell count-{$dateCount}" data-date="{$date}">
-                                <a href="date-details.html?date={$date}">
-                                    <span class="day">{$n}</span>
+                                <a href="date-details.html?date={$date}" data-count="{$dateCount}">
+                                    <span class="day" data-month="{$monthName}">{$n}</span>
                                     <span class="count">{$dateCount}</span>
                                 </a>
                             </div>
@@ -428,8 +443,8 @@ declare function app:browse-date($node as node(), $model as map(*)) as node()+ {
                     </div>
                 </div>
             </div>
-};
 
+};
 
 
 declare function app:last-day-of-month($month as xs:string) as xs:integer{

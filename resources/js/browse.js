@@ -5,14 +5,14 @@ let togDiv = document.querySelector('.browse-toggle');
 togDiv.classList.add('js');
 let togSel = togDiv.querySelector('select');
 let alphaBrowseDiv = document.querySelectorAll('.browse-div');
-let items =  document.querySelectorAll('.browse-div li');
+let items =  document.querySelectorAll('.browse-div [data-count]');
 let countDiv;
 
 togSel.addEventListener('change', e=> {
     let selected = togSel.options[togSel.selectedIndex].value;
-    let isName = selected === 'name';
-    toggleNames(isName);
-    if (isName && countDiv) countDiv.classList.add('hidden');
+    let isDefault = (selected === 'default');
+    toggleDefault(isDefault);
+    if (isDefault && countDiv) countDiv.classList.add('hidden');
     if (selected === 'count'){
         if (countDiv){
             countDiv.classList.remove('hidden');
@@ -22,7 +22,7 @@ togSel.addEventListener('change', e=> {
     }
 });
 
-function toggleNames(show){
+function toggleDefault(show){
     if (show){
         alphaBrowseDiv.forEach(div => div.classList.remove('hidden'));
     } else {
@@ -38,12 +38,28 @@ function makeCountDiv(){
     })
     let newList = document.createElement('ul');
     newList.classList.add('browse-list');
-    countDiv.appendChild(newList);
     sorted.forEach(el => {
-        let clone = el.cloneNode(true);
-        newList.appendChild(clone);
+        if (el.tagName === 'A'){
+            if (getCount(el) === 0){
+                return;
+            }
+            let newLi = document.createElement('li');
+            newLi.appendChild(el.cloneNode(true));
+
+            newList.appendChild(newLi);
+            newList.querySelectorAll('.day').forEach(span => {
+                span.classList.remove('day')
+                span.classList.add('name')
+            });
+            newList.style.setProperty('--height', '0%');
+
+        } else {
+            newList.appendChild(el.cloneNode(true));
+        }
     });
+    countDiv.appendChild(newList);
 }
+
 
 function getCount(el){
     return parseInt(el.getAttribute('data-count'), 10);
