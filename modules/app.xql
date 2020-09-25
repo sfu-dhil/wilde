@@ -1133,8 +1133,9 @@ declare function app:gallery($node as node(), $model as map(*)) as node() {
             for $index in  1 to $tileCount return
                 if ($index <= count($filenames)) then
                     let $filename := $filenames[$index]
+                    let $meta := $metadata//div[@data-filename=$filename]
                     return
-                        app:gallery-tile($filename)
+                        app:gallery-tile($filename, $meta)
                 else 
                  <div class="img-tile empty">
                  </div>
@@ -1145,8 +1146,7 @@ declare function app:gallery($node as node(), $model as map(*)) as node() {
 (:
     Create an image tile from a $filename
 :)
-declare function app:gallery-tile($filename as xs:string){
-   let $meta := $metadata//div[@data-filename=$filename]
+declare function app:gallery-tile($filename as xs:string, $meta as node()?){
    let $title := if ($meta) then $meta/@data-title/string() else ""
    let $date := if ($meta) then $meta/@data-date/string() else ""
    let $descr := if($meta/node()/text()) then $meta/node() else <p>{$filename}</p>
