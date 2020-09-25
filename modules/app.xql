@@ -34,16 +34,19 @@ declare function app:link-view($id as xs:string, $content) as node() {
 :)
 declare function local:report-table($reports as node()*, $param as xs:string?) as element() {
     let $fields := ('date','publisher','region','city','language')[. != $param]
+    let $names := map:merge(
+        for $f in $fields return
+        map:entry($f, if ($f  ='publisher') then 'newspaper' else $f)
+    )
     return
     <table class="table table-striped table-hover table-condensed" id="tbl-browser">
         <thead>
             <tr>
                 <th>Title</th>
                 {
-                    for $field in $fields
-                    let $name := if ($field = 'publisher') then 'Newspaper' else functx:capitalize-first($field)
-                    return
-                    <th>{$name}</th>
+                   for $field in $fields
+                   return
+                   <th>{functx:capitalize-first($names($field))}</th>
                 }
                 <th class="count">Document <br/>Matches</th>
                 <th class="count">Paragraph <br/>Matches</th>
@@ -56,10 +59,10 @@ declare function local:report-table($reports as node()*, $param as xs:string?) a
             <tr>
                 <td data-name="Title">{app:link-view(document:id($report), document:short-title($report))}</td>
                 {
-                    for $field in $fields
-                    let $name := if ($field='publisher') then 'newspaper' else $field
-                    return 
-                    <td data-name="{functx:capitalize-first($name)}">{app:link-details($report, $field, $name)}</td>
+                    for $field in $fields return
+                    <td data-name="{functx:capitalize-first($names($field))}">
+                        {app:link-details($report, $field, $names($field))}
+                    </td>
                 }
                 <td data-name="Document Matches" class="count">{count(document:document-matches($report))}</td>
                 <td data-name="Paragraph Matches" class="count">{count(document:paragraph-matches($report))}</td>
@@ -68,7 +71,6 @@ declare function local:report-table($reports as node()*, $param as xs:string?) a
         }</tbody>
     </table>
 };
-
 
 
 (:
@@ -194,7 +196,9 @@ declare function app:browse($node as node(), $model as map(*)) as node()* {
     return (local:report-table($map('pagination'), ()), local:pagination($map('count'), $map('total')))
 };
 
-
+(:
+    Create a map of data for each item in a collection of metadata items
+:)
 declare function app:browse-items($name as xs:string, $query as xs:string, $page as xs:string) as map(*){
    let $collection := collection:documents()
    let $values := $collection//xhtml:meta[@name = $name]/xs:string(@content)
@@ -220,6 +224,10 @@ declare function app:browse-items($name as xs:string, $query as xs:string, $page
 };
 
 
+(:
+    Produce a list from a set of $map of items with an optional
+    string to append to the query
+:)
 declare function app:browse-list($map as map(*), $append as xs:string?){
     <div class="browse-div">        
         <ul class="browse-list">{
@@ -238,22 +246,27 @@ declare function app:browse-list($map as map(*), $append as xs:string?){
    </div>
 };
 
+(:
+    Produce browse lists from a set of items, grouped by first letter
+:)
 declare function app:browse-alphabetize($map as map(*)) as node()+{
     for $n in (97 to 122) return
         let $letter := codepoints-to-string($n)
         let $keys := map:keys($map)[matches(.,'^' || $letter,'i')]
+        let $submap := map:merge(for $key in $keys return map{$key: $map($key)})
         return
             if (exists($keys)) then 
-                let $items := map:merge(for $key in $keys return map{$key: map:get($map, $key)})
-                return
                     <div class="browse-div alpha-browse-div">
                         <h3>{upper-case($letter)}</h3>
-                        {app:browse-list($items,())}
+                        {app:browse-list($submap,())}
                     </div>
             else ()
 };
 
 
+(:
+    Create a toggle menu for the browse display
+:)
 declare function app:browse-toggle($defaultName as xs:string) as element()+ {
 <div class="browse-toggle">
     <label for="browse-toggle">Order by</label>
@@ -352,6 +365,10 @@ declare function app:details-newspaper($node as node(), $model as map(*)) as nod
   return (local:report-table($map('pagination'),'publisher'), local:pagination($map('count'), $map('total'), '&amp;publisher=' || $publisher))
 };
 
+
+(:
+    Produce a list of all available regions in the collection
+:)
 declare function app:browse-region($node as node(), $model as map(*)) as node()+ {
     let $items := app:browse-items('dc.region', 'region', 'region')
     return 
@@ -362,12 +379,20 @@ declare function app:browse-region($node as node(), $model as map(*)) as node()+
     </div>
 };
 
+(:
+    Produce a list of reports for a given region
+:)
+
 declare function app:details-region($node as node(), $model as map(*)) as node()* {
   let $region := request:get-parameter('region', false())
   let $map := local:page('dc.region', $region)
   return (local:report-table($map('pagination'),'region'), local:pagination($map('count'), $map('total'), '&amp;region=' || $region))
 };
 
+(:
+    Produce a list of all sources (databases and institutions)
+    in the collection
+:)
 declare function app:browse-source($node as node(), $model as map(*)) as node() {
   let $collection := collection:documents()
   let $dbs := app:browse-items('dc.source.database','source','source')
@@ -385,6 +410,9 @@ declare function app:browse-source($node as node(), $model as map(*)) as node() 
       </div>
 };
 
+(:
+    Produce a list of reports given a source
+:)
 declare function app:details-source($node as node(), $model as map(*)) as node()* {
   let $source := request:get-parameter('source', false())
   let $type := request:get-parameter('type', 'db')
@@ -394,7 +422,9 @@ declare function app:details-source($node as node(), $model as map(*)) as node()
 };
 
 
-
+(:
+    Produce a list of all dates available for browsing
+:)
 declare function app:browse-date($node as node(), $model as map(*)) as node()+ {
       let $collection := collection:documents()
       let $dates := $collection//xhtml:meta[@name="dc.date"]/string(@content)
@@ -404,60 +434,79 @@ declare function app:browse-date($node as node(), $model as map(*)) as node()+ {
 };
 
 
-declare function app:browse-calendar($dates as xs:string*){
-let $jDates := $dates[normalize-space(.) castable as xs:date]
-      let $distinctJDates := distinct-values($jDates)
-      let $months := distinct-values(for $date in $jDates return tokenize($date,'-')[2])
-      let $cal-header:= 
-            for $n in 1 to 7 return
-                <div class="cal-cell">
-                    <span class="month-text">{format-date(xs:date('2020-03-0' || $n), '[FNn]')}</span>
-                </div>
-            
-      return
-        for $month in $months order by xs:integer($month) return
-            let $firstDay := xs:date('1895-' || $month || '-01')
-            let $offset := app:weekday-from-date($firstDay)
-            let $monthLength := app:last-day-of-month($month)
-            let $monthName := format-date($firstDay,'[MNn]')
-            return
-            <div class="browse-div">
-                <h2>{ $monthName  }</h2>
-                <div class="calendar offset-{$offset}">
-                    <div class="cal-header">
-                        {$cal-header}
-                    </div>
-                    <div class="cal-body">
-                        {
-                            for $n in 1 to $monthLength
-                            let $date := string-join(('1895',$month,format-number($n,'00')),'-')
-                            let $dateCount := count($dates[matches(.,$date)])
-                            return
-                            <div class="cal-cell count-{$dateCount}" data-date="{$date}">
-                                <a href="date-details.html?date={$date}" data-count="{$dateCount}">
-                                    <span class="day" data-month="{$monthName}">{$n}</span>
-                                    <span class="count">{$dateCount}</span>
-                                </a>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
 
+
+(:
+    Create a calendar display for a given set of dates
+:)
+declare function app:browse-calendar($dates as xs:string*){
+    let $jDates := $dates[normalize-space(.) castable as xs:date]
+    let $distinctJDates := distinct-values($jDates)
+    let $months := distinct-values(for $date in $jDates return tokenize($date,'-')[2])
+    let $header := app:calendar-header()
+    for $month in $months 
+    order by xs:integer($month)
+    return
+      let $firstDay := xs:date('1895-' || $month || '-01')
+      let $offset := app:weekday-from-date($firstDay)
+      let $monthLength := app:last-day-of-month($month)
+      let $monthName := format-date($firstDay,'[MNn]')
+      return
+        <div class="browse-div">
+            <h2>{$monthName}</h2>
+            <div class="calendar offset-{$offset}">
+                <div class="cal-header">
+                    {$header}
+                 </div>
+                 <div class="cal-body">{
+                    for $n in 1 to $monthLength
+                        let $date := string-join(('1895',$month,format-number($n,'00')),'-')
+                        let $dateCount := count($dates[matches(.,$date)])
+                        return
+                        <div class="cal-cell count-{$dateCount}" data-date="{$date}">
+                           <a href="date-details.html?date={$date}" data-count="{$dateCount}">
+                              <span class="day" data-month="{$monthName}">{$n}</span>
+                              <span class="count">{$dateCount}</span>
+                           </a>
+                        </div>
+                }</div>
+            </div>
+        </div>
 };
 
 
+(: 
+    Produce the header for a calendar (Sunday start)
+:)
+declare function app:calendar-header(){
+    let $headerDates:= (1 to 7)!format-date(xs:date('2020-03-0' || .), '[FNn]')
+    for $date in $headerDates
+    return
+        <div class="cal-cell">
+            <span class="month-text">{$date}</span>
+        </div>
+};
+
+(:
+    Return the last day of some month in 1895 
+:)
 declare function app:last-day-of-month($month as xs:string) as xs:integer{
-let $one-day := xs:dayTimeDuration('P1D')
-let $one-month := xs:yearMonthDuration('P1M')
-let $month-date := xs:date('1895-' || $month || '-01')
+    let $one-day := xs:dayTimeDuration('P1D')
+    let $one-month := xs:yearMonthDuration('P1M')
+    let $month-date := xs:date('1895-' || $month || '-01')
     return xs:integer(day-from-date($month-date + $one-month - $one-day))
 };
 
+(:
+    Return the numerical weekday from a date
+:)
 declare function app:weekday-from-date($date as xs:date) as xs:integer{
     xs:integer(format-date($date, '[F0]')) + 1
 };
 
+(:
+    Produce a list of reports for a given date
+:)
 declare function app:details-date($node as node(), $model as map(*)) as node()* {
   let $date := request:get-parameter('date', false())
   let $map := local:page('dc.date', $date)
@@ -1069,8 +1118,11 @@ declare function app:graph-view($node as node(), $model as map(*)) as node() {
       <iframe src="gefx.html#{$f}" style="width: 100%; height: 700px;" />
 };
 
-declare function app:gallery($node as node(), $model as map(*)) as node() {
 
+(:
+    Produce the gallery of images
+:)
+declare function app:gallery($node as node(), $model as map(*)) as node() {
     let $filenames := collection:image-list()
     let $cols := 3
     let $empty := count($filenames) mod $cols
@@ -1081,27 +1133,35 @@ declare function app:gallery($node as node(), $model as map(*)) as node() {
             for $index in  1 to $tileCount return
                 if ($index <= count($filenames)) then
                     let $filename := $filenames[$index]
-                    let $meta := $metadata//div[@data-filename=$filename]
-                    let $title := if($meta) then $meta/@data-title/string() else ""
-                    let $date := if($meta) then $meta/@data-date/string() else ""
-                    let $descr := if($meta/node()/text()) then $meta/node() else <p>{$filename}</p>
                     return
-                    <div class="img-tile">
-                        <div class="thumbnail">
-                            <div class="img-container">
-                                <a href="#imgModal" data-toggle="modal" data-title="{$title}"  data-date="{$date}" data-target="#imgModal" data-img="images/{$filename}">
-                                    <img alt="{normalize-space(string-join($meta,''))}" src="thumbs/{$filename}" class="img-thumbnail"/>
-                                </a>
-                            </div>
-                            <div class="caption">                    
-                                <div class="title"><i>{$title}</i><br/>{$date}<br/></div>                                    
-                                {$descr}
-                            </div>
-                        </div>
-                    </div>
-                    else 
-                    <div class="img-tile empty">
-                    </div>
+                        app:gallery-tile($filename)
+                else 
+                 <div class="img-tile empty">
+                 </div>
           }
       </div>
+};
+
+(:
+    Create an image tile from a $filename
+:)
+declare function app:gallery-tile($filename as xs:string){
+   let $meta := $metadata//div[@data-filename=$filename]
+   let $title := if ($meta) then $meta/@data-title/string() else ""
+   let $date := if ($meta) then $meta/@data-date/string() else ""
+   let $descr := if($meta/node()/text()) then $meta/node() else <p>{$filename}</p>
+   return
+   <div class="img-tile">
+       <div class="thumbnail">
+           <div class="img-container">
+               <a href="#imgModal" data-toggle="modal" data-title="{$title}"  data-date="{$date}" data-target="#imgModal" data-img="images/{$filename}">
+                   <img alt="{normalize-space(string-join($meta,''))}" src="thumbs/{$filename}" class="img-thumbnail"/>
+               </a>
+           </div>
+           <div class="caption">                    
+               <div class="title"><i>{$title}</i><br/>{$date}<br/></div>                                    
+               {$descr}
+           </div>
+       </div>
+   </div>
 };
