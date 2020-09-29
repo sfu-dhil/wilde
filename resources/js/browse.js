@@ -23,6 +23,7 @@ togSel.addEventListener('change', e=> {
 });
 
 function toggleDefault(show){
+
     if (show){
         alphaBrowseDiv.forEach(div => div.classList.remove('hidden'));
     } else {
@@ -57,7 +58,14 @@ function makeCountDiv(){
             newList.appendChild(el.cloneNode(true));
         }
     });
+    countDiv.classList.add('fade');
     countDiv.appendChild(newList);
+    requestAnimationFrame(function(){
+        countDiv.classList.add('in');
+
+    });
+
+
 }
 
 

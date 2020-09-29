@@ -30,7 +30,7 @@ declare function document:subtitle($node as node()) as xs:string {
     string(root($node)//body/p[1])
 };
 
-declare function document:short-title($node as node()) as xs:string{
+declare function document:headline($node as node()) as xs:string{
     let $headEl := root($node)//p[matches(@class,'(^|\s*)heading(\s*|$)')][1]
     let $headString := normalize-space($headEl)
     return if (string-length($headString) gt 1) then

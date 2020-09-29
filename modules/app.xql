@@ -33,7 +33,7 @@ declare function app:link-view($id as xs:string, $content) as node() {
     Create a table showing some of the reports for navigation.
 :)
 declare function local:report-table($reports as node()*, $param as xs:string?) as element() {
-    let $fields := ('date','publisher','region','city','language')[. != $param]
+    let $fields := ('date','publisher','region','city','language')[not(. = $param)]
     let $names := map:merge(
         for $f in $fields return
         map:entry($f, if ($f  ='publisher') then 'newspaper' else $f)
@@ -42,7 +42,7 @@ declare function local:report-table($reports as node()*, $param as xs:string?) a
     <table class="table table-striped table-hover table-condensed" id="tbl-browser">
         <thead>
             <tr>
-                <th>Title</th>
+                <th>Headline</th>
                 {
                    for $field in $fields
                    return
@@ -57,7 +57,7 @@ declare function local:report-table($reports as node()*, $param as xs:string?) a
             for $report in $reports
             return
             <tr>
-                <td data-name="Title">{app:link-view(document:id($report), document:short-title($report))}</td>
+                <td data-name="Headline">{app:link-view(document:id($report), document:headline($report))}</td>
                 {
                     for $field in $fields return
                     <td data-name="{functx:capitalize-first($names($field))}">
