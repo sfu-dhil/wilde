@@ -10,7 +10,7 @@ let countDiv;
 
 togSel.addEventListener('change', e=> {
     let selected = togSel.options[togSel.selectedIndex].value;
-    let isDefault = (selected === 'default');
+    let isDefault = (togSel.selectedIndex === 0);
     toggleDefault(isDefault);
     if (isDefault && countDiv) countDiv.classList.add('hidden');
     if (selected === 'count'){

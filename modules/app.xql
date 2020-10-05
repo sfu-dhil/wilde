@@ -201,7 +201,8 @@ declare function app:browse($node as node(), $model as map(*)) as node()* {
 :)
 declare function app:browse-items($name as xs:string, $query as xs:string, $page as xs:string) as map(*){
    let $collection := collection:documents()
-   let $values := $collection//xhtml:meta[@name = $name]/xs:string(@content)
+   let $metas := $collection//xhtml:meta[@name = $name]
+   let $values := $metas/xs:string(@content)
    let $map := map:merge(for $v in distinct-values($values) return map{$v: local:count($values, $v)})
    let $max := math:log10(max(for $key in map:keys($map) return $map($key)))
    return
@@ -231,11 +232,11 @@ declare function app:browse-items($name as xs:string, $query as xs:string, $page
 declare function app:browse-list($map as map(*), $append as xs:string?){
     <div class="browse-div">        
         <ul class="browse-list">{
-            for $key in map:keys($map) return
-                let $item := map:get($map, $key)
-                order by $item('count')
+            for $key in map:keys($map)
+            let $item := map:get($map, $key)
+            order by xs:string($item('output'))
                 return
-                <li data-count="{$item('count')}" data-value="{$item('output')}" style="--height: {$item('percent') * 100}%">
+                <li data-count="{$item('count')}" data-value="{$item('output')}" style="--height: {$item('percent') * 100}%" data-region="{$item('region')}">
                     <a href="{$item('page')}-details.html?{$item('query')}={$key}{$append}">
                         <span class="name">{$item('output')}</span>
                         <span class="count">{$item('count')}</span>
@@ -326,34 +327,29 @@ declare function app:details-language($node as node(), $model as map(*)) as node
 (:
     Produce a list of newspapers/publishers from the database.
 :)
-declare function app:browse-newspaper($node as node(), $model as map(*)) as node() {
-  let $collection := collection:documents()
-      let $publishers := $collection//xhtml:meta[@name="dc.publisher"]/@content
+declare function app:browse-newspaper($node as node(), $model as map(*)) as node()+ {
+      let $collection := collection:collection()
+      let $items := app:browse-items('dc.publisher', 'publisher', 'newspaper')
+      let $keys := map:keys($items)
       return
-        <table class='table table-striped table-hover table-condensed' id="tbl-browser">
-            <thead>
-                <tr>
-                   <th>Newspaper</th>
-                   <th>Region</th>
-                   <th>City</th>
-                   <th>Language</th>
-                   <th>Count</th>
-                </tr>
-            </thead>
-            <tbody>{
-              for $publisher in distinct-values($publishers)
-              order by $publisher
-                return <tr>
-                    <td><a href="newspaper-details.html?publisher={$publisher}">{$publisher}</a></td>
-                    <td>{ collection:regions($publisher) }</td>
-                    <td>{ collection:cities($publisher) }</td>
-                    <td>{
-                      string-join(lang:code2lang(collection:languages($publisher)), ', ')
-                    }</td>
-                    <td>{ local:count($publishers, $publisher) }</td>
-                </tr>
-            }</tbody>
-        </table>
+      <div>
+      {app:browse-toggle('Region')}
+      { for $key in $keys
+        let $curr := $items($key)
+        group by $region := 
+        document:region($collection//xhtml:meta[@name='dc.publisher'][@content = $curr('output')][1])
+        order by $region
+        return
+            let $submap := map:merge(for $k in $key return map{$k: map:get(map:merge($items), $k)})
+            return
+            <div class="browse-div">
+                <h3>{upper-case($region)}</h3>
+                {app:browse-list($submap, ())}
+            </div>
+        }
+      <script src="resources/js/browse.js"></script>
+      </div>
+     
 };
 
 (:
