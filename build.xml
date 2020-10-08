@@ -26,7 +26,6 @@
     <get src="${cache.base}/language-nocache.html" dest="language.html"/>
     <get src="${cache.base}/newspaper-nocache.html" dest="newspaper.html"/>
     <get src="${cache.base}/region-nocache.html" dest="region.html"/>
-    <get src="${cache.base}/list-nocache.html" dest="list.html"/>
     <get src="${cache.base}/source-nocache.html" dest="source.html"/>
   </target>
 
