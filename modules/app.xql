@@ -32,35 +32,74 @@ declare function app:link-view($id as xs:string, $content) as node() {
 (:
     Create a table showing some of the reports for navigation.
 :)
-declare function local:report-table($reports as node()*) as element() {
-    <table class='table table-striped table-hover table-condensed' id="tbl-browser">
+declare function local:report-table($reports as node()*, $param as xs:string?) as element() {
+    let $fields := ('date','publisher','region','city','language')[not(. = $param)]
+    let $names := map:merge(
+        for $f in $fields return
+        map:entry($f, if ($f  ='publisher') then 'newspaper' else $f)
+    )
+    return
+    <table class="table table-striped table-hover table-condensed" id="tbl-browser">
         <thead>
             <tr>
-                <th data-field="date">Date</th>
-                <th data-field="newspaper" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Newspaper</th>
-                <th data-field="region" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Region</th>
-                <th data-field="city" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">City</th>
-                <th data-field="language" data-filter-control="select" data-sortable="true" data-filter-strict-search="true">Language</th>
-                <th data-field="document-matches" data-sortable="true">Document <br/>Matches</th>
-                <th data-field="paragraph-matches" data-sortable="true">Paragraph <br/>Matches</th>
-                <th data-field="words" data-sortable="true">Word Count</th>
+                <th>Headline</th>
+                {
+                   for $field in $fields
+                   return
+                   <th>{functx:capitalize-first($names($field))}</th>
+                }
+                <th class="count">Document <br/>Matches</th>
+                <th class="count">Paragraph <br/>Matches</th>
+                <th class="count">Word Count</th>
             </tr>
         </thead>
         <tbody>{
             for $report in $reports
-            return <tr>
-                <td>{app:link-view(document:id($report), document:date($report))}</td>
-                <td>{document:publisher($report)}</td>
-                <td>{document:region($report)}</td>
-                <td>{document:city($report)}</td>
-                <td>{lang:code2lang(document:language($report))}</td>
-                <td>{count(document:document-matches($report))}</td>
-                <td>{count(document:paragraph-matches($report))}</td>
-                <td>{document:word-count($report)}</td>
+            return
+            <tr>
+                <td data-name="Headline">{app:link-view(document:id($report), document:headline($report))}</td>
+                {
+                    for $field in $fields return
+                    <td data-name="{functx:capitalize-first($names($field))}">
+                        {app:link-details($report, $field, $names($field))}
+                    </td>
+                }
+                <td data-name="Document Matches" class="count">{count(document:document-matches($report))}</td>
+                <td data-name="Paragraph Matches" class="count">{count(document:paragraph-matches($report))}</td>
+                <td data-name="Word Count" class="count">{document:word-count($report)}</td>
             </tr>
         }</tbody>
     </table>
 };
+
+
+(:
+    Link to a details page ($fn-details.html) based off 
+    of a parameter ($param) in a report ($report)
+:)
+
+declare function app:link-details($report, $param, $fn) as item()* {
+
+    (: Construct the function :)
+    let $fx := function-lookup(xs:QName('document:' || $param), 1)
+    
+    (: Use the function :)
+    let $result := $fx($report)
+    
+    (: Hook in case we need to clean up the value :)
+    let $output := if ($param = 'language') then lang:code2lang($result) else $result
+    return if ($result != '') then 
+        let $query := request:get-parameter($param, false())
+        let $curr := ($query instance of xs:string and $query = $result)
+        
+        (: If you're the current thing being displayed, don't link :)
+        return if ($curr) then ()
+        
+        (: Else make a link :)
+        else <a href="{$fn}-details.html?{$param}={$result}">{$output}</a>
+    else ()
+};
+
 
 (:
     Count the items in $list that match $item and return the result.
@@ -74,35 +113,35 @@ declare function local:count($list, $item) as xs:integer {
 (:
     Build a pagination widget to let users move from one page of results to another.
 :)
-declare function local:pagination($count as xs:int, $total as xs:int, $query as xs:string) as element() {
+declare function local:pagination($count as xs:int, $total as xs:int, $query as xs:string) as element()? {
     let $page := request:get-parameter('page', 1) cast as xs:int   
     let $span := $config:pagination-window
-    let $pageSize := $config:pagination-size    
-    
-    let $pages := xs:integer($total div $pageSize)+1
-    let $start := max((1, $page - $span))
-    let $end := min(($pages, $page + $span))
-    let $next := min(($pages, $page + 1))
-    let $prev := max((1, $page - 1))
-
-    return
-        <div><p>Showing {$count} reports of {$total}.</p>
-        <nav>
-            <ul class='pagination'>
-                <li><a href="?page=1{$query}">⇐</a></li>
-                <li><a href="?page={$prev}{$query}" id='prev-page'>←</a></li>
-
-                {
-                    for $pn in ($start to $end)
-                    let $selected := if($page = $pn) then 'active' else ''
-                    return <li class="{$selected}"><a href="?page={$pn}{$query}">{$pn}</a></li>
-                }
-
-                <li><a href="?page={$next}{$query}" id='next-page'>→</a></li>
-                <li><a href="?page={$pages}{$query}">⇒</a></li>
-            </ul>
-        </nav>
-        </div>
+    let $pageSize := $config:pagination-size
+    return 
+        if ($total > $pageSize) then
+            let $pages := xs:integer($total div $pageSize)+1
+            let $start := max((1, $page - $span))
+            let $end := min(($pages, $page + $span))
+            let $next := min(($pages, $page + 1))
+            let $prev := max((1, $page - 1))
+            return
+            <div>
+                <p>Showing {$count} reports of {$total}.</p>
+                <nav>
+                    <ul class="pagination">
+                        <li><a href="?page=1{$query}">⇐</a></li>
+                        <li><a href="?page={$prev}{$query}" id='prev-page'>←</a></li>
+                        {
+                            for $pn in ($start to $end)
+                                let $selected := if($page = $pn) then 'active' else ''
+                                return <li class="{$selected}"><a href="?page={$pn}{$query}">{$pn}</a></li>
+                        }
+                        <li><a href="?page={$next}{$query}" id='next-page'>→</a></li>
+                        <li><a href="?page={$pages}{$query}">⇒</a></li>
+                    </ul>
+                </nav>
+            </div>
+        else ()
 };
 
 (:
@@ -154,27 +193,107 @@ declare function local:page() {
 declare function app:browse($node as node(), $model as map(*)) as node()* {
     let $map := local:page()
     
-    return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total')))
+    return (local:report-table($map('pagination'), ()), local:pagination($map('count'), $map('total')))
 };
+
+(:
+    Create a map of data for each item in a collection of metadata items
+:)
+declare function app:browse-items($name as xs:string, $query as xs:string, $page as xs:string) as map(*){
+   let $collection := collection:documents()
+   let $metas := $collection//xhtml:meta[@name = $name]
+   let $values := $metas/xs:string(@content)
+   let $map := map:merge(for $v in distinct-values($values) return map{$v: local:count($values, $v)})
+   let $max := math:log10(max(for $key in map:keys($map) return $map($key)))
+   return
+   map:merge(
+        for $key in map:keys($map)
+            let $count := $map($key)
+            let $percent := (math:log10($count) div $max)
+            let $output := if ($query = 'language') then lang:code2lang($key) else $key
+            return
+                map{$key: 
+                    map{
+                        'count': $count,
+                        'percent': $percent,
+                        'output': $output,
+                        'query': $query,
+                        'page': $page
+                }
+            }
+    )
+};
+
+
+(:
+    Produce a list from a set of $map of items with an optional
+    string to append to the query
+:)
+declare function app:browse-list($map as map(*), $append as xs:string?){
+    <div class="browse-div">        
+        <ul class="browse-list">{
+            for $key in map:keys($map)
+            let $item := map:get($map, $key)
+            order by xs:string($item('output'))
+                return
+                <li data-count="{$item('count')}" data-value="{$item('output')}" style="--height: {$item('percent') * 100}%" data-region="{$item('region')}">
+                    <a href="{$item('page')}-details.html?{$item('query')}={$key}{$append}">
+                        <span class="name">{$item('output')}</span>
+                        <span class="count">{$item('count')}</span>
+                    </a>
+                </li>
+            }
+          </ul>
+   </div>
+};
+
+(:
+    Produce browse lists from a set of items, grouped by first letter
+:)
+declare function app:browse-alphabetize($map as map(*)) as node()+{
+    for $n in (97 to 122) return
+        let $letter := codepoints-to-string($n)
+        let $keys := map:keys($map)[matches(.,'^' || $letter,'i')]
+        let $submap := map:merge(for $key in $keys return map{$key: $map($key)})
+        return
+            if (exists($keys)) then 
+                    <div class="browse-div alpha-browse-div">
+                        <h3>{upper-case($letter)}</h3>
+                        {app:browse-list($submap,())}
+                    </div>
+            else ()
+};
+
+
+(:
+    Create a toggle menu for the browse display
+:)
+declare function app:browse-toggle($defaultName as xs:string) as element()+ {
+<div class="browse-toggle">
+    <label for="browse-toggle">Order by</label>
+    <select name="browse-toggle" class="form-control">
+        <option value="default">{$defaultName}</option>
+        <option value="count">Count</option>
+    </select>
+</div>
+};
+
+
 
 (:
     Produce a list of cities and count the reports in that city.
 :)
-declare function app:browse-city($node as node(), $model as map(*)) as node() {
-  let $city := request:get-parameter('city', false())
-  return
-    let $collection := collection:documents()
-    let $cities := $collection//xhtml:meta[@name='dc.region.city']/@content
-      return
-        <ul> {
-          for $city in distinct-values($cities)
-          let $count := local:count($cities, $city)
-          order by $city
-          return <li data-city="{$city}" data-count="{$count}">
-              <a href="city-details.html?city={$city}">{$city}</a>: {$count}
-            </li>
-        } </ul>    
+declare function app:browse-city($node as node(), $model as map(*)) as node()+ {
+   let $items := app:browse-items('dc.region.city', 'city', 'city')
+   return 
+   <div>
+        {app:browse-toggle('Name')}
+        {app:browse-alphabetize($items)}
+        <script src="resources/js/browse.js"></script>
+   </div>
 };
+
+
 
 (:
     Produce a list of reports in a city.
@@ -182,25 +301,18 @@ declare function app:browse-city($node as node(), $model as map(*)) as node() {
 declare function app:details-city($node as node(), $model as map(*)) as node()* {
     let $city := request:get-parameter('city', false())
     let $map := local:page('dc.region.city', $city)    
-    return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total'), '&amp;city=' || $city))
+    return (local:report-table($map('pagination'), 'city'), local:pagination($map('count'), $map('total'), '&amp;city=' || $city))
 };
 
 (:
     Produce a list of languages used in the reports.
 :)
 declare function app:browse-language($node as node(), $model as map(*)) as node() {
-  let $collection := collection:documents()
-  let $languages := $collection//xhtml:meta[@name="dc.language"]/@content
-  return
-    <ul> {
-      for $language in distinct-values($languages)
-      let $count := local:count($languages, $language)
-      order by lang:code2lang($language)
-      return <li data-language="{lang:code2lang($language)}" data-count="{$count}">
-          <a href="language-details.html?language={$language}">{lang:code2lang($language)}</a>:
-          {$count}
-        </li>
-    } </ul>
+    let $items := app:browse-items('dc.language', 'language', 'language')
+    return 
+    <div>
+        {app:browse-list($items,())}
+    </div>
 };
 
 (:
@@ -209,40 +321,35 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
 declare function app:details-language($node as node(), $model as map(*)) as node()* {
     let $language := request:get-parameter('language', false())
     let $map := local:page('dc.language', $language)
-    return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total'), '&amp;language=' || $language))
+    return (local:report-table($map('pagination'), 'language'), local:pagination($map('count'), $map('total'), '&amp;language=' || $language))
 };
 
 (:
     Produce a list of newspapers/publishers from the database.
 :)
-declare function app:browse-newspaper($node as node(), $model as map(*)) as node() {
-  let $collection := collection:documents()
-      let $publishers := $collection//xhtml:meta[@name="dc.publisher"]/@content
+declare function app:browse-newspaper($node as node(), $model as map(*)) as node()+ {
+      let $collection := collection:collection()
+      let $items := app:browse-items('dc.publisher', 'publisher', 'newspaper')
+      let $keys := map:keys($items)
       return
-        <table class='table table-striped table-hover table-condensed' id="tbl-browser">
-            <thead>
-                <tr>
-                   <th>Newspaper</th>
-                   <th>Region</th>
-                   <th>City</th>
-                   <th>Language</th>
-                   <th>Count</th>
-                </tr>
-            </thead>
-            <tbody>{
-              for $publisher in distinct-values($publishers)
-              order by $publisher
-                return <tr>
-                    <td><a href="newspaper-details.html?publisher={$publisher}">{$publisher}</a></td>
-                    <td>{ collection:regions($publisher) }</td>
-                    <td>{ collection:cities($publisher) }</td>
-                    <td>{
-                      string-join(lang:code2lang(collection:languages($publisher)), ', ')
-                    }</td>
-                    <td>{ local:count($publishers, $publisher) }</td>
-                </tr>
-            }</tbody>
-        </table>
+      <div>
+      {app:browse-toggle('Region')}
+      { for $key in $keys
+        let $curr := $items($key)
+        group by $region := 
+        document:region($collection//xhtml:meta[@name='dc.publisher'][@content = $curr('output')][1])
+        order by $region
+        return
+            let $submap := map:merge(for $k in $key return map{$k: map:get(map:merge($items), $k)})
+            return
+            <div class="browse-div">
+                <h3>{upper-case($region)}</h3>
+                {app:browse-list($submap, ())}
+            </div>
+        }
+      <script src="resources/js/browse.js"></script>
+      </div>
+     
 };
 
 (:
@@ -251,122 +358,155 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
 declare function app:details-newspaper($node as node(), $model as map(*)) as node()* {
   let $publisher := request:get-parameter('publisher', false())
   let $map := local:page('dc.publisher', $publisher)
-  return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total'), '&amp;publisher=' || $publisher))
+  return (local:report-table($map('pagination'),'publisher'), local:pagination($map('count'), $map('total'), '&amp;publisher=' || $publisher))
 };
 
-declare function app:browse-region($node as node(), $model as map(*)) as node() {
-  let $collection := collection:documents()
-      let $regions := $collection//xhtml:meta[@name="dc.region"]/@content
-      return
-        <ul> {
-          for $region in distinct-values($regions)
-          let $count := local:count($regions, $region)
-          order by $region
-          return <li data-region="{$region}" data-count="{$count}">
-              <a href="region-details.html?region={$region}">{$region}</a>:
-              {$count}
-            </li>
-        } </ul>
+
+(:
+    Produce a list of all available regions in the collection
+:)
+declare function app:browse-region($node as node(), $model as map(*)) as node()+ {
+    let $items := app:browse-items('dc.region', 'region', 'region')
+    return 
+    <div>
+        {app:browse-toggle('Name')}
+        {app:browse-list($items,())}
+        <script src="resources/js/browse.js"></script>
+    </div>
 };
+
+(:
+    Produce a list of reports for a given region
+:)
 
 declare function app:details-region($node as node(), $model as map(*)) as node()* {
   let $region := request:get-parameter('region', false())
   let $map := local:page('dc.region', $region)
-  return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total'), '&amp;region=' || $region))
+  return (local:report-table($map('pagination'),'region'), local:pagination($map('count'), $map('total'), '&amp;region=' || $region))
 };
 
+(:
+    Produce a list of all sources (databases and institutions)
+    in the collection
+:)
 declare function app:browse-source($node as node(), $model as map(*)) as node() {
   let $collection := collection:documents()
+  let $dbs := app:browse-items('dc.source.database','source','source')
+  let $institutions := app:browse-items('dc.source.institution','source','source')
   return
-      <div class='row'>
-        <div class='col-md-6'>
+      <div>
           <h2>Databases</h2>
-            <ul> {
-              let $sources := $collection//xhtml:meta[@name="dc.source.database"]/@content
-              for $source in distinct-values($sources)
-              let $count := local:count($sources, $source)
-              order by $source
-              return <li>
-                  <a href="source-details.html?source={$source}&amp;type=database">{$source}</a>: {$count}
-                </li>
-            } </ul>
-        </div>
-        <div class='col-md-6'>
+          {
+            app:browse-list($dbs,'&amp;type=database')
+          }
           <h2>Institutions</h2>
-            <ul> {
-              let $sources := $collection//xhtml:meta[@name="dc.source.institution"]/@content
-              for $source in distinct-values($sources)
-              let $count := local:count($sources, $source)
-              order by $source
-              return <li>
-                  <a href="source-details.html?source={$source}&amp;type=institution">{$source}</a>: {$count}
-                </li>
-            } </ul>
-        </div>
+          {
+            app:browse-list($institutions,'&amp;type=institution')
+          }
       </div>
 };
 
+(:
+    Produce a list of reports given a source
+:)
 declare function app:details-source($node as node(), $model as map(*)) as node()* {
   let $source := request:get-parameter('source', false())
   let $type := request:get-parameter('type', 'db')
   let $map := local:page('dc.source.'||$type, $source)
   
-  return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total'), '&amp;source=' || $source || '&amp;type=' || $type))
+  return (local:report-table($map('pagination'),'source'), local:pagination($map('count'), $map('total'), '&amp;source=' || $source || '&amp;type=' || $type))
 };
 
+
+(:
+    Produce a list of all dates available for browsing
+:)
 declare function app:browse-date($node as node(), $model as map(*)) as node()+ {
       let $collection := collection:documents()
       let $dates := $collection//xhtml:meta[@name="dc.date"]/string(@content)
-      let $jDates := $dates[normalize-space(.) castable as xs:date]
-      let $distinctJDates := distinct-values($jDates)
-      let $months := distinct-values(for $date in $jDates return tokenize($date,'-')[2])
-      let $cal-header:= for $n in 1 to 7 return  <div class="cal-cell">{format-date(xs:date('2020-03-0' || $n), '[FNn]')}</div>
-      return
-        for $month in $months order by xs:integer($month) return
-            let $firstDay := xs:date('1895-' || $month || '-01')
-            let $offset := app:weekday-from-date($firstDay)
-            let $monthLength := app:last-day-of-month($month)
-            return
-            <div>
-                <h2>{ format-date($firstDay,'[MNn]') }</h2>
-                <div class="calendar offset-{$offset}">
-                    <div class="cal-header">
-                        {$cal-header}
-                    </div>
-                    <div class="cal-body">
-                        {
-                            for $n in 1 to $monthLength
-                            let $date := string-join(('1895',$month,format-number($n,'00')),'-')
-                            let $dateCount := count($dates[matches(.,$date)])
-                            return
-                            <div class="cal-cell count-{$dateCount}" data-date="{$date}">
-                                <a href="date-details.html?date={$date}">
-                                    <span class="day">{$n}</span>
-                                    <span class="count">{$dateCount}</span>
-                                </a>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
+      let $calendars := app:browse-calendar($dates)
+      let $script := <script src="resources/js/browse.js"></script>
+      return (app:browse-toggle('Date'), $calendars, $script)
 };
 
 
+
+
+(:
+    Create a calendar display for a given set of dates
+:)
+declare function app:browse-calendar($dates as xs:string*){
+    let $jDates := $dates[normalize-space(.) castable as xs:date]
+    let $distinctJDates := distinct-values($jDates)
+    let $months := distinct-values(for $date in $jDates return tokenize($date,'-')[2])
+    let $header := app:calendar-header()
+    for $month in $months 
+    order by xs:integer($month)
+    return
+      let $firstDay := xs:date('1895-' || $month || '-01')
+      let $offset := app:weekday-from-date($firstDay)
+      let $monthLength := app:last-day-of-month($month)
+      let $monthName := format-date($firstDay,'[MNn]')
+      return
+        <div class="browse-div">
+            <h2>{$monthName}</h2>
+            <div class="calendar offset-{$offset}">
+                <div class="cal-header">
+                    {$header}
+                 </div>
+                 <div class="cal-body">{
+                    for $n in 1 to $monthLength
+                        let $date := string-join(('1895',$month,format-number($n,'00')),'-')
+                        let $dateCount := count($dates[matches(.,$date)])
+                        return
+                        <div class="cal-cell count-{$dateCount}" data-date="{$date}">
+                           <a href="date-details.html?date={$date}" data-count="{$dateCount}">
+                              <span class="day" data-month="{$monthName}">{$n}</span>
+                              <span class="count">{$dateCount}</span>
+                           </a>
+                        </div>
+                }</div>
+            </div>
+        </div>
+};
+
+
+(: 
+    Produce the header for a calendar (Sunday start)
+:)
+declare function app:calendar-header(){
+    let $headerDates:= (1 to 7)!format-date(xs:date('2020-03-0' || .), '[FNn]')
+    for $date in $headerDates
+    return
+        <div class="cal-cell">
+            <span class="month-text">{$date}</span>
+        </div>
+};
+
+(:
+    Return the last day of some month in 1895 
+:)
 declare function app:last-day-of-month($month as xs:string) as xs:integer{
-let $one-day := xs:dayTimeDuration('P1D')
-let $one-month := xs:yearMonthDuration('P1M')
-let $month-date := xs:date('1895-' || $month || '-01')
+    let $one-day := xs:dayTimeDuration('P1D')
+    let $one-month := xs:yearMonthDuration('P1M')
+    let $month-date := xs:date('1895-' || $month || '-01')
     return xs:integer(day-from-date($month-date + $one-month - $one-day))
 };
 
+(:
+    Return the numerical weekday from a date
+:)
 declare function app:weekday-from-date($date as xs:date) as xs:integer{
     xs:integer(format-date($date, '[F0]')) + 1
 };
 
+(:
+    Produce a list of reports for a given date
+:)
 declare function app:details-date($node as node(), $model as map(*)) as node()* {
   let $date := request:get-parameter('date', false())
   let $map := local:page('dc.date', $date)
-  return (local:report-table($map('pagination')), local:pagination($map('count'), $map('total'), '&amp;date=' || $date))
+  return (local:report-table($map('pagination'),'date'), local:pagination($map('count'), $map('total'), '&amp;date=' || $date))
 };
 
 declare function app:parameter($node as node(), $model as map(*), $name as xs:string) as xs:string {
@@ -424,16 +564,17 @@ declare function app:doc-word-count($node as node(), $model as map(*)) as xs:str
     document:word-count($model('document'))
 };
 
-declare function app:doc-date($node as node(), $model as map(*)) as xs:string {
-    string(document:date($model('document')))
+declare function app:doc-date($node as node(), $model as map(*)) as element()? {
+    app:link-details($model('document'), 'date', 'date')
 };
 
 declare function app:doc-updated($node as node(), $model as map(*)) as xs:string {
     document:updated($model('document'))
 };
 
-declare function app:doc-publisher($node as node(), $model as map(*)) as xs:string {
-    document:publisher($model('document'))
+declare function app:doc-publisher($node as node(), $model as map(*)) as element()? {
+    app:link-details($model('document'), 'publisher', 'newspaper')
+
 };
 
 declare function app:doc-edition($node as node(), $model as map(*)) as xs:string {
@@ -441,12 +582,16 @@ declare function app:doc-edition($node as node(), $model as map(*)) as xs:string
   return if(string-length($edition) gt 0) then " - " || document:edition($model('document')) else ""
 };
 
-declare function app:doc-region($node as node(), $model as map(*)) as xs:string {
-    document:region($model('document'))
+declare function app:doc-region($node as node(), $model as map(*)) as element()? {
+    app:link-details($model('document'), 'region', 'region')
 };
 
-declare function app:doc-city($ndoe as node(), $model as map(*)) as xs:string {
-    document:city($model('document'))
+declare function app:doc-city($node as node(), $model as map(*)) as element()? {
+    app:link-details($model('document'), 'city', 'city')
+};
+
+declare function app:doc-language($node as node(), $model as map(*)) as element()? {
+    app:link-details($model('document'), 'language', 'language')
 };
 
 declare function app:doc-translation-tabs($node as node(), $model as map(*)) as node()* {
@@ -487,9 +632,7 @@ declare function app:doc-content($node as node(), $model as map(*)) as node()* {
     tx:document($model('document')//body/*)
 };
 
-declare function app:doc-language($node as node(), $model as map(*)) as xs:string {
-    lang:code2lang(document:language($model('document')))
-};
+
 
 (:
 * British Library (dc.source.institution if present)
@@ -734,6 +877,9 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
 
     let $da := collection:fetch($a)
     let $db := collection:fetch($b)
+    
+    let $da-title := document:title($da)
+    let $db-title := document:title($db)
 
     let $lang := $da//div[@id='original']/@lang
 
@@ -742,37 +888,62 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
     let $links := $da//link[@href=$b]
     
     return
-      <div>
-        <div class='row'>
-            <div class='col-sm-4'>
-                <b>{app:link-view($a, document:title($da))}</b>
-            </div>
-            <div class='col-sm-4'>
-                <b>{app:link-view($b, document:title($db))}</b>
-            </div>
-            <div class='col-sm-4'> 
-                <b>Highlighted Differences</b> <br/> { 
-                    if (count($links) gt 0) then
-                        for $link in $links 
-                        return 
-                            <span style="display:block;">Match: {format-number($link/@data-similarity, "###.#%")}%</span>
-                    else "Not significantly similar"
-                } </div>
-        </div>
-        <div class='row'>
-            <div class='col-sm-4' id="doc_a"> {
+      (   app:compare-documents-nav($da-title, $db-title),
+      <div class="doc-compare">
+         <div class="compare-col" id="col1">
+            <h3>{app:link-view($a, $da-title)}</h3>
+            <div id="doc_a">{ 
                 for $p in $pa
                 return <p>{$p/text()}</p>
-            }
+                }
             </div>
-            <div class='col-sm-4' id="doc_b"> {
+         </div>
+         <div class="compare-col" id="col2">
+            <h3>{app:link-view($b, $db-title)}</h3>
+            <div id="doc_b">
+            {
                 for $p in $pb
                 return <p>{$p/text()}</p>
             }
             </div>
-            <div class='col-sm-4' id="diff"></div>
-        </div>
-    </div>
+         </div>
+         <div id="col3">
+         <h3>
+            <span>Highlighted Differences</span>
+            {
+             if (count($links) gt 0) then
+                        for $link in $links 
+                        return 
+                       <span style="display:block;">Match: {format-number($link/@data-similarity, "###.#%")}%</span>
+                        else
+                        <span style="display:block">Not significantly similar</span>
+            }
+          </h3>
+          <div id="diff"></div>
+         </div>
+    </div>)
+};
+
+declare function app:compare-documents-nav($da-title as xs:string, $db-title as xs:string) as element()*{
+    <nav class="doc-compare-nav">
+           <ul class="list-inline">
+            <li>
+            <a href="#col1">
+                <span class="sr-only">Go to {$da-title}</span>
+             </a>
+            </li>
+            <li>
+            <a href="#col2">
+                <span class="sr-only">Go to {$db-title}</span>
+             </a>
+            </li>
+            <li>
+                <a href="#col3">
+                    <span class="sr-only">Go to comparison</span>
+                </a>
+            </li>
+           </ul>
+    </nav>
 };
 
 declare function app:similarities-summary($node as node(), $model as map(*)) {
@@ -943,8 +1114,11 @@ declare function app:graph-view($node as node(), $model as map(*)) as node() {
       <iframe src="gefx.html#{$f}" style="width: 100%; height: 700px;" />
 };
 
-declare function app:gallery($node as node(), $model as map(*)) as node() {
 
+(:
+    Produce the gallery of images
+:)
+declare function app:gallery($node as node(), $model as map(*)) as node() {
     let $filenames := collection:image-list()
     let $cols := 3
     let $empty := count($filenames) mod $cols
@@ -956,26 +1130,34 @@ declare function app:gallery($node as node(), $model as map(*)) as node() {
                 if ($index <= count($filenames)) then
                     let $filename := $filenames[$index]
                     let $meta := $metadata//div[@data-filename=$filename]
-                    let $title := if($meta) then $meta/@data-title/string() else ""
-                    let $date := if($meta) then $meta/@data-date/string() else ""
-                    let $descr := if($meta/node()/text()) then $meta/node() else <p>{$filename}</p>
                     return
-                    <div class="img-tile">
-                        <div class="thumbnail">
-                            <div class="img-container">
-                                <a href="#imgModal" data-toggle="modal" data-title="{$title}"  data-date="{$date}" data-target="#imgModal" data-img="images/{$filename}">
-                                    <img alt="{normalize-space(string-join($meta,''))}" src="thumbs/{$filename}" class="img-thumbnail"/>
-                                </a>
-                            </div>
-                            <div class="caption">                    
-                                <div class="title"><i>{$title}</i><br/>{$date}<br/></div>                                    
-                                {$descr}
-                            </div>
-                        </div>
-                    </div>
-                    else 
-                    <div class="img-tile empty">
-                    </div>
+                        app:gallery-tile($filename, $meta)
+                else 
+                 <div class="img-tile empty">
+                 </div>
           }
       </div>
+};
+
+(:
+    Create an image tile from a $filename
+:)
+declare function app:gallery-tile($filename as xs:string, $meta as node()?){
+   let $title := if ($meta) then $meta/@data-title/string() else ""
+   let $date := if ($meta) then $meta/@data-date/string() else ""
+   let $descr := if($meta/node()/text()) then $meta/node() else <p>{$filename}</p>
+   return
+   <div class="img-tile">
+       <div class="thumbnail">
+           <div class="img-container">
+               <a href="#imgModal" data-toggle="modal" data-title="{$title}"  data-date="{$date}" data-target="#imgModal" data-img="images/{$filename}">
+                   <img alt="{normalize-space(string-join($meta,''))}" src="thumbs/{$filename}" class="img-thumbnail"/>
+               </a>
+           </div>
+           <div class="caption">                    
+               <div class="title"><i>{$title}</i><br/>{$date}<br/></div>                                    
+               {$descr}
+           </div>
+       </div>
+   </div>
 };

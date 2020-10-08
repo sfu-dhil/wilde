@@ -68,9 +68,12 @@ h5 {
 
 h2 {
   font-size: 34px;
-  margin-top: 1.5em;
-  margin-bottom: 1em;
+  @include h2-margins();
+  &:first-child {
+      margin-top:0;
+  }
 }
+
 
 h3 {
   font-size: 24px;
@@ -80,3 +83,5 @@ h3 {
 p {
   hyphens: auto;
 }
+
+
