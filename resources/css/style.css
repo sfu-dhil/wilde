@@ -576,6 +576,13 @@ table td.count {
 table th.count {
   text-align: center;
 }
+table td[data-name=Headline] > a {
+  max-width: 23ch;
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
 
 #languages {
   display: none !important;

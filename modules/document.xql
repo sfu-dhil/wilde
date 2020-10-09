@@ -31,19 +31,11 @@ declare function document:subtitle($node as node()) as xs:string {
 };
 
 declare function document:headline($node as node()) as xs:string{
-    let $headEl := root($node)//p[matches(@class,'(^|\s*)heading(\s*|$)')][1]
-    let $headString := normalize-space($headEl)
-    return if (string-length($headString) gt 1) then
-        document:clip-string($headString)
-    else document:clip-string(document:title($node))
-};
-
-declare function document:clip-string($string as xs:string) as xs:string{
-    let $length := 20
+    let $heading := root($node)//p[matches(@class,'(^|\s*)heading(\s*|$)')][1]
     return
-        if (string-length($string) <= $length)
-        then $string 
-        else substring($string, 1, $length) || '...'
+        if (exists($heading)) 
+        then $heading
+        else document:title($node)
 };
 
 declare function document:path($node as node()) as xs:string {
