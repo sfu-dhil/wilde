@@ -29,15 +29,15 @@ declare function app:link-view($id as xs:string, $content) as node() {
     <a href="view.html?f={$id}">{$content}</a>
 };
 
+
+declare function local:field2Param($field as xs:string) as xs:string{
+    if ($field = 'newspaper') then 'publisher' else $field
+};
 (:
     Create a table showing some of the reports for navigation.
 :)
 declare function local:report-table($reports as node()*, $param as xs:string?) as element() {
     let $fields := ('date','publisher','region','city','language')[not(. = $param)]
-    let $names := map:merge(
-        for $f in $fields return
-        map:entry($f, if ($f  ='publisher') then 'newspaper' else $f)
-    )
     return
     <table class="table table-striped table-hover table-condensed" id="tbl-browser">
         <thead>
@@ -46,7 +46,7 @@ declare function local:report-table($reports as node()*, $param as xs:string?) a
                 {
                    for $field in $fields
                    return
-                   <th>{functx:capitalize-first($names($field))}</th>
+                   <th>{functx:capitalize-first(local:field2Param($field))}</th>
                 }
                 <th class="count">Document <br/>Matches</th>
                 <th class="count">Paragraph <br/>Matches</th>
@@ -60,8 +60,8 @@ declare function local:report-table($reports as node()*, $param as xs:string?) a
                 <td data-name="Headline">{app:link-view(document:id($report), document:headline($report))}</td>
                 {
                     for $field in $fields return
-                    <td data-name="{functx:capitalize-first($names($field))}">
-                        {app:link-details($report, $field, $names($field))}
+                    <td data-name="{functx:capitalize-first(local:field2Param($field))}">
+                        {app:link-details($report, $field, local:field2Param($field))}
                     </td>
                 }
                 <td data-name="Document Matches" class="count">{count(document:document-matches($report))}</td>
@@ -70,6 +70,88 @@ declare function local:report-table($reports as node()*, $param as xs:string?) a
             </tr>
         }</tbody>
     </table>
+};
+
+
+declare function app:breadcrumb($node as node(), $model as map(*)){
+   if (ends-with(request:get-uri(),'index.html'))
+   then ()
+   else
+    let $crumbs := reverse(local:breadcrumb($node, $model))
+    return
+        <div class="container">
+            <nav aria-label="breadcrumb" class="row">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    {for $crumb in $crumbs return 
+                        if (functx:index-of-node($crumbs, $crumb) lt count($crumbs))
+                        then
+                        <li class="breadcrumb-item">{$crumb}</li>
+                        else
+                        <li class="breadcrumb-item active" aria-current="page">{string($crumb)}</li>
+                    }</ol>
+                </nav>
+         </div>
+};
+
+
+declare function local:breadcrumb($node as node(), $model as map(*)) as item()*{
+let $uri := tokenize(request:get-uri(),'/')[last()]
+let $id := (request:get-parameter('f',request:get-parameter('a',())))
+let $doc := if ($id) then collection:fetch($id) else ()
+return
+    if ($uri = 'view.html') 
+        then local:breadcrumb-report($doc)
+    else 
+        if (matches($uri,'compare(-docs)?.html$'))
+        then
+            let $compareNode := <span>Compare</span>
+            return ($compareNode, local:breadcrumb-report($doc))
+    else 
+        if (matches($uri, '-details.html')) 
+        then 
+            let $field := substring-before($uri, '-details')
+            let $value := request:get-parameter(local:field2Param($field),())
+            return local:breadcrumb-details($field, $value)
+    else local:breadcrumb-simple($uri, local:get-doc($uri))
+};
+
+
+declare function local:breadcrumb-report($document){
+      (app:link-view(document:id($document), document:date($document)),
+      local:breadcrumb-details('newspaper', document:publisher($document)))
+};
+
+declare function local:breadcrumb-details($field, $value){
+    let $text := if ($field = 'language') then lang:code2lang($value) else $value
+    let $detailsLink := <a href="{$field}-details.html?{local:field2Param($field)}={$value}">{$text}</a>
+    let $href := $field || '.html'
+    let $doc := local:get-doc($href)
+    return ($detailsLink, local:breadcrumb-simple($href, $doc))
+};
+
+declare function local:breadcrumb-simple($href, $document as node()){
+    <a href="{$href}">{app:page-title($document)}</a>
+};
+
+declare function app:page-title($node as node()) as xs:string{
+    let $title := $node//h1[1]
+    return
+        if ($title) 
+        then string($title) 
+        else "No title available"
+};
+
+declare function local:get-doc($path) as document-node(){
+    let $resolved :=  $config:app-root || '/' || $path
+    let $nocache := replace($resolved,'\.html$','-nocache.html')
+    return 
+        if (doc-available($resolved))
+        then doc($resolved)
+        else
+            if (doc-available($nocache))
+            then doc($nocache)
+            else ()
 };
 
 
@@ -722,6 +804,9 @@ declare function app:paragraph-similarities($node as node(), $model as map(*)) a
                     </li>
             } </ul>
 };
+
+
+
 
 declare function app:search($node as node(), $model as map(*)) {
     let $query := request:get-parameter('query', '')
