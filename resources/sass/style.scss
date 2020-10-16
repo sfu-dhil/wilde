@@ -729,14 +729,27 @@ table{
 .report-navigation {
     font-size: 15px;
     line-height: 1.25em;
-    
+    display:flex;
+    justify-content:space-between;
+    div{
+      max-width: 40%;
+    }
     div:last-child {
      text-align: right;
+    }
+    strong{
+      display:block;
+      margin-bottom: .3rem;
     }
 }
 
 .breadcrumb{
-  @extend .report-navigation;
+  font-size: 15px;
+  line-height: 1.25em;
+  & > li + li:before{
+    content: "·";
+    font-size: 110%;
+  }
 }
 
 

@@ -776,12 +776,30 @@ table td[data-name=Headline] > a {
   font-size: 1em;
 }
 
-.report-navigation, .breadcrumb {
+.report-navigation {
+  font-size: 15px;
+  line-height: 1.25em;
+  display: flex;
+  justify-content: space-between;
+}
+.report-navigation div {
+  max-width: 40%;
+}
+.report-navigation div:last-child {
+  text-align: right;
+}
+.report-navigation strong {
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.breadcrumb {
   font-size: 15px;
   line-height: 1.25em;
 }
-.report-navigation div:last-child, .breadcrumb div:last-child {
-  text-align: right;
+.breadcrumb > li + li:before {
+  content: "·";
+  font-size: 110%;
 }
 
 .panel-metadata,
