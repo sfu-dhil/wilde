@@ -289,22 +289,26 @@ a:active, a:focus, a:hover {
   border-color: #960000;
 }
 
-#content {
+main.container {
   flex-grow: 1;
   padding-bottom: 6em;
   width: 100%;
 }
 @media (min-width: 1024px) {
-  #content {
+  main.container {
     width: 970px;
   }
 }
-#content .row {
+main.container #content .row {
   padding-left: 0.5em;
   padding-right: 0.5em;
 }
+main.container #content .row > .page-header {
+  padding-left: 15px;
+  padding-right: 15px;
+}
 @media (min-width: 1024px) {
-  #content .row {
+  main.container #content .row {
     padding-left: 0;
     padding-right: 0;
   }
@@ -563,6 +567,10 @@ table option {
   background: #EAE8E3;
 }
 
+td a {
+  white-space: normal;
+}
+
 table td:nth-child(n+2) a:not(.btn) {
   color: inherit;
 }
@@ -582,9 +590,60 @@ table td[data-name=Headline] > a {
   white-space: nowrap;
   text-overflow: ellipsis;
   display: inline-block;
+  padding-right: 0.5rem;
 }
 
-#languages {
+@media (max-width: 768px) {
+  .table {
+    display: block;
+  }
+  .table thead {
+    display: none;
+  }
+  .table tbody {
+    display: block;
+  }
+  .table tbody tr {
+    display: flex;
+    flex-wrap: wrap;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.25rem;
+    background: none !important;
+    border: 2px solid rgba(234, 232, 227, 0.4);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    box-shadow: none;
+  }
+  .table tbody tr td {
+    flex: 1 1 30%;
+    text-align: left;
+    padding: 1em;
+  }
+  .table tbody tr td:before {
+    content: attr(data-name);
+    font-weight: bold;
+    display: block;
+    white-space: nowrap;
+  }
+  .table tbody tr td:first-child {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 100%;
+    background: #EAE8E3;
+    border-bottom: 1px solid #efefef;
+  }
+  .table tbody tr td:first-child:before {
+    content: unset;
+  }
+  .table tbody tr td:first-child a {
+    color: #960000;
+    font-weight: bold;
+    white-space: nowrap;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+  }
+}
+guages {
   display: none !important;
 }
 
@@ -819,11 +878,11 @@ table td[data-name=Headline] > a {
   font-size: 1em;
 }
 
-.report-navigation div {
+.report-navigation, .breadcrumb {
   font-size: 15px;
   line-height: 1.25em;
 }
-.report-navigation div:last-child {
+.report-navigation div:last-child, .breadcrumb div:last-child {
   text-align: right;
 }
 
@@ -867,6 +926,10 @@ table td[data-name=Headline] > a {
 
 .page-header {
   border-bottom: 1px solid #b3b3b3;
+}
+
+#content > .row:first-child > .page-header {
+  margin-top: -10px;
 }
 
 /* Image gallery styles. */
@@ -1069,7 +1132,8 @@ table td[data-name=Headline] > a {
 
 /* Browse lists */
 .browse-div {
-  margin: 0 -15px;
+  margin-top: 0;
+  margin-bottom: 0;
   display: block;
 }
 @media (min-width: 1024px) {
@@ -1160,7 +1224,8 @@ ul.browse-list li:hover {
 ul.browse-list li:hover:before {
   opacity: 0.85;
 }
-ul.browse-list li a {
+
+ul.browse-list a {
   display: flex;
   flex-direction: column;
   padding: 0.25rem;
@@ -1169,22 +1234,22 @@ ul.browse-list li a {
   text-transform: uppercase;
   height: 100%;
 }
-ul.browse-list li a .name {
+ul.browse-list a .count {
+  display: block;
+  padding-top: 2rem;
+  text-align: center;
+  font-size: 0.8em;
+  color: #333333;
+}
+ul.browse-list .name {
   display: block;
   text-align: center;
   margin: 0.75rem 0.25rem;
   width: 100%;
   color: #960000;
 }
-ul.browse-list li a .name[data-month]:before {
+ul.browse-list .name[data-month]:before {
   content: attr(data-month) " ";
-}
-ul.browse-list li a .count {
-  display: block;
-  padding-top: 2rem;
-  text-align: center;
-  font-size: 0.8em;
-  color: #333333;
 }
 
 .browse-toggle {

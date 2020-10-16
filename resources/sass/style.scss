@@ -228,25 +228,32 @@ body {
   border-color: $color_red_dark;
 }
 
-#content {
+main.container {
   flex-grow: 1;
   padding-bottom: 6em;
   width: 100%;
 
   @include desktop {
-    width: 970px;
+    width: $desktop-content-width;
   }
 
-  .row {
+  #content .row {
     padding-left: 0.5em;
     padding-right: 0.5em;
 
+    //Hack to fix inconsistent heads not in columns
+    & > .page-header{
+      padding-left:15px;
+      padding-right:15px;
+    }
     @include desktop {
       padding-left: 0;
       padding-right: 0;
     }
   }
 }
+
+
 
 .footer {
   background-color: $color_black;
@@ -404,6 +411,8 @@ a.front-page {
   border-bottom: 0;
 }
 
+
+
 .article {
   margin-bottom: 2em;
 
@@ -497,6 +506,7 @@ table option {
   font-weight: 400;
 }
 
+
 .table > caption + thead > tr:first-child > th,
 .table > colgroup + thead > tr:first-child > th,
 .table > thead:first-child > tr:first-child > th,
@@ -519,6 +529,10 @@ table option {
 .table-striped > tbody > tr:nth-of-type(2n+1) {
   background: #EAE8E3;
 }
+
+td a{
+  white-space:normal;
+}
 table{
   td:nth-child(n+2){
     a:not(.btn){
@@ -535,19 +549,75 @@ table{
   th.count {
     text-align: center;
   }
-  td[data-name="Headline"] > a{
-      max-width:23ch;
+
+
+
+    td[data-name="Headline"] > a {
+      max-width: 23ch;
       overflow-x: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      display:inline-block;
-       
-  }
+      display: inline-block;
+      padding-right:.5rem;
 
+    }
+}
+
+@media (max-width: $tablet-width) {
+  .table {
+    display:block;
+    thead {
+      display: none;
+    }
+
+    tbody {
+        display:block;
+      tr {
+        display: flex;
+        flex-wrap:wrap;
+        padding-bottom:.75rem;
+        margin-bottom: 1.25rem;
+        background:none!important;
+        @include tile-shadow;
+        box-shadow:none;
+        td {
+          flex:1 1 30%;
+          text-align: left;
+          padding: 1em;
+          &:before {
+            content: attr(data-name);
+            font-weight: bold;
+            display:block;
+            white-space:nowrap;
+          }
+        }
+        td:first-child {
+          flex-grow:0;
+          flex-shrink:0;
+          flex-basis:100%;
+          background: $color_beige;
+          border-bottom: 1px solid #efefef;
+          &:before {
+            content: unset;
+          }
+          a {
+            color: $color_red_dark;
+            font-weight: bold;
+            white-space: nowrap;
+            text-transform: uppercase;
+            text-align: center;
+            text-decoration:none;
+          }
+        }
+
+      }
+    }
+  }
 }
 
 
-#languages {
+
+guages {
   display: none !important;
 }
 
@@ -832,15 +902,20 @@ table{
 
 // next/previous report at top of screen
 .report-navigation {
-  div {
     font-size: 15px;
     line-height: 1.25em;
-
-    &:last-child {
-      text-align: right;
+    
+    div:last-child {
+     text-align: right;
     }
-  }
 }
+
+.breadcrumb{
+  @extend .report-navigation;
+}
+
+
+
 
 // both sidebar panels on Reports
 .panel-metadata,
@@ -891,8 +966,13 @@ table{
 }
 
 
+
 .page-header {
   border-bottom: 1px solid lighten($color_light_grey, 50%);
+}
+
+#content > .row:first-child > .page-header{
+    margin-top:-10px;
 }
 
 /* Image gallery styles. */
@@ -1094,7 +1174,8 @@ table{
  /* Browse lists */
 
 .browse-div{
-  margin:0 -15px;
+  margin-top:0;
+  margin-bottom:0;
   display:block;
   &.alpha-browse-div{
     @media (min-width: $desktop-width) {
@@ -1149,12 +1230,12 @@ ul.browse-list {
     margin-right:15px;
   }
 
+
+
   li {
     list-style-type: none;
     display: block;
-    border: 2px solid rgba($color_beige, 0.4);
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
-                0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    @include tile-shadow;
     height:$browse-item-height;
     position:relative;
     overflow-y: hidden;
@@ -1180,35 +1261,39 @@ ul.browse-list {
         opacity:0.85;
       }
     }
-    a{
-      display:flex;
-      flex-direction:column;
-      padding: 0.25rem;
-      align-content:space-between;
-      font-weight: bold;
-      text-transform: uppercase;
-      height:100%;
-      .name {
-        display:block;
-        text-align:center;
-        margin: .75rem .25rem;
-        width:100%;
-        color: $color_red_dark;
-        &[data-month]:before{
-          content: attr(data-month) " "
-        }
-      }
-      .count{
-        display:block;
-        padding-top:2rem;
-        text-align:center;
-        font-size:0.8em;
-        color:$color_black;
-      }
-    }
-
   }
 }
+
+ul.browse-list{
+  a{
+    display:flex;
+    flex-direction:column;
+    padding: 0.25rem;
+    align-content:space-between;
+    font-weight: bold;
+    text-transform: uppercase;
+    height:100%;
+    .count{
+      display:block;
+      padding-top:2rem;
+      text-align:center;
+      font-size:0.8em;
+      color:$color_black;
+    }
+  }
+  .name {
+    display:block;
+    text-align:center;
+    margin: .75rem .25rem;
+    width:100%;
+    color: $color_red_dark;
+    &[data-month]:before{
+      content: attr(data-month) " "
+    }
+  }
+
+}
+
 
 .browse-toggle{
   display:none;
