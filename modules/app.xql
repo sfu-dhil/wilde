@@ -788,7 +788,7 @@ declare function app:doc-source($node as node(), $model as map(*)) as node()* {
       return
         <dd>
           <a href="{ $url }" target="_blank"> {
-            analyze-string($url,'^https?://([^/]*)')//fn:group[@nr=1]
+            analyze-string($url,'^https?://([^/]*)')//fn:group[@nr=1]/string(.)
           } </a>
         </dd>
   )
@@ -799,7 +799,7 @@ declare function app:doc-facsimile($node as node(), $model as map(*)) as node()*
       return
         <dd>
           <a href="{ $url }" target="_blank"> {
-            analyze-string($url,'^https?://([^/]*)')//fn:group[@nr=1]
+            analyze-string($url,'^https?://([^/]*)')//fn:group[@nr=1]/string(.)
           } </a>
         </dd>
 };
