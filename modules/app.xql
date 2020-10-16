@@ -133,7 +133,7 @@ return
 declare function local:breadcrumb-report($document){
       let $date := document:date($document)
       let $show := if ($date castable as xs:date) 
-                   then format-date($date, '[MNn] [D01], [Y0001]') 
+                   then format-date($date, '[MNn] [D1], [Y0001]') 
                    else $date
       return
       (app:link-view(document:id($document), $show),
@@ -795,12 +795,19 @@ declare function app:doc-source($node as node(), $model as map(*)) as node()* {
 };
 
 declare function app:doc-facsimile($node as node(), $model as map(*)) as node()* {
-      for $url in document:facsimile($model('document'))
+      let $urls := document:facsimile($model('document'))
       return
+      if (not(empty($urls))) then 
+        for $url in $urls
+        return
         <dd>
           <a href="{ $url }" target="_blank"> {
             analyze-string($url,'^https?://([^/]*)')//fn:group[@nr=1]/string(.)
           } </a>
+        </dd>
+     else 
+        <dd>
+        <i>None found</i>
         </dd>
 };
 
