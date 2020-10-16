@@ -846,7 +846,8 @@ guages {
     > a,
     > a:hover,
     > a:focus {
-      border-bottom: 0;
+      border-bottom-color: transparent;
+      transition: all 0.25s ease-in-out, border-bottom 0ms;
     }
   }
 

@@ -834,7 +834,8 @@ guages {
 .report-view .nav-tabs > li.active > a,
 .report-view .nav-tabs > li.active > a:hover,
 .report-view .nav-tabs > li.active > a:focus {
-  border-bottom: 0;
+  border-bottom-color: transparent;
+  transition: all 0.25s ease-in-out, border-bottom 0ms;
 }
 .report-view .tab-pane {
   margin-bottom: 0.5em;
