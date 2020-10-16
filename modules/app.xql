@@ -30,9 +30,6 @@ declare function app:link-view($id as xs:string, $content) as node() {
 };
 
 
-declare function local:field2Param($field as xs:string) as xs:string{
-    if ($field = 'newspaper') then 'publisher' else $field
-};
 (:
     Create a table showing some of the reports for navigation.
 :)
@@ -72,67 +69,100 @@ declare function local:report-table($reports as node()*, $param as xs:string?) a
     </table>
 };
 
-
-declare function app:breadcrumb($node as node(), $model as map(*)){
+(:
+    Creates the breadcrumb menu for all pages
+:)
+declare function app:breadcrumb($node as node(), $model as map(*)) as element()?{
    if (ends-with(request:get-uri(),'index.html'))
    then ()
    else
     let $crumbs := reverse(local:breadcrumb($node, $model))
     return
-        <div class="container">
-            <nav aria-label="breadcrumb" class="row">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                    {for $crumb in $crumbs return 
-                        if (functx:index-of-node($crumbs, $crumb) lt count($crumbs))
-                        then
-                        <li class="breadcrumb-item">{$crumb}</li>
-                        else
-                        <li class="breadcrumb-item active" aria-current="page">{string($crumb)}</li>
-                    }</ol>
-                </nav>
-         </div>
+        <nav aria-label="breadcrumb" class="col-md-12">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                {for $crumb in $crumbs return 
+                    if (functx:index-of-node($crumbs, $crumb) lt count($crumbs))
+                    then
+                    <li class="breadcrumb-item">{$crumb}</li>
+                    else
+                    <li class="breadcrumb-item active" aria-current="page">{string($crumb)}</li>
+                  }
+             </ol>
+         </nav>
 };
 
-
+(:
+    Returns the breadcrumb path for a given document. This function determines
+    what kind of page we're on and then calls the function associated with that
+    page type.
+:)
 declare function local:breadcrumb($node as node(), $model as map(*)) as item()*{
 let $uri := tokenize(request:get-uri(),'/')[last()]
 let $id := (request:get-parameter('f',request:get-parameter('a',())))
 let $doc := if ($id) then collection:fetch($id) else ()
 return
+    (:  Handling for reports: just call local:breadcrumb-report for
+        the document :)
     if ($uri = 'view.html') 
         then local:breadcrumb-report($doc)
     else 
+    (: Handling for compare pages, which is a subset of the base 
+        document of the comparison (i.e. the "a" report) :)
         if (matches($uri,'compare(-docs)?.html$'))
         then
             let $compareNode := <span>Compare</span>
             return ($compareNode, local:breadcrumb-report($doc))
     else 
+    (: Handling for details pages :)
         if (matches($uri, '-details.html')) 
         then 
             let $field := substring-before($uri, '-details')
-            let $value := request:get-parameter(local:field2Param($field),())
+            let $value := request:get-parameter(local:param2Field($field),())
             return local:breadcrumb-details($field, $value)
+            
+    (: Generic page handling from root :)
     else local:breadcrumb-simple($uri, local:get-doc($uri))
 };
 
 
+(:
+    Return a breadcrumb path for a report: which is the report
+    as link, and then the breadcrumb from the parent newspaper
+:)
 declare function local:breadcrumb-report($document){
-      (app:link-view(document:id($document), document:date($document)),
+      let $date := document:date($document)
+      let $show := if ($date castable as xs:date) 
+                   then format-date($date, '[MNn] [D01], [Y0001]') 
+                   else $date
+      return
+      (app:link-view(document:id($document), $show),
       local:breadcrumb-details('newspaper', document:publisher($document)))
 };
 
+
+(:
+    Return the breadcrumb path for a details page
+:)
 declare function local:breadcrumb-details($field, $value){
     let $text := if ($field = 'language') then lang:code2lang($value) else $value
-    let $detailsLink := <a href="{$field}-details.html?{local:field2Param($field)}={$value}">{$text}</a>
+    let $detailsLink := <a href="{$field}-details.html?{local:param2Field($field)}={$value}">{$text}</a>
     let $href := $field || '.html'
     let $doc := local:get-doc($href)
     return ($detailsLink, local:breadcrumb-simple($href, $doc))
 };
 
+(:
+    Return the a simple breadcrumb link, which is just the page name
+:)
 declare function local:breadcrumb-simple($href, $document as node()){
     <a href="{$href}">{app:page-title($document)}</a>
 };
+
+(:
+   Function to return a given page's title as encoded in the HTML
+   structure
+:)
 
 declare function app:page-title($node as node()) as xs:string{
     let $title := $node//h1[1]
@@ -142,18 +172,40 @@ declare function app:page-title($node as node()) as xs:string{
         else "No title available"
 };
 
-declare function local:get-doc($path) as document-node(){
+
+
+(:
+   Retrieves a local document within the application
+:)
+declare function local:get-doc($path) as document-node()?{
     let $resolved :=  $config:app-root || '/' || $path
     let $nocache := replace($resolved,'\.html$','-nocache.html')
     return 
+        (: Fork depending on whether or not the cached version of the document
+            is available :)
         if (doc-available($resolved))
         then doc($resolved)
         else
             if (doc-available($nocache))
             then doc($nocache)
-            else ()
+        else ()
 };
 
+(:
+    Translates a field name (i.e. the metadata field) to
+    a parameter. Inverse of local:param2Field
+:)
+declare function local:field2Param($field as xs:string) as xs:string{
+    if ($field = 'publisher') then 'newspaper' else $field
+};
+
+(:
+    Translates a parameter to a parameter (i.e.
+    the metadata field). Inverse of local:param2Field
+:)
+declare function local:param2Field($param as xs:string) as xs:string{
+    if ($param = 'newspaper') then 'publisher' else $param
+};
 
 (:
     Link to a details page ($fn-details.html) based off 
