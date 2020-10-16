@@ -29,15 +29,12 @@ declare function app:link-view($id as xs:string, $content) as node() {
     <a href="view.html?f={$id}">{$content}</a>
 };
 
+
 (:
     Create a table showing some of the reports for navigation.
 :)
 declare function local:report-table($reports as node()*, $param as xs:string?) as element() {
     let $fields := ('date','publisher','region','city','language')[not(. = $param)]
-    let $names := map:merge(
-        for $f in $fields return
-        map:entry($f, if ($f  ='publisher') then 'newspaper' else $f)
-    )
     return
     <table class="table table-striped table-hover table-condensed" id="tbl-browser">
         <thead>
@@ -46,7 +43,7 @@ declare function local:report-table($reports as node()*, $param as xs:string?) a
                 {
                    for $field in $fields
                    return
-                   <th>{functx:capitalize-first($names($field))}</th>
+                   <th>{functx:capitalize-first(local:field2Param($field))}</th>
                 }
                 <th class="count">Document <br/>Matches</th>
                 <th class="count">Paragraph <br/>Matches</th>
@@ -60,8 +57,8 @@ declare function local:report-table($reports as node()*, $param as xs:string?) a
                 <td data-name="Headline">{app:link-view(document:id($report), document:headline($report))}</td>
                 {
                     for $field in $fields return
-                    <td data-name="{functx:capitalize-first($names($field))}">
-                        {app:link-details($report, $field, $names($field))}
+                    <td data-name="{functx:capitalize-first(local:field2Param($field))}">
+                        {app:link-details($report, $field, local:field2Param($field))}
                     </td>
                 }
                 <td data-name="Document Matches" class="count">{count(document:document-matches($report))}</td>
@@ -72,6 +69,144 @@ declare function local:report-table($reports as node()*, $param as xs:string?) a
     </table>
 };
 
+(:
+    Creates the breadcrumb menu for all pages
+:)
+declare function app:breadcrumb($node as node(), $model as map(*)) as element()?{
+   if (ends-with(request:get-uri(),'index.html'))
+   then ()
+   else
+    let $crumbs := reverse(local:breadcrumb($node, $model))
+    return
+        <nav aria-label="breadcrumb" class="col-md-12">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                {for $crumb in $crumbs return 
+                    if (functx:index-of-node($crumbs, $crumb) lt count($crumbs))
+                    then
+                    <li class="breadcrumb-item">{$crumb}</li>
+                    else
+                    <li class="breadcrumb-item active" aria-current="page">{string($crumb)}</li>
+                  }
+             </ol>
+         </nav>
+};
+
+(:
+    Returns the breadcrumb path for a given document. This function determines
+    what kind of page we're on and then calls the function associated with that
+    page type.
+:)
+declare function local:breadcrumb($node as node(), $model as map(*)) as item()*{
+let $uri := tokenize(request:get-uri(),'/')[last()]
+return
+    (:  Handling for reports: just call local:breadcrumb-report for
+        the document :)
+    if ($uri = 'view.html') 
+        then 
+            let $reportId := request:get-parameter('f',())
+            return local:breadcrumb-report(collection:fetch($reportId))
+    else 
+    (: Handling for compare pages, which is a subset of the base 
+        document of the comparison (i.e. the "a" report) :)
+        if (matches($uri,'compare(-docs)?.html$'))
+        then
+            let $compareNode := <span>Compare</span>
+            let $reportId := request:get-parameter('a', ())
+            return ($compareNode, local:breadcrumb-report(collection:fetch($reportId)))
+    else 
+    (: Handling for details pages :)
+        if (matches($uri, '-details.html')) 
+        then 
+            let $field := substring-before($uri, '-details')
+            let $value := request:get-parameter(local:param2Field($field),())
+            return local:breadcrumb-details($field, $value)
+            
+    (: Generic page handling from root :)
+    else local:breadcrumb-simple($uri, local:get-doc($uri))
+};
+
+
+(:
+    Return a breadcrumb path for a report: which is the report
+    as link, and then the breadcrumb from the parent newspaper
+:)
+declare function local:breadcrumb-report($document){
+      let $date := document:date($document)
+      let $show := if ($date castable as xs:date) 
+                   then format-date($date, '[MNn] [D1], [Y0001]') 
+                   else $date
+      return
+      (app:link-view(document:id($document), $show),
+      local:breadcrumb-details('newspaper', document:publisher($document)))
+};
+
+
+(:
+    Return the breadcrumb path for a details page
+:)
+declare function local:breadcrumb-details($field, $value){
+    let $text := if ($field = 'language') then lang:code2lang($value) else $value
+    let $detailsLink := <a href="{$field}-details.html?{local:param2Field($field)}={$value}">{$text}</a>
+    let $href := $field || '.html'
+    let $doc := local:get-doc($href)
+    return ($detailsLink, local:breadcrumb-simple($href, $doc))
+};
+
+(:
+    Return the a simple breadcrumb link, which is just the page name
+:)
+declare function local:breadcrumb-simple($href, $document as node()){
+    <a href="{$href}">{app:page-title($document)}</a>
+};
+
+(:
+   Function to return a given page's title as encoded in the HTML
+   structure
+:)
+
+declare function app:page-title($node as node()) as xs:string{
+    let $title := $node//h1[1]
+    return
+        if ($title) 
+        then string($title) 
+        else "No title available"
+};
+
+
+
+(:
+   Retrieves a local document within the application
+:)
+declare function local:get-doc($path) as document-node()?{
+    let $resolved :=  $config:app-root || '/' || $path
+    let $nocache := replace($resolved,'\.html$','-nocache.html')
+    return 
+        (: Fork depending on whether or not the cached version of the document
+            is available :)
+        if (doc-available($resolved))
+        then doc($resolved)
+        else
+            if (doc-available($nocache))
+            then doc($nocache)
+        else ()
+};
+
+(:
+    Translates a field name (i.e. the metadata field) to
+    a parameter. Inverse of local:param2Field
+:)
+declare function local:field2Param($field as xs:string) as xs:string{
+    if ($field = 'publisher') then 'newspaper' else $field
+};
+
+(:
+    Translates a parameter to a parameter (i.e.
+    the metadata field). Inverse of local:param2Field
+:)
+declare function local:param2Field($param as xs:string) as xs:string{
+    if ($param = 'newspaper') then 'publisher' else $param
+};
 
 (:
     Link to a details page ($fn-details.html) based off 
@@ -527,7 +662,6 @@ declare function app:count-documents($node as node(), $model as map(*), $name, $
 declare function app:load($node as node(), $model as map(*)) {
     let $f := request:get-parameter('f', '')
     let $doc := collection:fetch($f)
-
     return map {
         "doc-id" := $f,
         "document" := $doc
@@ -654,19 +788,26 @@ declare function app:doc-source($node as node(), $model as map(*)) as node()* {
       return
         <dd>
           <a href="{ $url }" target="_blank"> {
-            analyze-string($url,'^https?://([^/]*)')//fn:group[@nr=1]
+            analyze-string($url,'^https?://([^/]*)')//fn:group[@nr=1]/string(.)
           } </a>
         </dd>
   )
 };
 
 declare function app:doc-facsimile($node as node(), $model as map(*)) as node()* {
-      for $url in document:facsimile($model('document'))
+      let $urls := document:facsimile($model('document'))
       return
+      if (not(empty($urls))) then 
+        for $url in $urls
+        return
         <dd>
           <a href="{ $url }" target="_blank"> {
-            analyze-string($url,'^https?://([^/]*)')//fn:group[@nr=1]
+            analyze-string($url,'^https?://([^/]*)')//fn:group[@nr=1]/string(.)
           } </a>
+        </dd>
+     else 
+        <dd>
+        <i>None found</i>
         </dd>
 };
 
@@ -722,6 +863,9 @@ declare function app:paragraph-similarities($node as node(), $model as map(*)) a
                     </li>
             } </ul>
 };
+
+
+
 
 declare function app:search($node as node(), $model as map(*)) {
     let $query := request:get-parameter('query', '')

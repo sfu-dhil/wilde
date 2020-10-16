@@ -2,34 +2,29 @@
 <div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround"
     data-template-with="templates/page.html" data-template-at="content">
     <div data-template="app:load">
-
-        <div class="row report-navigation">
-            <div class="col-sm-6">
+        <div class="report-navigation">
+            <div>
                 <strong>Previous report</strong>
-                <br/>
                 <span data-template="app:doc-previous"/>
             </div>
-            <div class="col-sm-6">
+            <div>
                 <strong>Next report</strong>
-                <br/>
                 <span data-template="app:doc-next"/>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-sm-12">
-                <div class="page-header">
-                    <h1>
-                        <span data-template="app:doc-title">Report</span>
-                    </h1>
-                </div>
+            <div class="page-header">
+                <h1>
+                    <span data-template="app:doc-title">Report</span>
+                </h1>
+                <p class="report-translation-help">This report was originally published in <span
+                    data-template="app:doc-language"/>. Machine translations may be available in
+                    other languages.</p>
             </div>
         </div>
         <div class="row report-view">
             <div class="col-sm-8">
-                <p class="report-translation-help">This report was originally published in <span
-                        data-template="app:doc-language"/>. Machine translations may be available in
-                    other languages.</p>
                 <div data-template="app:doc-translation-tabs"/>
                 <div data-template="app:doc-translations"/>
             </div>
