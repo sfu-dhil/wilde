@@ -99,20 +99,21 @@ declare function app:breadcrumb($node as node(), $model as map(*)) as element()?
 :)
 declare function local:breadcrumb($node as node(), $model as map(*)) as item()*{
 let $uri := tokenize(request:get-uri(),'/')[last()]
-let $id := (request:get-parameter('f',request:get-parameter('a',())))
-let $doc := if ($id) then collection:fetch($id) else ()
 return
     (:  Handling for reports: just call local:breadcrumb-report for
         the document :)
     if ($uri = 'view.html') 
-        then local:breadcrumb-report($doc)
+        then 
+            let $reportId := request:get-parameter('f',())
+            return local:breadcrumb-report(collection:fetch($reportId))
     else 
     (: Handling for compare pages, which is a subset of the base 
         document of the comparison (i.e. the "a" report) :)
         if (matches($uri,'compare(-docs)?.html$'))
         then
             let $compareNode := <span>Compare</span>
-            return ($compareNode, local:breadcrumb-report($doc))
+            let $reportId := request:get-parameter('a', ())
+            return ($compareNode, local:breadcrumb-report(collection:fetch($reportId)))
     else 
     (: Handling for details pages :)
         if (matches($uri, '-details.html')) 
@@ -661,7 +662,6 @@ declare function app:count-documents($node as node(), $model as map(*), $name, $
 declare function app:load($node as node(), $model as map(*)) {
     let $f := request:get-parameter('f', '')
     let $doc := collection:fetch($f)
-
     return map {
         "doc-id" := $f,
         "document" := $doc
