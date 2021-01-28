@@ -126,6 +126,14 @@ declare function document:language($node as node()) as xs:string {
         ''      
 };
 
+declare function document:filename($node as node()) as xs:string {
+    util:unescape-uri(util:document-name($node), "UTF-8")
+};
+
+declare function document:collection($node as node()) as xs:string {
+    util:unescape-uri(util:collection-name($node), "UTF-8")
+};
+
 declare function document:translations($node as node()) as xs:string* {
   root($node)//div[@id='translation']/@lang/string()
 };
