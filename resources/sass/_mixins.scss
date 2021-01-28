@@ -5,6 +5,7 @@
 @mixin link($color, $hover_color) {
   a {
     color: $color;
+    @include ext-link($color);
     &:link,
     &:visited {
       color: $color;
@@ -14,9 +15,17 @@
     &:focus,
     &:hover {
       color: $hover_color;
+      @include ext-link($hover-color);
     }
   }
 }
+
+@mixin tile-shadow{
+  border: 2px solid rgba($color_beige, 0.4);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
+  0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
 
 @mixin diff-header{
     display:block;
@@ -25,6 +34,12 @@
     margin-bottom:1rem;
     
 }
+
+@mixin h2-margins {
+  margin-top: 1em;
+  margin-bottom: .75em;
+}
+
 
 @mixin tablet {
   @media (min-width: #{$tablet-width}) {
@@ -50,4 +65,23 @@
       -moz-filter: blur(0px); 
       -ms-filter: blur(0px);
       filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='0');
+}
+
+@mixin ext-link($color){
+  &[href ^='http']:after{
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='#{encodecolor($color)}' width='14px' height='14px'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z'/%3E%3C/svg%3E");
+    position: relative;
+    top: 1px;
+    left: 0px;
+  }
+}
+
+// Taken, with thanks, from: https://gist.github.com/certainlyakey/e9c0d8f5c87ff47e3d5b
+@function encodecolor($string) {
+  @if type-of($string) == 'color' {
+    $hex: str-slice(ie-hex-str($string), 4);
+    $string:unquote("#{$hex}");
+  }
+  $string: '%23' + $string;
+  @return $string;
 }

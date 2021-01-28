@@ -34,9 +34,7 @@
           nodes: nodes,
           edges: edges
         };
-        console.log('beginning layout.');
         var network = new vis.Network(container, graph, options);
-        console.log('completed layout.');
       }
     });
   }

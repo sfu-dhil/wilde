@@ -22,11 +22,6 @@ else if ($exist:path eq "/") then
     <dispatch>
         <redirect url="index.html"/>
     </dispatch>
-
-else if($exist:path eq "/list.html") then
-    <dispatch>
-        <cache-control cache="yes"/>
-    </dispatch>
   
 else if (ends-with($exist:resource, ".html")) then
     (: the html page is run through view.xql to expand templates :)

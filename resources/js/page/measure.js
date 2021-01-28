@@ -33,7 +33,6 @@
     }
     
     $(document).ready(function () {
-        console.log('ready');
         var dmp = new diff_match_patch();
         
         var a = normalize($("#first").text());

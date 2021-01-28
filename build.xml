@@ -15,7 +15,7 @@
     </condition>
   </fail>
 
-  <target depends="cache-list,docs,bower" name="xar">
+  <target depends="cache-list,yarn" name="xar">
     <mkdir dir="${build.dir}" />
     <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/*,wilde.xpr" />
   </target>
@@ -26,21 +26,11 @@
     <get src="${cache.base}/language-nocache.html" dest="language.html"/>
     <get src="${cache.base}/newspaper-nocache.html" dest="newspaper.html"/>
     <get src="${cache.base}/region-nocache.html" dest="region.html"/>
-    <get src="${cache.base}/list-nocache.html" dest="list.html"/>
     <get src="${cache.base}/source-nocache.html" dest="source.html"/>
   </target>
 
-  <target name="docs">
-    <exec dir="docs" executable="make">
-      <arg value="clean" />
-    </exec>
-    <exec dir="docs" executable="make">
-      <arg value="html" />
-    </exec>
-  </target>
-
-  <target name="bower">
-    <exec executable="bower">
+  <target name="yarn">
+    <exec executable="yarn">
       <arg value="install" />
     </exec>
   </target>

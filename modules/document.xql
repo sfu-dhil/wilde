@@ -22,12 +22,20 @@ declare function document:title($node as node() ) as xs:string {
     return 
     if(string-length($title) gt 1) then
         $title
-    else
+    else 
         "(unknown title)" 
 };
 
 declare function document:subtitle($node as node()) as xs:string {
     string(root($node)//body/p[1])
+};
+
+declare function document:headline($node as node()) as xs:string{
+    let $heading := root($node)//p[matches(@class,'(^|\s*)heading(\s*|$)')][1]
+    return
+        if (exists($heading)) 
+        then $heading
+        else document:title($node)
 };
 
 declare function document:path($node as node()) as xs:string {

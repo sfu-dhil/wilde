@@ -46,6 +46,10 @@ declare variable $config:thumb-root := '/db/apps/wilde-data/data/thumbs';
 
 declare variable $config:image-root := '/db/apps/wilde-data/data/images';
 
+declare variable $config:pagination-window := 3;
+
+declare variable $config:pagination-size := 100;
+
 (:
     Default string metric.
 :)

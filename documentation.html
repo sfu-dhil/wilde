@@ -1,0 +1,274 @@
+<div data-template="templates:surround" data-template-at="content"
+    data-template-with="templates/page.html" xmlns="http://www.w3.org/1999/xhtml">
+    <div class="row">
+        <div class="page-header">
+            <h1>User Manual</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" id="content">
+            <div id="introduction">
+                <h2>Introduction</h2>
+                <p>The Wilde Trials International Archive is a textbase and
+                    text-­sharing detection program for analyzing international news
+                    reports about the three trials of Oscar Wilde. Wilde’s three trials
+                    were an international media event in the spring of 1895 and were
+                    front­-page news the world over for nearly a two­ month period,
+                    triggering debates about homosexuality, censorship and press
+                    standards. The textbase contains news reports published
+                    in1895 which have been gathered from newspapers around the
+                    world in a number of languages.</p>
+            </div>
+            <div id="pages">
+                <h2>Pages</h2>
+                <div id="pages_home">
+                    <h2>Home Page</h2>
+                    <p>The Home Page offers access to the other pages on the site
+                        through in-text links (indicated in red) and through header and
+                        footer menus.</p>
+                    <p>To return to the home page at any time, select Wilde Trials
+                        International News Archive at the top left-hand corner.</p>
+                </div>
+                <div id="pages_about">
+                    <h2>About</h2>
+                    <p>Select “About” from the header menu to choose a page from the
+                        drop-down menu.</p>
+                    <p>The Overview page provides background on Oscar Wilde’s three
+                        trials and the website’s features. </p>
+                    <p>The Curatorial Statement provides information on the data
+                        sources and data analysis methods used.</p>
+                    <p>The News Sources page provides a full list of all sources for
+                        the news reports, which can be browsed by source.</p>
+                    <p>The Image Gallery contains selected images of the trials from
+                        the news reports..</p>
+                    <p>The Contributors page lists all contributors to the Wilde Trials
+                        International News Archive.</p>
+                </div>
+                <div id="pages_browsing">
+                    <h2>Browsing the Reports</h2>
+                    <p>On the Reports page, you will find a bar graph showing the
+                        day-by-day volume of news on the Wilde trials across all four
+                        languages represented in the archive,and a full list of all
+                        news reports collected on the three trials of Oscar Wilde.</p>
+                    <p>The bar graph features a legend in the corner that indicates
+                        which color represents the language in which the reports were
+                        published. The graph offers two data visualization displays. The
+                        default display is Stacked, with the line indicating the total
+                        number of reports for each day and the colours differentiating each
+                        language. Choose Grouped to separate the number of reports in each
+                        language per day into separate lines. In either view, hover over a
+                        line to view the exact number of reports in each language for each
+                        day.</p>
+                    <p>News reports on Wilde’s trials can be browsed by date,
+                        newspaper, region, city, and languagevia the drop-down
+                        filtersaboveeach field. To reset the list, return the
+                        drop-down filtersto blank.</p>
+                    <p>The search bar on the upper right hand side of the list will
+                        query theNewspaper, Region, City, and Language fields. (For
+                        example, you can search by “Gazette” to find all reports published
+                        in newspapers with Gazette in the title; or you can search by
+                        “Britain” to find all reports published in Britain).</p>
+                    <p>The metadata for the Reports includes:</p>
+                    <ul>
+                        <li>Date: the publication date of the report</li>
+                        <li>Newspaper: the name of the newspaper in which the report
+                            was published</li>
+                        <li>Region: the country in which the newspaper was published</li>
+                        <li>City: the city in which the newspaper was published</li>
+                        <li>Language: the language in which the report was first
+                            published</li>
+                        <li>Document Matches: the number of other full reports that match,
+                            based on the measure of Levenshtein distance.</li>
+                        <li>Paragraph Matches: the number of other paragraphs in other
+                            reports that match, based on the measure of Levenshtein
+                            distance.</li>
+                        <li>Words: the word count of the report, excluding the headline</li>
+                    </ul>
+                </div>
+                <div id="pages_individual">
+                    <h2>Individual reports</h2>
+                    <p>Each report provides two different kinds of matching tools. The
+                        main section shows in-line matches, which are matches that are
+                        found at the paragraph level. The second comparison section, on the
+                        right-hand side, shows document matches, which are matches that are
+                        found at the full document level.</p>
+                    <p>Each individual news report also includes basic bibliographic
+                        metadata about the newspaper from which it was derived, as well as
+                        date of publication, word count, and source information. If sourced
+                        from open-access databases, a link to the facsimile is provided. In
+                        the case of certain databases, however, it is not possible to
+                        provide a direct link to the report.</p>
+                    <p>Metadata for each individual report includes:</p>
+                    <ul>
+                        <li>Newspaper: the name of the newspaper in which the report was
+                            published</li>
+                        <li>Date published: the publication date of the report</li>
+                        <li>Region: the country and city in which the newspaper was
+                            published</li>
+                        <li>Original language: the language in which the report was first
+                            published</li>
+                        <li>Sources: the database and institution where the newspaper is
+                            located, including links</li>
+                        <li>Facsimile: link to the digitized copy of the report</li>
+                        <li>Word count: the number of words in the report</li>
+                    </ul>
+                    
+                    <div id="pages_individual_inlineMatches">
+                        <h3>In-line matches</h3>
+                        <p>The in-line match section will be shown first in the language in
+                            which it was originally published. For non-English languages, a
+                            translation in English can be found by selecting the “English” tab.
+                            Matches may be found in either the original or translated
+                            language.</p>
+                        <p>Each paragraph from the individual report that matches a
+                            paragraph in another report will appear with a match button next to
+                            it. The match button will indicate how many matches of that
+                            paragraph have been found.</p>
+                        <p>Selecting the match button will display the matches of each
+                            paragraph.</p>
+                        <p>Selecting Compare Paragraphs will open a new page that compares
+                            the two reports at the paragraph level. The page displays the
+                            original paragraph(s) on the left, and the matching paragraph(s) in
+                            the middle. The column on the right highlights any differences
+                            between the two matching paragraphs: pink shows differences in the
+                            first report and purple in the second report.</p>
+                        <p>Selecting Compare Documents will open a new page that compares
+                            the two reports at the document level. The page displays the
+                            original document on the left, and the matching document in the
+                            middle. The column on the right highlights any differences between
+                            the two matching documents: pink shows differences in the first
+                            report and purple in the second report.</p>
+                    </div>
+                    <div id="pages_individual_docMatches">
+                        <h3>Document Matches:</h3>
+                        <p>To the right of the in-line comparison tool is the document
+                            comparison tool. The tool lists the names of each report that
+                            matches the original report at the document level, and the
+                            percentage of text-matching between documents. It also includes a
+                            link to a document comparison tool. Selecting Compare Documents
+                            will open a new page that compares the two reports at the document
+                            level.</p>
+                        <p>Levenshtein matches indicate reports that match based
+                            onthe number of different characters between two pieces of
+                            text.</p>
+                        <p>Selecting the news report title will take you to the individual
+                            record for that report.</p>
+                        <p>Selecting the Compare tool will open a new page that compares
+                            the two reports at the document level. The page displays the
+                            original document on the left, and the matching document in the
+                            middle. The column on the right highlights any differences between
+                            the two matching documents: pink shows differences in the first
+                            report and purple in the second report.</p>
+                    </div>
+                    
+                    
+                </div>
+                <div id="pages_searching">
+                    
+                    <h2>Searching the Reports</h2>
+                    <p>Use the search page to query the full-text database and find
+                        reports.</p>
+                    
+                    <dl class="dl-horizontal">
+                        <dt>Match any term</dt>
+                        <dd>
+                            <kbd>wilde verdict</kbd> matches "wilde" or "verdict."</dd>
+                        <dt>Wildcards</dt>
+                        <dd>
+                            <kbd>crim*</kbd> matches "crime" and "criminal".<br/>
+                            <kbd>s?t</kbd> matches "sit" and "sat" but not "saat."</dd>
+                        <dt>match all terms</dt>
+                        <dd>
+                            <kbd>+wilde +verdict</kbd> matches paragraphs which contain both wilde and
+                            verdict.</dd>
+                        <dt>Exclude some terms</dt>
+                        <dd>
+                            <kbd>-wilde +verdict</kbd> matches paragraphs which do not contain wilde but do
+                            contain verdict.</dd>
+                        <dt>Phrase searches</dt>
+                        <dd>
+                            <kbd>"at the witness box"</kbd>
+                        </dd>
+                        <dt>Proximity search</dt>
+                        <dd>
+                            <kbd>"wilde queensberry"~10</kbd> matches paragraphs which contain the words
+                            wilde and queensberry no more than 10 words apart.</dd>
+                        <dt>Fuzzy search</dt>
+                        <dd>
+                            <kbd>persecution~</kbd> matches words which are similar to persecution.<br/>
+                            <kbd>persecution~0.9</kbd> matches words which are closer to persecution than
+                            <kbd>persecution~0.1</kbd> would.</dd>
+                        <dt>Booleans</dt>
+                        <dd>
+                            <kbd>queensberry AND clarke</kbd> finds paragraphs that contain both queensberry
+                            and clarke</dd>
+                        <dt>Grouping booleans</dt>
+                        <dd>
+                            <kbd>(queensberry OR wilde) AND clarke</kbd>
+                        </dd>
+                    </dl>
+                </div>
+                <div id="pages_compare">
+                    <h2>Comparing the Reports</h2>
+                    <p>The compare tool allows comparison of passages from any two news
+                        reports from the collection.</p>
+                    <p>To compare two different pieces of text, enter them into the two
+                        fields below by copy and paste, and then select the Measure
+                        button.The text-comparison tool will produce text similarity
+                        scores based on levenshtein and cosine measures and highlight the
+                        differences between the two texts.</p>
+                </div>
+                <div id="pages_network">
+                    <h2>News Networks</h2>
+                    <p>These network graphs draw on matching reports data generated
+                        within the archive to visualise news flows about the Wilde
+                        trials.</p>
+                    <p>Select the “Newspapers Networks Gephi” link to see the reports
+                        network visualization.</p>
+                    <p>Each newspaper forms a node in the network, indicated by a dot
+                        on the graph. Newspapers are connected - or networked - to each
+                        other based on whether documents or paragraphs from them match. For
+                        example, if the New York Heraldhas any matches with the
+                        Philadelphia Times, they are networked or connected. Selecting a
+                        newspaper node will bring up metadata about its place in the
+                        network.</p>
+                </div>
+                <div id="page_additional">
+                    <h2>Additional Pages</h2>
+                    <div id="page_additional_data">
+                        <h3>Data</h3>
+                        <p>From the Data page, you can export the bibliographical, match,
+                            and network data generated about the news reportsin UTF-8 CSV
+                            file format. There are also some data exports in formats that are
+                            easy to work with in Gephi.</p>
+                    </div>
+                    <div id="page_additional_contact">
+                        <h3>Contact</h3>
+                        <p>Contact information for the site’s Project Director can be found
+                            here.</p>
+                    </div>
+                    <div id="page_additional_github">
+                        <h3>GitHub</h3>
+                        <p>Selecting GitHub will take you to the GitHub account for the
+                            Wilde Trials International News Archive, where you will find the
+                            source code for the website.</p>
+                    </div>
+                    <div id="page_additional_privacy">
+                        <h3>Privacy Policy</h3>
+                        <p>The Privacy Policy page outlines the data that the Wilde Trials
+                            website collects for users that visit it. You can opt out of having
+                            your data collected on this page.</p>
+                    </div>
+                    <div id="page_additional_license">
+                        <h3>License</h3>
+                        <p>The License page provides information on the licenses for the
+                            news reports, for the data available for export, and for the source
+                            code for the site.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        </div>
+
+    </div>
