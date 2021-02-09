@@ -1181,6 +1181,15 @@ ul.browse-list{
   }
 }
 
+// Documentation page
+
+ul.simple{
+    list-style-type:none;
+    & > li{
+        margin-bottom:10px;
+    }
+}
+
 
 
 

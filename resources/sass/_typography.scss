@@ -69,9 +69,12 @@ h5 {
 h2 {
   font-size: 34px;
   @include h2-margins();
-  &:first-child {
-      margin-top:0;
-  }
+
+}
+
+div[class*='col-'] > h2:first-child,
+div[class*='col-'] > div:not([class*='col-']):first-child > h2:first-child{
+    margin-top: 0;
 }
 
 
