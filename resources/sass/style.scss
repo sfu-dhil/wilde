@@ -208,6 +208,8 @@ body {
 // buttons
 .btn,
 .btn-primary,
+a.btn,
+a.btn-primary
 {
   color: $color_white;
   background-color: $color_red_dark;
@@ -262,6 +264,9 @@ main.container {
 
 
 // start header
+
+
+
 #navbar-collapse-1 {
   .container {
     padding: 0;
@@ -273,6 +278,7 @@ main.container {
 
 .navbar {
   border: 0;
+  min-height: $navbar-height;
 }
 
 .navbar-header,
@@ -877,7 +883,7 @@ table{
 }
 
 .modal {
-  top: 50px;
+  top: $navbar-height;
   margin-bottom: 20px;
 }
 
@@ -1182,6 +1188,61 @@ ul.browse-list{
 }
 
 // Documentation page
+html{
+    scroll-behavior: smooth;
+}
+
+#documentation{
+        display:grid;
+        grid-template-columns:1fr;
+        grid-column-gap:0;
+        @include tablet{
+            grid-template-columns: 1fr 2fr;
+            grid-column-gap: 3rem;
+            padding-left:15px;
+        }
+        *[id]{
+    @include tablet{
+      scroll-margin-top: #{$navbar-height + 15px};
+    }
+
+}
+
+}
+
+
+
+#documentation{
+    &.row, .row{
+        &:before, &:after{
+            content:unset;
+        }
+    }
+}
+
+#documentation #article div:first-of-type > h2{
+    margin-top:0;
+}
+#toc .panel{
+
+   @include tablet{
+   position:sticky;
+   top: #{$navbar-height + 15px};
+   margin-left: 15px;
+   margin-right: 40px;
+   }
+
+   background-color: rgba(#fff, 0.4);
+   ul{
+       margin-left:0;
+       list-style-type:none;
+       padding-left:0;
+       ul{
+           margin-left: 2rem;
+       }
+   }
+   
+}
 
 ul.simple{
     list-style-type:none;
