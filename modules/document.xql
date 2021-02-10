@@ -134,6 +134,15 @@ declare function document:collection($node as node()) as xs:string {
     util:unescape-uri(util:collection-name($node), "UTF-8")
 };
 
+declare function document:sortable($node as node()) as xs:string {
+    let $meta := root($node)//meta[@name='wr.sortable']
+    return
+        if($meta) then
+            $meta/@content
+        else
+            document:title($node)
+};
+
 declare function document:translations($node as node()) as xs:string* {
   root($node)//div[@id='translation']/@lang/string()
 };

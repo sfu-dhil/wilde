@@ -164,7 +164,7 @@ declare function collection:documents($name as xs:string, $value as xs:string) a
     return
         for $doc in $collection
         where util:document-name($doc) != 'reports.xpr'
-        order by document:region($doc), document:publisher($doc), document:date($doc)
+        order by document:sortable($doc)
         return $doc
 };
 
