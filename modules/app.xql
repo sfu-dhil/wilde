@@ -21,7 +21,6 @@ declare namespace array="http://www.w3.org/2005/xpath-functions/array";
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
-
 (:
     Build a link to a report.
 :)
@@ -346,6 +345,8 @@ declare function app:browse-items($name as xs:string, $query as xs:string, $page
             let $count := $map($key)
             let $percent := (math:log10($count) div $max)
             let $output := if ($query = 'language') then lang:code2lang($key) else $key
+            let $m := head($metas[@content = $key])
+            let $sort := if($m[@data-sortable]) then $m/@data-sortable else $output
             return
                 map{$key: 
                     map{
@@ -353,7 +354,8 @@ declare function app:browse-items($name as xs:string, $query as xs:string, $page
                         'percent': $percent,
                         'output': $output,
                         'query': $query,
-                        'page': $page
+                        'page': $page,
+                        'sort': $sort
                 }
             }
     )
@@ -369,7 +371,7 @@ declare function app:browse-list($map as map(*), $append as xs:string?){
         <ul class="browse-list">{
             for $key in map:keys($map)
             let $item := map:get($map, $key)
-            order by xs:string($item('output'))
+            order by xs:string($item('sort'))
                 return
                 <li data-count="{$item('count')}" data-value="{$item('output')}" style="--height: {$item('percent') * 100}%" data-region="{$item('region')}">
                     <a href="{$item('page')}-details.html?{$item('query')}={$key}{$append}">
