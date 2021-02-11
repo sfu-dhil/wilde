@@ -8,6 +8,8 @@ module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection";
 import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace functx='http://www.functx.com';
 import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
+import module namespace util="http://exist-db.org/xquery/util";
+import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare default element namespace "http://www.w3.org/1999/xhtml";
@@ -143,7 +145,8 @@ declare function collection:previous($document) as node()? {
  :)
 declare function collection:documents() as node()* {
     let $collection := collection:collection()
-    for $doc in $collection 
+    for $doc in $collection
+        where util:document-name($doc) != 'reports.xpr'
         order by document:region($doc), document:publisher($doc), document:date($doc), document:id($doc)
         return $doc
 };
@@ -160,7 +163,8 @@ declare function collection:documents($name as xs:string, $value as xs:string) a
     let $collection := collection($config:data-root)[.//meta[@name=$name and @content=$value]]
     return
         for $doc in $collection
-        order by document:region($doc), document:publisher($doc), document:date($doc)
+        where util:document-name($doc) != 'reports.xpr'
+        order by document:sortable($doc)
         return $doc
 };
 
