@@ -1228,7 +1228,6 @@ html{
    @include tablet{
    position:sticky;
    top: #{$navbar-height + 15px};
-   margin-left: 15px;
    margin-right: 40px;
    }
 
