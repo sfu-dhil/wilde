@@ -448,7 +448,9 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
     let $items := app:browse-items('dc.language', 'language', 'language')
     return 
     <div>
+        {app:browse-toggle('Language')}
         {app:browse-list($items,())}
+          <script src="resources/js/browse.js"></script>
     </div>
 };
 
