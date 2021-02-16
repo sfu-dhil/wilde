@@ -54,13 +54,13 @@
 
                 <div id="pages_browsing">
                     <h2>Browsing the Reports</h2>
+                    
                     <p>Select <b>Reports</b> from the header menu to choose a page from the
                         drop-down menu.</p>
 
                     <p>The <a href="list.html">All Reports</a> page provides a full list of all news
                         reports collected related to the three trials and imprisonment of Oscar
-                        Wilde, which can be browsed using the page navigation bar at the bottom of
-                        the page. Each row in the list provides basic metadata about an individual
+                        Wilde. Each row in the list provides basic metadata about an individual
                         report.</p>
 
                     <ul class="simple">
@@ -78,8 +78,12 @@
                             match, based on the measure of Levenshtein distance.</li>
                         <li>Words: the word count of the report, excluding the headline.</li>
                     </ul>
-
-
+                    
+                    <p>The report list shows one hundred reports at a time and can be paged through
+                    using the bottoms at the bottom of the reports page. Use the left-facing double arrow to
+                    to go to the first page of results and the right-facing double arrow to go to the last page of results.</p>
+                    
+                    
                     <p>The <a href="city.html">By City</a> page allows for browsing news reports by
                         city.</p>
 
@@ -87,11 +91,7 @@
                         <li>Use the drop-down menu of the Order By button to change "Name" to
                             "Count;" this will rearrange the display of cities to show the number of
                             news reports published in different cities, beginning with most to
-                            least. The background of each tile offers a visual approximation of the
-                            number of reports published from that city relative to all of the cities
-                            in the collection; in other words, each tile is like a bar on a bar
-                            chart where the y-axis denotes the number of reports on a logarithmic
-                            scale.</li>
+                            least.</li>
                         <li> Select a city to navigate to another page that lists all the individual
                             reports published in the city. These can be viewed by selecting the
                             headline of the news report.</li>
@@ -152,8 +152,21 @@
                             region. These can be viewed by selecting the headline of the news
                             report.</li>
                     </ul>
+                    
+                    <p>Each entry in the <a href="city.html">By City</a>, <a href="language.html">By Language</a>, <a href="newspaper.html">By Newspaper</a>, and <a href="region.html">By Region</a> is a "tile" that represents
+                        the approximate number of reports relative to the rest of the categories for that page. Each tile, in other words, can be understood
+                        as a bar on a bar chart. Consider the
+                        following example from the "By City" browse page:</p>
+                    
+                        <img src="resources/img/documentation-tile-example.png" 
+                            class="center-block img-responsive img-thumbnail" style="margin: 1rem auto" alt="Screenshot of Paris, London, Brooklyn, New Orleans tile."/>
+                        
+                            <p>Paris has the greatest number of associated reports and so its tile is entirely filled with a darker colour; there are fewer reports associated with New Orleans and thus its tile has a shorter background. Note, however, that these backgrounds display the distribution of reports on a logarithmic (rather than linear) scale.</p>
+                     
                 </div>
-
+         
+                
+    
 
 
                 <div id="pages_individual">
@@ -176,6 +189,17 @@
                             transcription process, <a href="contact.html">contact</a> the Principal
                             Investigator.</p>
                     </div>
+                    
+                    <div id="pages_individual_navigation">
+                        <h3>Navigation</h3>
+                        <p>The individual report pages contain additional navigation features at the top of each page:</p>
+                        <ul class="simple">
+                            <li>Breadcrumb menu: The "breadcrumb" menu at the top of each page displays the page's location within the hierarchy of the textbase. While there are multiple ways to access a report (see <a href="#pages_browsing">Browsing the Reports</a>), the breadcrumb menu for a report page will always show the newspaper in which the report was published.</li>
+                            <li>Next and Previous Reports: The Next and Previous report buttons at the top of each report page link to the reports that precede and follow the current report within the same publication by date.</li>
+                            
+                        </ul>
+                    </div>
+                    
 
                     <div id="pages_individual_paragraphMatches">
                         <h3>Paragraph Matches</h3>
@@ -263,7 +287,9 @@
                             Documents page, which opens a new page that compares the two reports at
                             the document level.</p>
                     </div>
+                    
                 </div>
+                
 
 
                 <div id="pages_searching">
