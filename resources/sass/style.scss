@@ -1128,9 +1128,16 @@ ul.browse-list{
   .name {
     display:block;
     text-align:center;
-    margin: .75rem .25rem;
-    width:100%;
+    margin: .75rem .5rem;
+    width:calc(100% - .5rem);
+    line-height: 1.4;
     color: $color_red_dark;
+    // Clamp lines to 2
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 2 * 1.4 * 1em; // 2 lines * line height (cast to em)
     &[data-month]:before{
       content: attr(data-month) " "
     }
