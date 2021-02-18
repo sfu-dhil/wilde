@@ -33,7 +33,7 @@ declare function document:subtitle($node as node()) as xs:string {
 declare function document:headline($node as node()) as xs:string{
     let $heading := root($node)//p[matches(@class,'(^|\s*)heading(\s*|$)')][1]
     return
-        if (exists($heading)) 
+        if (string-length($heading) gt 1) 
         then $heading
         else document:title($node)
 };
