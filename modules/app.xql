@@ -994,8 +994,13 @@ declare function app:compare-paragraphs($node as node(), $model as map(*)) {
         </div> {
             for $other at $i in $pa
                 let $q := local:find-similar("levenshtein", $pb, $other)
+                let $similarity := if($q) then 
+                        format-number($q//a[@data-paragraph = $other/@id]/@data-similarity cast as xs:float, "###.#%")
+                    else 
+                        ""
+                
                 return
-                  <div class='row paragraph-compare' data-score="{format-number($q/@data-similarity, "###.#%")}%">
+                  <div class='row paragraph-compare' data-score="{$similarity}%">
                     <div class="col-sm-4 paragraph-a">
                         <div class="compare-link">{$la}</div>
                         <div class='content'>{string($other)}</div>
