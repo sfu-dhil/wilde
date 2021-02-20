@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="row">
-<<<<<<< HEAD
+
         <h2>Bibliographical and Match Data</h2>
         <dl>
             <dt>
@@ -94,146 +94,10 @@
             </dd>
         </dl>
 
-        <h2>Network Data - Document Level</h2>
-        <dl>
-            <dt><a href="export/gephi-documents.csv">Node Table</a></dt>
-            <dd>Export a list of all documents that contain matches as <br/>
-                <ol class="list-inline export-fields well well-sm">
-                    <li>ID</li>
-                    <li>Label</li>
-                    <li>Language</li>
-                    <li>Region</li>
-                    <li>City</li>
-                </ol>
-            </dd>
-
-            <dt><a href="export/gephi-document-matches.csv">Match Table</a></dt>
-            <dd>Export a list of all document-level matches as <br/>
-                <ol class="list-inline export-fields well well-sm">
-                    <li>Source</li>
-                    <li>Target</li>
-                    <li>Type</li>
-                    <li>Weight</li>
-                </ol>
-            </dd>
-        </dl>
-
-        <h2>Network Data - Newspaper Level</h2>
-        <p>These two exports provide a higher-level view of the data set. They summarize the data at
-            the newspaper level.</p>
-
-        <dl>
-            <dt><a href="export/gephi-papers.csv">Papers</a></dt>
-            <dd>Export a list of all newspapers that contain matches as
-                <br/>
-                <ol class="list-inline export-fields well well-sm">
-                    <li>ID</li>
-                    <li>Label</li>
-                    <li>Language</li>
-                    <li>Region</li>
-                    <li>City</li>
-                </ol>
-            </dd>
-
-            <dt><a href="export/gephi-papers-matches.csv">Paper Matches</a></dt>
-            <dd>Export a list of newspaper-level matches as
-                <br/>
-                <ol class="list-inline export-fields well well-sm">
-                    <li>Source</li>
-                    <li>Target</li>
-                    <li>Type</li>
-                    <li>Weight</li>
-                </ol>
-            </dd>
-        </dl>
-
-=======
-        <div class="col-md-12">
-            <h2>Bibliographical and Match Data</h2>
-            <dl>
-                <dt>
-                    <a href="export/volume.csv">Volume of news</a>
-                </dt>
-                <dd>Export all of the metadata for all the reports as  <br/>
-                    <ol class="list-inline export-fields well well-sm">
-                        <li>Id</li>
-                        <li>Date</li>
-                        <li>Word count</li>
-                        <li>Document matches</li>
-                        <li>Paragraph matches</li>
-                        <li>Newspaper Title</li>
-                        <li>Region</li>
-                        <li>City</li>
-                        <li>Language</li>
-                    </ol>
-                </dd>
-                
-                <dt>
-                    <a href="export/matching.csv">Matching documents</a>
-                </dt>
-                <dd>Export all of the document-level matching data as <br/>
-                    <ol class="list-inline export-fields well well-sm">
-                        <li>Report Id</li>
-                        <li>Report date</li>
-                        <li>Report paper</li>
-                        <li>Report region</li>
-                        <li>Report city</li>
-                        <li>Match Id</li>
-                        <li>Match date</li>
-                        <li>Match paper</li>
-                        <li>Match region</li>
-                        <li>Match city</li>
-                        <li>Match similarity</li>
-                    </ol>
-                </dd>
-                <dt>
-                    <a href="export/matching-paragraphs.csv">Matching paragraphs</a>
-                </dt>
-                <dd>Export all of the document-level matching data as<br/>
-                    <ol class="list-inline export-fields well well-sm">
-                        <li>Source Id</li>
-                        <li>Source date</li>
-                        <li>Source paper</li>
-                        <li>Source region</li>
-                        <li>Source city</li>
-                        <li>Source language</li>
-                        <li>Target Id</li>
-                        <li>Target date</li>
-                        <li>Target paper</li>
-                        <li>Target region</li>
-                        <li>Target city</li>
-                        <li>Target language</li>
-                        <li>Match</li>
-                    </ol>
-                </dd>
-                <dt><a href="export/signatures.csv">Signatures</a></dt>
-                <dd>Export a list of signed reports as <br/>
-                    <ol class="list-inline export-fields well well-sm">
-                        <li>Id</li>
-                        <li>Date</li>
-                        <li>Newspaper Title</li>
-                        <li>Country</li>
-                        <li>City</li>
-                        <li>Language</li>
-                        <li>Signature</li>
-                    </ol>
-                </dd>
-                <dt><a href="export/bibliography.csv">Bibliography</a></dt>
-                <dd>Export a list of all reports as <br/>
-                    <ol class="list-inline export-fields well well-sm">
-                        <li>Id</li>
-                        <li>Date</li>
-                        <li>Newspaper Title</li>
-                        <li>Country</li>
-                        <li>City</li>
-                        <li>Language</li>
-                    </ol>
-                </dd>
-            </dl>
             
             <h2>Network Data - Document Level</h2>
             <dl>
-                <dt><a href="export/gephi-documents.csv">Node Table</a></dt>
+                <dt><a href="export/gephi-documents.csv">Documents</a></dt>
                 <dd>Export a list of all documents that contain matches as <br/>
                     <ol class="list-inline export-fields well well-sm">
                         <li>ID</li>
@@ -244,7 +108,7 @@
                     </ol>
                 </dd>
                 
-                <dt><a href="export/gephi-document-matches.csv">Match Table</a></dt>
+                <dt><a href="export/gephi-document-matches.csv">Document Matches</a></dt>
                 <dd>Export a list of all document-level matches as <br/>
                     <ol class="list-inline export-fields well well-sm">
                         <li>Source</li>
@@ -256,12 +120,11 @@
             </dl>
             
             <h2>Network Data - Newspaper Level</h2>
-            <p>These two exports provide a higher-level view of the data set. They summarize the data at
-                the newspaper level.</p>
+            <p>These two exports provide a higher-level view of the data set. They summarize the data at the newspaper level.</p>
             
             <dl>
-                <dt><a href="export/gephi-papers.csv">Papers</a></dt>
-                <dd>Export a list of newspapers as
+                <dt><a href="export/gephi-papers.csv">Newspapers</a></dt>
+                <dd>Export a list of all newspapers that contain matches as 
                     <br/>
                     <ol class="list-inline export-fields well well-sm">
                         <li>ID</li>
@@ -272,9 +135,8 @@
                     </ol>
                 </dd>
                 
-                <dt><a href="export/gephi-papers-matches.csv">Paper Matches</a></dt>
-                <dd>Export a list of paper matches showing how frequently the newspapers copied each
-                    other. 
+                <dt><a href="export/gephi-papers-matches.csv">Newspaper Matches</a></dt>
+                <dd>Export a list of all newspaper-level matches as
                     <br/>
                     <ol class="list-inline export-fields well well-sm">
                         <li>Source</li>
@@ -287,6 +149,5 @@
             
         </div>
         
->>>>>>> upstream/main
     </div>
-</div>
+
