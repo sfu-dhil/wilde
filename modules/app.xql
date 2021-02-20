@@ -448,7 +448,9 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
     let $items := app:browse-items('dc.language', 'language', 'language')
     return 
     <div>
+        {app:browse-toggle('Language')}
         {app:browse-list($items,())}
+          <script src="resources/js/browse.js"></script>
     </div>
 };
 
@@ -1311,4 +1313,29 @@ declare function app:gallery-tile($filename as xs:string, $meta as node()?){
            </div>
        </div>
    </div>
+};
+
+(: Create TOC for the documentation :)
+declare function app:toc($node as node(), $model as map(*)){
+    let $divs := root($node)//div[@id='article']/div[@id and child::*[matches(local-name(), '^h\d+')]]
+    return app:toc-list($divs)
+};
+
+declare function app:toc-list($divs){
+    if (exists($divs)) then 
+    <ul>
+        {$divs!app:toc-item(.)}
+    </ul>
+    else ()
+};
+
+declare function app:toc-item($div){
+    let $id := $div/@id
+    let $label := string($div/child::*[matches(local-name(),'^h\d+')])
+    let $children := $div/div[@id and child::*[matches(local-name(),'^h\d+')]]
+    return
+    <li>
+        <a href="#{$id}">{$label}</a>
+        {app:toc-list($children)}
+    </li>
 };
