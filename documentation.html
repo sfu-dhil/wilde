@@ -38,14 +38,14 @@
 
                 <div id="pages_about">
                     <h2>About</h2>
-                    <p>Select <b>About</b> from the header menu to choose a page from the drop-down
+                    <p>Select <b>About</b> from the header menu to choose one of the pages from the drop-down
                         menu.</p>
                     <p>The <a href="about.html">Overview</a> page provides background on Oscar
                         Wilde’s three trials and the website’s features. </p>
                     <p>The <a href="curation.html">Curatorial Statement</a> provides information on
-                        the data sources and data analysis methods used.</p>
+                        the data sources and data curation methods used.</p>
                     <p>The <a href="source.html">News Sources</a> page provides a full list of all
-                        sources for the news reports, which can be browsed by source.</p>
+                        sources for the news reports.</p>
                     <p>The <a href="gallery.html">Image Gallery</a> contains selected images of the
                         trials from the news reports.</p>
                     <p>The <a href="contributors.html">Contributors</a> page lists all contributors
@@ -55,7 +55,7 @@
                 <div id="pages_browsing">
                     <h2>Browsing the Reports</h2>
                     
-                    <p>Select <b>Reports</b> from the header menu to choose a page from the
+                    <p>Select <b>Reports</b> from the header menu to choose one of the pages from the
                         drop-down menu.</p>
 
                     <p>The <a href="list.html">All Reports</a> page provides a full list of all news
@@ -72,16 +72,17 @@
                         <li>Region: the country in which the newspaper was published.</li>
                         <li>City: the city in which the newspaper was published.</li>
                         <li>Language: the language in which the report was first published.</li>
-                        <li>Document Matches: the number of other full reports that match, based on
+                        <li>Document Matches: the number of other reports that match the report at the document-level, based on
                             the measure of Levenshtein distance.</li>
-                        <li>Paragraph Matches: the number of other paragraphs in other reports that
-                            match, based on the measure of Levenshtein distance.</li>
+                        <li>Paragraph Matches: the number of paragraphs in other reports that
+                            match paragraphs in the report, based on the measure of Levenshtein distance.</li>
                         <li>Words: the word count of the report, excluding the headline.</li>
                     </ul>
                     
                     <p>The report list shows one hundred reports at a time and can be paged through
-                    using the bottoms at the bottom of the reports page. Use the left-facing double arrow to
+                    using the widget at the bottom of the reports page. Use the left-facing double arrow to
                     to go to the first page of results and the right-facing double arrow to go to the last page of results.</p>
+                    <!--This description will have to change when drop-down widget is included-->
                     
                     
                     <p>The <a href="city.html">By City</a> page allows for browsing news reports by
@@ -93,7 +94,7 @@
                             news reports published in different cities, beginning with most to
                             least.</li>
                         <li> Select a city to navigate to another page that lists all the individual
-                            reports published in the city. These can be viewed by selecting the
+                            reports published in the city. These can be accessed by selecting the
                             headline of the news report.</li>
                     </ul>
 
@@ -108,7 +109,7 @@
                             days by number of published news reports, beginning with most to
                             least.</li>
                         <li> Select a day to navigate to another page that lists all the individual
-                            reports published on that day. These can be viewed by selecting the
+                            reports published on that day. These can be accessed by selecting the
                             headline of the news report.</li>
                     </ul>
 
@@ -116,12 +117,12 @@
                         reports by language.</p>
 
                     <ul class="simple">
-                        <li>>Use the drop-down menu of the Order By button to change "Language" to
+                        <li>Use the drop-down menu of the Order By button to change "Language" to
                             "Count"; this will rearrange the display to show the number of news
-                            reports published in different language, beginning from most to
+                            reports published in different languagesv, beginning from most to
                             least.</li>
                         <li>Select a language to view a list of all the individual reports published
-                            in the language. These can be viewed by selecting the headline of the
+                            in the language. These can be accessed by selecting the headline of the
                             news report.</li>
                     </ul>
 
@@ -135,7 +136,7 @@
                             number of news reports published in different newspapers, beginning from
                             most to least.</li>
                         <li> Select a newspaper title within a region to view all the individual
-                            reports published in the newspaper. These can be viewed by selecting the
+                            reports published in the newspaper. These can be accessed by selecting the
                             headline of the news report.</li>
                     </ul>
 
@@ -149,7 +150,7 @@
                             reports published in different regions, beginning from most to
                             least.</li>
                         <li>Select a region to view all the individual reports published in the
-                            region. These can be viewed by selecting the headline of the news
+                            region. These can be accessed by selecting the headline of the news
                             report.</li>
                     </ul>
                     
@@ -186,13 +187,13 @@
                             report displays in the language in which it was originally published.
                             For non-English languages, a machine translation in English can be found
                             by selecting the “English” tab. For information about the collection and
-                            transcription process, <a href="contact.html">contact</a> the Principal
+                            transcription process, refer to the <a href="curation.html"> Curatorial Statement</a> or <a href="contact.html">contact</a> the Principal
                             Investigator.</p>
                     </div>
                     
                     <div id="pages_individual_navigation">
                         <h3>Navigation</h3>
-                        <p>The individual report pages contain additional navigation features at the top of each page:</p>
+                        <p>The individual report pages contain additional navigation features at the top of each page.</p>
                         <ul class="simple">
                             <li>Breadcrumb menu: The "breadcrumb" menu at the top of each page displays the page's location within the hierarchy of the textbase. While there are multiple ways to access a report (see <a href="#pages_browsing">Browsing the Reports</a>), the breadcrumb menu for a report page will always show the newspaper in which the report was published.</li>
                             <li>Next and Previous Reports: The Next and Previous report buttons at the top of each report page link to the reports that precede and follow the current report within the same publication by date.</li>
@@ -207,7 +208,7 @@
                             news reports that are found at the paragraph level within the
                             collection. Each paragraph from the individual report that matches a
                             paragraph in another report will appear with a match button next to it.
-                            The match button indicates how many matches of that paragraph have been
+                            The match button indicates how many matches to that paragraph have been
                             found. Selecting the match button displays the matches of each
                             paragraph. Matches are based on the measure of Levenshtein distance,
                             with 60% similarity meeting the match threshold.</p>
@@ -216,7 +217,7 @@
                     <div id="pages_individual_compareParagraphs">
                         <h3>Compare Paragraphs</h3>
                         <p>Under each in-line paragraph match is a Compare Paragraphs button.
-                            Selecting the Compare Paragraphs button opens a new Comparison Page that
+                            Selecting the Compare Paragraphs button opens a new page that
                             compares the two reports at the paragraph level.</p>
                         <p>Here is an example of a <a href="compare.html?a=eja_1688&amp;b=sara_290">
                                 Compare Paragraphs</a> page, showing paragraph-level matches between
@@ -234,8 +235,7 @@
                         <h3>Compare Documents</h3>
 
                         <p>Under each in-line paragraph match is a Compare Documents button.
-                            Selecting the Compare Documents button opens a new Compare Documents
-                            page that compares the two reports at the document level. </p>
+                            Selecting the Compare Documents button opens a new page that compares the two reports at the document level. </p>
                         <p>Here is an example of a 
                             <a href="compare-docs.html?a=eja_1688&amp;b=sara_290">Compare Documents</a> page,
                             showing document-level matches between the April
@@ -244,7 +244,7 @@
                             document on the left, and the matching document in the middle. The
                             column on the right highlights any differences between the two matching
                             documents: pink shows differences in the first report and purple in the
-                            second report. The Match percentage at the top of in this column shows
+                            second report. The Match percentage at the top of this column shows
                             the percentage of similarity between the two documents.</p>
                     </div>
 
@@ -261,18 +261,18 @@
                             includes:</p>
                         <ul>
                             <li>Newspaper: the name of the newspaper in which the report was
-                                published</li>
-                            <li>Date published: the publication date of the report</li>
+                                published.</li>
+                            <li>Date published: the publication date of the report.</li>
                             <li>Region: the country and city in which the newspaper was
-                                published</li>
+                                published.</li>
                             <li>Original language: the language in which the report was first
-                                published</li>
+                                published.</li>
                             <li>Sources: the database and institution where the newspaper is
-                                located, including links</li>
+                                located, including links.</li>
                             <li>Facsimile: link to the digitized copy of the report</li>
-                            <li>Word count: the number of words in the report</li>
+                            <li>Word count: the number of words in the report.</li>
                             <li>Report date updated: the date the report was last uploaded on the
-                                site</li>
+                                site.</li>
                         </ul>
                     </div>
 
@@ -284,7 +284,7 @@
                             of Levenshtein distance, with 60% similarity meeting the match
                             threshold. Select the title of the report to navigate directly to the
                             matching report. Select the Compare button to go to the Compare
-                            Documents page, which opens a new page that compares the two reports at
+                            Documents page, which compares the two reports at
                             the document level.</p>
                     </div>
                     
@@ -295,7 +295,7 @@
                 <div id="pages_searching">
                     <h2>Searching the Reports</h2>
                     <p>Select <a href="search.html">Search</a> from the header menu to query the
-                        full-text database and find news reports. On the Search page, select the
+                        textbase and find news reports. On the Search page, select the
                         Help button for information on search-term options.</p>
                     <!--Removed search options here; they're on the search page already
                         so no need to keep them here-->
@@ -309,7 +309,7 @@
                         <li>To compare two different passages of text, enter them into the two boxes
                             by copy and paste, and then select the Measure button.</li>
                         <li>This measure tool will produce text similarity scores based on a
-                            levenshtein distance measure and highlight the differences between the
+                            Levenshtein distance measure and highlight the differences between the
                             two texts.</li>
                     </ul>
 
@@ -340,13 +340,14 @@
                             the Wilde news reports.</li>
                         <li> This data is exportable in UTF-8 CSV file format. The first row
                             contains header information. Fields are quoted and separated by
-                            commas.</li>
-                        <li>There are also some data exports formatted for use with 
+                            commas. (Make sure to select UTF-8 as the encoding in spreadsheet software).</li>
+                        <li>The Network data exports are also formatted for use with 
                             <a href="https://gephi.org/">Gephi</a> open visualization
                             software.</li>
+                        <li>The data is updated periodically, and the date of the most recent update is
+                            provided.</li>
                     </ul>
-                    <p>The data is updated periodically, and the date of the most recent update is
-                        provided.</p>
+                   
                 </div>
 
                 <div id="page_contact">
