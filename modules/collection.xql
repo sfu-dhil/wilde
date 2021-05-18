@@ -178,6 +178,10 @@ declare function collection:publishers() as xs:string* {
     return $publisher
 };
 
+declare function collection:publisher-index() as node()* {
+    doc($config:data-root || '/publisherIndex.xml')
+};
+
 (:~
  : Fetch a list of regions, ordered by name.
  : @return Sequence of strings.
