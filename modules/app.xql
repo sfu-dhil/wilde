@@ -653,11 +653,13 @@ declare function app:details-date($node as node(), $model as map(*)) as node()* 
 };
 
 declare function app:parameter($node as node(), $model as map(*), $name as xs:string) as xs:string {
+  
   let $p := request:get-parameter($name, false())
-  return if($name = 'language') then
-        lang:code2lang($p)
-    else
-        serialize($p)
+  return
+  switch($name)
+    case 'language' return lang:code2lang($p)
+    case 'publisher' return document:publisher(collection:documents('dc.publisher.id', $p)[1])
+    default return serialize($p)
 };
 
 declare function app:count-documents($node as node(), $model as map(*), $name, $value) as xs:integer {
