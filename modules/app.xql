@@ -344,7 +344,11 @@ declare function app:browse-items($name as xs:string, $query as xs:string, $page
         for $key in map:keys($map)
             let $count := $map($key)
             let $percent := (math:log10($count) div $max)
-            let $output := if ($query = 'language') then lang:code2lang($key) else $key
+            let $output := 
+                switch($query)
+                    case 'language' return lang:code2lang($key)
+                    case 'publisher' return document:publisher(collection:documents('dc.publisher.id', $key)[1])
+                    default return $key
             let $m := head($metas[@content = $key])
             let $sort := if($m[@data-sortable]) then $m/@data-sortable else $output
             return
@@ -355,12 +359,12 @@ declare function app:browse-items($name as xs:string, $query as xs:string, $page
                         'output': $output,
                         'query': $query,
                         'page': $page,
-                        'sort': $sort
+                        'sort': $sort,
+                        'key': $key
                 }
             }
     )
 };
-
 
 (:
     Produce a list from a set of $map of items with an optional
@@ -468,7 +472,7 @@ declare function app:details-language($node as node(), $model as map(*)) as node
 :)
 declare function app:browse-newspaper($node as node(), $model as map(*)) as node()+ {
       let $collection := collection:collection()
-      let $items := app:browse-items('dc.publisher', 'publisher', 'newspaper')
+      let $items := app:browse-items('dc.publisher.id', 'publisher', 'newspaper')
       let $keys := map:keys($items)
       return
       <div>
@@ -476,7 +480,7 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
       { for $key in $keys
         let $curr := $items($key)
         group by $region := 
-        document:region($collection//xhtml:meta[@name='dc.publisher'][@content = $curr('output')][1])
+            document:region(collection:documents('dc.publisher.id', $curr('key'))[1])
         order by $region
         return
             let $submap := map:merge(for $k in $key return map{$k: map:get(map:merge($items), $k)})
