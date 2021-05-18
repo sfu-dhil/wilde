@@ -338,7 +338,7 @@ declare function app:browse-items($name as xs:string, $query as xs:string, $page
    let $metas := $collection//xhtml:meta[@name = $name]
    let $values := $metas/xs:string(@content)
    let $map := map:merge(for $v in distinct-values($values) return map{$v: local:count($values, $v)})
-   let $max := math:log10(max(for $key in map:keys($map) return $map($key)))
+   let $max := math:log10(max((0,for $key in map:keys($map) return $map($key))))
    return
    map:merge(
         for $key in map:keys($map)
