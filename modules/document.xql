@@ -64,6 +64,10 @@ declare function document:publisher($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.publisher']/@content)
 };
 
+declare function document:publisher-id($node as node()) as xs:string {
+    string(root($node)//meta[@name='dc.publisher.id']/@content)
+};
+
 declare function document:edition($node as node()) as xs:string {
     string(root($node)//meta[@name='dc.publisher.edition']/@content)
 };
