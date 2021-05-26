@@ -37,7 +37,7 @@ div.paragraph-compare {
           content:attr(data-caption);
           @include diff-header;
       }
-      
+
   }
 }
 
@@ -253,7 +253,17 @@ main.container {
   }
 }
 
-
+// Jump to widget in the pagination widget.
+.pagination .jump {
+    float: left;
+    input {
+      margin-left: -1px;
+      line-height: 1.4;
+      width: 9em;
+      height: 2.2em;
+      text-align: center;
+    }
+}
 
 .footer {
   background-color: $color_black;
@@ -848,7 +858,7 @@ table{
             .thumbnail{
                 flex-direction:column;
             }
-            
+
         }
     }
 
@@ -997,10 +1007,10 @@ table{
         .cal-body > .cal-cell:first-child{
             grid-column: #{$i};
         }
-        
+
     }
  }
- 
+
  .calendar.list {
      .cal-header{
          display:none;
@@ -1011,7 +1021,7 @@ table{
              grid-column:1!important;
          }
      }
-     
+
  }
 
 
@@ -1243,11 +1253,11 @@ ul.browse-list{
            margin-left: 2rem;
        }
    }
-   
+
    a.current{
        color:black;
    }
-   
+
 }
 
 ul.simple{
@@ -1260,8 +1270,3 @@ ul.simple{
 summary{
     cursor:pointer;
 }
-
-
-
- 
-
