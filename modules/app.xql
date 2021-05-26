@@ -280,6 +280,7 @@ declare function local:pagination($count as xs:int, $total as xs:int, $query as 
                         }
                         <li><a href="?page={$next}{$query}" id='next-page'>→</a></li>
                         <li><a href="?page={$pages}{$query}">⇒</a></li>
+                        <li><form method='get' class='jump'><input type='text' name='page' value="" placeholder="Jump to page"/></form></li>
                     </ul>
                 </nav>
             </div>
