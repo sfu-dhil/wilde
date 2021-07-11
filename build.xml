@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="xar" name="wilde">
+<project default="xar" name="wilde" xmlns:xdb="http://exist-db.org/ant">
   <xmlproperty file="expath-pkg.xml" />
   <property name="project.version" value="${package(version)}" />
   <property name="project.app" value="wilde" />
   <property name="build.dir" value="build" />
   <property name="cache.base" value="http://localhost:8080/exist/wilde"/>
+
+  <property name="host" value="localhost"/>
+  <property file="${host}.properties"/>
+  
+  <path id="classpath.core">
+    <fileset dir="${local.dir}/lib/core">
+      <include name="*.jar"/>
+    </fileset>
+    <pathelement path="${local.dir}/exist.jar"/>
+    <pathelement path="${local.dir}/exist-optional.jar"/>
+  </path>
+  
+  <typedef resource="org/exist/ant/antlib.xml" uri="http://exist-db.org/ant">
+    <classpath refid="classpath.core"/>
+  </typedef>
 
   <fileset id="console-usages" dir="." includes="**/*.xql">
     <contains text="console"/>
@@ -34,4 +49,14 @@
       <arg value="install" />
     </exec>
   </target>
+  
+  <target name="store-pages">
+    <echo>Storing pages to ${host} at ${server.data}</echo>
+    <xdb:store uri="${server.root}" user="${server.user}" password="${server.pass}" type="xml">
+      <fileset dir=".">
+        <include name="*.html"/>
+      </fileset>
+    </xdb:store>
+  </target>
+  
 </project>

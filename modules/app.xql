@@ -8,6 +8,7 @@ import module namespace functx="http://www.functx.com";
 import module namespace map="http://www.w3.org/2005/xpath-functions/map";
 import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
+import module namespace publisher="http://dhil.lib.sfu.ca/exist/wilde-app/publisher" at "publisher.xql";
 import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
 import module namespace similarity="http://dhil.lib.sfu.ca/exist/wilde-app/similarity" at "similarity.xql";
 import module namespace tx="http://dhil.lib.sfu.ca/exist/wilde-app/transform" at "transform.xql";
@@ -214,14 +215,21 @@ declare function local:param2Field($param as xs:string) as xs:string{
 
 declare function app:link-details($report, $param, $fn) as item()* {
 
+    let $lookup := if($param = 'publisher') then 'publisher-id' else $param 
+
     (: Construct the function :)
-    let $fx := function-lookup(xs:QName('document:' || $param), 1)
+    let $fx := function-lookup(xs:QName('document:' || $lookup), 1)
     
     (: Use the function :)
     let $result := $fx($report)
     
     (: Hook in case we need to clean up the value :)
-    let $output := if ($param = 'language') then lang:code2lang($result) else $result
+    let $output := 
+        switch($param)
+            case 'language' return lang:code2lang($result)
+            case 'publisher' return publisher:name($result)
+            default return $result
+
     return if ($result != '') then 
         let $query := request:get-parameter($param, false())
         let $curr := ($query instance of xs:string and $query = $result)
@@ -272,6 +280,7 @@ declare function local:pagination($count as xs:int, $total as xs:int, $query as 
                         }
                         <li><a href="?page={$next}{$query}" id='next-page'>→</a></li>
                         <li><a href="?page={$pages}{$query}">⇒</a></li>
+                        <li><form method='get' class='jump'><input type='text' name='page' value="" placeholder="Jump to page"/></form></li>
                     </ul>
                 </nav>
             </div>
@@ -338,13 +347,17 @@ declare function app:browse-items($name as xs:string, $query as xs:string, $page
    let $metas := $collection//xhtml:meta[@name = $name]
    let $values := $metas/xs:string(@content)
    let $map := map:merge(for $v in distinct-values($values) return map{$v: local:count($values, $v)})
-   let $max := math:log10(max(for $key in map:keys($map) return $map($key)))
+   let $max := math:log10(max((0,for $key in map:keys($map) return $map($key))))
    return
    map:merge(
         for $key in map:keys($map)
             let $count := $map($key)
             let $percent := (math:log10($count) div $max)
-            let $output := if ($query = 'language') then lang:code2lang($key) else $key
+            let $output := 
+                switch($query)
+                    case 'language' return lang:code2lang($key)
+                    case 'publisher' return publisher:name($key)
+                    default return $key
             let $m := head($metas[@content = $key])
             let $sort := if($m[@data-sortable]) then $m/@data-sortable else $output
             return
@@ -355,12 +368,12 @@ declare function app:browse-items($name as xs:string, $query as xs:string, $page
                         'output': $output,
                         'query': $query,
                         'page': $page,
-                        'sort': $sort
+                        'sort': $sort,
+                        'key': $key
                 }
             }
     )
 };
-
 
 (:
     Produce a list from a set of $map of items with an optional
@@ -467,8 +480,7 @@ declare function app:details-language($node as node(), $model as map(*)) as node
     Produce a list of newspapers/publishers from the database.
 :)
 declare function app:browse-newspaper($node as node(), $model as map(*)) as node()+ {
-      let $collection := collection:collection()
-      let $items := app:browse-items('dc.publisher', 'publisher', 'newspaper')
+      let $items := app:browse-items('dc.publisher.id', 'publisher', 'newspaper')
       let $keys := map:keys($items)
       return
       <div>
@@ -476,7 +488,7 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
       { for $key in $keys
         let $curr := $items($key)
         group by $region := 
-        document:region($collection//xhtml:meta[@name='dc.publisher'][@content = $curr('output')][1])
+            document:region(collection:documents('dc.publisher.id', $curr('key'))[1])
         order by $region
         return
             let $submap := map:merge(for $k in $key return map{$k: map:get(map:merge($items), $k)})
@@ -487,8 +499,7 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
             </div>
         }
       <script src="resources/js/browse.js"></script>
-      </div>
-     
+      </div>     
 };
 
 (:
@@ -496,7 +507,7 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
 :)
 declare function app:details-newspaper($node as node(), $model as map(*)) as node()* {
   let $publisher := request:get-parameter('publisher', false())
-  let $map := local:page('dc.publisher', $publisher)
+  let $map := local:page('dc.publisher.id', $publisher)
   return (local:report-table($map('pagination'),'publisher'), local:pagination($map('count'), $map('total'), '&amp;publisher=' || $publisher))
 };
 
@@ -649,11 +660,13 @@ declare function app:details-date($node as node(), $model as map(*)) as node()* 
 };
 
 declare function app:parameter($node as node(), $model as map(*), $name as xs:string) as xs:string {
+  
   let $p := request:get-parameter($name, false())
-  return if($name = 'language') then
-        lang:code2lang($p)
-    else
-        serialize($p)
+  return
+  switch($name)
+    case 'language' return lang:code2lang($p)
+    case 'publisher' return document:publisher(collection:documents('dc.publisher.id', $p)[1])
+    default return serialize($p)
 };
 
 declare function app:count-documents($node as node(), $model as map(*), $name, $value) as xs:integer {
