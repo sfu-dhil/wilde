@@ -138,7 +138,7 @@ declare function local:breadcrumb-report($document){
                    else $date
       return
       (app:link-view(document:id($document), $show),
-      local:breadcrumb-details('newspaper', document:publisher($document)))
+      local:breadcrumb-details('newspaper', document:publisher-id($document), document:publisher($document)))
 };
 
 
@@ -152,6 +152,17 @@ declare function local:breadcrumb-details($field, $value){
     let $doc := local:get-doc($href)
     return ($detailsLink, local:breadcrumb-simple($href, $doc))
 };
+
+(:
+    Return the breadcrumb path for a details page, overriding the text of the link.
+:)
+declare function local:breadcrumb-details($field, $value, $text){
+    let $detailsLink := <a href="{$field}-details.html?{local:param2Field($field)}={$value}">{$text}</a>
+    let $href := $field || '.html'
+    let $doc := local:get-doc($href)
+    return ($detailsLink, local:breadcrumb-simple($href, $doc))
+};
+
 
 (:
     Return the a simple breadcrumb link, which is just the page name
@@ -280,7 +291,16 @@ declare function local:pagination($count as xs:int, $total as xs:int, $query as 
                         }
                         <li><a href="?page={$next}{$query}" id='next-page'>→</a></li>
                         <li><a href="?page={$pages}{$query}">⇒</a></li>
-                        <li><form method='get' class='jump'><input type='text' name='page' value="" placeholder="Jump to page"/></form></li>
+                        <li>
+                            <form method='get' class='jump'> {                                 
+                                    for $pair in tokenize($query, '&amp;')
+                                        where $pair != ''
+                                        let $parts := tokenize($pair, '=')
+                                        return <input type='hidden' name='{$parts[1]}' value='{$parts[2]}'/>
+                                }
+                                <input type='text' name='page' value="" placeholder="Jump to page"/>
+                            </form>
+                        </li>
                     </ul>
                 </nav>
             </div>
