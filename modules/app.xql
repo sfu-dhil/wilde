@@ -280,7 +280,16 @@ declare function local:pagination($count as xs:int, $total as xs:int, $query as 
                         }
                         <li><a href="?page={$next}{$query}" id='next-page'>→</a></li>
                         <li><a href="?page={$pages}{$query}">⇒</a></li>
-                        <li><form method='get' class='jump'><input type='text' name='page' value="" placeholder="Jump to page"/></form></li>
+                        <li>
+                            <form method='get' class='jump'> {                                 
+                                    for $pair in tokenize($query, '&amp;')
+                                        where $pair != ''
+                                        let $parts := tokenize($pair, '=')
+                                        return <input type='hidden' name='{$parts[1]}' value='{$parts[2]}'/>
+                                }
+                                <input type='text' name='page' value="" placeholder="Jump to page"/>
+                            </form>
+                        </li>
                     </ul>
                 </nav>
             </div>
