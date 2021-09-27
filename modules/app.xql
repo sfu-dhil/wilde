@@ -138,7 +138,7 @@ declare function local:breadcrumb-report($document){
                    else $date
       return
       (app:link-view(document:id($document), $show),
-      local:breadcrumb-details('newspaper', document:publisher($document)))
+      local:breadcrumb-details('newspaper', document:publisher-id($document), document:publisher($document)))
 };
 
 
@@ -152,6 +152,17 @@ declare function local:breadcrumb-details($field, $value){
     let $doc := local:get-doc($href)
     return ($detailsLink, local:breadcrumb-simple($href, $doc))
 };
+
+(:
+    Return the breadcrumb path for a details page, overriding the text of the link.
+:)
+declare function local:breadcrumb-details($field, $value, $text){
+    let $detailsLink := <a href="{$field}-details.html?{local:param2Field($field)}={$value}">{$text}</a>
+    let $href := $field || '.html'
+    let $doc := local:get-doc($href)
+    return ($detailsLink, local:breadcrumb-simple($href, $doc))
+};
+
 
 (:
     Return the a simple breadcrumb link, which is just the page name
