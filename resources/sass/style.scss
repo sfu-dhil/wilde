@@ -288,7 +288,7 @@ main.container {
 
 .navbar {
   border: 0;
-  min-height: $navbar-height;
+  height: $navbar-height;
 }
 
 .navbar-header,
@@ -561,7 +561,7 @@ table{
     font-variant-numeric: tabular-nums;
   }
   th.count {
-    text-align: center;
+    text-align: right;
   }
 
 
@@ -576,6 +576,33 @@ table{
 
     }
 }
+
+// Make table headings sticky
+thead{
+    background: $color_white;
+}
+
+thead > tr{
+    top: #{$navbar-height - 5px};
+    position:sticky;
+    background: $color_white;
+    // Adjust styling when it is stuck
+    &.stuck{
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
+                    0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        transition: all 0.2s ease-in-out;
+    }
+}
+
+thead th{
+    vertical-align:middle!important;
+}
+
+th.count{
+    text-align:right;
+}
+
+
 
 // Mobile table handling
 @media (max-width: $tablet-width) {
