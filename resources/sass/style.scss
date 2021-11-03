@@ -253,13 +253,42 @@ main.container {
   }
 }
 
+.pagination-widget{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    p{
+        margin-bottom:0;
+    }
+    padding: 10px 0;
+}
+
+.pagination{
+    margin:0;
+    // Use nth-last-child since the pagination widget
+        is actually last
+    &.last{
+        & > li:nth-last-child(2),
+            li:nth-last-child(3){
+            display:none;
+        }
+    }
+    &.first{
+       & > li:first-child,
+           li:nth-child(2){
+            display:none;
+        }
+    }
+}
+
 // Jump to widget in the pagination widget.
-.pagination .jump {
-    float: left;
+.pagination-widget .jump {
     input {
       margin-left: -1px;
       line-height: 1.4;
-      width: 9em;
+      width: 6em;
       height: 2.2em;
       text-align: center;
     }
@@ -543,6 +572,8 @@ table option {
 .table-striped > tbody > tr:nth-of-type(2n+1) {
   background: #EAE8E3;
 }
+
+
 
 td a{
   white-space:normal;
