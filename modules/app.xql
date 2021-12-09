@@ -138,7 +138,7 @@ declare function local:breadcrumb-report($document){
                    else $date
       return
       (app:link-view(document:id($document), $show),
-      local:breadcrumb-details('newspaper', document:publisher($document)))
+      local:breadcrumb-details('newspaper', document:publisher-id($document), document:publisher($document)))
 };
 
 
@@ -152,6 +152,17 @@ declare function local:breadcrumb-details($field, $value){
     let $doc := local:get-doc($href)
     return ($detailsLink, local:breadcrumb-simple($href, $doc))
 };
+
+(:
+    Return the breadcrumb path for a details page, overriding the text of the link.
+:)
+declare function local:breadcrumb-details($field, $value, $text){
+    let $detailsLink := <a href="{$field}-details.html?{local:param2Field($field)}={$value}">{$text}</a>
+    let $href := $field || '.html'
+    let $doc := local:get-doc($href)
+    return ($detailsLink, local:breadcrumb-simple($href, $doc))
+};
+
 
 (:
     Return the a simple breadcrumb link, which is just the page name
@@ -266,12 +277,15 @@ declare function local:pagination($count as xs:int, $total as xs:int, $query as 
             let $end := min(($pages, $page + $span))
             let $next := min(($pages, $page + 1))
             let $prev := max((1, $page - 1))
+            let $isFirstClass := 'first'[xs:integer($page = 1)]
+            let $isLastClass := 'last'[xs:integer($page = $pages)]
             return
-            <div>
+            <div class="pagination-widget">
                 <p>Showing {$count} reports of {$total}.</p>
+
                 <nav>
-                    <ul class="pagination">
-                        <li><a href="?page=1{$query}">⇐</a></li>
+                    <ul class="{string-join(('pagination', $isFirstClass, $isLastClass),' ')}">
+                        <li><a href="?page=1{$query}">1 ⇐</a></li>
                         <li><a href="?page={$prev}{$query}" id='prev-page'>←</a></li>
                         {
                             for $pn in ($start to $end)
@@ -279,10 +293,19 @@ declare function local:pagination($count as xs:int, $total as xs:int, $query as 
                                 return <li class="{$selected}"><a href="?page={$pn}{$query}">{$pn}</a></li>
                         }
                         <li><a href="?page={$next}{$query}" id='next-page'>→</a></li>
-                        <li><a href="?page={$pages}{$query}">⇒</a></li>
-                        <li><form method='get' class='jump'><input type='text' name='page' value="" placeholder="Jump to page"/></form></li>
+                        <li><a href="?page={$pages}{$query}">⇒ {$pages}</a></li>
                     </ul>
                 </nav>
+               <form method='get' class='jump'>
+                {                                 
+                    for $pair in tokenize($query, '&amp;') where $pair != ''
+                        let $parts := tokenize($pair, '=')
+                        return 
+                            <input type='hidden' name='{$parts[1]}' value='{$parts[2]}'/>
+                }            
+                <input type='number' step="1" name='page' value="" min="1" max="{$pages}" placeholder="Go to page"/>
+              </form>
+  
             </div>
         else ()
 };
@@ -335,8 +358,8 @@ declare function local:page() {
 :)
 declare function app:browse($node as node(), $model as map(*)) as node()* {
     let $map := local:page()
-    
-    return (local:report-table($map('pagination'), ()), local:pagination($map('count'), $map('total')))
+    let $widget: = local:pagination($map('count'), $map('total'))
+    return ($widget, local:report-table($map('pagination'), ()), $widget)
 };
 
 (:
@@ -450,8 +473,9 @@ declare function app:browse-city($node as node(), $model as map(*)) as node()+ {
 :)
 declare function app:details-city($node as node(), $model as map(*)) as node()* {
     let $city := request:get-parameter('city', false())
-    let $map := local:page('dc.region.city', $city)    
-    return (local:report-table($map('pagination'), 'city'), local:pagination($map('count'), $map('total'), '&amp;city=' || $city))
+    let $map := local:page('dc.region.city', $city)
+    let $widget := local:pagination($map('count'), $map('total'), '&amp;city=' || $city)
+    return ($widget, local:report-table($map('pagination'), 'city'), $widget)
 };
 
 (:
@@ -473,7 +497,8 @@ declare function app:browse-language($node as node(), $model as map(*)) as node(
 declare function app:details-language($node as node(), $model as map(*)) as node()* {
     let $language := request:get-parameter('language', false())
     let $map := local:page('dc.language', $language)
-    return (local:report-table($map('pagination'), 'language'), local:pagination($map('count'), $map('total'), '&amp;language=' || $language))
+    let $widget := local:pagination($map('count'), $map('total'), '&amp;language=' || $language)
+    return ($widget, local:report-table($map('pagination'), 'language'), $widget)
 };
 
 (:
@@ -508,7 +533,8 @@ declare function app:browse-newspaper($node as node(), $model as map(*)) as node
 declare function app:details-newspaper($node as node(), $model as map(*)) as node()* {
   let $publisher := request:get-parameter('publisher', false())
   let $map := local:page('dc.publisher.id', $publisher)
-  return (local:report-table($map('pagination'),'publisher'), local:pagination($map('count'), $map('total'), '&amp;publisher=' || $publisher))
+  let $widget := local:pagination($map('count'), $map('total'), '&amp;publisher=' || $publisher)
+  return ($widget, local:report-table($map('pagination'),'publisher'), $widget)
 };
 
 
@@ -532,7 +558,8 @@ declare function app:browse-region($node as node(), $model as map(*)) as node()+
 declare function app:details-region($node as node(), $model as map(*)) as node()* {
   let $region := request:get-parameter('region', false())
   let $map := local:page('dc.region', $region)
-  return (local:report-table($map('pagination'),'region'), local:pagination($map('count'), $map('total'), '&amp;region=' || $region))
+  let $widget := local:pagination($map('count'), $map('total'), '&amp;region=' || $region)
+  return ($widget, local:report-table($map('pagination'),'region'), $widget)
 };
 
 (:
@@ -563,8 +590,8 @@ declare function app:details-source($node as node(), $model as map(*)) as node()
   let $source := request:get-parameter('source', false())
   let $type := request:get-parameter('type', 'db')
   let $map := local:page('dc.source.'||$type, $source)
-  
-  return (local:report-table($map('pagination'),'source'), local:pagination($map('count'), $map('total'), '&amp;source=' || $source || '&amp;type=' || $type))
+  let $widget := local:pagination($map('count'), $map('total'), '&amp;source=' || $source || '&amp;type=' || $type)
+  return ($widget, local:report-table($map('pagination'),'source'), $widget)
 };
 
 
@@ -656,7 +683,8 @@ declare function app:weekday-from-date($date as xs:date) as xs:integer{
 declare function app:details-date($node as node(), $model as map(*)) as node()* {
   let $date := request:get-parameter('date', false())
   let $map := local:page('dc.date', $date)
-  return (local:report-table($map('pagination'),'date'), local:pagination($map('count'), $map('total'), '&amp;date=' || $date))
+  let $widget := local:pagination($map('count'), $map('total'), '&amp;date=' || $date)
+  return ($widget, local:report-table($map('pagination'),'date'), $widget)
 };
 
 declare function app:parameter($node as node(), $model as map(*), $name as xs:string) as xs:string {
