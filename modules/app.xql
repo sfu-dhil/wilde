@@ -2,24 +2,25 @@ xquery version "3.0";
 
 module namespace app="http://dhil.lib.sfu.ca/exist/wilde-app/templates";
 
-import module namespace kwic="http://exist-db.org/xquery/kwic";
-import module namespace templates="http://exist-db.org/xquery/templates" ;
-import module namespace functx="http://www.functx.com";
-import module namespace map="http://www.w3.org/2005/xpath-functions/map";
-import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
-import module namespace publisher="http://dhil.lib.sfu.ca/exist/wilde-app/publisher" at "publisher.xql";
+import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
-import module namespace similarity="http://dhil.lib.sfu.ca/exist/wilde-app/similarity" at "similarity.xql";
-import module namespace tx="http://dhil.lib.sfu.ca/exist/wilde-app/transform" at "transform.xql";
-import module namespace stats="http://dhil.lib.sfu.ca/exist/wilde-app/stats" at "stats.xql";
-import module namespace lang="http://dhil.lib.sfu.ca/exist/wilde-app/lang" at "lang.xql";
+import module namespace functx="http://www.functx.com";
 import module namespace graph="http://dhil.lib.sfu.ca/exist/wilde-app/graph" at "graph.xql";
+import module namespace kwic="http://exist-db.org/xquery/kwic";
+import module namespace lang="http://dhil.lib.sfu.ca/exist/wilde-app/lang" at "lang.xql";
+import module namespace map="http://www.w3.org/2005/xpath-functions/map";
+import module namespace publisher="http://dhil.lib.sfu.ca/exist/wilde-app/publisher" at "publisher.xql";
+import module namespace similarity="http://dhil.lib.sfu.ca/exist/wilde-app/similarity" at "similarity.xql";
+import module namespace stats="http://dhil.lib.sfu.ca/exist/wilde-app/stats" at "stats.xql";
+import module namespace templates="http://exist-db.org/xquery/html-templating" ;
+import module namespace tx="http://dhil.lib.sfu.ca/exist/wilde-app/transform" at "transform.xql";
 
-declare namespace wilde="http://dhil.lib.sfu.ca/wilde";
-declare namespace string="java:org.apache.commons.lang3.StringUtils";
 declare namespace array="http://www.w3.org/2005/xpath-functions/array";
+declare namespace string="java:org.apache.commons.lang3.StringUtils";
+declare namespace wilde="http://dhil.lib.sfu.ca/wilde";
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
+
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
 (:
@@ -328,10 +329,10 @@ declare function local:page($name, $content) {
     
     let $pagination := subsequence($documents, ($page - 1) * $pageSize+1, $pageSize)
     return map {
-        "page" := $page,
-        "count" := count($pagination),
-        "total" := $total,
-        "pagination" := $pagination
+        "page" : $page,
+        "count" : count($pagination),
+        "total" : $total,
+        "pagination" : $pagination
     }
 };
 
@@ -346,10 +347,10 @@ declare function local:page() {
     
     let $pagination := subsequence($documents, ($page - 1) * $pageSize+1, $pageSize)
     return map {
-        "page" := $page,
-        "count" := count($pagination),
-        "total" := $total,
-        "pagination" := $pagination
+        "page" : $page,
+        "count" : count($pagination),
+        "total" : $total,
+        "pagination" : $pagination
     }
 };
 
@@ -708,8 +709,8 @@ declare function app:load($node as node(), $model as map(*)) {
     let $f := request:get-parameter('f', '')
     let $doc := collection:fetch($f)
     return map {
-        "doc-id" := $f,
-        "document" := $doc
+        "doc-id" : $f,
+        "document" : $doc
     }
 };
 
@@ -917,9 +918,9 @@ declare function app:search($node as node(), $model as map(*)) {
     let $page := request:get-parameter('p', 1)
     let $hits := collection:search($query)
     return map {
-        'hits' := $hits,
-        'query' := $query,
-        'page' := $page
+        'hits' : $hits,
+        'query' : $query,
+        'page' : $page
     }
 };
 
@@ -1297,8 +1298,8 @@ declare function app:load-graph($node as node(), $model as map(*)) {
     let $doc := collection:graph($f)
 
     return map {
-        "graph-id" := $f,
-        "graph" := $doc
+        "graph-id" : $f,
+        "graph" : $doc
     }
 };
 

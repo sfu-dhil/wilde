@@ -5,7 +5,7 @@
  :)
 xquery version "3.0";
 
-import module namespace templates="http://exist-db.org/xquery/templates";
+import module namespace templates="http://exist-db.org/xquery/html-templating";
 
 (:
  : The following modules provide functions which will be called by the
@@ -21,8 +21,8 @@ declare option output:media-type "text/html";
 
 
 let $config := map {
-    $templates:CONFIG_APP_ROOT := $config:app-root,
-    $templates:CONFIG_STOP_ON_ERROR := true()
+    $templates:CONFIG_APP_ROOT : $config:app-root,
+    $templates:CONFIG_STOP_ON_ERROR : true()
 }
 
 (:

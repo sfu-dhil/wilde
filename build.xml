@@ -10,7 +10,7 @@
   <property file="${host}.properties"/>
   
   <path id="classpath.core">
-    <fileset dir="${local.dir}/lib/core">
+    <fileset dir="${local.dir}/lib">
       <include name="*.jar"/>
     </fileset>
     <pathelement path="${local.dir}/exist.jar"/>

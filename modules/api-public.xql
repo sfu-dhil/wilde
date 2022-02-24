@@ -2,21 +2,21 @@ xquery version "3.0";
 
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
-declare namespace xhtml='http://www.w3.org/1999/xhtml';
 declare namespace api="http://dhil.lib.sfu.ca/exist/wilde-app/api-public";
-declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace json="http://www.json.org";
+declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace request="http://exist-db.org/xquery/request";
+declare namespace xhtml='http://www.w3.org/1999/xhtml';
 
 declare option output:method "json";
 declare option output:media-type "application/json";
 
-import module namespace login="http://exist-db.org/xquery/login" at "resource:org/exist/xquery/modules/persistentlogin/login.xql";
-import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
-import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
-import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
 import module namespace app="http://dhil.lib.sfu.ca/exist/wilde-app/templates" at "app.xql";
+import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
+import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
+import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
 import module namespace lang="http://dhil.lib.sfu.ca/exist/wilde-app/lang" at "lang.xql";
+import module namespace login="http://exist-db.org/xquery/login" at "resource:org/exist/xquery/modules/persistentlogin/login.xql";
 
 declare function api:documents() {
     let $documents := collection:documents()

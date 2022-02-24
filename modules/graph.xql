@@ -7,6 +7,7 @@ import module namespace functx='http://www.functx.com';
 
 declare namespace gexf='http://www.gexf.net/1.3';
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
+
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
 declare function graph:filename($node as node()) as xs:string {

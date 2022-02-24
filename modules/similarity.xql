@@ -2,12 +2,12 @@ xquery version "3.0";
 
 module namespace similarity="http://dhil.lib.sfu.ca/exist/wilde-app/similarity";
 
-import module namespace functx="http://www.functx.com"; 
-import module namespace math="http://exist-db.org/xquery/math";
 import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
+import module namespace functx="http://www.functx.com"; 
+import module namespace math="java:org.exist.xquery.functions.math.MathModule";
 
-declare namespace string="java:org.apache.commons.lang3.StringUtils";
 declare namespace locale="java:java.util.Locale";
+declare namespace string="java:org.apache.commons.lang3.StringUtils";
 
 declare function similarity:normalize($string as item(), $clean) as xs:string {
     let $unicode := normalize-unicode($string, 'NFD')

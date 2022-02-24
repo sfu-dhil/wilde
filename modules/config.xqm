@@ -1,15 +1,10 @@
 xquery version "3.0";
 
-(:~
- : A set of helper functions to access the application context from
- : within a module.
- :)
 module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config";
 
-declare namespace templates="http://exist-db.org/xquery/templates";
-
-declare namespace repo="http://exist-db.org/xquery/repo";
 declare namespace expath="http://expath.org/ns/pkg";
+declare namespace repo="http://exist-db.org/xquery/repo";
+declare namespace templates="http://exist-db.org/xquery/templates";
 
 (: 
     Determine the application root collection from the current module load path.

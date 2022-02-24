@@ -2,12 +2,12 @@ xquery version "3.0";
 
 module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document";
 
+import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
 import module namespace functx='http://www.functx.com';
 import module namespace util="http://exist-db.org/xquery/util";
 
-import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
-
 declare namespace xhtml='http://www.w3.org/1999/xhtml';
+
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
 declare function document:id($node as node()) as xs:string {
