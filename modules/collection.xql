@@ -1,17 +1,17 @@
+xquery version "3.0";
+
+module namespace collection = "http://dhil.lib.sfu.ca/exist/wilde-app/collection";
 (:~
  : Functions for interacting with a collection.
  :)
-xquery version "3.0";
 
-module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection";
+import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
+import module namespace document = "http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
+import module namespace functx = 'http://www.functx.com';
+import module namespace util = "http://exist-db.org/xquery/util";
+import module namespace xmldb = "http://exist-db.org/xquery/xmldb";
 
-import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
-import module namespace document="http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
-import module namespace functx='http://www.functx.com';
-import module namespace util="http://exist-db.org/xquery/util";
-import module namespace xmldb="http://exist-db.org/xquery/xmldb";
-
-declare namespace xhtml='http://www.w3.org/1999/xhtml';
+declare namespace xhtml = 'http://www.w3.org/1999/xhtml';
 
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
@@ -20,45 +20,47 @@ declare default element namespace "http://www.w3.org/1999/xhtml";
  : @return Node representing the data collection
  :)
 declare function collection:collection() as node()* {
-    collection($config:data-root || '/reports') 
+  collection($config:data-root || '/reports')
 };
 
 declare function collection:count() as xs:int {
-    count(collection($config:data-root || '/reports'))
+  count(collection($config:data-root || '/reports'))
 };
 
 declare function collection:graph($filename as xs:string) as node() {
-  if(not(matches($filename, '^[a-zA-Z0-9% .-]*$'))) then
+  if (not(matches($filename, '^[a-zA-Z0-9% .-]*$'))) then
     ()
   else
     let $path := $config:graph-root || '/' || $filename
     return
-      if(doc-available($path)) then
+      if (doc-available($path)) then
         doc($path)
       else
         ()
 };
 
 declare function collection:graph-list() as node()* {
-    let $collection := collection($config:graph-root)
+  let $collection := collection($config:graph-root)
+  return
+    for $doc in $collection
+      where fn:ends-with(util:document-name($doc), '.gexf')
+      order by util:document-name($doc)
     return
-        for $doc in $collection
-        where fn:ends-with(util:document-name($doc), '.gexf')
-        order by util:document-name($doc)
-        return $doc
+      $doc
 };
 
 declare function collection:image-list() as xs:string* {
-    let $collection := collection($config:thumb-root)
-    return 
-        for $doc in $collection
-        let $filename := xmldb:decode(util:document-name($doc))
-        order by $filename
-        return $filename
+  let $collection := collection($config:thumb-root)
+  return
+    for $doc in $collection
+    let $filename := xmldb:decode(util:document-name($doc))
+      order by $filename
+    return
+      $filename
 };
 
 declare function collection:image-meta() as node()? {
-    doc($config:data-root || '/images.xml')
+  doc($config:data-root || '/images.xml')
 };
 
 (:~
@@ -67,20 +69,20 @@ declare function collection:image-meta() as node()? {
  : @return The HTML root node of the document or a blank HTML document.
  :)
 declare function collection:fetch($id as xs:string) as node() {
-    let $collection := collection($config:data-root)
-    let $document := $collection//html[@id=$id]
-    return
-      if($document) then
-        $document
-      else
-        <html>
-          <head>
-            <title>Cannot find {$id}.</title>
-          </head>
-          <body>
-            <p>Cannot find {$id}.</p>
-          </body>
-        </html>
+  let $collection := collection($config:data-root)
+  let $document := $collection//html[@id = $id]
+  return
+    if ($document) then
+      $document
+    else
+      <html>
+        <head>
+          <title>Cannot find {$id}.</title>
+        </head>
+        <body>
+          <p>Cannot find {$id}.</p>
+        </body>
+      </html>
 };
 
 (:~
@@ -90,8 +92,9 @@ declare function collection:fetch($id as xs:string) as node() {
  : @return Node representing the paragraph or null.
  :)
 declare function collection:paragraph($doc-id as xs:string, $par-id as xs:string) as node() {
-    let $collection := collection($config:data-root)
-    return $collection//html[@id=$doc-id]//p[@id=$par-id]
+  let $collection := collection($config:data-root)
+  return
+    $collection//html[@id = $doc-id]//p[@id = $par-id]
 };
 
 (:~
@@ -103,15 +106,17 @@ declare function collection:paragraph($doc-id as xs:string, $par-id as xs:string
 declare function collection:next($document) as node()? {
   let $publisher := document:publisher($document)
   let $date := document:date($document)
-
+  
   let $documents :=
-    for $doc in collection($config:data-root)/html[.//meta[@name='dc.publisher' and @content=$publisher]]
-    order by document:date($doc), document:id($doc)
-    return $doc
-
+  for $doc in collection($config:data-root)/html[.//meta[@name = 'dc.publisher' and @content = $publisher]]
+    order by document:date($doc),
+      document:id($doc)
+  return
+    $doc
+  
   let $idx := functx:index-of-node($documents, $document)
   return
-    if($idx lt count($documents)) then
+    if ($idx lt count($documents)) then
       $documents[$idx + 1]
     else
       ()
@@ -126,15 +131,17 @@ declare function collection:next($document) as node()? {
 declare function collection:previous($document) as node()? {
   let $publisher := document:publisher($document)
   let $date := document:date($document)
-
+  
   let $documents :=
-    for $doc in collection($config:data-root)/html[.//meta[@name='dc.publisher' and @content=$publisher]]
-    order by document:date($doc), document:id($doc)
-    return $doc
-
+  for $doc in collection($config:data-root)/html[.//meta[@name = 'dc.publisher' and @content = $publisher]]
+    order by document:date($doc),
+      document:id($doc)
+  return
+    $doc
+  
   let $idx := functx:index-of-node($documents, $document)
   return
-    if($idx ge 2) then
+    if ($idx ge 2) then
       $documents[$idx - 1]
     else
       ()
@@ -145,11 +152,15 @@ declare function collection:previous($document) as node()? {
  : @return Sequence of nodes for the roots of the documents.
  :)
 declare function collection:documents() as node()* {
-    let $collection := collection:collection()
-    for $doc in $collection
-        where util:document-name($doc) != 'reports.xpr'
-        order by document:region($doc), document:publisher($doc), document:date($doc), document:id($doc)
-        return $doc
+  let $collection := collection:collection()
+  for $doc in $collection
+    where util:document-name($doc) != 'reports.xpr'
+    order by document:region($doc),
+      document:publisher($doc),
+      document:date($doc),
+      document:id($doc)
+  return
+    $doc
 };
 
 (:~
@@ -161,12 +172,13 @@ declare function collection:documents() as node()* {
  : @return Sequence of nodes for the roots of the documents.
  :)
 declare function collection:documents($name as xs:string, $value as xs:string) as node()* {
-    let $collection := collection($config:data-root)[.//meta[@name=$name and @content=$value]]
+  let $collection := collection($config:data-root)[.//meta[@name = $name and @content = $value]]
+  return
+    for $doc in $collection
+      where util:document-name($doc) != 'reports.xpr'
+      order by document:sortable($doc)
     return
-        for $doc in $collection
-        where util:document-name($doc) != 'reports.xpr'
-        order by document:sortable($doc)
-        return $doc
+      $doc
 };
 
 (:~
@@ -174,13 +186,14 @@ declare function collection:documents($name as xs:string, $value as xs:string) a
  : @return Sequence of strings.
  :)
 declare function collection:publishers() as xs:string* {
-    for $publisher in distinct-values(collection($config:data-root)//meta[@name='dc.publisher']/@content)
+  for $publisher in distinct-values(collection($config:data-root)//meta[@name = 'dc.publisher']/@content)
     order by $publisher
-    return $publisher
+  return
+    $publisher
 };
 
 declare function collection:publisher-index() as node()* {
-    doc($config:data-root || '/publisherIndex.xml')
+  doc($config:data-root || '/publisherIndex.xml')
 };
 
 (:~
@@ -188,15 +201,17 @@ declare function collection:publisher-index() as node()* {
  : @return Sequence of strings.
  :)
 declare function collection:regions() as xs:string* {
-    for $region in distinct-values(collection($config:data-root)//meta[@name='dc.region']/@content)
+  for $region in distinct-values(collection($config:data-root)//meta[@name = 'dc.region']/@content)
     order by $region
-    return $region
+  return
+    $region
 };
 
 declare function collection:regions($publisher as xs:string) as xs:string* {
-    let $heads := collection:collection()//head[meta[@name='dc.publisher'][@content=$publisher]]    
-    let $regions := $heads//meta[@name='dc.region']/@content/string()
-    return distinct-values($regions)
+  let $heads := collection:collection()//head[meta[@name = 'dc.publisher'][@content = $publisher]]
+  let $regions := $heads//meta[@name = 'dc.region']/@content/string()
+  return
+    distinct-values($regions)
 };
 
 (:~
@@ -204,15 +219,17 @@ declare function collection:regions($publisher as xs:string) as xs:string* {
  : @return Sequence of strings.
  :)
 declare function collection:languages() as xs:string* {
-    for $language in distinct-values(collection($config:data-root)//meta[@name='dc.language']/@content)
+  for $language in distinct-values(collection($config:data-root)//meta[@name = 'dc.language']/@content)
     order by $language
-    return $language
+  return
+    $language
 };
 
 declare function collection:languages($publisher as xs:string) as xs:string* {
-    let $heads := collection:collection()//head[meta[@name='dc.publisher'][@content=$publisher]]    
-    let $languages := $heads//meta[@name='dc.language']/@content/string()
-    return distinct-values($languages)
+  let $heads := collection:collection()//head[meta[@name = 'dc.publisher'][@content = $publisher]]
+  let $languages := $heads//meta[@name = 'dc.language']/@content/string()
+  return
+    distinct-values($languages)
 };
 
 (:~
@@ -220,9 +237,10 @@ declare function collection:languages($publisher as xs:string) as xs:string* {
  : @return Sequence of strings.
  :)
 declare function collection:sources() as xs:string* {
-    for $source in distinct-values(collection($config:data-root)//meta[@name='dc.source']/@content)
+  for $source in distinct-values(collection($config:data-root)//meta[@name = 'dc.source']/@content)
     order by $source
-    return $source
+  return
+    $source
 };
 
 (:~
@@ -230,15 +248,17 @@ declare function collection:sources() as xs:string* {
  : @return Sequence of strings.
  :)
 declare function collection:cities() as xs:string* {
-    for $city in distinct-values(collection($config:data-root)//meta[@name='dc.region.city']/@content)
+  for $city in distinct-values(collection($config:data-root)//meta[@name = 'dc.region.city']/@content)
     order by $city
-    return $city
+  return
+    $city
 };
 
 declare function collection:cities($publisher as xs:string) as xs:string* {
-    let $heads := collection:collection()//head[meta[@name='dc.publisher'][@content=$publisher]]    
-    let $cities := $heads//meta[@name='dc.region.city']/@content/string()
-    return distinct-values($cities)
+  let $heads := collection:collection()//head[meta[@name = 'dc.publisher'][@content = $publisher]]
+  let $cities := $heads//meta[@name = 'dc.region.city']/@content/string()
+  return
+    distinct-values($cities)
 };
 
 (:~
@@ -246,12 +266,13 @@ declare function collection:cities($publisher as xs:string) as xs:string* {
  : @return Sequence of hits ordered by score.
  :)
 declare function collection:search($query as xs:string) as node()* {
-    if(empty($query) or $query = '') then
-        ()
-    else
-        for $hit in collection($config:data-root)//div[@id="original"]//p[ft:query(., $query)]
-        order by ft:score($hit) descending
-        return $hit
+  if (empty($query) or $query = '') then
+    ()
+  else
+    for $hit in collection($config:data-root)//div[@id = "original"]//p[ft:query(., $query)]
+      order by ft:score($hit) descending
+    return
+      $hit
 };
 
 (:~
@@ -259,11 +280,13 @@ declare function collection:search($query as xs:string) as node()* {
  : @return Sequence of nodes.
  :)
 declare function collection:similarities() as node()* {
-    for $a in collection($config:data-root)//a[@class='similarity']
-        let $da := xs:date(document:date($a))
-        let $b := collection:paragraph($a/@data-document, $a/@data-paragraph)
-        let $db := xs:date(document:date($b))
-        where $da le $db
-        order by  $a/@data-similarity descending, document:id($a)
-        return $a
+  for $a in collection($config:data-root)//a[@class = 'similarity']
+  let $da := xs:date(document:date($a))
+  let $b := collection:paragraph($a/@data-document, $a/@data-paragraph)
+  let $db := xs:date(document:date($b))
+    where $da le $db
+    order by $a/@data-similarity descending,
+      document:id($a)
+  return
+    $a
 };

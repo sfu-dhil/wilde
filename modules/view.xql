@@ -1,28 +1,27 @@
+xquery version "3.0";
 (:~
  : This is the main XQuery which will (by default) be called by controller.xql
  : to process any URI ending with ".html". It receives the HTML from
  : the controller and passes it to the templating system.
  :)
-xquery version "3.0";
 
-import module namespace templates="http://exist-db.org/xquery/html-templating";
+import module namespace templates = "http://exist-db.org/xquery/html-templating";
 
 (:
  : The following modules provide functions which will be called by the
  : templating.
  :)
-import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
-import module namespace app="http://dhil.lib.sfu.ca/exist/wilde-app/templates" at "app.xql";
+import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
+import module namespace app = "http://dhil.lib.sfu.ca/exist/wilde-app/templates" at "app.xql";
 
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option output:method "xhtml5";
 declare option output:media-type "text/html";
 
-
 let $config := map {
-    $templates:CONFIG_APP_ROOT : $config:app-root,
-    $templates:CONFIG_STOP_ON_ERROR : true()
+  $templates:CONFIG_APP_ROOT: $config:app-root,
+  $templates:CONFIG_STOP_ON_ERROR: true()
 }
 
 (:
@@ -31,14 +30,13 @@ let $config := map {
  : module cannot see the application modules, but the inline function
  : below does see them.
  :)
-let $lookup := function($functionName as xs:string, $arity as xs:int) {
-    try {
-        function-lookup(xs:QName($functionName), $arity)
-    } catch * {
-        ()
-    }
+let $lookup := function ($functionName as xs:string, $arity as xs:int) {
+  try {
+    function-lookup(xs:QName($functionName), $arity)
+  } catch * {
+    ()
+  }
 }
-
 
 (:
  : The HTML is passed in the request from the controller.
@@ -46,4 +44,4 @@ let $lookup := function($functionName as xs:string, $arity as xs:int) {
  :)
 let $content := request:get-data()
 return
-    templates:apply($content, $lookup, (), $config)
+  templates:apply($content, $lookup, (), $config)

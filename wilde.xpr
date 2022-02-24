@@ -1,8 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="22.0">
+<project>
     <meta>
         <filters directoryPatterns="" filePatterns="\Qwilde.xpr\E" positiveFilePatterns="" showHiddenFiles="false"/>
-        <options/>
+        <options>
+            <serialized xml:space="preserve">
+                <serializableOrderedMap>
+                    <entry>
+                        <String>editor.indent.size.v9.2</String>
+                        <Integer>2</Integer>
+                    </entry>
+                    <entry>
+                        <String>key.editor.format.option.pane.group</String>
+                        <Boolean>true</Boolean>
+                    </entry>
+                    <entry>
+                        <String>key.editor.format.xquery.option.pane</String>
+                        <Boolean>true</Boolean>
+                    </entry>
+                    <entry>
+                        <String>key.editor.open.option.pane</String>
+                        <Boolean>false</Boolean>
+                    </entry>
+                    <entry>
+                        <String>key.editor.save.option.pane</String>
+                        <Boolean>false</Boolean>
+                    </entry>
+                    <entry>
+                        <String>key.xquery.option.pane.group</String>
+                        <Boolean>true</Boolean>
+                    </entry>
+                    <entry>
+                        <String>xq.pp.break.line.before.attribute.name</String>
+                        <Boolean>false</Boolean>
+                    </entry>
+                    <entry>
+                        <String>xquery.options.transformation.engine.v9</String>
+                        <String>eXist-db localhost</String>
+                    </entry>
+                </serializableOrderedMap>
+            </serialized>
+        </options>
     </meta>
     <projectTree name="wilde.xpr">
         <folder path="."/>
