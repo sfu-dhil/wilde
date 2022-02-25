@@ -8,7 +8,7 @@
 
   <property name="host" value="localhost"/>
   <property file="${host}.properties"/>
-  
+
   <path id="classpath.core">
     <fileset dir="${local.dir}/lib">
       <include name="*.jar"/>
@@ -16,7 +16,7 @@
     <pathelement path="${local.dir}/exist.jar"/>
     <pathelement path="${local.dir}/exist-optional.jar"/>
   </path>
-  
+
   <typedef resource="org/exist/ant/antlib.xml" uri="http://exist-db.org/ant">
     <classpath refid="classpath.core"/>
   </typedef>
@@ -32,7 +32,7 @@
 
   <target depends="cache-list,yarn" name="xar">
     <mkdir dir="${build.dir}" />
-    <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/*,wilde.xpr" />
+    <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludesfile='excludes.txt' />
   </target>
 
   <target name="cache-list">
@@ -49,7 +49,7 @@
       <arg value="install" />
     </exec>
   </target>
-  
+
   <target name="store-pages">
     <echo>Storing pages to ${host} at ${server.data}</echo>
     <xdb:store uri="${server.root}" user="${server.user}" password="${server.pass}" type="xml">
@@ -58,5 +58,5 @@
       </fileset>
     </xdb:store>
   </target>
-  
+
 </project>
