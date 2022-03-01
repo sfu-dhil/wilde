@@ -7,7 +7,7 @@ let $filename := request:get-attribute('filename')
 let $type := request:get-attribute('type')
 
 return
-  if (not(matches($filename, "^[a-zA-Z0-9_% .'-]*$"))) then
+  if (not(matches($filename, "^(?:-|[a-zA-Z0-9_% .'])*$"))) then
     ()
   else
     let $path := switch ($type)

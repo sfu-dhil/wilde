@@ -367,7 +367,7 @@ declare function local:pagination($count as xs:int, $total as xs:int, $query as 
 (:
     Wrapper around local:pagination#3 when there is no query string.
 :)
-declare function local:pagination($count as xs:int, $total as xs:int) as element() {
+declare function local:pagination($count as xs:int, $total as xs:int) as element()? {
   local:pagination($count, $total, '')
 };
 
