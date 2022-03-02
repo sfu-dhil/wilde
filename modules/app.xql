@@ -1,24 +1,26 @@
 xquery version "3.0";
 
-module namespace app = "http://dhil.lib.sfu.ca/exist/wilde-app/templates";
+module namespace app = "http://dhil.lib.sfu.ca/exist/wilde/templates";
 (:~
  : Main entry points for the app. All templates should call functions in this
  : file only.
  :)
+import module namespace templates="http://exist-db.org/xquery/html-templating";
+import module namespace lib="http://exist-db.org/xquery/html-templating/lib";
 
-import module namespace collection = "http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
-import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
-import module namespace document = "http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
 import module namespace functx = "http://www.functx.com";
-import module namespace graph = "http://dhil.lib.sfu.ca/exist/wilde-app/graph" at "graph.xql";
 import module namespace kwic = "http://exist-db.org/xquery/kwic";
-import module namespace lang = "http://dhil.lib.sfu.ca/exist/wilde-app/lang" at "lang.xql";
 import module namespace map = "http://www.w3.org/2005/xpath-functions/map";
-import module namespace publisher = "http://dhil.lib.sfu.ca/exist/wilde-app/publisher" at "publisher.xql";
-import module namespace similarity = "http://dhil.lib.sfu.ca/exist/wilde-app/similarity" at "similarity.xql";
-import module namespace stats = "http://dhil.lib.sfu.ca/exist/wilde-app/stats" at "stats.xql";
-import module namespace templates = "http://exist-db.org/xquery/html-templating";
-import module namespace tx = "http://dhil.lib.sfu.ca/exist/wilde-app/transform" at "transform.xql";
+
+import module namespace collection = "http://dhil.lib.sfu.ca/exist/wilde/collection" at "collection.xql";
+import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde/config" at "config.xqm";
+import module namespace document = "http://dhil.lib.sfu.ca/exist/wilde/document" at "document.xql";
+import module namespace graph = "http://dhil.lib.sfu.ca/exist/wilde/graph" at "graph.xql";
+import module namespace lang = "http://dhil.lib.sfu.ca/exist/wilde/lang" at "lang.xql";
+import module namespace publisher = "http://dhil.lib.sfu.ca/exist/wilde/publisher" at "publisher.xql";
+import module namespace similarity = "http://dhil.lib.sfu.ca/exist/wilde/similarity" at "similarity.xql";
+import module namespace stats = "http://dhil.lib.sfu.ca/exist/wilde/stats" at "stats.xql";
+import module namespace tx = "http://dhil.lib.sfu.ca/exist/wilde/transform" at "transform.xql";
 
 declare namespace array = "http://www.w3.org/2005/xpath-functions/array";
 declare namespace string = "java:org.apache.commons.lang3.StringUtils";

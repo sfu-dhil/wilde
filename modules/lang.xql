@@ -1,6 +1,6 @@
 xquery version "3.0";
 
-module namespace lang = "http://dhil.lib.sfu.ca/exist/wilde-app/lang";
+module namespace lang = "http://dhil.lib.sfu.ca/exist/wilde/lang";
 
 import module namespace functx = 'http://www.functx.com';
 

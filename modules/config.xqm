@@ -1,78 +1,61 @@
-xquery version "3.0";
+xquery version "3.1";
 
-module namespace config = "http://dhil.lib.sfu.ca/exist/wilde-app/config";
 (:~
- : Configuration information for the app.
+ : A set of helper functions to access the application context from
+ : within a module.
  :)
 
-declare namespace expath = "http://expath.org/ns/pkg";
-declare namespace repo = "http://exist-db.org/xquery/repo";
-declare namespace templates = "http://exist-db.org/xquery/templates";
+module namespace config="http://dhil.lib.sfu.ca/exist/wilde/config";
 
-(: 
+import module namespace templates="http://exist-db.org/xquery/html-templating";
+import module namespace lib="http://exist-db.org/xquery/html-templating/lib";
+
+declare namespace repo="http://exist-db.org/xquery/repo";
+declare namespace expath="http://expath.org/ns/pkg";
+(:
     Determine the application root collection from the current module load path.
-    The app may be run from a file system (Mac OS specific for now), the appropriate
-    file path is returned.
 :)
 declare variable $config:app-root :=
-let $rawPath := system:get-module-load-path()
-let $modulePath :=
-(: strip the xmldb: part :)
-if (starts-with($rawPath, "xmldb:exist://")) then
-  if (starts-with($rawPath, "xmldb:exist://embedded-eXist-server")) then
-    substring($rawPath, 36)
-  else
-    substring($rawPath, 15)
-else
-  $rawPath
-let $path := substring-before($modulePath, "/modules")
-return
-  if (starts-with($path, '/Users')) then
-    'file:/' || $path
-  else
-    $path
+  let $rawPath := system:get-module-load-path()
+  let $modulePath :=
+      (: strip the xmldb: part :)
+      if (starts-with($rawPath, "xmldb:exist://")) then
+          if (starts-with($rawPath, "xmldb:exist://embedded-eXist-server")) then
+              substring($rawPath, 36)
+          else
+              substring($rawPath, 15)
+      else
+          $rawPath
+  let $path := substring-before($modulePath, "/modules")
+  return
+    if (starts-with($path, '/Users')) then
+      'file:/' || $path
+    else
+      $path
 ;
 
-(:
-    Path to the data inside eXist
-:)
 declare variable $config:data-root := '/db/apps/wilde-data/data';
 
-declare variable $config:report-root := '/db/apps/wilde-data/data/reports';
+declare variable $config:report-root := $config:data-root || '/reports';
 
-declare variable $config:graph-root := '/db/apps/wilde-data/data/graphs';
+declare variable $config:graph-root := $config:data-root || '/graphs';
 
-declare variable $config:thumb-root := '/db/apps/wilde-data/data/thumbs';
+declare variable $config:thumb-root := $config:data-root || '/thumbs';
 
-declare variable $config:image-root := '/db/apps/wilde-data/data/images';
+declare variable $config:image-root := $config:data-root || '/images';
 
 declare variable $config:pagination-window := 3;
 
 declare variable $config:pagination-size := 100;
 
-(:
-    Default string metric.
-:)
 declare variable $config:similarity-metric := 'levenshtein';
 
-(:
-    Minimum similarity level. Similarities less than this are discarded.
-:)
 declare variable $config:similarity-threshold := 0.6;
 
-(:
-    Minimum length for strings to be considered.
-:)
 declare variable $config:minimum-length := 25;
 
-(:
-    Number of search results per page.
-:)
 declare variable $config:search-results-per-page := 20;
 
-(:
-    Similarities to display per page. I think it's unused.
-:)
 declare variable $config:similarities-per-page := 50;
 
 declare variable $config:repo-descriptor := doc(concat($config:app-root, "/repo.xml"))/repo:meta;
@@ -81,39 +64,38 @@ declare variable $config:expath-descriptor := doc(concat($config:app-root, "/exp
 
 (:~
  : Resolve the given path using the current application context.
+ : If the app resides in the file system,
  :)
 declare function config:resolve($relPath as xs:string) {
-  if (starts-with($config:app-root, "/db")) then
-    doc(concat($config:app-root, "/", $relPath))
-  else
-    doc(concat("file://", $config:app-root, "/", $relPath))
+    if (starts-with($config:app-root, "/db")) then
+        doc(concat($config:app-root, "/", $relPath))
+    else
+        doc(concat("file://", $config:app-root, "/", $relPath))
 };
 
 (:~
  : Returns the repo.xml descriptor for the current application.
  :)
 declare function config:repo-descriptor() as element(repo:meta) {
-  $config:repo-descriptor
+    $config:repo-descriptor
 };
 
 (:~
  : Returns the expath-pkg.xml descriptor for the current application.
  :)
 declare function config:expath-descriptor() as element(expath:package) {
-  $config:expath-descriptor
+    $config:expath-descriptor
 };
 
-declare
-%templates:wrap
-function config:app-title($node as node(), $model as map(*)) as text() {
-  $config:expath-descriptor/expath:title/text()
+declare %templates:wrap function config:app-title($node as node(), $model as map(*)) as text() {
+    $config:expath-descriptor/expath:title/text()
 };
 
 declare function config:app-meta($node as node(), $model as map(*)) as element()* {
-  <meta xmlns="http://www.w3.org/1999/xhtml" name="description" content="{$config:repo-descriptor/repo:description/text()}"/>,
-  for $author in $config:repo-descriptor/repo:author
-  return
-    <meta xmlns="http://www.w3.org/1999/xhtml" name="creator" content="{$author/text()}"/>
+    <meta xmlns="http://www.w3.org/1999/xhtml" name="description" content="{$config:repo-descriptor/repo:description/text()}"/>,
+    for $author in $config:repo-descriptor/repo:author
+    return
+        <meta xmlns="http://www.w3.org/1999/xhtml" name="creator" content="{$author/text()}"/>
 };
 
 (:~
@@ -121,25 +103,31 @@ declare function config:app-meta($node as node(), $model as map(*)) as element()
  : in the application descriptors.
  :)
 declare function config:app-info($node as node(), $model as map(*)) {
-  let $expath := config:expath-descriptor()
-  let $repo := config:repo-descriptor()
-  return
-    <table class="app-info">
-      <tr>
-        <td>app collection:</td>
-        <td>{$config:app-root}</td>
-      </tr>
-      {
-        for $attr in ($expath/@*, $expath/*, $repo/*)
-        return
-          <tr>
-            <td>{node-name($attr)}:</td>
-            <td>{$attr/string()}</td>
-          </tr>
-      }
-      <tr>
-        <td>Controller:</td>
-        <td>{request:get-attribute("$exist:controller")}</td>
-      </tr>
-    </table>
+    let $expath := config:expath-descriptor()
+    let $repo := config:repo-descriptor()
+    return
+        <table class="app-info">
+          <caption>Application Info</caption>
+            <tr>
+                <td>app collection:</td>
+                <td>{$config:app-root}</td>
+            </tr>
+            {
+                for $attr in ($expath/@*, $expath/*, $repo/*)
+                return
+                  if ($attr eq '')
+                then (<tr>
+                    <td>{node-name($attr)}:</td>
+                    <td>{$attr/@*/string()}</td>
+                </tr>)
+                else (<tr>
+                    <td>{node-name($attr)}:</td>
+                    <td>{$attr/string()}</td>
+                </tr>)
+            }
+            <tr>
+                <td>Controller:</td>
+                <td>{ request:get-attribute("$exist:controller") }</td>
+            </tr>
+        </table>
 };

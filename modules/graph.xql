@@ -1,8 +1,8 @@
 xquery version "3.0";
 
-module namespace graph = "http://dhil.lib.sfu.ca/exist/wilde-app/graph";
+module namespace graph = "http://dhil.lib.sfu.ca/exist/wilde/graph";
 
-import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
+import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde/config" at "config.xqm";
 import module namespace functx = 'http://www.functx.com';
 
 declare namespace gexf = 'http://www.gexf.net/1.3';

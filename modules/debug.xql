@@ -1,6 +1,6 @@
 xquery version "3.0";
 
-import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
+import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde/config" at "config.xqm";
 
 declare namespace request = "http://exist-db.org/xquery/request";
 declare namespace session = "http://exist-db.org/xquery/session";

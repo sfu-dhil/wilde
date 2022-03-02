@@ -1,8 +1,8 @@
 xquery version "3.0";
 
-module namespace publisher = "http://dhil.lib.sfu.ca/exist/wilde-app/publisher";
+module namespace publisher = "http://dhil.lib.sfu.ca/exist/wilde/publisher";
 
-import module namespace collection = "http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
+import module namespace collection = "http://dhil.lib.sfu.ca/exist/wilde/collection" at "collection.xql";
 
 declare function publisher:list() as xs:string* {
   for $name in collection:publisher-index()//item/@name

@@ -4,10 +4,10 @@
  :)
 xquery version "3.0";
 
-module namespace stats = "http://dhil.lib.sfu.ca/exist/wilde-app/stats";
+module namespace stats = "http://dhil.lib.sfu.ca/exist/wilde/stats";
 
-import module namespace collection = "http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
-import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
+import module namespace collection = "http://dhil.lib.sfu.ca/exist/wilde/collection" at "collection.xql";
+import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde/config" at "config.xqm";
 import module namespace functx = "http://www.functx.com";
 import module namespace math = "java:org.exist.xquery.functions.math.MathModule";
 

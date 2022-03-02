@@ -1,12 +1,12 @@
 xquery version "3.0";
 
-module namespace collection = "http://dhil.lib.sfu.ca/exist/wilde-app/collection";
+module namespace collection = "http://dhil.lib.sfu.ca/exist/wilde/collection";
 (:~
  : Functions for interacting with a collection.
  :)
 
-import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
-import module namespace document = "http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
+import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde/config" at "config.xqm";
+import module namespace document = "http://dhil.lib.sfu.ca/exist/wilde/document" at "document.xql";
 import module namespace functx = 'http://www.functx.com';
 import module namespace util = "http://exist-db.org/xquery/util";
 import module namespace xmldb = "http://exist-db.org/xquery/xmldb";

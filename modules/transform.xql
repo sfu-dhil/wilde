@@ -1,9 +1,9 @@
 xquery version "3.0";
 
-module namespace tx = "http://dhil.lib.sfu.ca/exist/wilde-app/transform";
+module namespace tx = "http://dhil.lib.sfu.ca/exist/wilde/transform";
 
-import module namespace collection = "http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
-import module namespace document = "http://dhil.lib.sfu.ca/exist/wilde-app/document" at "document.xql";
+import module namespace collection = "http://dhil.lib.sfu.ca/exist/wilde/collection" at "collection.xql";
+import module namespace document = "http://dhil.lib.sfu.ca/exist/wilde/document" at "document.xql";
 import module namespace kwic = "http://exist-db.org/xquery/kwic";
 
 declare namespace xhtml = 'http://www.w3.org/1999/xhtml';

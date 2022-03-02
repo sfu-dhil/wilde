@@ -1,8 +1,8 @@
 xquery version "3.0";
 
-module namespace document = "http://dhil.lib.sfu.ca/exist/wilde-app/document";
+module namespace document = "http://dhil.lib.sfu.ca/exist/wilde/document";
 
-import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
+import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde/config" at "config.xqm";
 import module namespace functx = 'http://www.functx.com';
 import module namespace util = "http://exist-db.org/xquery/util";
 
