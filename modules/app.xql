@@ -1141,7 +1141,7 @@ declare function app:compare-paragraphs($node as node(), $model as map(*)) {
           ""
         
         return
-          <div class='rowparagraph-compare' data-score="{$similarity}%">
+          <div class='row paragraph-compare' data-score="{$similarity}%">
             <div class="col-sm-4 paragraph-a">
               <div class="compare-link">{$la}</div>
               <div class='content'>{string($other)}</div>
