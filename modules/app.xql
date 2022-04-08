@@ -22,6 +22,8 @@ import module namespace similarity = "http://dhil.lib.sfu.ca/exist/wilde/similar
 import module namespace stats = "http://dhil.lib.sfu.ca/exist/wilde/stats" at "stats.xql";
 import module namespace tx = "http://dhil.lib.sfu.ca/exist/wilde/transform" at "transform.xql";
 
+import module namespace console="http://exist-db.org/xquery/console";
+
 declare namespace array = "http://www.w3.org/2005/xpath-functions/array";
 declare namespace string = "java:org.apache.commons.lang3.StringUtils";
 declare namespace wilde = "http://dhil.lib.sfu.ca/wilde";
@@ -1006,13 +1008,81 @@ declare function app:paragraph-similarities($node as node(), $model as map(*)) a
 declare function app:search($node as node(), $model as map(*)) {
   let $query := request:get-parameter('query', '')
   let $page := request:get-parameter('p', 1)
-  let $hits := collection:search($query)
+  let $options := map {
+    "facets": map {
+      "lang": request:get-parameter('facet-lang', ()),
+      "region": request:get-parameter('facet-region', ()),
+      "publisher": request:get-parameter('facet-publisher', ())
+    }
+  }
+  
+  let $hits := collection:search($query, $options)
+  
+  let $facets := map {
+    'lang': ft:facets($hits, "lang"),
+    'region': ft:facets($hits, "region"),
+    'publisher': ft:facets($hits, "publisher")
+  } 
+  
   return
     map {
       'hits': $hits,
       'query': $query,
-      'page': $page
+      'page': $page,
+      'facets': $facets,
+      'options': $options
     }
+};
+
+declare function app:search-facets($node as node(), $model as map(*)) {
+  let $options := $model('options')('facets')
+  let $facets := $model('facets')
+  let $languages := 
+    for $code in $options('lang')
+    return lang:code2lang($code)
+
+  return 
+    <div>
+    <h3>Language</h3>
+    <div class='facet-container'> { 
+      for $code in map:keys($facets('lang'))
+        let $label := lang:code2lang($code)
+        let $checked := index-of($options('lang'), $code) gt 0
+        order by $label
+        return 
+          <label class='facet'>
+            <input type="checkbox" value="{$code}" name="facet-lang">
+              { if ($checked) then attribute checked { '' } else () }
+            </input>
+            {$label}: {$facets('lang')($code)}
+          </label>
+    } </div>
+
+    <h3>Publisher</h3>
+    <div class='facet-container'> { 
+      for $publisher in map:keys($facets('publisher'))
+        order by $publisher
+        return 
+          <label class='facet'>
+            <input type="checkbox" value="{$publisher}" name="facet-publisher">
+              { if(index-of($options('publisher'), $publisher) gt 0) then attribute checked {''} else () }
+            </input>
+            {$publisher}: {$facets('publisher')($publisher)}
+          </label>
+    } </div>
+
+    <h3>Region</h3>
+    <div class='facet-container'> { 
+      for $region in map:keys($facets('region'))
+        order by $region
+        return 
+          <label class='facet'><input type="checkbox" value="{$region}" name="facet-region">
+              { if(index-of($options('region'), $region) gt 0) then attribute checked {''} else () }
+            </input>
+            {$region}: {$facets('region')($region)}
+          </label>
+    } </div>
+  </div>
 };
 
 declare function app:search-summary($node as node(), $model as map(*)) {
@@ -1020,7 +1090,7 @@ declare function app:search-summary($node as node(), $model as map(*)) {
     ()
   else
     <p>
-      Found {count($model('hits'))} for search
+      Found {count($model('hits'))} matching reports for search
       query <kbd>{$model('query')}</kbd>.
     </p>
 };
@@ -1030,7 +1100,7 @@ declare function app:search-export($node as node(), $model as map(*)) {
   
   return
     if ($query) then
-      <a href="export/search.csv?query={$query}" class='btnbtn-primary'>Export Results</a>
+      <a href="export/search.csv?query={$query}" class='btn btn-primary'>Export Results</a>
     else
       ()
 };

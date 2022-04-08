@@ -101,14 +101,14 @@ declare function collection:paragraph($doc-id as xs:string, $par-id as xs:string
 declare function collection:next($document) as node()? {
   let $publisher := document:publisher($document)
   let $date := document:date($document)
-  
+
   let $documents :=
   for $doc in collection($config:data-root)/html[.//meta[@name = 'dc.publisher' and @content = $publisher]]
     order by document:date($doc),
       document:id($doc)
   return
     $doc
-  
+
   let $idx := functx:index-of-node($documents, $document)
   return
     if ($idx lt count($documents)) then
@@ -126,14 +126,14 @@ declare function collection:next($document) as node()? {
 declare function collection:previous($document) as node()? {
   let $publisher := document:publisher($document)
   let $date := document:date($document)
-  
+
   let $documents :=
   for $doc in collection($config:data-root)/html[.//meta[@name = 'dc.publisher' and @content = $publisher]]
     order by document:date($doc),
       document:id($doc)
   return
     $doc
-  
+
   let $idx := functx:index-of-node($documents, $document)
   return
     if ($idx ge 2) then
@@ -260,11 +260,11 @@ declare function collection:cities($publisher as xs:string) as xs:string* {
  : Search the collection for the query string.
  : @return Sequence of hits ordered by score.
  :)
-declare function collection:search($query as xs:string) as node()* {
+declare function collection:search($query as xs:string, $options as map(*)) as node()* {
   if (empty($query) or $query = '') then
     ()
   else
-    for $hit in collection($config:data-root)//div[@id = "original"]//p[ft:query(., $query)]
+    for $hit in collection($config:data-root)//div[@id = "original"][ft:query(., $query, $options)]
       order by ft:score($hit) descending
     return
       $hit

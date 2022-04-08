@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@websanova/url@^2.6.3":
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/@websanova/url/-/url-2.6.3.tgz#4da0c686e78b3612be48dcb9c0c60274360a1075"
-  integrity sha512-+gLI+9nIVPg3X4VcC30MUrGd9/DmYPla2ryzl7qKzIbH07wgsgy99H2WRsSFweVgV4FLkTHEpClj1//t0u+FLw==
-
 "@websanova/url@https://github.com/websanova/js-url.git":
   version "2.6.3"
   resolved "https://github.com/websanova/js-url.git#33cb63676f7a1c072f72c0a0696d7121da000063"
