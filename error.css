@@ -1,0 +1,21 @@
+body {
+  max-width: 600px;
+  margin: 0 auto;
+  background: lightgray;
+  padding: 1em;
+}
+
+div {
+  outline: 1px solid grey;
+  padding: 1em;
+  background: white;
+}
+
+pre {
+  overflow-x: auto;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}

@@ -4,16 +4,17 @@
  :)
 xquery version "3.0";
 
-module namespace stats="http://dhil.lib.sfu.ca/exist/wilde-app/stats";
+module namespace stats = "http://dhil.lib.sfu.ca/exist/wilde/stats";
 
-import module namespace functx="http://www.functx.com"; 
-import module namespace math="http://exist-db.org/xquery/math";
-import module namespace config="http://dhil.lib.sfu.ca/exist/wilde-app/config" at "config.xqm";
-import module namespace collection="http://dhil.lib.sfu.ca/exist/wilde-app/collection" at "collection.xql";
+import module namespace collection = "http://dhil.lib.sfu.ca/exist/wilde/collection" at "collection.xql";
+import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde/config" at "config.xqm";
+import module namespace functx = "http://www.functx.com";
+import module namespace math = "java:org.exist.xquery.functions.math.MathModule";
 
-declare namespace string="java:org.apache.commons.lang3.StringUtils";
-declare namespace locale="java:java.util.Locale";
-declare namespace xhtml='http://www.w3.org/1999/xhtml';
+declare namespace locale = "java:java.util.Locale";
+declare namespace string = "java:org.apache.commons.lang3.StringUtils";
+declare namespace xhtml = 'http://www.w3.org/1999/xhtml';
+
 declare default element namespace "http://www.w3.org/1999/xhtml";
 
 (:~
@@ -21,11 +22,13 @@ declare default element namespace "http://www.w3.org/1999/xhtml";
  : @return Integer count of the words.
  :)
 declare function stats:count-words() as xs:int {
-  let $wc := 
-	 for $p in collection($config:data-root)//p 
-	 return count(tokenize($p, '\s'))
-
-  return sum($wc)
+  let $wc :=
+  for $p in collection($config:data-root)//p
+  return
+    count(tokenize($p, '\s'))
+  
+  return
+    sum($wc)
 };
 
 (:~
@@ -33,10 +36,12 @@ declare function stats:count-words() as xs:int {
  : @return Integer count of the paragraphs.
  :)
 declare function stats:count-paragraphs() as xs:int {
-  let $wc := 
-    for $d in collection:documents()
-    return count($d//p)
-  return sum($wc)
+  let $wc :=
+  for $d in collection:documents()
+  return
+    count($d//p)
+  return
+    sum($wc)
 };
 
 (:~
@@ -53,10 +58,12 @@ declare function stats:count-documents() as xs:int {
  : @return Integer count of the paragraphs with matches.
  :)
 declare function stats:count-paragraphs-with-matches() as xs:int {
-  let $wc := 
-    for $d in collection:documents()
-    return count($d//p[a])
-  return sum($wc)
+  let $wc :=
+  for $d in collection:documents()
+  return
+    count($d//p[a])
+  return
+    sum($wc)
 };
 
 (:~
@@ -65,10 +72,12 @@ declare function stats:count-paragraphs-with-matches() as xs:int {
  : @return Integer count of the paragraph matches.
  :)
 declare function stats:count-paragraph-matches() as xs:int {
-  let $wc := 
-    for $d in collection:documents()
-    return count($d//a)
-  return sum($wc) div 2
+  let $wc :=
+  for $d in collection:documents()
+  return
+    count($d//a)
+  return
+    sum($wc) div 2
 };
 
 (:~

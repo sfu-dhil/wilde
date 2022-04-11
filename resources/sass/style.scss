@@ -162,6 +162,18 @@ kbd {
   background-color: #eee;
 }
 
+label.facet {
+  display: block;
+  input {
+    margin-right: 6px;
+  }
+}
+
+div.facet-container {
+  max-height: 200px;
+  overflow-x: auto;
+}
+
 /* images with captions */
 figure {
   margin: 1em 0;

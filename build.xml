@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="xar" name="wilde" xmlns:xdb="http://exist-db.org/ant">
+  <description>Wilde Trials International News Archive</description>
+
   <xmlproperty file="expath-pkg.xml" />
   <property name="project.version" value="${package(version)}" />
   <property name="project.app" value="wilde" />
   <property name="build.dir" value="build" />
   <property name="cache.base" value="http://localhost:8080/exist/wilde"/>
-
+  
   <property name="host" value="localhost"/>
   <property file="${host}.properties"/>
   
   <path id="classpath.core">
-    <fileset dir="${local.dir}/lib/core">
+    <fileset dir="${local.dir}/lib">
       <include name="*.jar"/>
     </fileset>
     <pathelement path="${local.dir}/exist.jar"/>
@@ -20,7 +22,7 @@
   <typedef resource="org/exist/ant/antlib.xml" uri="http://exist-db.org/ant">
     <classpath refid="classpath.core"/>
   </typedef>
-
+  
   <fileset id="console-usages" dir="." includes="**/*.xql">
     <contains text="console"/>
   </fileset>
@@ -29,12 +31,12 @@
       <resourcecount when="greater" count="0" refid="console-usages" />
     </condition>
   </fail>
-
+  
   <target depends="cache-list,yarn" name="xar">
     <mkdir dir="${build.dir}" />
-    <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/*,wilde.xpr" />
+    <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludesfile='excludes.txt' />
   </target>
-
+  
   <target name="cache-list">
     <get src="${cache.base}/city-nocache.html" dest="city.html"/>
     <get src="${cache.base}/date-nocache.html" dest="date.html"/>
@@ -43,7 +45,7 @@
     <get src="${cache.base}/region-nocache.html" dest="region.html"/>
     <get src="${cache.base}/source-nocache.html" dest="source.html"/>
   </target>
-
+  
   <target name="yarn">
     <exec executable="yarn">
       <arg value="install" />
@@ -58,5 +60,5 @@
       </fileset>
     </xdb:store>
   </target>
-  
+
 </project>
