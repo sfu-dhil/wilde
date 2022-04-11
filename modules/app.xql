@@ -976,7 +976,7 @@ declare function app:document-similarities($node as node(), $model as map(*)) as
                     order by $link/@data-similarity descending
                   return
                     <li class="{$link/@class}">
-                      {app:link-view($link/@href, document:title($doc))} - {format-number($link/@data-similarity, "###.#%")}% <br/>
+                      {app:link-view($link/@href, document:title($doc))} - {format-number($link/@data-similarity, "###.#%")} <br/>
                       <a href='compare-docs.html?a={document:id($model('document'))}&amp;b={document:id($doc)}'>Compare</a>
                     </li>
                 }
@@ -997,7 +997,7 @@ declare function app:paragraph-similarities($node as node(), $model as map(*)) a
           let $doc := collection:fetch($link/@data-document)
           return
             <li class="{$link/@class}">
-              {app:link-view($link/@data-document, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")}%)
+              {app:link-view($link/@data-document, document:title($doc))} ({format-number($link/@data-similarity, "###.#%")})
             </li>
         }
       </ul>
@@ -1290,7 +1290,7 @@ declare function app:compare-documents($node as node(), $model as map(*)) {
             if (count($links) gt 0) then
               for $link in $links
               return
-                <span style="display:block;">Match: {format-number($link/@data-similarity, "###.#%")}%</span>
+                <span style="display:block;">Match: {format-number($link/@data-similarity, "###.#%")}</span>
             else
               <span style="display:block">Not significantly similar</span>
           }
@@ -1392,7 +1392,7 @@ declare function app:similarities-results($node as node(), $model as map(*)) {
                 <strong>difference</strong>
               </div>
             </div>
-            <div class='rowparagraph-compare' data-score="{format-number($a/@data-similarity, "###.#%")}%">
+            <div class='rowparagraph-compare' data-score="{format-number($a/@data-similarity, "###.#%")}">
               <div class='col-sm-4paragraph-a'>
                 {string($pa)}
               </div>
@@ -1431,7 +1431,7 @@ declare function app:measure($node as node(), $model as map(*)) {
         <dt>Word counts</dt>
         <dd>First passage: {functx:word-count($a)}, Second passage: {functx:word-count($b)}</dd>
         <dt>Similarity</dt>
-        <dd>{format-number($lev, "###.#%")}%</dd>
+        <dd>{format-number($lev, "###.#%")}</dd>
         <dt>Difference</dt>
         <dd id='difference'></dd>
       </dl>
