@@ -6,7 +6,7 @@
   <property name="project.version" value="${package(version)}" />
   <property name="project.app" value="wilde" />
   <property name="build.dir" value="build" />
-  <property name="cache.base" value="http://localhost:8080/exist/local/wilde"/>
+  <property name="cache.base" value="http://localhost:8080/exist/wilde"/>
   
   <property name="host" value="localhost"/>
   <property file="${host}.properties"/>
