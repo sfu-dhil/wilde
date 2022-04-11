@@ -233,7 +233,7 @@ label.facet input {
   margin-right: 6px;
 }
 
-div.facet-container {
+.panel-facet {
   max-height: 200px;
   overflow-x: auto;
 }
