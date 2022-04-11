@@ -22,8 +22,6 @@ import module namespace similarity = "http://dhil.lib.sfu.ca/exist/wilde/similar
 import module namespace stats = "http://dhil.lib.sfu.ca/exist/wilde/stats" at "stats.xql";
 import module namespace tx = "http://dhil.lib.sfu.ca/exist/wilde/transform" at "transform.xql";
 
-import module namespace console="http://exist-db.org/xquery/console";
-
 declare namespace array = "http://www.w3.org/2005/xpath-functions/array";
 declare namespace string = "java:org.apache.commons.lang3.StringUtils";
 declare namespace wilde = "http://dhil.lib.sfu.ca/wilde";
