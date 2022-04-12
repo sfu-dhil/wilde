@@ -1050,9 +1050,9 @@ declare function app:search-facets($node as node(), $model as map(*)) {
       <button id='clear' type='submit' class='btn btn-primary'>Clear</button>
       </div>
       
-      <div class='panel panel-default panel-facet'> 
+      <div class='panel panel-default'> 
         <div class='panel-heading'>Language</div>
-        <div class='panel-body'> {
+        <div class='panel-body panel-facet'> {
           for $code in map:keys($facets('lang'))
             let $label := lang:code2lang($code)
             let $checked := index-of($options('lang'), $code) gt 0
@@ -1067,9 +1067,9 @@ declare function app:search-facets($node as node(), $model as map(*)) {
         } </div>
       </div>
   
-      <div class='panel panel-default panel-facet'> 
+      <div class='panel panel-default'> 
         <div class='panel-heading'>Publisher</div>
-          <div class='panel-body'> {
+          <div class='panel-body panel-facet'> {
           for $publisher in map:keys($facets('publisher'))
             order by $publisher
             return 
@@ -1082,9 +1082,9 @@ declare function app:search-facets($node as node(), $model as map(*)) {
         } </div>
       </div>
   
-      <div class='panel panel-default panel-facet'> 
+      <div class='panel panel-default'> 
         <div class='panel-heading'>Language</div>
-        <div class='panel-body'> {
+        <div class='panel-body panel-facet'> {
           for $region in map:keys($facets('region'))
             order by $region
             return 
@@ -1113,7 +1113,7 @@ declare function app:search-export($node as node(), $model as map(*)) {
   
   return
     if ($query) then
-      <a href="export/search.csv?query={$query}" class='btn btn-primary'>Export Results</a>
+      <button id='export' type='submit' class='btn btn-primary'>Export Results</button>
     else
       ()
 };

@@ -9,6 +9,7 @@ declare namespace xhtml = 'http://www.w3.org/1999/xhtml';
 
 import module namespace collection = "http://dhil.lib.sfu.ca/exist/wilde/collection" at "collection.xql";
 import module namespace config = "http://dhil.lib.sfu.ca/exist/wilde/config" at "config.xqm";
+import module namespace csv = "http://dhil.lib.sfu.ca/exist/wilde/csv" at "csv.xql";
 import module namespace document = "http://dhil.lib.sfu.ca/exist/wilde/document" at "document.xql";
 import module namespace kwic = "http://exist-db.org/xquery/kwic";
 import module namespace lang = "http://dhil.lib.sfu.ca/exist/wilde/lang" at "lang.xql";
@@ -19,35 +20,34 @@ declare option output:media-type "text/csv";
 
 declare function export:search() {
   let $query := request:get-parameter('query', '')
-  let $page := request:get-parameter('p', 1)
-  let $hits := collection:search($query)
-  
-  let $headers := (
-  <row>
-    <item>ID</item>
-    <item>Title</item>
-    <item>Result</item>
-  </row>,
-  <row>
-    <item>Found {count($hits)} results for search query {$query}.</item>
-  </row>
-  )
-  
-  let $body := for $hit in $hits
-  let $did := document:id($hit)
-  let $title := document:title($hit)
+  let $options := map {
+    "facets": map {
+      "lang": request:get-parameter('facet-lang', ()),
+      "region": request:get-parameter('facet-region', ()),
+      "publisher": request:get-parameter('facet-publisher', ())
+    }
+  }
+  let $hits := collection:search($query, $options)
   let $config := <config xmlns='' width="60" table="no"/>
-  let $kwic := kwic:summarize($hit, $config)
-  for $node in $kwic
-  return
-    <row>
-      <item>{$did}</item>
-      <item>{$title}</item>
-      <item>{$node//text()}</item>
-    </row>
   
-  return
-    ($headers, $body)
+  let $headers := csv:row(('ID', 'Date', 'Publisher', 'Title', 'Region', 'City', 'Language', 'Result'))
+
+  let $rows := for $hit in $hits
+    let $did := document:id($hit)
+    let $date := document:date($hit)
+    let $publisher := document:publisher($hit)
+    let $title := document:title($hit)
+    let $region := document:region($hit)
+    let $city := document:city($hit)
+    let $lang := lang:code2lang(document:language($hit))
+    let $kwic := kwic:summarize($hit, $config)[1]
+    for $node in $kwic
+    return csv:row(($did, $date, $publisher, $title, $region, $city, $lang, $kwic))
+  
+  let $count := csv:row("Found " || count($rows) || " results for search query " || $query || ".")
+  let $export := ($headers, $count, $rows)
+  
+  return csv:records($export)
 };
 
 declare function export:volume() {
