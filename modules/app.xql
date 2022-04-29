@@ -1033,54 +1033,69 @@ declare function app:search($node as node(), $model as map(*)) {
 };
 
 declare function app:search-facets($node as node(), $model as map(*)) {
-  let $options := $model('options')('facets')
-  let $facets := $model('facets')
-  let $languages := 
-    for $code in $options('lang')
-    return lang:code2lang($code)
-
-  return 
-    <div>
-    <h3>Language</h3>
-    <div class='facet-container'> { 
-      for $code in map:keys($facets('lang'))
-        let $label := lang:code2lang($code)
-        let $checked := index-of($options('lang'), $code) gt 0
-        order by $label
-        return 
-          <label class='facet'>
-            <input type="checkbox" value="{$code}" name="facet-lang">
-              { if ($checked) then attribute checked { '' } else () }
-            </input>
-            {$label}: {$facets('lang')($code)}
-          </label>
-    } </div>
-
-    <h3>Publisher</h3>
-    <div class='facet-container'> { 
-      for $publisher in map:keys($facets('publisher'))
-        order by $publisher
-        return 
-          <label class='facet'>
-            <input type="checkbox" value="{$publisher}" name="facet-publisher">
-              { if(index-of($options('publisher'), $publisher) gt 0) then attribute checked {''} else () }
-            </input>
-            {$publisher}: {$facets('publisher')($publisher)}
-          </label>
-    } </div>
-
-    <h3>Region</h3>
-    <div class='facet-container'> { 
-      for $region in map:keys($facets('region'))
-        order by $region
-        return 
-          <label class='facet'><input type="checkbox" value="{$region}" name="facet-region">
-              { if(index-of($options('region'), $region) gt 0) then attribute checked {''} else () }
-            </input>
-            {$region}: {$facets('region')($region)}
-          </label>
-    } </div>
-  </div>
+  if($model('query') = '') then
+    ()
+  else
+    let $options := $model('options')('facets')
+    let $facets := $model('facets')
+    let $languages := 
+      for $code in $options('lang')
+      return lang:code2lang($code)
+  
+    return 
+      <div>
+      <h3>Filters</h3>
+      <div class='btn-group'>
+      <button id='apply' type='submit' class='btn btn-primary'>Apply</button>
+      <button id='clear' type='submit' class='btn btn-primary'>Clear</button>
+      </div>
+      
+      <div class='panel panel-default'> 
+        <div class='panel-heading'>Language</div>
+        <div class='panel-body panel-facet'> {
+          for $code in map:keys($facets('lang'))
+            let $label := lang:code2lang($code)
+            let $checked := index-of($options('lang'), $code) gt 0
+            order by $label
+            return 
+              <label class='facet'>
+                <input type="checkbox" value="{$code}" name="facet-lang" class='facet'>
+                  { if ($checked) then attribute checked { '' } else () }
+                </input>
+                {$label}: {$facets('lang')($code)}
+              </label>
+        } </div>
+      </div>
+  
+      <div class='panel panel-default'> 
+        <div class='panel-heading'>Publisher</div>
+          <div class='panel-body panel-facet'> {
+          for $publisher in map:keys($facets('publisher'))
+            order by $publisher
+            return 
+              <label class='facet'>
+                <input type="checkbox" value="{$publisher}" name="facet-publisher" class='facet'>
+                  { if(index-of($options('publisher'), $publisher) gt 0) then attribute checked {''} else () }
+                </input>
+                {$publisher}: {$facets('publisher')($publisher)}
+              </label>
+        } </div>
+      </div>
+  
+      <div class='panel panel-default'> 
+        <div class='panel-heading'>Region</div>
+        <div class='panel-body panel-facet'> {
+          for $region in map:keys($facets('region'))
+            order by $region
+            return 
+              <label class='facet'><input type="checkbox" value="{$region}" name="facet-region" class='facet'>
+                  { if(index-of($options('region'), $region) gt 0) then attribute checked {''} else () }
+                </input>
+                {$region}: {$facets('region')($region)}
+              </label>
+        } </div>
+      </div>
+    </div>
 };
 
 declare function app:search-summary($node as node(), $model as map(*)) {
@@ -1098,7 +1113,7 @@ declare function app:search-export($node as node(), $model as map(*)) {
   
   return
     if ($query) then
-      <a href="export/search.csv?query={$query}" class='btn btn-primary'>Export Results</a>
+      <button id='export' type='submit' class='btn btn-primary'>Export Results</button>
     else
       ()
 };
