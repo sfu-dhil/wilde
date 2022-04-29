@@ -1083,7 +1083,7 @@ declare function app:search-facets($node as node(), $model as map(*)) {
       </div>
   
       <div class='panel panel-default'> 
-        <div class='panel-heading'>Language</div>
+        <div class='panel-heading'>Region</div>
         <div class='panel-body panel-facet'> {
           for $region in map:keys($facets('region'))
             order by $region
