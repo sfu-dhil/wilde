@@ -75,7 +75,7 @@ declare function export:gephi-documents() {
 };
 
 declare function export:gephi-document-matches() {
-  util:binary-to-string(util:binary-doc($config:data-root || "/tables/gephi-document-edges.csv"))
+  util:binary-to-string(util:binary-doc($config:data-root || "/tables/gephi-document-matches.csv"))
 };
 
 declare function export:gephi-papers() {
