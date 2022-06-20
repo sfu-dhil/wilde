@@ -71,6 +71,11 @@ keycharm@^0.2.0:
   resolved "https://registry.yarnpkg.com/keycharm/-/keycharm-0.2.0.tgz#fa6ea2e43b90a68028843d27f2075d35a8c3e6f9"
   integrity sha1-+m6i5DuQpoAohD0n8gddNajD5vk=
 
+levdist@^2.2.10:
+  version "2.2.10"
+  resolved "https://registry.yarnpkg.com/levdist/-/levdist-2.2.10.tgz#8c6936d253aba8386b948283d0d0a6ff95d94ecb"
+  integrity sha512-0E/OIb6Yx4rBP2neLQhNqAAM36B/fpGvUBYYHSKk2ogwjK+jjwBA40auNACxQyxpnKZks0VVPHX072bF1pwWvg==
+
 modularscale-sass@^3.0.10:
   version "3.0.10"
   resolved "https://registry.yarnpkg.com/modularscale-sass/-/modularscale-sass-3.0.10.tgz#3a596b090360129dd2375bee81b9318085cb47b3"

@@ -1423,41 +1423,6 @@ declare function app:similarities-results($node as node(), $model as map(*)) {
 
 };
 
-declare function app:measure($node as node(), $model as map(*)) {
-  let $c1 := request:get-parameter('c1', '')
-  let $c2 := request:get-parameter('c2', '')
-  let $clean := request:get-parameter('clean', 'no') = "yes"
-  let $a := similarity:normalize($c1, $clean)
-  let $b := similarity:normalize($c2, $clean)
-  
-  let $d := string:getLevenshteinDistance($a, $b)
-  let $m := max((string-length($a), string-length($b)))
-  
-  let $lev :=
-  if ($c1 and $c2) then
-    1 - $d div $m
-  else
-    0
-  let $cos := similarity:similarity("cosine", $a, $b)
-  
-  return
-    <div id="measure-results">
-      <dl class='dl-horizontal'>
-        <dt>Word counts</dt>
-        <dd>First passage: {functx:word-count($a)}, Second passage: {functx:word-count($b)}</dd>
-        <dt>Similarity</dt>
-        <dd>{format-number($lev, "###.#%")}</dd>
-        <dt>Difference</dt>
-        <dd id='difference'></dd>
-      </dl>
-      
-      <div class="hidden">
-        <div id='first'>{$a}</div>
-        <div id='second'>{$b}</div>
-      </div>
-    </div>
-};
-
 declare
 %templates:wrap
 function app:measure-textarea($node as node(), $model as map(*), $name) {
