@@ -43,13 +43,17 @@
             var $d = $this.find('.paragraph-d');
             
             if (! b) {
-                $d.html("No similar paragraph.");
+                $d.html("<em>No similar paragraph</em>");
             } else {
                 var diff = dmp.diff_main(a, b);
                 dmp.diff_cleanupSemantic(diff);
                 var html = htmlize(diff);
                 $d.html('<p>' + html + '</p>');
-                $d.append("Match: " + $this.data('score'));
+                if($this.data('score') !== '%') {
+                  $d.append("<em>Match: " + $this.data('score') + "</em>");
+                } else {
+                  $d.append("<em>Too short to calculate match</em>");
+                }
             }
         });
     });
