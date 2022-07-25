@@ -10,20 +10,18 @@
                 the two passages. The differences in the first passage are highlighted in pink, those in the second passage in blue.</p>
         </div>
     </div>
-    <form accept-charset="utf-8" method="post">
+    <form>
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="c1">First passage</label>
-                    <textarea class="form-control" rows="6" cols="40" name="c1" id="c1"
-                        data-template="app:measure-textarea" data-template-name="c1"/>
+                    <textarea class="form-control" rows="6" cols="40" name="c1" id="c1"/>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="c2">Second passage</label>
-                    <textarea class="form-control" rows="6" cols="40" name="c2" id="c2"
-                        data-template="app:measure-textarea" data-template-name="c2"/>
+                    <textarea class="form-control" rows="6" cols="40" name="c2" id="c2"/>
                 </div>
             </div>
         </div>
@@ -37,19 +35,26 @@
 
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="clean" value="yes"
-                            data-template="templates:form-control"/> Ignore Punctuation &amp;
-                        Accents </label>
+                        <input type="checkbox" name="clean" value="yes"/> Ignore Punctuation &amp; Accents </label>
                 </div>
             </div>
         </div>
     </form>
     <div class="row">
         <div class="col-md-12">
-            <span data-template="app:measure"/>
+            <div id="measure-results">
+                <dl class='dl-horizontal'>
+                    <dt>Word counts</dt>
+                    <dd id="wordcount">First passage: 0, Second passage: 0</dd>
+                    <dt>Similarity</dt>
+                    <dd id="similarity"></dd>
+                    <dt>Difference</dt>
+                    <dd id='difference'></dd>
+                </dl>
+            </div>
         </div>
     </div>
-    <script type="text/javascript"
-        src="resources/lib/google-diff-match-patch-js/diff_match_patch.js"/>
+    <script type="text/javascript" src="resources/lib/google-diff-match-patch-js/diff_match_patch.js"/>
+    <script type="text/javascript" src="resources/lib/levdist/lib/index.js"/>
     <script type="text/javascript" src="resources/js/page/measure.js"/>
 </div>
