@@ -22,6 +22,8 @@ import module namespace similarity = "http://dhil.lib.sfu.ca/exist/wilde/similar
 import module namespace stats = "http://dhil.lib.sfu.ca/exist/wilde/stats" at "stats.xql";
 import module namespace tx = "http://dhil.lib.sfu.ca/exist/wilde/transform" at "transform.xql";
 
+import module namespace console="http://exist-db.org/xquery/console";
+
 declare namespace array = "http://www.w3.org/2005/xpath-functions/array";
 declare namespace string = "java:org.apache.commons.lang3.StringUtils";
 declare namespace wilde = "http://dhil.lib.sfu.ca/wilde";
@@ -1173,7 +1175,7 @@ declare function app:search-results($node as node(), $model as map(*)) {
         (<p><a href="view.html?f={$did}&amp;query={$model('query')}"><b>{$title}</b></a></p>, kwic:summarize($hit, $config))
 };
 
-declare function local:find-similar($measure as xs:string, $p as node()+, $q as node()) {
+declare function local:find-similar($measure as xs:string, $p as node()*, $q as node()) {
   let $matches :=
   for $t in $p
   let $score := similarity:similarity($measure, $t, $q)
@@ -1217,29 +1219,29 @@ declare function app:compare-paragraphs($node as node(), $model as map(*)) {
       </div>
       {
         for $other at $i in $pa
-        let $q := local:find-similar("levenshtein", $pb, $other)
-        let $similarity := if ($q) then
-          format-number($q//a[@data-paragraph = $other/@id]/@data-similarity cast as xs:float, "###.#%")
-        else
-          ""
-        
-        return
-          <div class='row paragraph-compare' data-score="{$similarity}%">
-            <div class="col-sm-4 paragraph-a">
-              <div class="compare-link">{$la}</div>
-              <div class='content'>{string($other)}</div>
-            </div>
-            <div class="col-sm-4 paragraph-b">
-              <div class="compare-link">{$lb}</div>
-              {
-                if ($q) then
-                  <div class='content'>{string($q)}</div>
-                else
-                  '—'
-              }
-            </div>
-            <div class="col-sm-4 paragraph-d" data-caption="Difference">
-            </div>
+          let $q := local:find-similar("levenshtein", $pb, $other)  
+          let $similarity := if ($q) then
+            format-number($q//a[@data-paragraph = $other/@id]/@data-similarity cast as xs:float, "###.#%")
+          else
+            ""
+          
+          return
+            <div class='row paragraph-compare' data-score="{$similarity}%">
+              <div class="col-sm-4 paragraph-a">
+                <div class="compare-link">{$la}</div>
+                <div class='content'>{string($other)}</div>
+              </div>
+              <div class="col-sm-4 paragraph-b">
+                <div class="compare-link">{$lb}</div>
+                {
+                  if ($q) then
+                    <div class='content'>{string($q)}</div>
+                  else
+                    '—'
+                }
+              </div>
+              <div class="col-sm-4 paragraph-d" data-caption="Difference">
+              </div>
           </div>
       }
     </div>
