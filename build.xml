@@ -33,6 +33,13 @@
   </fail>
   
   <target depends="cache-list,yarn" name="xar">
+    <echo>Regenerating cache files and building .xar file</echo>
+    <mkdir dir="${build.dir}" />
+    <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludesfile='excludes.txt' />
+  </target>
+  
+  <target depends="yarn" name="xar-quick">
+    <echo>Skipping cache files and building .xar file</echo>
     <mkdir dir="${build.dir}" />
     <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludesfile='excludes.txt' />
   </target>
