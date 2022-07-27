@@ -114,7 +114,7 @@ declare function local:breadcrumb($node as node(), $model as map(*)) as item()* 
         the document :)
     if ($uri = 'view.html')
     then
-      let $reportId := request:get-parameter('f', ())
+      let $reportId := request:get-parameter('f', '')
       return
         local:breadcrumb-report(collection:fetch($reportId))
     else
@@ -281,21 +281,21 @@ declare function app:link-details($report, $param, $fn) as item()* {
     default return
       $result
 
-return
-  if ($result != '') then
-    let $query := request:get-parameter($param, false())
-    let $curr := ($query instance of xs:string and $query = $result)
-    
-    (: If you're the current thing being displayed, don't link :)
-    return
-      if ($curr) then
-        ()
-        
-        (: Else make a link :)
-      else
-        <a href="{$fn}-details.html?{$param}={$result}">{$output}</a>
-  else
-    ()
+  return
+    if ($result != '') then
+      let $query := request:get-parameter($param, false())
+      let $curr := ($query instance of xs:string and $query = $result)
+      
+      (: If you're the current thing being displayed, don't link :)
+      return
+        if ($curr) then
+          ()
+          
+          (: Else make a link :)
+        else
+          <a href="{$fn}-details.html?{$param}={$result}">{$output}</a>
+    else
+      ()
 };
 
 
@@ -850,11 +850,14 @@ declare function app:doc-edition($node as node(), $model as map(*)) as xs:string
 };
 
 declare function app:doc-region($node as node(), $model as map(*)) as element()? {
-  app:link-details($model('document'), 'region', 'region')
-};
-
-declare function app:doc-city($node as node(), $model as map(*)) as element()? {
-  app:link-details($model('document'), 'city', 'city')
+  let $region := app:link-details($model('document'), 'region', 'region') 
+  let $city := app:link-details($model('document'), 'city', 'city')
+  
+  return
+    if(not(empty($city))) then
+      $region || ", " || $city
+    else
+      $region
 };
 
 declare function app:doc-language($node as node(), $model as map(*)) as element()? {
@@ -942,8 +945,12 @@ declare function app:doc-facsimile($node as node(), $model as map(*)) as node()*
           </a>
         </dd>
     else
-      <dd>
-        <i>None found</i>
+      <dd> {
+        if(request:get-parameter('f', '') != '') then
+          <i>None found</i>
+        else 
+          ''
+        }
       </dd>
 };
 

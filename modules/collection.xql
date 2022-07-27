@@ -64,20 +64,34 @@ declare function collection:image-meta() as node()? {
  : @return The HTML root node of the document or a blank HTML document.
  :)
 declare function collection:fetch($id as xs:string) as node() {
-  let $collection := collection($config:data-root)
-  let $document := $collection//html[@id = $id]
-  return
-    if ($document) then
-      $document
-    else
-      <html>
-        <head>
-          <title>Cannot find {$id}.</title>
-        </head>
-        <body>
-          <p>Cannot find {$id}.</p>
-        </body>
-      </html>
+  if($id = '') then
+    <html>
+      <head>
+        <title>No report selected</title>
+      </head>
+      <body>
+        <div id='original' lang='en'>
+        <p>No report was selected from the list of reports.</p>
+        </div>
+      </body>
+    </html>
+  else 
+    let $collection := collection($config:data-root)
+    let $document := $collection//html[@id = $id]
+    return
+      if ($document) then
+        $document
+      else
+        <html>
+          <head>
+            <title>Cannot find {$id}.</title>
+          </head>
+          <body>
+            <div id='original' lang='en'>
+            <p>Cannot find {$id}.</p>
+            </div>
+          </body>
+        </html>
 };
 
 (:~
