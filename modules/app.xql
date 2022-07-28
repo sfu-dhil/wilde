@@ -849,7 +849,7 @@ declare function app:doc-edition($node as node(), $model as map(*)) as xs:string
       ""
 };
 
-declare function app:doc-region($node as node(), $model as map(*)) as element()? {
+declare function app:doc-region($node as node(), $model as map(*)) as xs:string? {
   let $region := app:link-details($model('document'), 'region', 'region') 
   let $city := app:link-details($model('document'), 'city', 'city')
   
