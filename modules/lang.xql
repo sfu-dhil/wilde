@@ -28,6 +28,9 @@ declare function lang:code2lang($codes as xs:string*) as xs:string* {
           case 'it'
             return
               'Italian'
+          case 'any'
+            return
+              'any'
           default return
             'Unknown code ' || $code
   return

@@ -1140,25 +1140,34 @@ declare function app:search-paginate($node as node(), $model as map(*)) {
     if ($hit-count <= $config:search-results-per-page) then
       ()
     else
-      <nav>
-        <ul class='pagination'>
-          <li><a href="?query={$query}&amp;p=1">⇐</a></li>
-          <li><a href="?query={$query}&amp;p={$prev}" id='prev-page'>←</a></li>
-          
-          {
-            for $pn in ($start to $end)
-            let $selected := if ($page = $pn) then
-              'active'
-            else
-              ''
-            return
-              <li class="{$selected}"><a href="?query={$query}&amp;p={$pn}">{$pn}</a></li>
-          }
-          
-          <li><a href="?query={$query}&amp;p={$next}" id='next-page'>→</a></li>
-          <li><a href="?query={$query}&amp;p={$pages}">⇒</a></li>
-        </ul>
-      </nav>
+      let $params := 
+        for $name in request:get-parameter-names()
+        where starts-with($name, 'facet-')
+        return 
+          for $value in request:get-parameter($name, ())
+          return $name || '=' || encode-for-uri($value)
+      let $qs := string-join($params, '&amp;')
+      
+      return
+        <nav>
+          <ul class='pagination'>
+            <li><a href="?query={$query}&amp;p=1&amp;{$qs}">⇐</a></li>
+            <li><a href="?query={$query}&amp;p={$prev}&amp;{$qs}" id='prev-page'>←</a></li>
+            
+            {
+              for $pn in ($start to $end)
+              let $selected := if ($page = $pn) then
+                'active'
+              else
+                ''
+              return
+                <li class="{$selected}"><a href="?query={$query}&amp;p={$pn}&amp;{$qs}">{$pn}</a></li>
+            }
+            
+            <li><a href="?query={$query}&amp;p={$next}&amp;{$qs}" id='next-page'>→</a></li>
+            <li><a href="?query={$query}&amp;p={$pages}&amp;{$qs}">⇒</a></li>
+          </ul>
+        </nav>
 };
 
 declare function app:search-results($node as node(), $model as map(*)) {

@@ -45,7 +45,12 @@ declare function export:search() {
     return csv:row(($did, $date, $publisher, $title, $region, $city, $lang, $kwic))
   
   let $count := csv:row("Found " || count($rows) || " results for search query " || $query || ".")
-  let $export := ($headers, $count, $rows)
+  let $filters := (
+    csv:row("Filter Language=" || string-join(lang:code2lang(request:get-parameter('facet-lang', ('any'))), ' or ')),
+    csv:row("Filter Region=" || string-join(request:get-parameter('facet-region', ('any')), ' or ')),
+    csv:row("Filter Publisher=" || string-join(request:get-parameter('facet-publisher', ('any')), ' or '))
+  )
+  let $export := ($headers, $count, $filters, $rows)
   
   return csv:records($export)
 };
