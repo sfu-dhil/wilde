@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="all" name="Wilde Static">
+  
+  <property name="pd" location="${basedir}/.."/>
+  
+  <property name="reports.dir" location="${pd}/../wilde-reports"/>
+  <property name="dist.dir" value="${pd}/public"/>
+  <property name="resources.dir" value="${pd}/resources"/>
+  <property name="xsl.dir" value="${basedir}/xsl"/>
+  <property name="templates.dir" value="${basedir}/pages"/>
+  
+  
+  <!--Copy all of the templates we want to use, but remap the nocache ones to take over the non-nocache ones-->
+  <target name="copy">
+    <delete dir="${templates.dir}"/>
+    <copy todir="${templates.dir}" overwrite="true">
+      <fileset dir="${pd}">
+        <include name="*.html"/>
+        <exclude name="error-page.html"/>
+        <exclude name="graph.html"/>
+        <exclude name="gefx.html"/>
+        <exclude name="*-nocache.html"/>
+        <include name="templates/*.html"/>
+      </fileset>
+    </copy>
+    <copy todir="${templates.dir}" overwrite="true">
+      <fileset dir="${pd}">
+        <include name="*-nocache.html"/>
+      </fileset>
+      <globmapper from="*-nocache.html" to="*.html"/>
+    </copy>
+    
+  </target>
+  
+  <target name="html">
+    <exec executable="saxon">
+      <arg line="-xsl:${xsl.dir}/main.xsl
+        -it:go
+        templates.dir=${templates.dir}
+        reports.dir=${reports.dir}
+        dist.dir=${dist.dir}"/>
+    </exec>
+  </target>
+  
+  
+  <target name="all" depends="copy, html">
+    <echo message="${reports.dir}"/>
+  </target>
+  
+  
+</project>
