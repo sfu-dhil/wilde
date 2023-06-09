@@ -32,10 +32,7 @@
   </xd:doc>
   
   <xsl:mode name="report" on-no-match="shallow-skip"/>
-  
-  <xsl:output method="adaptive"/>
-  
-  
+
   
   <xsl:template match="/" mode="report">
     <!--<xsl:sequence select="dhil:debug('Processing data: ' || document-uri(.))"/>-->
@@ -71,6 +68,8 @@
   </xsl:template>
   
   <xsl:template match="body" mode="report">
+    
+    <xsl:map-entry key="'headlines'" select="div/p[contains-token(@class,'heading')]"/>
     <xsl:map-entry key="'content'">
       <xsl:map>
         <xsl:apply-templates select="div" mode="#current"/>
@@ -93,7 +92,7 @@
         <xsl:map>
           <xsl:map-entry key="'lang'" select="xs:string(@lang)"/>
           <xsl:map-entry key="'original'" select="@id = 'original'"/>
-          <xsl:map-entry key="'heading'" select="p[@id='heading']"/>
+          <xsl:map-entry key="'heading'" select="p[contains-token(@class,'heading')]"/>
         </xsl:map>
       </xsl:map-entry>  
   </xsl:template>

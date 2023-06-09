@@ -19,6 +19,7 @@
   xmlns:tx="http://dhil.lib.sfu.ca/exist/wilde/transform"
   xmlns:wilde="http://dhil.lib.sfu.ca/wilde"
   xmlns:templates="http://dhil.lib.sfu.ca/templates"
+  
   exclude-result-prefixes="#all"
   xpath-default-namespace="http://www.w3.org/1999/xhtml"
   xmlns="http://www.w3.org/1999/xhtml"
@@ -63,7 +64,65 @@
     <meta content="yes" name="wr.translated" />
     <meta content="20" name="wr.word-count" />-->
   
-  <xsl:template match="app:doc-title" mode="app">
+  <xsl:template match="app:doc-source" priority="2" mode="app">
+    <xsl:param name="data" tunnel="yes"/>
+    <xsl:where-populated>
+      <dd><xsl:value-of select="$data?dc.source.institution"/></dd>
+    </xsl:where-populated>
+    <xsl:where-populated>
+      <dd><xsl:value-of select="$data?dc.source.database"/></dd>
+    </xsl:where-populated>
+    <xsl:for-each select="$data?dc.source.url">
+      <dd>
+        <xsl:sequence select="dhil:ext-link(.)"/>
+      </dd>
+    </xsl:for-each>
+  </xsl:template>
+  
+  <xsl:template match="app:doc-facsimile" priority="2" mode="app">
+    <xsl:param name="data" tunnel="yes"/>
+     <xsl:variable name="urls" select="$data?dc.source.facsimile"/>
+    <xsl:sequence>
+      <xsl:for-each select="$urls">
+        <dd>
+          <xsl:sequence select="dhil:ext-link(.)"/>
+        </dd>
+      </xsl:for-each>
+      <xsl:on-empty>
+        <dd><i>None found</i></dd>
+      </xsl:on-empty>
+    </xsl:sequence>
+  </xsl:template>
+  
+  <xsl:template match="app:*[matches(local-name(),'doc-')]" priority="2" mode="app">
+    <xsl:param name="data" tunnel="yes"/>
+    <xsl:variable name="field" select="substring-after(local-name(),'doc-')"/>
+    <xsl:variable name="key" select="$fieldMap($field)" as="xs:string?"/>
+    <xsl:choose>
+      <xsl:when test="empty($key)">
+        <xsl:next-match/>
+      </xsl:when>
+      <xsl:otherwise>
+          <xsl:variable name="val" select="map:get($data, $key)"/>
+          <xsl:choose>
+             <xsl:when test="$linkedFields = $field">
+                <xsl:sequence select="dhil:link(dhil:getIdForField($field, $val), $val)"/>
+             </xsl:when>
+             <xsl:otherwise>
+               <xsl:sequence select="$val"/>
+             </xsl:otherwise>
+          </xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template match="app:parameter" mode="app">
+    <xsl:param name="data" tunnel="yes"/>
+    <xsl:variable name="name" select="@data-template-name"/>
+    <xsl:sequence select="map:get($data, $name)"/>
+  </xsl:template>
+  
+  <!--<xsl:template match="app:doc-title" mode="app">
     <xsl:param name="data" tunnel="yes" as="map(*)?"/>
     <xsl:apply-templates select="$data?title" mode="#current"/>
   </xsl:template>
@@ -117,21 +176,29 @@
     <xsl:param name="data" tunnel="yes" as="map(*)?"/>
     <xsl:sequence select="$data?dc.source.facsimile"/>
   </xsl:template>
+
+ -->
   
-  <xsl:template match="app:parameter[@data-template-name = 'region']" mode="app">
-    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:sequence select="$data?region"/>
-  </xsl:template>
+   
+  <xsl:template match="app:browse" mode="app">
+    <xsl:sequence select="dhil:report-table(dhil:map-entries($reports))"/>
+  </xsl:template> 
   
-  <xsl:template match="app:details-region" mode="app">
+  <xsl:template match="app:*[matches(local-name(),'details-')]" mode="app">
     <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:sequence select="dhil:report-table($data?reports, 'region')"/>
+    <xsl:variable name="field" select="substring-after(local-name(), 'details-')"/>
+    <xsl:sequence select="dhil:report-table($data?reports, $field)"/>
   </xsl:template>
+   
+   <xsl:function name="dhil:report-table">
+     <xsl:param name="reports" as="map(*)*"/>
+     <xsl:sequence select="dhil:report-table($reports,())"/>
+   </xsl:function>
   
   <xsl:function name="dhil:report-table">
     <xsl:param name="reports" as="map(*)*"/>
-    <xsl:param name="param" as="xs:string?"/>
-    <xsl:variable name="fields" select="('date', 'publisher', 'region', 'city', 'language')[not(. = $param)]"/>
+    <xsl:param name="field" as="xs:string?"/>
+    <xsl:variable name="fields" select="('date', 'publisher', 'region', 'city', 'language')[not(. = $field)]"/>
     <table class="table table-striped table-hover table-condensed" id="tbl-browser">
       <thead>
         <tr>
@@ -148,13 +215,20 @@
       </thead>
       <tbody>
         <xsl:for-each select="$reports">
+          <xsl:variable name="report" select="." as="map(*)"/>
             <tr>
-              <td data-name="Headline"></td>
+              <td data-name="Headline">
+                <a href="{$report?id}.html">
+                  <xsl:sequence select="($report?headlines[1],$report?title)[1] => string()"/>
+                </a>
+              </td>
               <xsl:for-each select="$fields">
                 <td data-name="{dhil:capitalize(.)}">
-                  <!--Get data-->
+                  <xsl:sequence select="map:get($report, $fieldMap(.))"/>
                 </td>
               </xsl:for-each>
+              <td><xsl:value-of select="count($report?doc-matches)"/></td>
+              <td><xsl:value-of select="count($report?paragraph-matches)"/></td>
             </tr>
         </xsl:for-each>
       </tbody>
@@ -171,6 +245,12 @@
   </xsl:template>
   
   
+  <xsl:function name="dhil:ext-link">
+    <xsl:param name="url"/>
+    <a href="{$url}" rel="nofollow" target="_blank">
+      <xsl:sequence select="replace($url, '^https?://([^/]+)/.+$', '$1')"/>
+    </a>
+  </xsl:function>
   
   <xsl:function name="dhil:link">
     <xsl:param name="id"/>

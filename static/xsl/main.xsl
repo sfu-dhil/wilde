@@ -60,8 +60,6 @@
     </xsl:for-each>
   </xsl:variable>
   
-  
-  
   <xsl:variable name="reports" as="map(*)">
    <xsl:map>
      <xsl:for-each select="collection($reports.dir || '?select=*.xml;recurse=yes;metadata=yes')">
@@ -101,6 +99,25 @@
    </xsl:map> 
   </xsl:variable>
   
+  <xsl:variable name="fieldMap" select="map{
+    'region': 'dc.region',
+    'language': 'dc.language',
+    'city': 'dc.region.city',
+    'date': 'dc.date',
+    'facsimile': 'dc.source.facsimile',
+    'title': 'title',
+    'word-count': 'wr.word-count',
+    'edition': 'dc.publisher.edition',
+    'newspaper': 'dc.publisher',
+    'publisher': 'dc.publisher',
+    'updated': 'dc.date.updated',
+    'source': 'dc.source'
+    }
+    "/>
+  
+  <xsl:variable name="linkedFields" 
+    select="$templates[matches(.?basename,'-details')] ! substring-before(.?basename, '-details')"/>
+  
   <xsl:template name="go">
     <xsl:call-template name="controller"/>
   </xsl:template>
@@ -112,15 +129,26 @@
 
         <xsl:choose>
           <xsl:when test="$basename = 'view'">
-             <!--<xsl:for-each select="dhil:map-entries($reports)">
+             <xsl:for-each select="dhil:map-entries($reports)">
                  <xsl:apply-templates select="$template" mode="app">
                    <xsl:with-param name="data" select="." tunnel="yes" as="map(*)"/>
                  </xsl:apply-templates>
-             </xsl:for-each>-->
+             </xsl:for-each>
           </xsl:when>
           <xsl:when test="matches($basename, '-details')">
-            <xsl:variable name="entity" select="substring-before($basename, '-details')" as="xs:string"/>
-            <xsl:choose>
+            <xsl:variable name="field" select="substring-before($basename, '-details')" as="xs:string"/>
+            <xsl:for-each-group select="dhil:map-entries($reports)" group-by="map:get(., $fieldMap($field))">
+               <xsl:variable name="param" select="current-grouping-key()"/>
+               <xsl:apply-templates select="$template" mode="app">
+                 <xsl:with-param name="data" tunnel="yes" select="map{
+                    $field: $param,
+                    'id': dhil:getIdForField($field, $param),
+                    'reports': current-group()
+                   }"/>
+               </xsl:apply-templates>
+            </xsl:for-each-group>
+            
+          <!--  <xsl:choose>
               <xsl:when test="$entity = 'region'">
                  <xsl:for-each-group select="dhil:map-entries($reports)" group-by=".?dc.region">
                     <xsl:variable name="region" select="current-grouping-key()"/>
@@ -137,20 +165,21 @@
                 <xsl:apply-templates select="$template" mode="app"/>
               </xsl:otherwise>
             </xsl:choose>
-            
+            -->
           </xsl:when>
-          
-          <!--DETAILS WILL NEED SPECIAL HANDLING TOO-->
           <xsl:otherwise>
             <xsl:apply-templates select="$template" mode="app"/>
           </xsl:otherwise>
         </xsl:choose> 
-<!--      <xsl:variable name="data" select="if (.?basename = 'view') then map{'doc-id': 'hi'} else map{}" as="map(*)"/>
-      <xsl:variable name="model" select="map:merge((., $data))" as="map(*)"/>
-      <xsl:apply-templates select="$model" mode="app"/>-->
     </xsl:for-each>
   </xsl:template>
   
+  
+  <xsl:function name="dhil:getIdForField" as="xs:string">
+    <xsl:param name="field"/>
+    <xsl:param name="param"/>
+    <xsl:sequence select="$field || '-' || $param"/>
+  </xsl:function>
   
   <xsl:function name="dhil:map-entries" as="item()*">
     <xsl:param name="map" as="map(*)"/>

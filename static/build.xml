@@ -3,15 +3,15 @@
   
   <property name="pd" location="${basedir}/.."/>
   
-  <property name="reports.dir" location="${pd}/../wilde-reports"/>
-  <property name="dist.dir" value="${pd}/public"/>
-  <property name="resources.dir" value="${pd}/resources"/>
+  <property name="reports.dir" location="${pd}/../wilde-reports"/>  
+  <property name="dist.dir" value="${basedir}/public"/>
   <property name="xsl.dir" value="${basedir}/xsl"/>
   <property name="templates.dir" value="${basedir}/pages"/>
   
   
+  <target name="copy" depends="copy.templates, copy.resources"/>
   <!--Copy all of the templates we want to use, but remap the nocache ones to take over the non-nocache ones-->
-  <target name="copy">
+  <target name="copy.templates">
     <delete dir="${templates.dir}"/>
     <copy todir="${templates.dir}" overwrite="true">
       <fileset dir="${pd}">
@@ -29,7 +29,14 @@
       </fileset>
       <globmapper from="*-nocache.html" to="*.html"/>
     </copy>
-    
+  </target>
+  
+  <target name="copy.resources">
+    <copy todir="${dist.dir}">
+      <fileset dir="${pd}">
+        <include name="resources/**"/>
+      </fileset>
+    </copy>
   </target>
   
   <target name="html">
