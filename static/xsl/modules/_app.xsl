@@ -32,47 +32,42 @@
     </xd:desc>
   </xd:doc>
   
-  <xsl:mode name="app" on-no-match="shallow-copy"/>
+  <xsl:mode name="app" on-no-match="shallow-copy" use-accumulators="currentReport"/>
   
-  <xsl:template match=".[. instance of map(*)]" mode="app">
-    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:variable name="outputId" select="if (exists($data)) then $data?id else .?basename"/>
-    <xsl:variable name="template" select="(.?template)/html" as="element(html)"/>
-    <xsl:result-document href="{$dist.dir}/{$outputId}.html" method="xhtml" version="5.0">
+  <xsl:accumulator name="currentReport" initial-value="()">
+    <xsl:accumulator-rule match="html[@id]">
+      <xsl:sequence select="map:get($reports, @id)"/>
+    </xsl:accumulator-rule>
+  </xsl:accumulator>
+  
+  <xsl:variable name="getReport" 
+    select="function($node) {
+         let $report := $node/accumulator-before('currentReport')
+         return $hydrate($report)
+    }"/>
+  
+  <xsl:template match="html[@id]" mode="app">
+<!--    <xsl:param name="data" tunnel="yes" as="map(*)?"/>-->
+   <!-- <xsl:variable name="outputId" select="if (exists($data)) then $data?id else .?basename"/>-->
+<!--    <xsl:variable name="template" select="(.?template)/html" as="element(html)"/-->
+    <xsl:result-document href="{$dist.dir}/{@id}.html" method="xhtml" version="5.0">
        <xsl:sequence select="dhil:debug('Building ' || current-output-uri())"/>
-       <xsl:apply-templates select="$template" mode="#current">
-         <xsl:with-param name="data" select="$data" tunnel="yes"/>
-       </xsl:apply-templates>
+       <xsl:copy>
+         <xsl:apply-templates select="@*|node()" mode="#current"/>
+       </xsl:copy>
     </xsl:result-document>
   </xsl:template>
   
-  <!--
-    
-       <meta content="1895-06-08" name="dc.date" />
-    <meta content="2022-04-22" name="dc.date.updated" />
-    <meta content="fr" name="dc.language" />
-    <meta content="Le Socialiste de la Manche" name="dc.publisher" data-sortable="socialiste de la manche" />
-    <meta content="f_lsdlm_161" name="dc.publisher.id" />
-    <meta content="socialiste de la manche" name="dc.publisher.sortable" />
-    <meta content="France" name="dc.region" />
-    <meta content="Cherbourg" name="dc.region.city" />
-    <meta content="Gallica" name="dc.source.database" />
-    <meta content="https://gallica.bnf.fr/ark:/12148/bpt6k63893370/f2.item.r=%22oscar%20wilde%22" name="dc.source.facsimile" />
-    <meta content="Bibliothèque nationale de France" name="dc.source.institution" />
-    <meta content="https://gallica.bnf.fr/ark:/12148/cb32868966m/date1895" name="dc.source.url" />
-    <meta content="socialiste de la manche - 1895-06-08" name="wr.sortable" />
-    <meta content="yes" name="wr.translated" />
-    <meta content="20" name="wr.word-count" />-->
-  
+
   <xsl:template match="app:doc-source" priority="2" mode="app">
-    <xsl:param name="data" tunnel="yes"/>
+    <xsl:variable name="report" select="$getReport(.)" as="function(*)"/>
     <xsl:where-populated>
-      <dd><xsl:value-of select="$data?dc.source.institution"/></dd>
+      <dd><xsl:value-of select="$report('institution')"/></dd>
     </xsl:where-populated>
     <xsl:where-populated>
-      <dd><xsl:value-of select="$data?dc.source.database"/></dd>
+      <dd><xsl:value-of select="$report('database')"/></dd>
     </xsl:where-populated>
-    <xsl:for-each select="$data?dc.source.url">
+    <xsl:for-each select="$report('this')?dc.source.url">
       <dd>
         <xsl:sequence select="dhil:ext-link(.)"/>
       </dd>
@@ -80,11 +75,10 @@
   </xsl:template>
   
   <xsl:template match="app:doc-facsimile" priority="2" mode="app">
-    <xsl:param name="data" tunnel="yes"/>
-     <xsl:variable name="urls" select="$data?dc.source.facsimile"/>
+    <xsl:variable name="report" select="$getReport(.)"/>
     <xsl:sequence>
-      <xsl:for-each select="$urls">
-        <dd>
+      <xsl:for-each select="$report('facsimile')">
+        <dd class="facsimile">
           <xsl:sequence select="dhil:ext-link(.)"/>
         </dd>
       </xsl:for-each>
@@ -93,27 +87,33 @@
       </xsl:on-empty>
     </xsl:sequence>
   </xsl:template>
+ 
   
   <xsl:template match="app:*[matches(local-name(),'doc-')]" priority="2" mode="app">
-    <xsl:param name="data" tunnel="yes"/>
+    <xsl:variable name="report" select="$getReport(.)"/>
     <xsl:variable name="field" select="substring-after(local-name(),'doc-')"/>
-    <xsl:variable name="key" select="$fieldMap($field)" as="xs:string?"/>
     <xsl:choose>
-      <xsl:when test="empty($key)">
+      <xsl:when test="not(map:keys($fieldMap) = $field)">
         <xsl:next-match/>
       </xsl:when>
       <xsl:otherwise>
-          <xsl:variable name="val" select="map:get($data, $key)"/>
-          <xsl:choose>
-             <xsl:when test="$linkedFields = $field">
-                <xsl:sequence select="dhil:link(dhil:getIdForField($field, $val), $val)"/>
-             </xsl:when>
-             <xsl:otherwise>
-               <xsl:sequence select="$val"/>
-             </xsl:otherwise>
-          </xsl:choose>
+        <xsl:variable name="val" select="$report($field)"/>
+        <xsl:choose>
+          <xsl:when test="empty($val)">
+            <xsl:next-match/>
+          </xsl:when>
+          <xsl:when test="$linkedFields = $field">
+            <xsl:sequence 
+              select="dhil:getIdForField($field, $val) => 
+              dhil:link($val)"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:sequence select="$val"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
+    
   </xsl:template>
   
   <xsl:template match="app:parameter" mode="app">
@@ -122,63 +122,26 @@
     <xsl:sequence select="map:get($data, $name)"/>
   </xsl:template>
   
-  <!--<xsl:template match="app:doc-title" mode="app">
-    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:apply-templates select="$data?title" mode="#current"/>
-  </xsl:template>
+<!--  <xsl:template match="app:breadcrumb" mode="app">
+    <xsl:param name="data" tunnel="yes"/>
+    <xsl:param name="template" tunnel="yes"/>
+    <xsl:choose>
+      <!-\-We're in a report-\->
+      <xsl:when test="$template?basename = 'view'">
+        
+      </xsl:when>
+    </xsl:choose> 
+  </xsl:template>-->
   
-  <xsl:template match="app:doc-word-count" mode="app">
-    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:apply-templates select="$data?wr.word-count"/>
-  </xsl:template> 
   
-  <xsl:template match="app:doc-language" mode="app">
-     <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-     <xsl:apply-templates select="dhil:link($data?dc.language)"/>
-  </xsl:template>
+<!--  <xsl:function name="dhil:breadcrumbDetails">
+    <xsl:param name="field"/>
+    <xsl:param name="value"/>
+    
+    
+  </xsl:function>
   
-  <xsl:template match="app:doc-edition" mode="app">
-    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:sequence select="$data?dc.publisher.edition"/>
-  </xsl:template>
-  
-  <xsl:template match="app:doc-publisher" mode="app">
-    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:sequence select="$data?dc.publisher"/>
-  </xsl:template>
-  
-  <xsl:template match="app:doc-region" mode="app">
-    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:sequence select="$data?dc.region"/>
-  </xsl:template>
-  
-  <xsl:template match="app:doc-city" mode="app">
-    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:sequence select="$data?dc.region.city"/>
-  </xsl:template>
-  
-  <xsl:template match="app:doc-date" mode="app">
-    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:sequence select="$data?dc.date"/>
-  </xsl:template>
-  
-  <xsl:template match="app:doc-updated" mode="app">
-    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:sequence select="$data?dc.date.updated"/>
-  </xsl:template>
-  
-  <xsl:template match="app:doc-source" mode="app">
-    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:sequence select="$data?dc.source"/>
-  </xsl:template>
-  
-  <xsl:template match="app:doc-facsimile" mode="app">
-    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:sequence select="$data?dc.source.facsimile"/>
-  </xsl:template>
-
- -->
-  
+  -->
    
   <xsl:template match="app:browse" mode="app">
     <xsl:sequence select="dhil:report-table(dhil:map-entries($reports))"/>
@@ -213,22 +176,23 @@
           <th class="count">Word Count</th>
         </tr>
       </thead>
+      <xsl:variable name="blort" select="function(){}"/>
       <tbody>
         <xsl:for-each select="$reports">
-          <xsl:variable name="report" select="." as="map(*)"/>
+          <xsl:variable name="report" select="$hydrate(.)" as="function(*)"/>
             <tr>
               <td data-name="Headline">
-                <a href="{$report?id}.html">
-                  <xsl:sequence select="($report?headlines[1],$report?title)[1] => string()"/>
+                <a href="{$report('id')}.html">
+                  <xsl:sequence select="($report('headlines')[1],$report('title'))[1] => string()"/>
                 </a>
               </td>
               <xsl:for-each select="$fields">
                 <td data-name="{dhil:capitalize(.)}">
-                  <xsl:sequence select="map:get($report, $fieldMap(.))"/>
+                  <xsl:sequence select="$report(.)"/>
                 </td>
               </xsl:for-each>
-              <td><xsl:value-of select="count($report?doc-matches)"/></td>
-              <td><xsl:value-of select="count($report?paragraph-matches)"/></td>
+              <td><xsl:value-of select="count($report('doc-similarity'))"/></td>
+              <td><xsl:value-of select="count($report('paragraph-similarity'))"/></td>
             </tr>
         </xsl:for-each>
       </tbody>
