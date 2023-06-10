@@ -41,9 +41,9 @@
   <xsl:param name="debug" select="'true'"/>
   
   <!--Includes-->
-  <xsl:include href="modules/_app.xsl"/>
-  <xsl:include href="modules/_report.xsl"/>
-  <xsl:include href="modules/_templates.xsl"/>
+  <xsl:include href="modules/app.xsl"/>
+  <xsl:include href="modules/report.xsl"/>
+  <xsl:include href="modules/templates.xsl"/>
   
   <xsl:variable name="templates" as="map(xs:string, item()*)+">
     <xsl:for-each select="collection($templates.dir || '?select=*.html&amp;metadata=yes')">
@@ -89,7 +89,12 @@
            <xsl:map-entry key="$key">
               <xsl:map>
                 <xsl:for-each-group select="current-group()" group-by="map:get(., $key)">
-                  <xsl:map-entry key="current-grouping-key()" select="current-group() ! .?id"/>
+                  <xsl:map-entry key="current-grouping-key()" 
+                    select="sort(current-group(), (), function($report){
+                                    if ($report?dc.date castable as xs:date)
+                                      then xs:date($report?dc.date)
+                                      else $report?dc.date
+                                   }) ! string(.?id)"/>
                 </xsl:for-each-group>
               </xsl:map>
            </xsl:map-entry>
@@ -97,6 +102,21 @@
        </xsl:choose>
      </xsl:for-each-group>
    </xsl:map> 
+  </xsl:variable>
+  
+  
+  
+  <xsl:variable name="publisherToPubId" as="map(*)">
+    <xsl:map>
+      <xsl:for-each select="map:keys($reportsByMeta?dc.publisher)">
+          <xsl:map-entry key=".">
+            <xsl:variable name="reportId" select="map:get($reportsByMeta?dc.publisher, .)[1]"/>
+            <xsl:variable name="report" select="map:get($reports, $reportId)"/>
+            <xsl:variable name="pubId" select="$report?dc.publisher.id"/>
+            <xsl:sequence select="$pubId"/>
+          </xsl:map-entry>
+      </xsl:for-each>
+    </xsl:map>
   </xsl:variable>
   
   <xsl:variable name="hydrate" 
@@ -149,7 +169,7 @@
   <xsl:variable name="lang2code" select="map:merge(map:keys($code2lang) ! map{$code2lang(.): .})"/>
   
   <xsl:variable name="linkedFields" 
-    select="$templates[matches(.?basename,'-details')] ! substring-before(.?basename, '-details')"/>
+    select="($templates[matches(.?basename,'-details')] ! substring-before(.?basename, '-details'), 'publisher')"/>
   
   <xsl:template name="go">
     <xsl:call-template name="controller"/>
@@ -187,7 +207,9 @@
             </xsl:for-each-group>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:apply-templates select="dhil:addIdToTemplate($templateDoc, $basename)" mode="app"/>
+            <xsl:apply-templates select="dhil:addIdToTemplate($templateDoc, $basename)" mode="app">
+              <xsl:with-param name="template" select="$template" tunnel="yes"/>
+            </xsl:apply-templates>
           </xsl:otherwise>
         </xsl:choose> 
     </xsl:for-each>
@@ -205,8 +227,26 @@
   <xsl:function name="dhil:getIdForField" as="xs:string">
     <xsl:param name="field"/>
     <xsl:param name="param"/>
-    <xsl:variable name="val" select="if ($field = 'language') then ($lang2code($param), $param)[1] else $param"/>
-    <xsl:sequence select="$field || '-' || $val"/>
+    
+    <xsl:variable name="prefix" select="if ($field = 'publisher') then 'newspaper' else $field"/>
+    <xsl:variable name="val" as="xs:string">
+      <xsl:choose>
+        <xsl:when test="$field = 'language'">
+            <xsl:message select="$param"/>
+          <xsl:variable name="langCode" select="($lang2code($param), $code2lang($param))[1]" as="xs:string"/>
+          <xsl:sequence select="$langCode"/>
+        </xsl:when>
+        <xsl:when test="$field = ('publisher','newspaper')">
+          <xsl:variable name="pubId" select="$publisherToPubId($param)" as="xs:string"/>
+          <xsl:sequence select="$pubId"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:sequence select="$param"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <xsl:sequence select="$prefix || '-' || $val"/>
   </xsl:function>
   
   <xsl:function name="dhil:map-entries" as="item()*">

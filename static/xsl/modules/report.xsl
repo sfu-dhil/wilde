@@ -58,7 +58,7 @@
     </xsl:map-entry>
   </xsl:template>
   
-  <xsl:template match="head/title" mode="html">
+  <xsl:template match="head/title" mode="report">
     <xsl:map-entry key="'title'" select="string(.)"/>
   </xsl:template>
   

@@ -88,6 +88,34 @@
     </xsl:sequence>
   </xsl:template>
  
+  <xsl:template match="app:doc-previous | app:doc-next" priority="3" mode="app">
+    <xsl:param name="report" select="$getReport(.)"/>
+    <xsl:variable name="publisher" select="$report('publisher')"/>
+    <xsl:variable name="id" select="$report('id')"/>
+    <xsl:variable name="sequence" select="map:get($reportsByMeta?dc.publisher, $publisher)"/>
+    <xsl:variable name="idx" select="index-of($sequence, $id)"/>
+    <xsl:variable name="prevId" select="if ($idx = 1) then () else $sequence[$idx - 1]"/>
+    <xsl:variable name="nextId" select="if ($idx = count($sequence)) then () else $sequence[$idx + 1]"/>
+    <xsl:choose>
+      <xsl:when test="local-name() = 'doc-previous'">
+        <xsl:choose>
+          <xsl:when test="exists($prevId)">
+            <a href="{$prevId}.html"><xsl:value-of select="$reports($prevId)?title"/></a>
+          </xsl:when>
+          <xsl:otherwise>No previous document</xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:choose>
+          <xsl:when test="exists($nextId)">
+            <a href="{$nextId}.html"><xsl:value-of select="$reports($nextId)?title"/></a>
+          </xsl:when>
+          <xsl:otherwise>No next document</xsl:otherwise>
+        </xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
   
   <xsl:template match="app:*[matches(local-name(),'doc-')]" priority="2" mode="app">
     <xsl:variable name="report" select="$getReport(.)"/>
@@ -117,6 +145,42 @@
     <xsl:param name="data" tunnel="yes"/>
     <xsl:variable name="name" select="@data-template-name"/>
     <xsl:sequence select="map:get($data, $name)"/>
+  </xsl:template>
+  
+  
+  
+  <xsl:template match="app:breadcrumb" mode="app">
+    <xsl:param name="data" tunnel="yes"/>
+    <xsl:param name="template" tunnel="yes" as="map(*)"/>
+    <xsl:variable name="report" select="$getReport(.)"/>
+    <nav aria-label="breadcrumb" class="col-md-12">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="index.html">Home</a>
+        </li>
+        <xsl:choose>
+          <!--We're in a report-->
+          <xsl:when test="$template?basename = 'view'">
+            <li class="breadcrumb-item">
+              <a href="newspaper.html">Browse by Newspaper</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="{dhil:getIdForField('newspaper', $report('newspaper'))}.html"><xsl:value-of select="$report('newspaper')"/></a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              <xsl:choose>
+                <xsl:when test="$report('date') castable as xs:date">
+                  <xsl:sequence select="$report('date') => xs:date() => format-date('[MNn] [D1], [Y0001]')"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="$report('date')"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </li>
+          </xsl:when>
+        </xsl:choose>
+      </ol>
+    </nav>
   </xsl:template>
   
 <!--  <xsl:template match="app:breadcrumb" mode="app">
