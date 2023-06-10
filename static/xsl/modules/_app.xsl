@@ -59,7 +59,7 @@
   </xsl:template>
   
 
-  <xsl:template match="app:doc-source" priority="2" mode="app">
+  <xsl:template match="app:doc-source" priority="3" mode="app">
     <xsl:variable name="report" select="$getReport(.)" as="function(*)"/>
     <xsl:where-populated>
       <dd><xsl:value-of select="$report('institution')"/></dd>
@@ -74,7 +74,7 @@
     </xsl:for-each>
   </xsl:template>
   
-  <xsl:template match="app:doc-facsimile" priority="2" mode="app">
+  <xsl:template match="app:doc-facsimile" priority="3" mode="app">
     <xsl:variable name="report" select="$getReport(.)"/>
     <xsl:sequence>
       <xsl:for-each select="$report('facsimile')">
@@ -99,9 +99,7 @@
       <xsl:otherwise>
         <xsl:variable name="val" select="$report($field)"/>
         <xsl:choose>
-          <xsl:when test="empty($val)">
-            <xsl:next-match/>
-          </xsl:when>
+          <xsl:when test="empty($val)"/>
           <xsl:when test="$linkedFields = $field">
             <xsl:sequence 
               select="dhil:getIdForField($field, $val) => 
@@ -113,7 +111,6 @@
         </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
-    
   </xsl:template>
   
   <xsl:template match="app:parameter" mode="app">
@@ -176,7 +173,6 @@
           <th class="count">Word Count</th>
         </tr>
       </thead>
-      <xsl:variable name="blort" select="function(){}"/>
       <tbody>
         <xsl:for-each select="$reports">
           <xsl:variable name="report" select="$hydrate(.)" as="function(*)"/>
@@ -187,12 +183,25 @@
                 </a>
               </td>
               <xsl:for-each select="$fields">
-                <td data-name="{dhil:capitalize(.)}">
-                  <xsl:sequence select="$report(.)"/>
+                <xsl:variable name="currField" select="."/>
+                <td data-name="{dhil:capitalize($currField)}">
+                  <xsl:variable name="val" select="$report($currField)"/>
+                  <xsl:choose>
+                    <xsl:when test="empty($val)"/>
+                    <xsl:when test="$linkedFields = $currField">
+                      <xsl:sequence 
+                        select="dhil:getIdForField($currField, $val) => 
+                        dhil:link($val)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:sequence select="$val"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
                 </td>
               </xsl:for-each>
               <td><xsl:value-of select="count($report('doc-similarity'))"/></td>
               <td><xsl:value-of select="count($report('paragraph-similarity'))"/></td>
+              <td><xsl:value-of select="$report('word-count')"/></td>
             </tr>
         </xsl:for-each>
       </tbody>

@@ -68,8 +68,7 @@
   </xsl:template>
   
   <xsl:template match="body" mode="report">
-    
-    <xsl:map-entry key="'headlines'" select="div/p[contains-token(@class,'heading')]"/>
+    <xsl:map-entry key="'headlines'" select="./div/p[contains-token(@class,'heading')]"/>
     <xsl:map-entry key="'content'">
       <xsl:map>
         <xsl:apply-templates select="div" mode="#current"/>

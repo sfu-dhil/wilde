@@ -146,7 +146,7 @@
       'it': 'Italian'
     }"/>
   
-  <xsl:variable name="lang2code" select="map:keys($code2lang) ! map{$code2lang(.): .}"/>
+  <xsl:variable name="lang2code" select="map:merge(map:keys($code2lang) ! map{$code2lang(.): .})"/>
   
   <xsl:variable name="linkedFields" 
     select="$templates[matches(.?basename,'-details')] ! substring-before(.?basename, '-details')"/>
@@ -205,7 +205,8 @@
   <xsl:function name="dhil:getIdForField" as="xs:string">
     <xsl:param name="field"/>
     <xsl:param name="param"/>
-    <xsl:sequence select="$field || '-' || $param"/>
+    <xsl:variable name="val" select="if ($field = 'language') then ($lang2code($param), $param)[1] else $param"/>
+    <xsl:sequence select="$field || '-' || $val"/>
   </xsl:function>
   
   <xsl:function name="dhil:map-entries" as="item()*">
