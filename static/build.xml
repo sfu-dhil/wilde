@@ -11,6 +11,10 @@
   <!--Property for building a subset of docs-->
   <property name="docsToBuild" value=""/>
   
+  <target name="clean">
+    <delete dir="${dist.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+  </target>
   
   <target name="copy" depends="copy.templates, copy.resources"/>
   <!--Copy all of the templates we want to use, but remap the nocache ones to take over the non-nocache ones-->
@@ -59,9 +63,8 @@
   </target>
   
   
-  <target name="all" depends="copy, html">
-    <echo message="${reports.dir}"/>
-  </target>
+  <target name="all" depends="clean, copy, html"/>
+  
   
   
 </project>

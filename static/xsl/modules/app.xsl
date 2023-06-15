@@ -44,7 +44,7 @@
   <xsl:variable name="getReport" 
     select="function($node) {
          let $report := $node/accumulator-before('currentReport')
-         return $hydrate($report)
+         return $construct($report)
     }"/>
   
   
@@ -206,9 +206,20 @@
     </xsl:choose>
   </xsl:template>
   
+  <xsl:template match="app:parameter[@data-template-name = 'publisher']" priority="2" mode="app">
+    <xsl:next-match>
+      <xsl:with-param name="name" select="'newspaper'"/>
+    </xsl:next-match>
+  </xsl:template>
+  
+  <xsl:template match="app:parameter[@data-template-name = 'language']" priority="2" mode="app">
+    <xsl:param name="data" tunnel="yes"/>
+    <xsl:sequence select="map:get($code2lang, map:get($data, 'language'))"/>
+  </xsl:template>
+  
   <xsl:template match="app:parameter" mode="app">
     <xsl:param name="data" tunnel="yes"/>
-    <xsl:variable name="name" select="@data-template-name"/>
+    <xsl:param name="name" select="string(@data-template-name)" as="xs:string"/>
     <xsl:sequence select="map:get($data, $name)"/>
   </xsl:template>
   
@@ -245,9 +256,36 @@
       </ol>
     </nav>
   </xsl:template>
+  
+  <!--Special template to handle the documentation page-->
+  <xsl:template match="app:toc" mode="app">
+     <xsl:where-populated>
+       <ul>
+         <xsl:apply-templates select="root(.)//div[@id='article']"
+           mode="toc"/>
+       </ul>
+     </xsl:where-populated>
+  </xsl:template>
+  
+  <xsl:template match="div[@id]" mode="toc">
+    <xsl:where-populated>
+      <li>
+        <xsl:apply-templates select="h1 | h2 | h3 | h4 | h5 | h6 | h7" mode="#current"/>
+        <xsl:where-populated>
+          <ul>
+            <xsl:apply-templates select="./div[@id]" mode="#current"/>
+          </ul>
+        </xsl:where-populated>
+      </li>
+    </xsl:where-populated>
+  </xsl:template>
+  
+  <xsl:template match="div[@id]/(h1 | h2 | h3 | h4 | h5 | h6 | h7)" mode="toc">
+    <a href="#{../@id}"><xsl:value-of select="."/></a>
+  </xsl:template>
    
   <xsl:template match="app:browse" mode="app">
-    <xsl:sequence select="dhil:report-table(dhil:map-entries($reports))"/>
+    <xsl:sequence select="dhil:report-table(dhil:map-entries($reports), ())"/>
   </xsl:template> 
   
   <xsl:template match="app:*[matches(local-name(),'details-')]" mode="app">
@@ -255,21 +293,17 @@
     <xsl:variable name="field" select="substring-after(local-name(), 'details-')"/>
     <xsl:sequence select="dhil:report-table($data?reports, $field)"/>
   </xsl:template>
-   
-   <xsl:function name="dhil:report-table">
-     <xsl:param name="reports" as="map(*)*"/>
-     <xsl:sequence select="dhil:report-table($reports,())"/>
-   </xsl:function>
+  
+  <xsl:variable name="reportFields" select="('date', 'newspaper', 'region', 'city', 'language')"/>
   
   <xsl:function name="dhil:report-table">
     <xsl:param name="reports" as="map(*)*"/>
     <xsl:param name="field" as="xs:string?"/>
-    <xsl:variable name="fields" select="('date', 'publisher', 'region', 'city', 'language')[not(. = $field)]"/>
     <table class="table table-striped table-hover table-condensed" id="tbl-browser">
       <thead>
         <tr>
           <th>Headline</th>
-          <xsl:for-each select="$fields">
+          <xsl:for-each select="$reportFields">
             <th>
               <xsl:sequence select="dhil:capitalize(.)"/>
             </th>
@@ -281,42 +315,50 @@
       </thead>
       <tbody>
         <xsl:for-each select="$reports">
-          <xsl:variable name="report" select="$hydrate(.)" as="function(*)"/>
-            <tr>
-              <td data-name="Headline">
-                <a href="{$report('id')}.html">
-                  <xsl:sequence select="($report('headlines')[1],$report('title'))[1] => string()"/>
-                </a>
-              </td>
-              <xsl:for-each select="$fields">
-                <xsl:variable name="currField" select="."/>
-                <td data-name="{dhil:capitalize($currField)}">
-                  <xsl:variable name="val" select="$report($currField)"/>
-                  <xsl:choose>
-                    <xsl:when test="empty($val)"/>
-                    <xsl:when test="$linkedFields = $currField">
-                      <xsl:sequence 
-                        select="dhil:getIdForField($currField, $val) => 
-                        dhil:link($val)"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:sequence select="$val"/>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </td>
-              </xsl:for-each>
-              <td><xsl:value-of select="count($report('doc-similarity'))"/></td>
-              <td><xsl:value-of select="count($report('paragraph-similarity'))"/></td>
-              <td><xsl:value-of select="$report('word-count')"/></td>
-            </tr>
+          <xsl:sequence select="dhil:report-row(.)"/>
         </xsl:for-each>
       </tbody>
     </table>
+  </xsl:function>
+  
+  <xsl:function name="dhil:report-row" as="element(tr)" new-each-time="no">
+    <xsl:param name="rep" as="map(*)"/>
+    <xsl:variable name="report" select="$construct($rep)" as="function(*)"/>
+    <tr>
+      <td data-name="Headline">
+        <a href="{$report('id')}.html">
+          <xsl:sequence select="($report('headlines')[1],$report('title'))[1] => string()"/>
+        </a>
+      </td>
+      <xsl:for-each select="$reportFields">
+        <xsl:variable name="currField" select="."/>
+        <td data-name="{dhil:capitalize($currField)}">
+          <xsl:variable name="val" select="$report($currField)"/>
+          <xsl:choose>
+            <xsl:when test="empty($val)"/>
+            <xsl:when test="$linkedFields = $currField">
+              <xsl:sequence 
+                select="dhil:getIdForField($currField, $val) => 
+                dhil:link($val)"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:sequence select="$val"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </td>
+      </xsl:for-each>
+      <td><xsl:value-of select="count($report('doc-similarity'))"/></td>
+      <td><xsl:value-of select="count($report('paragraph-similarity'))"/></td>
+      <td><xsl:value-of select="$report('word-count')"/></td>
+    </tr>
   </xsl:function>
  
   <xsl:template match="app:load" mode="app">
     <xsl:apply-templates mode="#current"/>
   </xsl:template>
+  
+  <!--Remove search: We'll do this with staticSearch-->
+  <xsl:template match="div[@class='app:search']" mode="app"/>
   
   <xsl:template match="app:*" priority="-1" mode="app">
     <xsl:message>WARNING: <xsl:value-of select="name()"/> unmatched</xsl:message>
@@ -385,16 +427,12 @@
     </xsl:if>
   </xsl:template>
   
-  
-  <!--<a href="atej_359" class="similarity lev"
-        data-document="atej_359" data-paragraph="atej_359_2"
-        data-similarity="1.0" data-type="lev" data-paper-id="a_tej_18"></a>-->
   <xsl:template match="p/a[dhil:isSimilarityLink(.)]" mode="translation">
     <xsl:variable name="currDocId" select="ancestor::html/@id"/>
     <xsl:variable name="docId" select="xs:string(@data-document)"/>
     <xsl:variable name="paragraphId" select="xs:string(@data-paragraph)"/>
     <xsl:variable name="compReport"
-      select="$hydrate($reports($docId))"/>
+      select="$construct($reports($docId))"/>
     <xsl:variable name="compPara" select="map:get($compReport('paragraphs'), $paragraphId)"/>
     <blockquote class="matches-found">
       <xsl:apply-templates 

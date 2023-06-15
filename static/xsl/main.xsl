@@ -134,35 +134,50 @@
     </xsl:map>
   </xsl:variable>
   
-  <xsl:variable name="hydrate" 
-      select="
-      function($map as map(*)) as function(xs:string) as item()*{
-          function($field as xs:string) as item()*{
-           if ($field = 'this')
-              then $map
-           else if ($field = 'paragraphs')
-              then 
-                let $translations := dhil:map-entries($map?translations)
-                return map:merge($translations?content/p[@id] ! map{string(./@id) : .})
-           else if (map:contains($map, $field))
-              then map:get($map, $field)
-
-           else if (not(map:contains($fieldMap, $field))) 
-              then error((), 'No field found for ' || $field)
-            else
-              let $key := $fieldMap($field),
-                  $val := $map($key)
-              return
-                if ($field = 'language')
-                  then $code2lang($val)
-                else $val  
-          }
-      }"/>
+  <xsl:variable name="construct" select="
+    function($map as map(*)) as function(xs:string) as item()*{
+    function($key as xs:string) as item()*{
+        dhil:getFromReport($map, $key)
+    }}"/>
+  
+  
+  <xsl:function name="dhil:getFromReport" new-each-time="no">
+    <xsl:param name="map" as="map(*)"/>
+    <xsl:param name="key" as="xs:string"/>
+    <xsl:choose>
+      <xsl:when test="$key = 'this'">
+        <xsl:sequence select="$map"/>
+      </xsl:when>
+      <xsl:when test="$key = 'paragraphs'">
+        <xsl:sequence select="let $translations := dhil:map-entries($map?translations)
+          return map:merge($translations?content/p[@id] ! map{string(./@id) : .})"/>
+      </xsl:when>
+      <xsl:when test="map:contains($map, $key)">
+        <xsl:sequence select="map:get($map, $key)"/>
+      </xsl:when>
+      <xsl:when test="not(map:contains($fieldMap, $key))">
+        <xsl:sequence select="error((), 'No field found for ' || $key)"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="dcTerm" select="$fieldMap($key)"/>
+        <xsl:variable name="val" select="$map($dcTerm)"/>
+        <xsl:choose>
+          <xsl:when test="$key='language'">
+            <xsl:sequence select="$code2lang($val)"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:sequence select="$val"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>    
+  </xsl:function>
   
   
   <xsl:variable name="fieldMap" select="map{
     'region': 'dc.region',
     'language': 'dc.language',
+    'langCode': 'dc.language',
     'city': 'dc.region.city',
     'date': 'dc.date',
     'facsimile': 'dc.source.url',
@@ -177,7 +192,7 @@
     'database': 'dc.source.database'
     }
     "/>
-  
+
   <xsl:variable name="code2lang" as="map(xs:string, xs:string)" select="map{
       'de': 'German',
       'en': 'English',
@@ -193,6 +208,7 @@
   
   <xsl:template name="go">
     <xsl:call-template name="controller"/>
+<!--    <xsl:call-template name="exports"/>-->
     <xsl:result-document href="tmp/reports.json" method="json">
       <xsl:choose>
         <xsl:when test="exists($docsToBuild)">
@@ -212,32 +228,13 @@
     <xsl:for-each select="$templates">
       <xsl:variable name="template" select="." as="map(*)"/>
       <xsl:variable name="basename" select=".?basename" as="xs:string"/>
-      <xsl:variable name="templateDoc" select="($template?template)/html" as="element(html)"/>
+      <xsl:variable name="templateDoc" select="(.?template)/html" as="element(html)"/>
         <xsl:choose>
           <xsl:when test="$basename = 'view'">
-             <xsl:for-each select="map:keys($reports)">
-               <xsl:variable name="newTemplate" select="dhil:addIdToTemplate($templateDoc,.)"/>
-               <xsl:apply-templates select="$newTemplate" mode="app">
-                 <xsl:with-param name="template" select="$template" tunnel="yes"/>
-                 <xsl:with-param name="data" select="$reports(.)" tunnel="yes"/>
-               </xsl:apply-templates>
-             </xsl:for-each>
+            <xsl:call-template name="view"/>
           </xsl:when>
           <xsl:when test="matches($basename, '-details')">
-            <xsl:variable name="field" select="substring-before($basename, '-details')" as="xs:string"/>
-            <xsl:for-each-group select="dhil:map-entries($reports)" group-by="map:get(., $fieldMap($field))">
-               <xsl:variable name="param" select="current-grouping-key()"/>
-               <xsl:variable name="id" select="dhil:getIdForField($field, $param)"/>
-               <xsl:variable name="newTemplate" select="dhil:addIdToTemplate($templateDoc, $id)"/>
-               <xsl:apply-templates select="$newTemplate" mode="app">
-                 <xsl:with-param name="template" select="$template" tunnel="yes"/>
-                 <xsl:with-param name="data" tunnel="yes" select="map{
-                    $field: $param,
-                    'id': dhil:getIdForField($field, $param),
-                    'reports': current-group()
-                   }"/>
-               </xsl:apply-templates>
-            </xsl:for-each-group>
+            <xsl:call-template name="details"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:apply-templates select="dhil:addIdToTemplate($templateDoc, $basename)" mode="app">
@@ -247,6 +244,39 @@
         </xsl:choose> 
     </xsl:for-each>
   </xsl:template>
+  
+  <xsl:template name="view">
+    <xsl:param name="template" select="." as="map(*)"/>
+    <xsl:variable name="templateDoc" select="(.?template)/html" as="element(html)"/>
+    <xsl:for-each select="map:keys($reports)">
+      <xsl:variable name="newTemplate" select="dhil:addIdToTemplate($templateDoc,.)"/>
+      <xsl:apply-templates select="$newTemplate" mode="app">
+        <xsl:with-param name="template" select="$template" tunnel="yes"/>
+        <xsl:with-param name="data" select="$reports(.)" tunnel="yes"/>
+      </xsl:apply-templates>
+    </xsl:for-each>
+  </xsl:template>
+  
+  <xsl:template name="details">
+    <xsl:param name="template" select="." as="map(*)"/>
+    <xsl:variable name="templateDoc" select="(.?template)/html" as="element(html)"/>
+    <xsl:variable name="field" select="substring-before($template?basename, '-details')" as="xs:string"/>
+    <xsl:for-each-group select="dhil:map-entries($reports)" group-by="map:get(., $fieldMap($field))">
+      <xsl:variable name="param" select="current-grouping-key()"/>
+      <xsl:variable name="id" select="dhil:getIdForField($field, $param)"/>
+      <xsl:variable name="newTemplate" select="dhil:addIdToTemplate($templateDoc, $id)"/>
+      <xsl:apply-templates select="$newTemplate" mode="app">
+        <xsl:with-param name="template" select="$template" tunnel="yes"/>
+        <xsl:with-param name="data" tunnel="yes" select="map{
+          $field: $param,
+          'id': dhil:getIdForField($field, $param),
+          'reports': current-group()
+          }"/>
+      </xsl:apply-templates>
+    </xsl:for-each-group>
+  </xsl:template>
+  
+  
   
   <xsl:function name="dhil:addIdToTemplate" as="element(html)">
     <xsl:param name="templateDoc" as="element(html)"/>
@@ -260,12 +290,11 @@
   <xsl:function name="dhil:getIdForField" as="xs:string">
     <xsl:param name="field"/>
     <xsl:param name="param"/>
-    
     <xsl:variable name="prefix" select="if ($field = 'publisher') then 'newspaper' else $field"/>
     <xsl:variable name="val" as="xs:string">
       <xsl:choose>
         <xsl:when test="$field = 'language'">
-          <xsl:variable name="langCode" select="($lang2code($param), $code2lang($param))[1]" as="xs:string"/>
+          <xsl:variable name="langCode" select="($lang2code($param), $param)[1]" as="xs:string"/>
           <xsl:sequence select="$langCode"/>
         </xsl:when>
         <xsl:when test="$field = ('publisher','newspaper')">

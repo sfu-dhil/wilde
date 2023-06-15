@@ -60,6 +60,29 @@
   <xsl:template match="head" mode="report">
     <xsl:apply-templates select="* except (meta, link)" mode="#current"/>
     <xsl:apply-templates select="meta" mode="#current"/>
+    
+    
+<!--    {
+      'publisher':
+      'newspaper':
+      'language':
+      'facsimile':
+      'headlines':
+      'translations': [
+        {
+          'id':
+          'lang':
+          'original':
+          'heading':
+          'content': [
+            {
+              p
+            
+            }
+          ],
+        }
+      ]
+    }-->
     <!--
     <xsl:for-each-group select="meta" group-by="@name">
       <xsl:map-entry key="current-grouping-key()" select="current-group()/@content ! string(.)"/>
