@@ -778,6 +778,9 @@ th.count {
 .report-view .row.matches:last-child {
   padding-bottom: 0.5em;
 }
+.report-view .row.matches p[id] {
+  text-align: justify;
+}
 .report-view .row.matches.viewing-matches {
   background-color: #EAE8E3;
 }

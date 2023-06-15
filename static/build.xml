@@ -8,6 +8,9 @@
   <property name="xsl.dir" value="${basedir}/xsl"/>
   <property name="templates.dir" value="${basedir}/pages"/>
   
+  <!--Property for building a subset of docs-->
+  <property name="docsToBuild" value=""/>
+  
   
   <target name="copy" depends="copy.templates, copy.resources"/>
   <!--Copy all of the templates we want to use, but remap the nocache ones to take over the non-nocache ones-->
@@ -32,6 +35,9 @@
   </target>
   
   <target name="copy.resources">
+    <exec executable="sass">
+      <arg line="${pd}/resources/sass:${pd}/resources/css"/>
+    </exec>
     <copy todir="${dist.dir}">
       <fileset dir="${pd}">
         <include name="resources/**"/>
@@ -45,7 +51,10 @@
         -it:go
         templates.dir=${templates.dir}
         reports.dir=${reports.dir}
-        dist.dir=${dist.dir}"/>
+        dist.dir=${dist.dir}
+        docsToBuild=${docsToBuild}
+        "/>
+      
     </exec>
   </target>
   

@@ -33,6 +33,7 @@
   </xd:doc>
   
   <xsl:mode name="app" on-no-match="shallow-copy" use-accumulators="currentReport"/>
+  <xsl:mode name="translation" on-no-match="shallow-copy"/>
   
   <xsl:accumulator name="currentReport" initial-value="()">
     <xsl:accumulator-rule match="html[@id]">
@@ -46,10 +47,14 @@
          return $hydrate($report)
     }"/>
   
+  
+  <xsl:template match="html[@id]" mode="app" priority="3">
+      <xsl:if test="empty($docsToBuild) or matches(@id, $docsToBuild)">
+        <xsl:next-match/>
+      </xsl:if>
+  </xsl:template>
+  
   <xsl:template match="html[@id]" mode="app">
-<!--    <xsl:param name="data" tunnel="yes" as="map(*)?"/>-->
-   <!-- <xsl:variable name="outputId" select="if (exists($data)) then $data?id else .?basename"/>-->
-<!--    <xsl:variable name="template" select="(.?template)/html" as="element(html)"/-->
     <xsl:result-document href="{$dist.dir}/{@id}.html" method="xhtml" version="5.0">
        <xsl:sequence select="dhil:debug('Building ' || current-output-uri())"/>
        <xsl:copy>
@@ -58,7 +63,7 @@
     </xsl:result-document>
   </xsl:template>
   
-
+  
   <xsl:template match="app:doc-source" priority="3" mode="app">
     <xsl:variable name="report" select="$getReport(.)" as="function(*)"/>
     <xsl:where-populated>
@@ -116,6 +121,66 @@
     </xsl:choose>
   </xsl:template>
   
+  <xsl:template match="app:doc-translation-tabs" priority="3" mode="app">
+    <xsl:variable name="report" select="$getReport(.)"/>
+    <xsl:variable name="translations" select="$report('translations')" as="map(*)"/>
+    <ul class="nav nav-tabs" role="tablist">
+      <xsl:for-each select="dhil:map-entries($translations)">
+        <li role="presentation">
+          <xsl:if test=".?original">
+            <xsl:attribute name="class">active</xsl:attribute>
+          </xsl:if>
+          <a href="#{.?id}" role="tab" data-toggle="tab">
+            <b><xsl:value-of select="$code2lang(.?lang)"/></b>
+          </a>
+        </li>
+      </xsl:for-each>
+    </ul>
+  </xsl:template>
+  
+  <xsl:template match="app:doc-translations" priority="3" mode="app">
+    <xsl:variable name="report" select="$getReport(.)"/>
+    <xsl:variable name="translations" select="$report('translations')" as="map(*)"/> 
+    <div class="tab-content">
+      <xsl:for-each select="dhil:map-entries($translations)">
+        <div class="tab-pane{if (.?original) then ' active' else ()}" id="{.?id}">
+          <xsl:apply-templates select=".?content" mode="translation"/>
+        </div>
+      </xsl:for-each>
+    </div>
+  </xsl:template>
+  
+  
+  <xsl:template match="app:document-similarities" mode="app">
+    <xsl:variable name="report" select="$getReport(.)"/>
+    <xsl:variable name="simDocLinks" 
+      select="$report('doc-similarity')"
+      as="map(*)*"/>
+      <div class="panel-body">
+        <xsl:sequence>
+          <xsl:where-populated>
+            <ul>
+              <xsl:for-each select="$simDocLinks">
+                <xsl:sort select="xs:double(.?similarity)" order="descending"/>
+                <li class="{.?type}">
+                  <a href="{.?href || '.html'}">
+                    <xsl:value-of select="$reports(.?href)?title"/>
+                  </a>
+                  <xsl:text> - </xsl:text>
+                  <xsl:value-of select="format-number(xs:double(.?similarity), '###.#%')"/>
+                  <!--TODO: Fix BR-->
+                  <br/>
+                  <a href="compare-docs.html?a={$report('id')}&amp;b={.?href}">Compare</a>
+                </li>
+              </xsl:for-each>
+            </ul>
+          </xsl:where-populated>
+          <xsl:on-empty>
+            <i>None found</i>
+          </xsl:on-empty>
+        </xsl:sequence>  
+      </div>
+  </xsl:template>
   
   <xsl:template match="app:*[matches(local-name(),'doc-')]" priority="2" mode="app">
     <xsl:variable name="report" select="$getReport(.)"/>
@@ -146,8 +211,6 @@
     <xsl:variable name="name" select="@data-template-name"/>
     <xsl:sequence select="map:get($data, $name)"/>
   </xsl:template>
-  
-  
   
   <xsl:template match="app:breadcrumb" mode="app">
     <xsl:param name="data" tunnel="yes"/>
@@ -182,27 +245,6 @@
       </ol>
     </nav>
   </xsl:template>
-  
-<!--  <xsl:template match="app:breadcrumb" mode="app">
-    <xsl:param name="data" tunnel="yes"/>
-    <xsl:param name="template" tunnel="yes"/>
-    <xsl:choose>
-      <!-\-We're in a report-\->
-      <xsl:when test="$template?basename = 'view'">
-        
-      </xsl:when>
-    </xsl:choose> 
-  </xsl:template>-->
-  
-  
-<!--  <xsl:function name="dhil:breadcrumbDetails">
-    <xsl:param name="field"/>
-    <xsl:param name="value"/>
-    
-    
-  </xsl:function>
-  
-  -->
    
   <xsl:template match="app:browse" mode="app">
     <xsl:sequence select="dhil:report-table(dhil:map-entries($reports))"/>
@@ -280,6 +322,99 @@
     <xsl:message>WARNING: <xsl:value-of select="name()"/> unmatched</xsl:message>
     <xsl:next-match/>
   </xsl:template>
+  
+  <xsl:template match="p" priority="3" mode="translation">
+    <xsl:param name="isMatch" tunnel="yes" select="false()"/>
+    <xsl:choose>
+      <xsl:when test="$isMatch">
+        <xsl:copy>
+          <xsl:apply-templates select="node()" mode="#current"/>
+        </xsl:copy>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:next-match/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template match="p" priority="2" mode="translation">
+    <xsl:variable name="id" select="string(@id)" as="xs:string"/>
+    <xsl:variable name="matches" select="child::*[dhil:isSimilarityLink(.)]" as="element()*"/>
+    <xsl:variable name="matchCount" select="count($matches)" as="xs:integer"/>
+    <div class="row matches matches-{$matchCount}">
+      <div class="col-sm-3">
+        <xsl:if test="exists($matches)">
+          <!--TODO: Fix this!-->
+          <a class="btn btn-primary"
+            onclick="$(this).parent().parent().toggleClass('viewing-matches'); $('#{$id}_matches').toggle();"
+            title="Show matches">
+            <xsl:value-of select="$matchCount || ' ' || (if ($matchCount gt 1) then 'matches' else 'match')"/>
+          </a>
+        </xsl:if>
+      </div>
+      <div class="col-sm-8">
+        <xsl:copy>
+          <xsl:apply-templates
+            select="@* | (node() except $matches)" mode="#current"/>
+        </xsl:copy>
+        <xsl:where-populated>
+          <div id="{$id}_matches" class="similarity">
+            <xsl:for-each-group select="$matches" group-by="@data-type">
+              <xsl:if test="current-grouping-key() = 'lev'">
+                <div class="panel panel-default">
+                  <xsl:if test="$matchCount gt 0">
+                    <div role="tabpanel" class="tab-pane" id="{$id}_{current-grouping-key()}">
+                      <xsl:apply-templates select="current-group()" mode="#current">
+                        <xsl:sort select="xs:double(@data-similarity)" order="descending"/>
+                      </xsl:apply-templates>
+                    </div>
+                  </xsl:if>
+                </div>
+              </xsl:if>
+            </xsl:for-each-group>  
+          </div>
+        </xsl:where-populated>
+      </div>
+    </div>
+  </xsl:template>
+  
+  <xsl:template match="p/a[dhil:isSimilarityLink(.)]" priority="2" mode="translation">
+    <xsl:param name="isMatch" tunnel="yes" select="false()"/>
+    <xsl:if test="not($isMatch)">
+      <xsl:next-match/>
+    </xsl:if>
+  </xsl:template>
+  
+  
+  <!--<a href="atej_359" class="similarity lev"
+        data-document="atej_359" data-paragraph="atej_359_2"
+        data-similarity="1.0" data-type="lev" data-paper-id="a_tej_18"></a>-->
+  <xsl:template match="p/a[dhil:isSimilarityLink(.)]" mode="translation">
+    <xsl:variable name="currDocId" select="ancestor::html/@id"/>
+    <xsl:variable name="docId" select="xs:string(@data-document)"/>
+    <xsl:variable name="paragraphId" select="xs:string(@data-paragraph)"/>
+    <xsl:variable name="compReport"
+      select="$hydrate($reports($docId))"/>
+    <xsl:variable name="compPara" select="map:get($compReport('paragraphs'), $paragraphId)"/>
+    <blockquote class="matches-found">
+      <xsl:apply-templates 
+        select="$compPara/node()" mode="#current">
+        <xsl:with-param name="isMatch" tunnel="yes" select="true()"/>
+      </xsl:apply-templates>
+      <div class="comparison-links">
+        <!--TODO: FIX BR-->
+        <a href="{$docId}.html#{$paragraphId}">
+          <xsl:sequence select="$compReport('title')"/>
+        </a> (<xsl:value-of select="format-number(@data-similarity, '###.#%')"/>) <br/>
+        <!--Now compare paragraph-->
+        <a href="compare.html?a={$currDocId}&amp;b{$docId}">Compare Paragraphs </a>
+        <xsl:text> | </xsl:text>
+        <!--Compare documents-->
+        <a href="compare-docs.html?a={$currDocId}&amp;b{$docId}">Compare Documents</a>
+      </div>
+    </blockquote>
+  </xsl:template>
+  
   
   
   <xsl:function name="dhil:ext-link">

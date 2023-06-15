@@ -39,7 +39,6 @@
   
   <xsl:template name="templates:surround">
     <xsl:param name="doc" select="." as="document-node()"/>
-    <xsl:message>Processing <xsl:value-of select="document-uri($doc)"/></xsl:message>
     <xsl:choose>
       <xsl:when test="$doc//*[@data-template = 'templates:surround']">
         <xsl:call-template name="templates:surround">

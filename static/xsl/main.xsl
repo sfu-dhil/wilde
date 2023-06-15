@@ -39,14 +39,29 @@
   <xsl:param name="templates.dir"/>
   <xsl:param name="dist.dir"/>
   <xsl:param name="debug" select="'true'"/>
+  <xsl:param name="docsToBuild" as="xs:string?"/>
+  
   
   <!--Includes-->
   <xsl:include href="modules/app.xsl"/>
   <xsl:include href="modules/report.xsl"/>
   <xsl:include href="modules/templates.xsl"/>
+  <xsl:include href="modules/serialize.xsl"/>
+  
+  <!--Top level collection variables-->
+  <xsl:variable name="templates.collection"
+    select="collection($templates.dir || '?select=*.html&amp;metadata=yes')"
+    as="map(*)+"/>
+  
+  <xsl:variable name="reports.collection" 
+    select="collection($reports.dir || '?select=*.xml;recurse=yes;metadata=yes')"
+    as="map(*)+"/>
+  
   
   <xsl:variable name="templates" as="map(xs:string, item()*)+">
-    <xsl:for-each select="collection($templates.dir || '?select=*.html&amp;metadata=yes')">
+    <xsl:message 
+      select="dhil:debug('Processing ' || count($templates.collection) || ' templates in ' || $templates.dir)"/>
+    <xsl:for-each select="$templates.collection">
         <xsl:variable name="curr" select="." as="map(*)"/>
         <xsl:map>
             <xsl:sequence select="map:remove($curr,'fetch')"/>
@@ -61,8 +76,10 @@
   </xsl:variable>
   
   <xsl:variable name="reports" as="map(*)">
+   <xsl:message
+     select="dhil:debug('Creating map of ' || count($reports.collection) || ' reports in ' || $reports.dir)"/>
    <xsl:map>
-     <xsl:for-each select="collection($reports.dir || '?select=*.xml;recurse=yes;metadata=yes')">
+     <xsl:for-each select="$reports.collection">
        <xsl:variable name="curr" select="." as="map(*)"/>
        <xsl:variable name="doc" select="$curr?fetch()" as="document-node()"/>
        <xsl:variable name="reportData" as="map(*)">
@@ -70,7 +87,7 @@
        </xsl:variable>
        <xsl:map-entry key="$reportData?id">
          <xsl:map>
-           <xsl:map-entry key="'doc'" select="$doc"/>
+<!--           <xsl:map-entry key="'doc'" select="$doc"/>-->
            <xsl:sequence select="dhil:uri($curr?canonical-path)"/>
            <xsl:sequence select="$reportData"/>
          </xsl:map>
@@ -104,8 +121,6 @@
    </xsl:map> 
   </xsl:variable>
   
-  
-  
   <xsl:variable name="publisherToPubId" as="map(*)">
     <xsl:map>
       <xsl:for-each select="map:keys($reportsByMeta?dc.publisher)">
@@ -123,10 +138,15 @@
       select="
       function($map as map(*)) as function(xs:string) as item()*{
           function($field as xs:string) as item()*{
-            if ($field = 'this')
+           if ($field = 'this')
               then $map
+           else if ($field = 'paragraphs')
+              then 
+                let $translations := dhil:map-entries($map?translations)
+                return map:merge($translations?content/p[@id] ! map{string(./@id) : .})
            else if (map:contains($map, $field))
               then map:get($map, $field)
+
            else if (not(map:contains($fieldMap, $field))) 
               then error((), 'No field found for ' || $field)
             else
@@ -173,6 +193,19 @@
   
   <xsl:template name="go">
     <xsl:call-template name="controller"/>
+    <xsl:result-document href="tmp/reports.json" method="json">
+      <xsl:choose>
+        <xsl:when test="exists($docsToBuild)">
+          <xsl:variable name="keys" select="map:keys($reports)[matches(.,$docsToBuild)]"/>
+          <xsl:variable name="submap" select="map:merge($keys ! map:get($reports, .))"/>
+          <xsl:sequence select="dhil:mapToJson($submap)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:sequence
+            select="dhil:mapToJson($reports)"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:result-document>
   </xsl:template>
   
   <xsl:template name="controller">
@@ -232,7 +265,6 @@
     <xsl:variable name="val" as="xs:string">
       <xsl:choose>
         <xsl:when test="$field = 'language'">
-            <xsl:message select="$param"/>
           <xsl:variable name="langCode" select="($lang2code($param), $code2lang($param))[1]" as="xs:string"/>
           <xsl:sequence select="$langCode"/>
         </xsl:when>

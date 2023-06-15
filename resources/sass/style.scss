@@ -713,13 +713,16 @@ th.count{
   }
 
   .row.matches {
-
+    padding-top: 0.25em;
+    
     &:last-child {
       padding-bottom: 0.5em;
     }
-
-    padding-top: 0.25em;
-
+    
+    p[id]{
+      text-align: justify;
+    }
+    
     &.viewing-matches {
       background-color: $color_beige;
 

@@ -32,18 +32,29 @@
   </xd:doc>
   
   <xsl:mode name="report" on-no-match="shallow-skip"/>
-
+  
+  <!--Since we can't do typing and object properties 
+      until XSLT 4.0, this is a sample object of what we should expect-->
+   
+<!--  <xsl:variable name="REPORT_SCHEMA" select="map{
+      'id': 'string',
+      'title': 'string',
+      'doc-similarity': 
+    
+    
+    
+    }"-->
+  
   
   <xsl:template match="/" mode="report">
     <!--<xsl:sequence select="dhil:debug('Processing data: ' || document-uri(.))"/>-->
     <xsl:map>
       <xsl:apply-templates select="*" mode="#current"/> 
     </xsl:map>
-
   </xsl:template>
   
   <xsl:template match="html/@id" mode="report">
-    <xsl:map-entry key="'id'" select="."/>
+    <xsl:map-entry key="'id'" select="string(.)"/>
   </xsl:template>
   
   <xsl:template match="head" mode="report">
@@ -54,7 +65,7 @@
       <xsl:map-entry key="current-grouping-key()" select="current-group()/@content ! string(.)"/>
     </xsl:for-each-group>-->
     <xsl:map-entry key="'doc-similarity'">
-       <xsl:apply-templates select="link[@rel='similarity']" mode="#current"/>
+      <xsl:apply-templates select="link[@rel='similarity']" mode="#current"/>
     </xsl:map-entry>
   </xsl:template>
   
@@ -69,7 +80,7 @@
   
   <xsl:template match="body" mode="report">
     <xsl:map-entry key="'headlines'" select="./div/p[contains-token(@class,'heading')]"/>
-    <xsl:map-entry key="'content'">
+    <xsl:map-entry key="'translations'">
       <xsl:map>
         <xsl:apply-templates select="div" mode="#current"/>
       </xsl:map>
@@ -87,17 +98,18 @@
   
   <!--Currently this produces a map, but should really be map-entries, by lang, I think-->
   <xsl:template match="div" mode="report">    
-      <xsl:map-entry key="string(@id)">
-        <xsl:map>
-          <xsl:map-entry key="'lang'" select="xs:string(@lang)"/>
-          <xsl:map-entry key="'original'" select="@id = 'original'"/>
-          <xsl:map-entry key="'heading'" select="p[contains-token(@class,'heading')]"/>
-        </xsl:map>
-      </xsl:map-entry>  
+    <xsl:map-entry key="string(@id)">
+      <xsl:map>
+        <xsl:map-entry key="'lang'" select="xs:string(@lang)"/>
+        <xsl:map-entry key="'id'" select="string(@id)"/>
+        <xsl:map-entry key="'original'" select="@id = 'original'"/>
+        <xsl:map-entry key="'heading'" select="p[contains-token(@class,'heading')]"/>
+        <xsl:map-entry key="'content'" select="."/>
+      </xsl:map>
+    </xsl:map-entry>
   </xsl:template>
-  
-
-  
+    
+    
   <xsl:template match="p[contains-token(@class,'heading')]" mode="report">
     <xsl:map-entry key="'heading'" select="."/>
   </xsl:template>
@@ -111,7 +123,8 @@
   <xsl:template
     match="*[dhil:isSimilarityLink(.)]" mode="report">
       <xsl:map>
-        <xsl:apply-templates select="@*" mode="#current"/>
+          <xsl:apply-templates select="@*" mode="#current"/>
+        
       </xsl:map>
   </xsl:template>
   
