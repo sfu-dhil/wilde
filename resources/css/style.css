@@ -692,6 +692,26 @@ table td[data-name=Headline] > a {
   padding-right: 0.5rem;
 }
 
+.table-date .cell-date {
+  display: none;
+}
+
+.table-newspaper .cell-newspaper {
+  display: none;
+}
+
+.table-region .cell-region {
+  display: none;
+}
+
+.table-city .cell-city {
+  display: none;
+}
+
+.table-language .cell-language {
+  display: none;
+}
+
 thead {
   background: #F9F7F1;
 }

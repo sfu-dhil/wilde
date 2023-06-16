@@ -620,6 +620,13 @@ table{
     }
 }
 
+// Remove cells/columns that are unnecessary
+@each $field in date, newspaper, region, city, language{
+  .table-#{$field} .cell-#{$field}{
+    display:none;
+  }
+}
+
 // Make table headings sticky
 thead{
     background: $color_white;
