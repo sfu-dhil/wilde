@@ -20,6 +20,7 @@
   xmlns:tx="http://dhil.lib.sfu.ca/exist/wilde/transform"
   xmlns:wilde="http://dhil.lib.sfu.ca/wilde"
   xmlns:templates="http://dhil.lib.sfu.ca/templates"
+  xmlns:log="http://dhil.lib.sfu.ca/log"
   exclude-result-prefixes="#all"
   xpath-default-namespace="http://www.w3.org/1999/xhtml"
   xmlns="http://www.w3.org/1999/xhtml"
@@ -38,8 +39,10 @@
   <xsl:param name="reports.dir"/>
   <xsl:param name="templates.dir"/>
   <xsl:param name="dist.dir"/>
-  <xsl:param name="debug" select="'true'"/>
+  <xsl:param name="logLevel" as="xs:string" select="'debug'"/>
   <xsl:param name="docsToBuild" as="xs:string?"/>
+ 
+  
   
   
   <!--Includes-->
@@ -59,8 +62,8 @@
   
   
   <xsl:variable name="templates" as="map(xs:string, item()*)+">
-    <xsl:message 
-      select="dhil:debug('Processing ' || count($templates.collection) || ' templates in ' || $templates.dir)"/>
+<!--    <xsl:sequence 
+      select="log:info('Processing ' || count($templates.collection) || ' templates in ' || $templates.dir)"/>-->
     <xsl:for-each select="$templates.collection">
         <xsl:variable name="curr" select="." as="map(*)"/>
         <xsl:map>
@@ -76,8 +79,8 @@
   </xsl:variable>
   
   <xsl:variable name="reports" as="map(*)">
-   <xsl:message
-     select="dhil:debug('Creating map of ' || count($reports.collection) || ' reports in ' || $reports.dir)"/>
+   <!--<xsl:sequence
+     select="log:info('Creating map of ' || count($reports.collection) || ' reports in ' || $reports.dir)"/>-->
    <xsl:map>
      <xsl:for-each select="$reports.collection">
        <xsl:variable name="curr" select="." as="map(*)"/>
@@ -334,6 +337,9 @@
     </xsl:map>
   </xsl:function>
   
+  
+  <!--TODO: Convert these to template calls, since that allows
+    for empty sequences AND better tracing for errors etc-->
   <xd:doc>
     <xd:desc>
       <xd:ref name="dhil:msg" type="function"/>
@@ -344,12 +350,48 @@
     <!--NOTE: Need to investigate why the AVT version of use-when doesn't
             work for xsl:message anymore (I swear it used to, pre Saxon11)-->
   </xd:doc>
-  <xsl:function name="dhil:debug" as="empty-sequence()">
+  <xsl:function name="log:debug">
+    <xsl:param name="msg"/>
+    <xsl:sequence select="log:_log($msg, 'debug')"/>    
+  </xsl:function>
+  
+  <xsl:function name="log:trace">
+    <xsl:param name="msg"/>
+    <xsl:sequence select="log:_log($msg, 'trace')"/>    
+  </xsl:function>
+  
+  <xsl:function name="log:info">
+    <xsl:param name="msg"/>
+    <xsl:sequence select="log:_log($msg, 'info')"/>    
+  </xsl:function>
+  
+  <xsl:function name="log:warn">
+    <xsl:param name="msg"/>
+    <xsl:sequence select="log:_log($msg, 'warn')"/>    
+  </xsl:function>
+  
+  <xsl:function name="log:error">
+    <xsl:param name="msg"/>
+    <xsl:sequence select="log:_log($msg, 'error')"/>    
+  </xsl:function>
+  
+  <xsl:function name="log:fatal">
+    <xsl:param name="msg"/>
+    <xsl:sequence select="log:_log($msg, 'fatal')"/>    
+  </xsl:function>
+  
+  <xsl:function name="log:_log">
+    <xsl:param name="msg"/>
+    <xsl:param name="level"/>
+    <xsl:sequence select="'[' || upper-case($level) || '] ' || string-join($msg) => normalize-space()"/>
+  </xsl:function>
+  
+<!--  <xsl:function name="dhil:debug" as="empty-sequence()">
     <xsl:param name="msg" as="item()*"/>
     <xsl:if test="$debug = 'true'">
       <xsl:message select="string-join($msg)"/>
     </xsl:if>
-  </xsl:function>
+  </xsl:function>-->
   
   
 </xsl:stylesheet>

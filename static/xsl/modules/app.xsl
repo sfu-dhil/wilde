@@ -19,7 +19,7 @@
   xmlns:tx="http://dhil.lib.sfu.ca/exist/wilde/transform"
   xmlns:wilde="http://dhil.lib.sfu.ca/wilde"
   xmlns:templates="http://dhil.lib.sfu.ca/templates"
-  
+  xmlns:log="http://dhil.lib.sfu.ca/log"
   exclude-result-prefixes="#all"
   xpath-default-namespace="http://www.w3.org/1999/xhtml"
   xmlns="http://www.w3.org/1999/xhtml"
@@ -48,6 +48,7 @@
     }"/>
   
   
+  <!--MAIN HTML TEMPLATES-->
   <xsl:template match="html[@id]" mode="app" priority="3">
       <xsl:if test="empty($docsToBuild) or matches(@id, $docsToBuild)">
         <xsl:next-match/>
@@ -56,14 +57,14 @@
   
   <xsl:template match="html[@id]" mode="app">
     <xsl:result-document href="{$dist.dir}/{@id}.html" method="xhtml" version="5.0">
-       <xsl:sequence select="dhil:debug('Building ' || current-output-uri())"/>
+       <xsl:sequence select="log:debug('Building ' || current-output-uri())"/>
        <xsl:copy>
          <xsl:apply-templates select="@*|node()" mode="#current"/>
        </xsl:copy>
     </xsl:result-document>
   </xsl:template>
   
-  
+  <!--Templates matching in the app: namespace-->
   <xsl:template match="app:doc-source" priority="3" mode="app">
     <xsl:variable name="report" select="$getReport(.)" as="function(*)"/>
     <xsl:where-populated>
@@ -256,15 +257,148 @@
       </ol>
     </nav>
   </xsl:template>
+
+  
+  <!--Main browse for list-->
+  
+  <xsl:template match="app:browse" mode="app">
+    <xsl:sequence select="dhil:report-table(dhil:map-entries($reports), ())"/>
+  </xsl:template> 
+  
+  <xsl:template match="app:*[matches(local-name(), '^browse-')]" priority="2" mode="app">
+    <xsl:next-match/>
+    <script src="resources/js/browse.js"></script>
+  </xsl:template>
+  
+  <xsl:template match="app:browse-region" mode="app">
+    <div>
+      <xsl:call-template name="browseToggle">
+        <xsl:with-param name="default" select="'Name'"/>
+      </xsl:call-template>
+      <xsl:call-template name="browseList"/>
+    </div>
+  </xsl:template>
+  
+  <xsl:template match="app:browse-language" mode="app">
+    <div>
+      <xsl:call-template name="browseToggle"/>
+      <xsl:call-template name="browseList"/>
+    </div>
+  </xsl:template>
+  
+  <xsl:template match="app:browse-newspaper" mode="app">
+    <xsl:variable name="items" select="dhil:groupReportsBy('newspaper')"/>
+    <div>
+      <xsl:call-template name="browseToggle">
+        <xsl:with-param name="default">Region</xsl:with-param>
+      </xsl:call-template>
+      <xsl:for-each-group select="$items" group-by="
+          let $firstReport := map:get(.,'reports')[1]
+          return ($construct($firstReport))('region')">
+        <xsl:sort select="current-grouping-key()"/>
+        <xsl:variable name="subset" select="current-group()"/>
+        <div class="browse-div">
+          <h3><xsl:value-of select="upper-case(current-grouping-key())"/></h3>
+          <xsl:call-template name="browseList">
+            <xsl:with-param name="items" select="$subset"/>
+            <xsl:with-param name="page" select="'newspaper'"/>
+            <xsl:with-param name="atts" select="map{'region': current-grouping-key()}"/>
+          </xsl:call-template>
+        </div>        
+      </xsl:for-each-group>  
+    </div>
+  </xsl:template>
+  
+  <xsl:template name="browseToggle">
+    <xsl:param name="default" select="local-name() => substring-after('browse-') => dhil:capitalize()"/>
+    <div class="browse-toggle">
+      <label for="browse-toggle">Order by</label>
+      <select name="browse-toggle" class="form-control">
+        <option value="default"><xsl:value-of select="$default"/></option>
+        <option value="count">Count</option>
+      </select>
+    </div>    
+  </xsl:template>
+  
+  <xsl:template name="browseList">
+    <xsl:param name="page" select="local-name() => substring-after('browse-')"/>
+    <xsl:param name="items" select="dhil:groupReportsBy($page)"/>
+    <xsl:param name="atts" select="map{}" as="map(*)?"/>
+    <div class="browse-div">
+      <ul class="browse-list">
+        <xsl:for-each select="$items">
+          <xsl:sort select=".?sortKey"/>
+          <li data-count="{.?count}" data-value="{.?label}" style="--height: {.?percent * 100}%">
+            <xsl:for-each select="map:keys($atts)">
+              <xsl:attribute name="data-{.}" select="$atts(.)"/>
+            </xsl:for-each>
+            <!--TODO ADD REGION-->
+            <a href="{.?id}.html">
+              <span class="name"><xsl:value-of select=".?label"/></span>
+              <span class="count"><xsl:value-of select=".?count"/></span>
+            </a>
+          </li>
+        </xsl:for-each>
+      </ul>
+    </div>
+  </xsl:template>
+  
+  <!--HOW THIS WORKS:
+     * The goal is to determine a logarithmic ratio of proportion
+     * So this first groups everything by a meta field (i.e. by language, by region) and stores that
+       in a map ($groups) from which the $max (log10) can be calculated
+     * From there, the map is iterated through again to determine the percentages
+    -->
+  
+  <xsl:function name="dhil:groupReportsBy" as="map(*)+">
+    <xsl:param name="field"/>
+    <xsl:variable name="groups" as="map(*)">
+      <xsl:map>
+        <xsl:for-each-group select="dhil:map-entries($reports)" group-by="($construct(.))($field)">
+          <xsl:map-entry key="current-grouping-key()" select="current-group()"/>
+        </xsl:for-each-group>
+      </xsl:map>
+    </xsl:variable>
+    <xsl:variable name="max" 
+      select="max(map:keys($groups) ! count($groups(.))) 
+              => math:log10()"/>
+    <xsl:for-each select="map:keys($groups)">
+      <xsl:variable name="key" select="."/>
+      <xsl:variable name="reports" select="$groups(.)"/>
+      <xsl:variable name="count" select="count($reports)"/>
+      <xsl:variable name="percent" select="(math:log10($count) div $max)"/>
+      <xsl:variable name="id" select="dhil:getIdForField($field, .)"/>
+      <xsl:map>
+        <xsl:map-entry key="'count'" select="$count"/>
+        <xsl:map-entry key="'percent'" select="$percent"/>
+        <xsl:map-entry key="'label'" select="$key"/>
+        <xsl:map-entry key="'id'" select="$id"/>
+        <xsl:map-entry key="'reports'" select="$reports"/>
+        <xsl:map-entry key="'sortKey'" select="if ($field = ('newspaper')) then $id else $key"/>
+      </xsl:map>
+    </xsl:for-each>
+  </xsl:function>
+  
+  
+  
+  
+  
+  
+  <xsl:template match="app:*[matches(local-name(),'details-')]" mode="app">
+    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
+    <xsl:variable name="field" select="substring-after(local-name(), 'details-')"/>
+    <xsl:sequence select="dhil:report-table($data?reports, $field)"/>
+  </xsl:template>
+  
   
   <!--Special template to handle the documentation page-->
   <xsl:template match="app:toc" mode="app">
-     <xsl:where-populated>
-       <ul>
-         <xsl:apply-templates select="root(.)//div[@id='article']"
-           mode="toc"/>
-       </ul>
-     </xsl:where-populated>
+    <xsl:where-populated>
+      <ul>
+        <xsl:apply-templates select="root(.)//div[@id='article']"
+          mode="toc"/>
+      </ul>
+    </xsl:where-populated>
   </xsl:template>
   
   <xsl:template match="div[@id]" mode="toc">
@@ -283,28 +417,19 @@
   <xsl:template match="div[@id]/(h1 | h2 | h3 | h4 | h5 | h6 | h7)" mode="toc">
     <a href="#{../@id}"><xsl:value-of select="."/></a>
   </xsl:template>
-   
-  <xsl:template match="app:browse" mode="app">
-    <xsl:sequence select="dhil:report-table(dhil:map-entries($reports), ())"/>
-  </xsl:template> 
   
-  <xsl:template match="app:*[matches(local-name(),'details-')]" mode="app">
-    <xsl:param name="data" tunnel="yes" as="map(*)?"/>
-    <xsl:variable name="field" select="substring-after(local-name(), 'details-')"/>
-    <xsl:sequence select="dhil:report-table($data?reports, $field)"/>
-  </xsl:template>
   
   <xsl:variable name="reportFields" select="('date', 'newspaper', 'region', 'city', 'language')"/>
   
   <xsl:function name="dhil:report-table">
     <xsl:param name="reports" as="map(*)*"/>
     <xsl:param name="field" as="xs:string?"/>
-    <table class="table table-striped table-hover table-condensed" id="tbl-browser">
+    <table class="table table-striped table-hover table-condensed table-{$field}" id="tbl-browser">
       <thead>
         <tr>
           <th>Headline</th>
           <xsl:for-each select="$reportFields">
-            <th>
+            <th class="cell-{.}">
               <xsl:sequence select="dhil:capitalize(.)"/>
             </th>
           </xsl:for-each>
@@ -332,7 +457,7 @@
       </td>
       <xsl:for-each select="$reportFields">
         <xsl:variable name="currField" select="."/>
-        <td data-name="{dhil:capitalize($currField)}">
+        <td class="cell-{$currField}" data-name="{dhil:capitalize($currField)}">
           <xsl:variable name="val" select="$report($currField)"/>
           <xsl:choose>
             <xsl:when test="empty($val)"/>
@@ -347,9 +472,9 @@
           </xsl:choose>
         </td>
       </xsl:for-each>
-      <td><xsl:value-of select="count($report('doc-similarity'))"/></td>
-      <td><xsl:value-of select="count($report('paragraph-similarity'))"/></td>
-      <td><xsl:value-of select="$report('word-count')"/></td>
+      <td class="count"><xsl:value-of select="count($report('doc-similarity'))"/></td>
+      <td class="count"><xsl:value-of select="count($report('paragraph-similarity'))"/></td>
+      <td class="count"><xsl:value-of select="$report('word-count')"/></td>
     </tr>
   </xsl:function>
  
@@ -361,7 +486,7 @@
   <xsl:template match="div[@class='app:search']" mode="app"/>
   
   <xsl:template match="app:*" priority="-1" mode="app">
-    <xsl:message>WARNING: <xsl:value-of select="name()"/> unmatched</xsl:message>
+    <xsl:sequence select="log:warn(name() || ' unmatched')"/>
     <xsl:next-match/>
   </xsl:template>
   
@@ -445,7 +570,7 @@
           <xsl:sequence select="$compReport('title')"/>
         </a> (<xsl:value-of select="format-number(@data-similarity, '###.#%')"/>) <br/>
         <!--Now compare paragraph-->
-        <a href="compare.html?a={$currDocId}&amp;b{$docId}">Compare Paragraphs </a>
+        <a href="compare.html?a={$currDocId}&amp;b{$docId}">Compare Paragraphs</a>
         <xsl:text> | </xsl:text>
         <!--Compare documents-->
         <a href="compare-docs.html?a={$currDocId}&amp;b{$docId}">Compare Documents</a>
