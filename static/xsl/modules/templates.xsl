@@ -56,7 +56,7 @@
   
   <xsl:template match="*[@data-template = 'templates:surround']" priority="2" mode="templates">
     <xsl:variable name="template" select="@data-template-with" as="xs:string"/>
-    <xsl:variable name="uri" select="resolve-uri($template,document-uri(root(.)))"/>
+    <xsl:variable name="uri" select="resolve-uri($template,base-uri(root(.)))"/>
     <xsl:variable name="doc" select="document($uri)" as="document-node()"/>
     <xsl:variable name="at" select="@data-template-at" as="xs:string"/>
     <xsl:apply-templates select="$doc/*" mode="surround">

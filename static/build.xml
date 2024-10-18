@@ -75,7 +75,6 @@
         docsToBuild=${docsToBuild}
         log=${log}
         "/>
-      
     </exec>
   </target>
   
