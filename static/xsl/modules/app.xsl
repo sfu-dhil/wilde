@@ -57,7 +57,7 @@
   
   <xsl:template match="html[@id]" mode="app">
     <xsl:result-document href="{$dist.dir}/{@id}.html" method="xhtml" version="5.0">
-       <xsl:sequence select="log:debug('Building ' || current-output-uri())"/>
+       <xsl:sequence select="$log.debug('Building ' || current-output-uri())"/>
        <xsl:copy>
          <xsl:apply-templates select="@*|node()" mode="#current"/>
        </xsl:copy>
@@ -227,35 +227,67 @@
   <xsl:template match="app:breadcrumb" mode="app">
     <xsl:param name="data" tunnel="yes"/>
     <xsl:param name="template" tunnel="yes" as="map(*)"/>
+    <xsl:variable name="basename" select="$template?basename" as="xs:string"/>
     <xsl:variable name="report" select="$getReport(.)"/>
-    <nav aria-label="breadcrumb" class="col-md-12">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="index.html">Home</a>
-        </li>
-        <xsl:choose>
-          <!--We're in a report-->
-          <xsl:when test="$template?basename = 'view'">
+    <xsl:choose>
+      <!--Don't make index -->
+      <xsl:when test="$basename = 'index'"/>
+      <xsl:otherwise>
+        <nav aria-label="breadcrumb" class="col-md-12">
+          <ol class="breadcrumb">
             <li class="breadcrumb-item">
-              <a href="newspaper.html">Browse by Newspaper</a>
+              <a href="index.html">Home</a>
             </li>
-            <li class="breadcrumb-item">
-              <a href="{dhil:getIdForField('newspaper', $report('newspaper'))}.html"><xsl:value-of select="$report('newspaper')"/></a>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              <xsl:choose>
-                <xsl:when test="$report('date') castable as xs:date">
-                  <xsl:sequence select="$report('date') => xs:date() => format-date('[MNn] [D1], [Y0001]')"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:value-of select="$report('date')"/>
-                </xsl:otherwise>
-              </xsl:choose>
-            </li>
-          </xsl:when>
-        </xsl:choose>
-      </ol>
-    </nav>
+            <xsl:choose>
+              <!--We're in a report-->
+              <xsl:when test="$basename = 'view'">
+                <li class="breadcrumb-item">
+                  <a href="newspaper.html">Browse by Newspaper</a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="{dhil:getIdForField('newspaper', $report('newspaper'))}.html"><xsl:value-of select="$report('newspaper')"/></a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                  <xsl:choose>
+                    <xsl:when test="$report('date') castable as xs:date">
+                      <xsl:sequence select="$report('date') => xs:date() => format-date('[MNn] [D1], [Y0001]')"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="$report('date')"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </li>
+              </xsl:when>
+              <xsl:when test="ends-with($basename, '-details')">
+                <xsl:variable name="type" select="substring-before($basename,'-details')"/>
+                <li class="breadcrumb-item">
+                  <a href="{$type}.html">Browse by <xsl:value-of select="dhil:capitalize($type)"/></a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                  <xsl:value-of select="$data($type)"/>
+                </li>
+              </xsl:when>
+              <xsl:when test="some $template in $templates satisfies $template?basename = ($basename || '-details')">
+                <li class="breadcrumb-item active" aria-current="page">
+                  Browse by <xsl:value-of select="dhil:capitalize($basename)"/>
+                </li>
+              </xsl:when>
+              <xsl:otherwise>
+                <!--<xsl:sequence select="$log.warn('Unknown breadcrumb path for ' || $template?basename)"/>-->
+                <li class="breadcrumb-item active" aria-current="page">
+                  <xsl:value-of select="$template?template//*:h1[1]"/>
+                </li>
+              </xsl:otherwise>
+            </xsl:choose>
+          </ol>
+        </nav>
+        
+      </xsl:otherwise>
+      
+    </xsl:choose>
+
+    
+        
   </xsl:template>
 
   
@@ -265,6 +297,8 @@
     <xsl:sequence select="dhil:report-table(dhil:map-entries($reports), ())"/>
   </xsl:template> 
   
+  <!--Most of the browse lists require a special JS-->
+  <!--TODO: Move this into the actual JavaScript to bundle-->
   <xsl:template match="app:*[matches(local-name(), '^browse-')]" priority="2" mode="app">
     <xsl:next-match/>
     <script src="resources/js/browse.js"></script>
@@ -486,7 +520,7 @@
   <xsl:template match="div[@class='app:search']" mode="app"/>
   
   <xsl:template match="app:*" priority="-1" mode="app">
-    <xsl:sequence select="log:warn(name() || ' unmatched')"/>
+    <xsl:sequence select="$log.debug(name() || ' unmatched')"/>
     <xsl:next-match/>
   </xsl:template>
   

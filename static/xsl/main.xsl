@@ -39,14 +39,17 @@
   <xsl:param name="reports.dir"/>
   <xsl:param name="templates.dir"/>
   <xsl:param name="dist.dir"/>
-  <xsl:param name="logLevel" as="xs:string" select="'debug'"/>
-  <xsl:param name="docsToBuild" as="xs:string?"/>
+  <xsl:param name="log" as="xs:string" select="'info'"/>
+  <xsl:param name="docsToBuild" as="xs:string" select="''" static="yes"/>
+  
+  <xsl:variable name="isSubset" 
+    select="string-length(normalize-space($docsToBuild)) gt 0" 
+    static="yes"/>
  
-  
-  
-  
   <!--Includes-->
+
   <xsl:include href="modules/app.xsl"/>
+  <xsl:include href="modules/log.xsl"/>
   <xsl:include href="modules/report.xsl"/>
   <xsl:include href="modules/templates.xsl"/>
   <xsl:include href="modules/serialize.xsl"/>
@@ -62,8 +65,8 @@
   
   
   <xsl:variable name="templates" as="map(xs:string, item()*)+">
-<!--    <xsl:sequence 
-      select="log:info('Processing ' || count($templates.collection) || ' templates in ' || $templates.dir)"/>-->
+    <xsl:sequence 
+      select="$log.info('Processing ' || count($templates.collection) || ' templates in ' || $templates.dir)"/>
     <xsl:for-each select="$templates.collection">
         <xsl:variable name="curr" select="." as="map(*)"/>
         <xsl:map>
@@ -79,8 +82,8 @@
   </xsl:variable>
   
   <xsl:variable name="reports" as="map(*)">
-   <!--<xsl:sequence
-     select="log:info('Creating map of ' || count($reports.collection) || ' reports in ' || $reports.dir)"/>-->
+   <xsl:sequence 
+     select="$log.info('Creating map of ' || count($reports.collection) || ' reports in ' || $reports.dir)"/>
    <xsl:map>
      <xsl:for-each select="$reports.collection">
        <xsl:variable name="curr" select="." as="map(*)"/>
@@ -210,11 +213,15 @@
     select="($templates[matches(.?basename,'-details')] ! substring-before(.?basename, '-details'), 'publisher')"/>
   
   <xsl:template name="go">
+    <xsl:sequence select="$log.info('Building subset of documents: ' || $docsToBuild)" use-when="$isSubset"/>
+    <xsl:if test="map:size($reports) = 0">
+      <xsl:message terminate="yes">No reports found</xsl:message>
+    </xsl:if>
     <xsl:call-template name="controller"/>
 <!--    <xsl:call-template name="exports"/>-->
     <xsl:result-document href="tmp/reports.json" method="json">
       <xsl:choose>
-        <xsl:when test="exists($docsToBuild)">
+        <xsl:when test="$isSubset">
           <xsl:variable name="keys" select="map:keys($reports)[matches(.,$docsToBuild)]"/>
           <xsl:variable name="submap" select="map:merge($keys ! map:get($reports, .))"/>
           <xsl:sequence select="dhil:mapToJson($submap)"/>
@@ -227,24 +234,34 @@
     </xsl:result-document>
   </xsl:template>
   
+  <xsl:template name="export">
+    <xsl:for-each select="map:keys($reports)">
+      <xsl:result-document href="{$dist.dir}/_data/{.}.json" method="json">
+        <xsl:sequence select="dhil:mapToJson($reports(.))"/>
+      </xsl:result-document>
+    </xsl:for-each>
+  </xsl:template>
+  
   <xsl:template name="controller">
     <xsl:for-each select="$templates">
       <xsl:variable name="template" select="." as="map(*)"/>
       <xsl:variable name="basename" select=".?basename" as="xs:string"/>
       <xsl:variable name="templateDoc" select="(.?template)/html" as="element(html)"/>
-        <xsl:choose>
-          <xsl:when test="$basename = 'view'">
-            <xsl:call-template name="view"/>
-          </xsl:when>
-          <xsl:when test="matches($basename, '-details')">
-            <xsl:call-template name="details"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="dhil:addIdToTemplate($templateDoc, $basename)" mode="app">
-              <xsl:with-param name="template" select="$template" tunnel="yes"/>
-            </xsl:apply-templates>
-          </xsl:otherwise>
-        </xsl:choose> 
+      <xsl:choose>
+        <xsl:when test="not(dhil:isDocToBuild($basename))" use-when="$isSubset"/>
+        
+        <xsl:when test="$basename = 'view'">
+          <xsl:call-template name="view"/>
+        </xsl:when>
+        <xsl:when test="matches($basename, '-details')">
+          <xsl:call-template name="details"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="dhil:addIdToTemplate($templateDoc, $basename)" mode="app">
+            <xsl:with-param name="template" select="$template" tunnel="yes"/>
+          </xsl:apply-templates>
+        </xsl:otherwise>
+      </xsl:choose> 
     </xsl:for-each>
   </xsl:template>
   
@@ -309,7 +326,6 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    
     <xsl:sequence select="$prefix || '-' || $val"/>
   </xsl:function>
   
@@ -318,6 +334,28 @@
     <xsl:for-each select="map:keys($map)">
       <xsl:sequence select="$map(.)"/> 
     </xsl:for-each>
+  </xsl:function>
+  
+  <xsl:function name="dhil:empty" as="xs:boolean">
+    <xsl:param name="item" as="item()*"/>
+    <xsl:choose>
+      <xsl:when test="empty($item)">
+        <xsl:sequence select="true()"/>
+      </xsl:when>
+      <xsl:when test="count($item) = 1 and $item instance of xs:string">
+        <xsl:choose>
+          <xsl:when test="string-length(normalize-space(string-join($item))) = 0">
+            <xsl:sequence select="true()"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:sequence select="false()"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:sequence select="false()"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:function>
 
   <xsl:function name="dhil:uri" as="map(xs:string, xs:string*)+">
@@ -337,61 +375,10 @@
     </xsl:map>
   </xsl:function>
   
-  
-  <!--TODO: Convert these to template calls, since that allows
-    for empty sequences AND better tracing for errors etc-->
-  <xd:doc>
-    <xd:desc>
-      <xd:ref name="dhil:msg" type="function"/>
-      <xd:p>Wrapper function for xsl:message to control
-        logging level</xd:p>
-    </xd:desc>
-    <xd:param name="msg">The message to be output to the console.</xd:param>
-    <!--NOTE: Need to investigate why the AVT version of use-when doesn't
-            work for xsl:message anymore (I swear it used to, pre Saxon11)-->
-  </xd:doc>
-  <xsl:function name="log:debug">
-    <xsl:param name="msg"/>
-    <xsl:sequence select="log:_log($msg, 'debug')"/>    
+  <xsl:function name="dhil:isDocToBuild" as="xs:boolean">
+    <xsl:param name="id" as="xs:string"/>
+    <xsl:sequence select="$id = tokenize($docsToBuild,'\s*,\s*')"/>
   </xsl:function>
-  
-  <xsl:function name="log:trace">
-    <xsl:param name="msg"/>
-    <xsl:sequence select="log:_log($msg, 'trace')"/>    
-  </xsl:function>
-  
-  <xsl:function name="log:info">
-    <xsl:param name="msg"/>
-    <xsl:sequence select="log:_log($msg, 'info')"/>    
-  </xsl:function>
-  
-  <xsl:function name="log:warn">
-    <xsl:param name="msg"/>
-    <xsl:sequence select="log:_log($msg, 'warn')"/>    
-  </xsl:function>
-  
-  <xsl:function name="log:error">
-    <xsl:param name="msg"/>
-    <xsl:sequence select="log:_log($msg, 'error')"/>    
-  </xsl:function>
-  
-  <xsl:function name="log:fatal">
-    <xsl:param name="msg"/>
-    <xsl:sequence select="log:_log($msg, 'fatal')"/>    
-  </xsl:function>
-  
-  <xsl:function name="log:_log">
-    <xsl:param name="msg"/>
-    <xsl:param name="level"/>
-    <xsl:sequence select="'[' || upper-case($level) || '] ' || string-join($msg) => normalize-space()"/>
-  </xsl:function>
-  
-<!--  <xsl:function name="dhil:debug" as="empty-sequence()">
-    <xsl:param name="msg" as="item()*"/>
-    <xsl:if test="$debug = 'true'">
-      <xsl:message select="string-join($msg)"/>
-    </xsl:if>
-  </xsl:function>-->
   
   
 </xsl:stylesheet>

@@ -3,13 +3,14 @@
   
   <property name="pd" location="${basedir}/.."/>
   
-  <property name="reports.dir" location="${pd}/../wilde-reports"/>  
+  <property name="reports.dir" location="${pd}/wilde-data/data/reports"/>  
   <property name="dist.dir" value="${basedir}/public"/>
   <property name="xsl.dir" value="${basedir}/xsl"/>
   <property name="templates.dir" value="${basedir}/pages"/>
   
   <!--Property for building a subset of docs-->
   <property name="docsToBuild" value=""/>
+  <property name="log" value="INFO"/>
   
   <target name="clean">
     <delete dir="${dist.dir}"/>
@@ -49,6 +50,21 @@
     </copy>
   </target>
   
+  <target name="compare">
+    <exec executable="saxon">
+      <arg line="-xsl:${xsl.dir}/compare.xsl
+        -it:go
+        templates.dir=${templates.dir}
+        reports.dir=${reports.dir}
+        dist.dir=${dist.dir}
+        docsToBuild=${docsToBuild}
+        log=${log}
+        "/>
+      
+    </exec>
+  </target>
+  
+  
   <target name="html">
     <exec executable="saxon">
       <arg line="-xsl:${xsl.dir}/main.xsl
@@ -57,11 +73,27 @@
         reports.dir=${reports.dir}
         dist.dir=${dist.dir}
         docsToBuild=${docsToBuild}
+        log=${log}
         "/>
       
     </exec>
   </target>
   
+  <target name="export">
+    <exec executable="saxon">
+      <arg line="-xsl:${xsl.dir}/main.xsl
+        -it:export
+        templates.dir=${templates.dir}
+        reports.dir=${reports.dir}
+        dist.dir=${dist.dir}
+        docsToBuild=${docsToBuild}
+        log=${log}
+        "/>
+      
+    </exec>
+  </target>
+  
+  <!--To find unmatched templates: ant html -Dlog=DEBUG | grep unmatched | sort -u -->
   
   <target name="all" depends="clean, copy, html"/>
   
