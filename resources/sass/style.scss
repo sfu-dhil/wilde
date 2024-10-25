@@ -915,10 +915,10 @@ th.count{
 
 
 .gallery{
-    display:flex;
-    flex-wrap:wrap;
+    display:grid;
     justify-content:space-evenly;
     align-content:center;
+    grid-template-columns: repeat(1, 1fr);
     .img-tile{
         flex: 1 0 100%;
         margin-bottom:.5rem;
@@ -932,16 +932,16 @@ th.count{
                 flex: 1 1 60%;
             }
         }
-        @include tablet{
-            flex: 1 0 30%;
-            margin:0.5rem;
-            .thumbnail{
-                flex-direction:column;
-            }
-
-        }
     }
-
+    @include tablet{
+     grid-template-columns: repeat(3, 1fr);
+     .img-tile{
+        margin:0.5rem; 
+      }
+      .thumbnail{
+        flex-direction:column;
+       }
+   }
 }
 
 .img-container {

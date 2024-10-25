@@ -947,10 +947,10 @@ th.count {
 /* Image gallery styles. */
 /* Image gallery styles. */
 .gallery {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   justify-content: space-evenly;
   align-content: center;
+  grid-template-columns: repeat(1, 1fr);
 }
 .gallery .img-tile {
   flex: 1 0 100%;
@@ -967,11 +967,13 @@ th.count {
   flex: 1 1 60%;
 }
 @media (min-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(3, 1fr);
+  }
   .gallery .img-tile {
-    flex: 1 0 30%;
     margin: 0.5rem;
   }
-  .gallery .img-tile .thumbnail {
+  .gallery .thumbnail {
     flex-direction: column;
   }
 }
