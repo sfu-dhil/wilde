@@ -519,6 +519,42 @@
   <!--Remove search: We'll do this with staticSearch-->
   <xsl:template match="div[@class='app:search']" mode="app"/>
   
+  
+  <!--Handling for the gallery -->
+  <xsl:template match="app:gallery" mode="app">
+    <div class="gallery">
+      <xsl:for-each select="$image.index//div[@data-filename]">
+        <xsl:variable name="filename" select="normalize-space(@data-filename)"
+          as="xs:string"/>
+        <xsl:variable name="title" select="normalize-space(@data-title)"
+          as="xs:string"/>
+        <xsl:variable name="date" select="normalize-space(@data-date)"
+          as="xs:string"/>
+        <xsl:variable name="desc"
+          as="xs:string"
+          select="string-join(descendant::text()) => normalize-space()"/>
+        <div class="img-tile">
+          <div class="thumbnail">
+            <div class="img-container">
+              <a href="#imgModal" data-toggle="modal"
+                data-target="#imgModal"
+                data-title="{$title}" data-date="{$date}"
+                data-img="images/{@data-filename}"
+                class="img-thumbnail">
+                <img alt="{$desc}" src="thumbs/{$filename}" class="img-thumbnail"/>
+              </a>
+          </div>
+            <div class="caption">
+              <div class="title"><i><xsl:value-of select="$title"/></i><br/><xsl:value-of select="$date"/></div>
+              <xsl:apply-templates select="node()" mode="#current"/>
+            </div>
+          </div>
+        </div>
+      </xsl:for-each>
+    </div>
+  </xsl:template>
+
+  
   <xsl:template match="app:*" priority="-1" mode="app">
     <xsl:sequence select="$log.debug(name() || ' unmatched')"/>
     <xsl:next-match/>

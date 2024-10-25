@@ -63,6 +63,10 @@
     select="collection($reports.dir || '?select=*.xml;recurse=yes;metadata=yes')"
     as="map(*)+"/>
   
+  <xsl:variable name="image.index"
+    select="document($dist.dir || '/images/images.xml')"
+    as="document-node()"/>
+  
   
   <xsl:variable name="templates" as="map(xs:string, item()*)+">
     <xsl:sequence 

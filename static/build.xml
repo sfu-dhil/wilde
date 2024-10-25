@@ -3,10 +3,15 @@
   
   <property name="pd" location="${basedir}/.."/>
   
-  <property name="reports.dir" location="${pd}/wilde-data/data/reports"/>  
+  <property name="wilde.dir" location="${pd}"/>
+  <property name="data.dir" location="${pd}/wilde-data/data"/>
+  <property name="reports.dir" location="${data.dir}/reports"/>
+  <property name="schema.dir" location="${pd}/wilde-schema/schema"/>
   <property name="dist.dir" value="${basedir}/public"/>
   <property name="xsl.dir" value="${basedir}/xsl"/>
-  <property name="templates.dir" value="${basedir}/pages"/>
+  <property name="templates.dir" value="${basedir}/templates"/>
+  
+  <property name="thumbs.dir" value="${dist.dir}/thumbs"/>
   
   <!--Property for building a subset of docs-->
   <property name="docsToBuild" value=""/>
@@ -17,12 +22,23 @@
     <mkdir dir="${dist.dir}"/>
   </target>
   
-  <target name="copy" depends="copy.templates, copy.resources"/>
+  <target name="validate">
+    <apply executable="jing" parallel="true">
+      <arg line="${schema.dir}/reports.rng"/>
+      <srcfile/>
+      <fileset dir="${reports.dir}">
+        <include name="**/*.xml"/>
+      </fileset>
+      
+    </apply>
+  </target>
+  
+  <target name="copy" depends="copy.templates, copy.resources, copy.tables"/>
   <!--Copy all of the templates we want to use, but remap the nocache ones to take over the non-nocache ones-->
   <target name="copy.templates">
     <delete dir="${templates.dir}"/>
     <copy todir="${templates.dir}" overwrite="true">
-      <fileset dir="${pd}">
+      <fileset dir="${wilde.dir}">
         <include name="*.html"/>
         <exclude name="error-page.html"/>
         <exclude name="graph.html"/>
@@ -31,8 +47,9 @@
         <include name="templates/*.html"/>
       </fileset>
     </copy>
+    
     <copy todir="${templates.dir}" overwrite="true">
-      <fileset dir="${pd}">
+      <fileset dir="${wilde.dir}">
         <include name="*-nocache.html"/>
       </fileset>
       <globmapper from="*-nocache.html" to="*.html"/>
@@ -40,30 +57,59 @@
   </target>
   
   <target name="copy.resources">
+    <echo message="Copying and compiling SASS/CSS/JS resources"/>
     <exec executable="sass">
-      <arg line="${pd}/resources/sass:${pd}/resources/css"/>
+      <arg line="${wilde.dir}/resources/sass:${wilde.dir}/resources/css"/>
     </exec>
     <copy todir="${dist.dir}">
-      <fileset dir="${pd}">
+      <fileset dir="${wilde.dir}">
         <include name="resources/**"/>
       </fileset>
     </copy>
   </target>
   
-  <target name="compare">
-    <exec executable="saxon">
-      <arg line="-xsl:${xsl.dir}/compare.xsl
-        -it:go
-        templates.dir=${templates.dir}
-        reports.dir=${reports.dir}
-        dist.dir=${dist.dir}
-        docsToBuild=${docsToBuild}
-        log=${log}
-        "/>
-      
-    </exec>
+  <target name="copy.tables">
+    <echo message="Copying generated tables..."/>
+    <copy todir="${dist.dir}">
+      <fileset dir="${data.dir}">
+        <include name="tables/**"/>
+      </fileset>
+    </copy>
   </target>
   
+  <target name="images" depends="images.copy, images.thumbnail"/>
+  
+  <target name="images.copy">
+    <echo message="Copying images (and associated metadata)..."/>
+    <copy todir="${dist.dir}/images">
+       <fileset dir="${data.dir}/images">
+         <include name="**"/>
+       </fileset>
+        <fileset dir="${data.dir}">
+          <include name="images.xml"/>
+        </fileset>
+    </copy>
+  </target>
+  
+  <target name="images.thumbnail">
+      <delete dir="${dist.dir}/thumbs"/>
+      <mkdir dir="${dist.dir}/thumbs"/>
+      <apply executable="convert">
+        <arg line="-strip -quality 95 -resize '160x160>'"/>
+        <srcfile/>
+        <targetfile/>
+        <fileset dir="${dist.dir}/images">
+          <include name="*.*"/>
+          <exclude name="*.xml"/>
+        </fileset>
+        <chainedmapper>
+          <mapper type="glob" from="*" to="${thumbs.dir}/*"/>
+        </chainedmapper>
+      </apply>
+  </target>
+  
+  
+
   
   <target name="html">
     <exec executable="saxon">
@@ -78,6 +124,29 @@
     </exec>
   </target>
   
+  <!--To find unmatched templates: ant html -Dlog=DEBUG | grep unmatched | sort -u -->
+  
+  <target name="all" depends="clean, copy, images, html"/>
+  
+  
+  
+  <!--Targets in development, but not actively useful or 
+ actually working -->
+  <!--  
+  <target name="compare">
+    <exec executable="saxon">
+      <arg line="-xsl:${xsl.dir}/compare.xsl
+        -it:go
+        templates.dir=${templates.dir}
+        reports.dir=${reports.dir}
+        dist.dir=${dist.dir}
+        docsToBuild=${docsToBuild}
+        log=${log}
+        "/>
+    </exec>
+  </target>
+  
+  
   <target name="export">
     <exec executable="saxon">
       <arg line="-xsl:${xsl.dir}/main.xsl
@@ -88,14 +157,7 @@
         docsToBuild=${docsToBuild}
         log=${log}
         "/>
-      
     </exec>
-  </target>
-  
-  <!--To find unmatched templates: ant html -Dlog=DEBUG | grep unmatched | sort -u -->
-  
-  <target name="all" depends="clean, copy, html"/>
-  
-  
+  </target>-->
   
 </project>
