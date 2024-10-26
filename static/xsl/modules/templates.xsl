@@ -29,7 +29,8 @@
     <xd:desc>
       <xd:p><xd:b>Created on:</xd:b> Jun 8, 2023</xd:p>
       <xd:p><xd:b>Author:</xd:b> takeda</xd:p>
-      <xd:p>Module for taking the eXist templating system and resolving into a set of XSLT transformations; note that this only handles the simplest of templates (i.e. data-template</xd:p>
+      <xd:p>Module for taking the eXist templating system and resolving into a set of XSLT transformations;
+        note that this only handles the simplest of templates (i.e. data-template)</xd:p>
     </xd:desc>
   </xd:doc>
   

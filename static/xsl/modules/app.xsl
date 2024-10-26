@@ -35,6 +35,8 @@
   <xsl:mode name="app" on-no-match="shallow-copy" use-accumulators="currentReport"/>
   <xsl:mode name="translation" on-no-match="shallow-copy"/>
   
+  
+  
   <xsl:accumulator name="currentReport" initial-value="()">
     <xsl:accumulator-rule match="html[@id]">
       <xsl:sequence select="map:get($reports, @id)"/>
@@ -45,6 +47,15 @@
     select="function($node) {
          let $report := $node/accumulator-before('currentReport')
          return $construct($report)
+    }"/>
+  
+  <xsl:variable name="searchFieldsMap" select="map{
+    'dc.region': 'desc',
+    'dc.region.city': 'desc',
+    'dc.language': 'desc',
+    'dc.publisher': 'desc',
+    'wr.word-count': 'num',
+    'dc.date': 'date'
     }"/>
   
   
@@ -64,15 +75,68 @@
     </xsl:result-document>
   </xsl:template>
   
+  <xsl:template match="html/head/title" mode="app">
+    <xsl:variable name="title" as="element(h1)?">
+      <xsl:apply-templates select="(root(.)//h1)[1]" mode="#current"/>
+    </xsl:variable>
+    <xsl:copy>
+      <xsl:choose>
+        <xsl:when test="exists($title)">
+          <xsl:sequence select="string-join($title/descendant::text(),'') => normalize-space()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates mode="#current"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:copy>
+  </xsl:template>
+  
+  
+  <!--Remove config:app-meta-->
+  <xsl:template match="config:app-meta" mode="app">
+    <xsl:variable name="report" select="accumulator-before('currentReport')" as="map(*)?"/>
+    <xsl:choose>
+      <xsl:when test="exists($report)">
+          <xsl:apply-templates select="$report?meta" mode="meta"/>
+      </xsl:when>
+      <xsl:otherwise/>
+    </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template match="meta[@name]" mode="meta">
+    <xsl:variable name="searchClass" select="map:get($searchFieldsMap, string(@name))" as="xs:string?"/>
+    <xsl:choose>
+      <xsl:when test="@name = 'wr.sortable'">
+        <meta name="docSortKey" class="staticSearch_docSortKey" content="{@content}"/>
+      </xsl:when>
+      <xsl:when test="exists($searchClass)">
+        <meta>
+          <xsl:sequence select="@*"/>
+          <xsl:attribute name="class" 
+            select="'staticSearch_' || $searchClass"/>
+        </meta>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:sequence select="."/>
+      </xsl:otherwise>     
+    </xsl:choose>
+  </xsl:template>
+  
   <!--Templates matching in the app: namespace-->
   <xsl:template match="app:doc-source" priority="3" mode="app">
     <xsl:variable name="report" select="$getReport(.)" as="function(*)"/>
-    <xsl:where-populated>
-      <dd><xsl:value-of select="$report('institution')"/></dd>
-    </xsl:where-populated>
-    <xsl:where-populated>
-      <dd><xsl:value-of select="$report('database')"/></dd>
-    </xsl:where-populated>
+    <xsl:variable name="institution" select="$report('institution')"/>
+    <xsl:variable name="database" select="$report('database')"/>
+    <xsl:if test="$institution">
+      <dd>
+        <a href="source-{$sourceToSourceId($institution)}.html"><xsl:value-of select="$institution"/></a>
+      </dd>
+    </xsl:if>
+    <xsl:if test="$database">
+      <dd>
+        <a href="source-{$sourceToSourceId($database)}.html"><xsl:value-of select="$database"/></a>
+      </dd>
+    </xsl:if>
     <xsl:for-each select="$report('this')?dc.source.url">
       <dd>
         <xsl:sequence select="dhil:ext-link(.)"/>
@@ -313,6 +377,29 @@
     </div>
   </xsl:template>
   
+  <xsl:template match="app:browse-city" mode="app">
+    <xsl:variable name="items" select="dhil:groupReportsBy('city')"/>
+    <div>
+      <xsl:call-template name="browseToggle">
+        <xsl:with-param name="default">City</xsl:with-param>
+      </xsl:call-template>
+      <xsl:for-each-group select="$items" group-by="substring(map:get(.,'sortKey'), 1, 1)">
+        <xsl:sort select="current-grouping-key()"/>
+        <xsl:variable name="subset" select="current-group()"/>
+        <div class="browse-div alpha-browse-div">
+          <h3><xsl:value-of select="upper-case(current-grouping-key())"/></h3>
+          <xsl:call-template name="browseList">
+            <xsl:with-param name="items" select="$subset"/>
+            <xsl:with-param name="page" select="'city'"/>
+            <xsl:with-param name="atts" select="map{'letter': current-grouping-key()}"/>
+          </xsl:call-template>
+        </div>
+        
+        
+      </xsl:for-each-group>
+    </div>
+  </xsl:template>
+  
   <xsl:template match="app:browse-language" mode="app">
     <div>
       <xsl:call-template name="browseToggle"/>
@@ -340,6 +427,24 @@
           </xsl:call-template>
         </div>        
       </xsl:for-each-group>  
+    </div>
+  </xsl:template>
+ 
+  
+  <xsl:template match="app:browse-source" mode="app">
+    <div>
+       <div>
+         <h2>Databases</h2>
+         <xsl:call-template name="browseList">
+           <xsl:with-param name="items" select="dhil:groupReportsBy('database')"/>
+         </xsl:call-template>
+       </div>
+      <div>
+        <h2>Institutions</h2>
+        <xsl:call-template name="browseList">
+          <xsl:with-param name="items" select="dhil:groupReportsBy('institution')"/>
+        </xsl:call-template>
+      </div>      
     </div>
   </xsl:template>
   
@@ -517,7 +622,9 @@
   </xsl:template>
   
   <!--Remove search: We'll do this with staticSearch-->
-  <xsl:template match="div[@class='app:search']" mode="app"/>
+  <xsl:template match="form[@id='search-form']" mode="app">
+    <div id="staticSearch"/>
+  </xsl:template>
   
   
   <!--Handling for the gallery -->
@@ -559,6 +666,8 @@
     <xsl:sequence select="$log.debug(name() || ' unmatched')"/>
     <xsl:next-match/>
   </xsl:template>
+  
+  <xsl:template match="div[@id][parent::body]/@id" mode="translation"/>
   
   <xsl:template match="p" priority="3" mode="translation">
     <xsl:param name="isMatch" tunnel="yes" select="false()"/>

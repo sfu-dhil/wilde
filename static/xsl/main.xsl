@@ -98,6 +98,7 @@
        <xsl:map-entry key="$reportData?id">
          <xsl:map>
 <!--           <xsl:map-entry key="'doc'" select="$doc"/>-->
+           <xsl:map-entry key="'meta'" select="$doc//meta[@name]"/>
            <xsl:sequence select="dhil:uri($curr?canonical-path)"/>
            <xsl:sequence select="$reportData"/>
          </xsl:map>
@@ -115,7 +116,11 @@
          <xsl:otherwise>
            <xsl:map-entry key="$key">
               <xsl:map>
-                <xsl:for-each-group select="current-group()" group-by="map:get(., $key)">
+                <xsl:for-each-group select="current-group()" group-by="
+                  let $values := map:get(., $key)
+                  return 
+                    if ($values instance of array(*)) then array:flatten($values)
+                  else $values">
                   <xsl:map-entry key="current-grouping-key()" 
                     select="sort(current-group(), (), function($report){
                                     if ($report?dc.date castable as xs:date)
@@ -129,6 +134,14 @@
        </xsl:choose>
      </xsl:for-each-group>
    </xsl:map> 
+  </xsl:variable>
+  
+  <xsl:variable name="sourceToSourceId" as="map(*)">
+    <xsl:map>
+      <xsl:for-each select="map:keys($reportsByMeta?dc.source)">
+        <xsl:map-entry key="." select="normalize-space(.) => replace('\s+','_') => replace('[^A-Za-z\d_-]+','')"/>
+      </xsl:for-each>
+    </xsl:map>
   </xsl:variable>
   
   <xsl:variable name="publisherToPubId" as="map(*)">
@@ -285,7 +298,12 @@
     <xsl:param name="template" select="." as="map(*)"/>
     <xsl:variable name="templateDoc" select="(.?template)/html" as="element(html)"/>
     <xsl:variable name="field" select="substring-before($template?basename, '-details')" as="xs:string"/>
-    <xsl:for-each-group select="dhil:map-entries($reports)" group-by="map:get(., $fieldMap($field))">
+    <xsl:for-each-group select="dhil:map-entries($reports)" group-by="
+      let $values := map:get(., $fieldMap($field))
+      return
+        if ($values instance of array(*)) 
+        then array:flatten($values)
+        else $values">
       <xsl:variable name="param" select="current-grouping-key()"/>
       <xsl:variable name="id" select="dhil:getIdForField($field, $param)"/>
       <xsl:variable name="newTemplate" select="dhil:addIdToTemplate($templateDoc, $id)"/>
@@ -314,7 +332,12 @@
   <xsl:function name="dhil:getIdForField" as="xs:string">
     <xsl:param name="field"/>
     <xsl:param name="param"/>
-    <xsl:variable name="prefix" select="if ($field = 'publisher') then 'newspaper' else $field"/>
+    <xsl:variable name="prefix" as="xs:string"
+      select="if ($field = 'publisher') 
+                then 'newspaper'
+              else if ($field = ('database','institution'))
+                then 'source' 
+              else $field"/>
     <xsl:variable name="val" as="xs:string">
       <xsl:choose>
         <xsl:when test="$field = 'language'">
@@ -324,6 +347,10 @@
         <xsl:when test="$field = ('publisher','newspaper')">
           <xsl:variable name="pubId" select="$publisherToPubId($param)" as="xs:string"/>
           <xsl:sequence select="$pubId"/>
+        </xsl:when>
+        <xsl:when test="$field = ('source','database','institution')">
+            <xsl:variable name="sourceId" select="$sourceToSourceId($param)" as="xs:string"/>
+            <xsl:sequence select="$sourceId"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:sequence select="$param"/>

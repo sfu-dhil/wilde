@@ -169,11 +169,106 @@ label.facet {
   }
 }
 
+
 .panel-facet {
   max-height: 200px;
   overflow-x: auto;
 }
 
+#staticSearch{
+  display:grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-areas: 
+    "form form"
+    "filters results";
+ & > form{
+   grid-area: form;
+ }   
+ & > .ss-filters{
+   grid-area: filters;
+ }
+ & > .ss-content{
+   grid-area: results;
+ }
+}
+
+.ss-filters{
+  display:flex;
+  flex-direction:column;
+}
+
+
+
+.ss-filters > h2{
+  margin-top:0;
+  margin-bottom: 16px;
+}
+
+.ss-filters > .input-group{
+  margin-bottom:20px;
+}
+
+
+.ss-filters > div > details{
+  width:100%;
+}
+
+.ss-filters > div {
+  margin-bottom: 0;
+}
+div > details{
+  margin-bottom: 16px;
+}
+
+
+#ssResults > p{
+  text-align:right;
+}
+
+.ss-filters ul{
+  width:100%;
+}
+
+.ss-filters ul > li{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    gap: 6px;
+    padding: 4px;
+    > *{
+      margin-top:0;
+      margin-bottom:0;
+    }
+}
+
+:is(.ssDateFilters, .ssNumFilters) .ssFieldset{
+  
+  span{
+    padding:0!important;
+    display:flex;
+    flex-direction:column;
+    background:none;
+    border:none;
+    margin:0;
+  }
+  span + span{
+    margin-top:8px;
+  }
+  input{
+    padding:0;
+    border:none;
+    border-bottom:1px solid #efefef;
+  }
+}
+
+legend.panel-heading{
+  font-size: inherit;
+}
+
+div.ss-filters > div > fieldset{
+  padding: 0;
+}
 /* images with captions */
 figure {
   margin: 1em 0;

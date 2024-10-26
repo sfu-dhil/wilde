@@ -1,3 +1,6 @@
 [submodule "wilde-schema"]
 	path = wilde-schema
 	url = https://github.com/sfu-dhil/wilde-schema
+[submodule "static/staticSearch"]
+	path = static/staticSearch
+	url = https://github.com/projectEndings/staticSearch

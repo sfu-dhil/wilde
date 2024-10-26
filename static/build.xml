@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="all" name="Wilde Static">
+<project basedir="." default="all" name="Wilde Static" xmlns:if="ant:if"
+  xmlns:unless="ant:unless">
   
   <property name="pd" location="${basedir}/.."/>
   
@@ -12,6 +13,11 @@
   <property name="templates.dir" value="${basedir}/templates"/>
   
   <property name="thumbs.dir" value="${dist.dir}/thumbs"/>
+  
+  <property name="staticSearch.dir" location="${basedir}/staticSearch"/>
+  <property name="ssConfigFile" location="${basedir}/staticSearch_config.xml"/>
+  <property name="ssVerbose" value="false"/>
+  <property name="ssTarget" value="allButValidate"/>
   
   <!--Property for building a subset of docs-->
   <property name="docsToBuild" value=""/>
@@ -43,6 +49,7 @@
         <exclude name="error-page.html"/>
         <exclude name="graph.html"/>
         <exclude name="gefx.html"/>
+        <exclude name="networks.html"/>
         <exclude name="*-nocache.html"/>
         <include name="templates/*.html"/>
       </fileset>
@@ -108,9 +115,6 @@
       </apply>
   </target>
   
-  
-
-  
   <target name="html">
     <exec executable="saxon">
       <arg line="-xsl:${xsl.dir}/main.xsl
@@ -124,9 +128,37 @@
     </exec>
   </target>
   
+  <target name="search.init">
+    <exec executable="git" append="false" output="${dist.dir}/VERSION">
+      <arg line="rev-parse --short HEAD"/>
+    </exec>
+  </target>
+  
+  <target name="search.build" depends="search.init">
+    <ant antfile="${staticSearch.dir}/build.xml" target="${ssTarget}" inheritall="false">
+      <property name="ssConfigFile" value="${ssConfigFile}"/>
+      <property name="ssVerbose" value="${ssVerbose}"/>
+    </ant>
+  </target>
+  
+ 
+  <target name="search.postprocess">
+    <available property="search_tmp.exists"
+      file="${dist.dir}/search_tmp.html"/>
+    <copy file="${dist.dir}/search.html" tofile="${dist.dir}/search_tmp.html" unless:true="${search_tmp.exists}"/>
+    <exec executable="saxon">
+      <arg line="-xsl:${xsl.dir}/search.xsl
+        -s:${dist.dir}/search_tmp.html
+        -o:${dist.dir}/search.html"/>
+    </exec>
+    
+  </target>
+  
+  <target name="search" depends="search.init, search.build, search.postprocess"/>
+  
   <!--To find unmatched templates: ant html -Dlog=DEBUG | grep unmatched | sort -u -->
   
-  <target name="all" depends="clean, copy, images, html"/>
+  <target name="all" depends="clean, copy, images, html, search"/>
   
   
   

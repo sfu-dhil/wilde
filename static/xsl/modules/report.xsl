@@ -60,7 +60,10 @@
   <xsl:template match="head" mode="report">
     <xsl:apply-templates select="* except (meta, link)" mode="#current"/>
     <xsl:apply-templates select="meta" mode="#current"/>
-    
+    <xsl:where-populated>
+      <xsl:map-entry key="'dc.source'" select="array{distinct-values(meta[matches(@name,'^dc\.source(\.(database|institution))?$')] ! @content)}"/>
+    </xsl:where-populated>
+  
     
 <!--    {
       'publisher':
@@ -96,6 +99,8 @@
     <xsl:map-entry key="'title'" select="string(.)"/>
   </xsl:template>
   
+  <!--We have to skip source given that it's a multi category-->
+  <xsl:template match="meta[@name='dc.source']" mode="report" priority="2"/>
   
   <xsl:template match="meta" mode="report">
     <xsl:map-entry key="string(@name)" select="string(@content)"/>
