@@ -28,6 +28,11 @@ div.compare-header{
         display:none;
     }
 }
+
+div.compare-documents .label{
+  display:none;
+}
+
 div.paragraph-compare {
   padding-top: 2rem;
   padding-bottom: 2rem;
@@ -81,7 +86,7 @@ div.paragraph-compare {
 
 
 /* Mobile friendly document comparison screen */
-.doc-compare{
+.compare-documents{
   display:flex;
   & > div {
     flex: 1 1 33%;

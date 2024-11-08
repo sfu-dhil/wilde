@@ -322,6 +322,11 @@
                   </xsl:choose>
                 </li>
               </xsl:when>
+              <xsl:when test="starts-with($basename, 'compare')">
+                <li class="breadcrumb-item">
+                  <a href="newspaper.html">Browse by Newspaper</a>
+                </li>
+              </xsl:when>
               <xsl:when test="ends-with($basename, '-details')">
                 <xsl:variable name="type" select="substring-before($basename,'-details')"/>
                 <li class="breadcrumb-item">
@@ -366,6 +371,63 @@
   <xsl:template match="app:*[matches(local-name(), '^browse-')]" priority="2" mode="app">
     <xsl:next-match/>
     <script src="resources/js/browse.js"></script>
+  </xsl:template>
+  
+  <xsl:template match="app:browse-date" mode="app">
+    <xsl:variable name="items" select="dhil:groupReportsBy('date')"/>
+    <xsl:call-template name="browseToggle">
+      <xsl:with-param name="default" select="'Date'"/>
+    </xsl:call-template>
+    <xsl:for-each-group select="$items" group-by="tokenize(map:get(.,'sortKey'),'-')[2]">
+      <xsl:sort select="xs:integer(current-grouping-key())"/>
+      <xsl:variable name="thisMonthReports" select="current-group()"/>
+      <xsl:variable name="dateInfo" 
+        select="dhil:getDateInfo('1895-' || current-grouping-key())" 
+        as="map(*)"/>
+      <div class="browse-div">
+        <h2><xsl:sequence select="$dateInfo?monthName"/></h2>
+        <div class="calendar offset-{$dateInfo?offset}">
+          <div class="cal-header">
+            <xsl:for-each select="1 to 7">
+              <!--March 2020 is arbitrary insofar as it starts on a Sunday-->
+              <xsl:variable name="date" 
+                select="xs:date('2020-03-0' || .)" as="xs:date"/>
+              <div class="cal-cell">
+                <span class="month-text">
+                  <xsl:value-of select="format-date($date,'[FNn]')"/>
+                </span>
+              </div>
+            </xsl:for-each>
+          </div>
+          <div class="cal-body">
+            <xsl:for-each select="1 to $dateInfo?lastDay">
+              <xsl:variable name="dayNum" select="." as="xs:integer"/>
+              <xsl:variable name="thisDate" 
+                select="($dateInfo('getDay'))(.)" as="xs:date"/>
+              <xsl:variable name="reports"
+                select="current-group()[.?sortKey = xs:string($thisDate)]"
+                as="map(*)?"/>
+              <xsl:variable name="count" 
+                select="if (exists($reports)) 
+                then $reports?count 
+                else 0"/>
+              <div class="cal-cell count-{$count}" 
+                data-date="{$thisDate}">
+                <a href="date-{$thisDate}.html"
+                  data-count="{$count}">
+                  <span class="day" data-month="{$dateInfo?monthName}">
+                    <xsl:sequence select="$dayNum"/>
+                  </span>
+                  <span class="count">
+                    <xsl:sequence select="$count"/>
+                  </span>
+                </a>
+              </div>
+            </xsl:for-each>
+          </div>
+        </div>
+      </div>
+    </xsl:for-each-group>
   </xsl:template>
   
   <xsl:template match="app:browse-region" mode="app">
@@ -521,6 +583,51 @@
   
   
   
+  <!--Comparison templates-->
+  
+  <xsl:template match="app:compare-paragraphs | app:compare-documents" priority="3"
+    mode="app">
+    <div class="compare-content {local-name()}">
+      <xsl:next-match/>
+    </div>
+  </xsl:template>
+  
+  <xsl:template match="app:compare-paragraphs" mode="app">
+    
+      <div class="row compare-header">
+        <div class="col-sm-4">
+          <b>Original paragraph in <br/>
+            <span class="compare-a"/></b>
+        </div>
+        <div class="col-sm-4">
+          <b>Most similar paragraph from <br/>
+            <span class="compare-b"/></b>
+        </div>
+        <div class="col-sm-4">
+          <b>Highlighted Differences</b>
+        </div>
+      </div>
+      <!--Slot for each paragraph-->
+  </xsl:template>
+  
+  <xsl:template match="app:compare-documents" mode="app">
+      <div class="compare-col" id="col1">
+        <h3><span class="compare-a"/></h3>
+        <div id="doc_a"></div>
+      </div>
+      <div class="compare-col" id="col2">
+        <h3><span class="compare-b"/></h3>
+        <div id="doc_b"></div>
+      </div>
+      <div id="col3">
+        <h3>
+          <span>Highlighted Differences</span>
+        </h3>
+        <div id="diff"></div>
+      </div>
+  </xsl:template>
+  
+
   
   
   <xsl:template match="app:*[matches(local-name(),'details-')]" mode="app">
@@ -749,15 +856,35 @@
           <xsl:sequence select="$compReport('title')"/>
         </a> (<xsl:value-of select="format-number(@data-similarity, '###.#%')"/>) <br/>
         <!--Now compare paragraph-->
-        <a href="compare.html?a={$currDocId}&amp;b{$docId}">Compare Paragraphs</a>
+        <a href="compare.html?a={$currDocId}&amp;b={$docId}">Compare Paragraphs</a>
         <xsl:text> | </xsl:text>
         <!--Compare documents-->
-        <a href="compare-docs.html?a={$currDocId}&amp;b{$docId}">Compare Documents</a>
+        <a href="compare-docs.html?a={$currDocId}&amp;b={$docId}">Compare Documents</a>
       </div>
     </blockquote>
   </xsl:template>
   
-  
+  <!--Function to return a map of relevant info for a given year
+    and month-->
+  <xsl:function name="dhil:getDateInfo" as="map(xs:string, item()*)">
+    <xsl:param name="YYYY-MM" as="xs:string"/>
+    <xsl:variable name="firstDay" as="xs:date" 
+      select="xs:date($YYYY-MM || '-01')"/>    
+    <xsl:map>
+      <xsl:map-entry key="'monthName'" select="format-date($firstDay, '[MNn]')"/>
+      <xsl:map-entry key="'offset'" select="xs:integer(format-date($firstDay, '[F0]')) + 1"/>
+      <xsl:map-entry key="'lastDay'" select="($firstDay +
+        xs:yearMonthDuration('P1M') -
+        xs:dayTimeDuration('P1D'))
+        => day-from-date()
+        => xs:integer()"/>
+      <xsl:map-entry key="'getDay'" select="function($day){
+          let $int := xs:integer($day),
+          $fint := format-integer($int, '00')
+          return xs:date($YYYY-MM || '-' || $fint)
+        }"/>
+    </xsl:map>
+  </xsl:function>
   
   <xsl:function name="dhil:ext-link">
     <xsl:param name="url"/>

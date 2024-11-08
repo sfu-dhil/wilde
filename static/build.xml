@@ -11,6 +11,7 @@
   <property name="dist.dir" value="${basedir}/public"/>
   <property name="xsl.dir" value="${basedir}/xsl"/>
   <property name="templates.dir" value="${basedir}/templates"/>
+  <property name="it" value="go"/>
   
   <property name="thumbs.dir" value="${dist.dir}/thumbs"/>
   
@@ -118,7 +119,7 @@
   <target name="html">
     <exec executable="saxon">
       <arg line="-xsl:${xsl.dir}/main.xsl
-        -it:go
+        -it:${it}
         templates.dir=${templates.dir}
         reports.dir=${reports.dir}
         dist.dir=${dist.dir}

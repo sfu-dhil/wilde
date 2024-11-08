@@ -235,26 +235,51 @@
       <xsl:message terminate="yes">No reports found</xsl:message>
     </xsl:if>
     <xsl:call-template name="controller"/>
-<!--    <xsl:call-template name="exports"/>-->
-    <xsl:result-document href="tmp/reports.json" method="json">
-      <xsl:choose>
-        <xsl:when test="$isSubset">
-          <xsl:variable name="keys" select="map:keys($reports)[matches(.,$docsToBuild)]"/>
-          <xsl:variable name="submap" select="map:merge($keys ! map:get($reports, .))"/>
-          <xsl:sequence select="dhil:mapToJson($submap)"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:sequence
-            select="dhil:mapToJson($reports)"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:result-document>
+    <xsl:call-template name="export"/>
   </xsl:template>
   
   <xsl:template name="export">
+    <xsl:sequence select="$log.info('Exporting reports to JSON...')"/>
     <xsl:for-each select="map:keys($reports)">
+      <xsl:variable name="thisReport" select="$reports(.)" as="map(*)"/>
+      <xsl:variable name="original"
+        select="($thisReport('translations'))('original')" as="map(*)"/>
       <xsl:result-document href="{$dist.dir}/_data/{.}.json" method="json">
-        <xsl:sequence select="dhil:mapToJson($reports(.))"/>
+        <xsl:sequence select="$log.debug('Serializing ' || .)"/>
+        <xsl:map>
+          <xsl:map-entry key="'id'" select="."/>
+          <xsl:map-entry key="'title'" select="$thisReport('title')"/>
+          <xsl:for-each select="map:keys($thisReport)[starts-with(.,'dc.')]">
+            <xsl:map-entry key="." select="$thisReport(.)"/>
+          </xsl:for-each>
+          <xsl:map-entry key="'doc-similarity'">
+            <xsl:map>
+              <xsl:for-each select="$thisReport('doc-similarity')">
+                <xsl:map-entry key=".?href" select="."/>
+              </xsl:for-each>
+            </xsl:map>
+            
+          </xsl:map-entry>
+          <xsl:for-each select="outermost($original('content')//p[@id][not(contains-token(@class,'heading'))])">
+            <xsl:map-entry key="string(@id)"
+              select="string-join(descendant::text()) => normalize-space()"/>
+          </xsl:for-each>
+          <xsl:map-entry key="'paragraph-similarity'">
+            <xsl:map>
+              <xsl:for-each select="map:keys($thisReport('paragraph-similarity'))">
+                <xsl:variable name="similarParas"
+                  select="($thisReport('paragraph-similarity'))(.)"/>
+                <xsl:map-entry key=".">
+                  <xsl:map>
+                    <xsl:for-each select="$similarParas">
+                      <xsl:map-entry key=".?paragraph" select="."/>     
+                    </xsl:for-each>
+                  </xsl:map>
+                </xsl:map-entry>
+              </xsl:for-each>
+            </xsl:map>
+          </xsl:map-entry>
+        </xsl:map>
       </xsl:result-document>
     </xsl:for-each>
   </xsl:template>

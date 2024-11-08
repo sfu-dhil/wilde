@@ -33,32 +33,45 @@
   
   <xsl:mode name="serialize" on-no-match="shallow-copy"/>
   
+  <xsl:variable name="keysToDelete" select="('meta','headlines', 'filename', 'basename','ext','dir')"/>
+  
   <xsl:template match=".[. instance of map(*)]" mode="serialize">
     <xsl:variable name="curr" select="." as="map(*)"/>
     <xsl:map>
       <xsl:for-each select="map:keys($curr)">
+        <xsl:message select="."/>
         <xsl:variable name="value" select="map:get($curr, .)" as="item()*"/>
-        <xsl:map-entry key=".">
-          <xsl:iterate select="$value">
-            <xsl:param name="outputSeq" as="item()*"/>
-            <xsl:on-completion>
-              <xsl:choose>
-                <xsl:when test="count($outputSeq) gt 1">
-                  <xsl:sequence select="[$outputSeq]"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:sequence select="$outputSeq"/>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:on-completion>
-            <xsl:next-iteration>
-              <xsl:with-param name="outputSeq">
-                <xsl:sequence select="$outputSeq"/>
-                <xsl:apply-templates select="." mode="#current"/>
-              </xsl:with-param>
-            </xsl:next-iteration>
-          </xsl:iterate>
-        </xsl:map-entry>
+        <xsl:choose>
+          <xsl:when test=". = 'content'">
+            <xsl:for-each select="outermost($value//p[@id])">
+              <xsl:map-entry key="string(@id)" select="string-join(descendant::text()) => normalize-space()"/>
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:when test=". = $keysToDelete"/>
+          <xsl:otherwise>
+            <xsl:map-entry key=".">
+              <xsl:iterate select="$value">
+                <xsl:param name="outputSeq" as="item()*"/>
+                <xsl:on-completion>
+                  <xsl:choose>
+                    <xsl:when test="count($outputSeq) gt 1">
+                      <xsl:sequence select="[$outputSeq]"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:sequence select="$outputSeq"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:on-completion>
+                <xsl:next-iteration>
+                  <xsl:with-param name="outputSeq">
+                    <xsl:sequence select="$outputSeq"/>
+                    <xsl:apply-templates select="." mode="#current"/>
+                  </xsl:with-param>
+                </xsl:next-iteration>
+              </xsl:iterate>
+            </xsl:map-entry>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:for-each>
     </xsl:map>
   </xsl:template>
@@ -81,5 +94,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:function>
+ 
+ 
   
 </xsl:stylesheet>

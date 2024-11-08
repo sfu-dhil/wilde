@@ -161,7 +161,7 @@
   </xsl:template>
   
   <xsl:template match="@*[matches(local-name(), '^data-')]" mode="report">
-     <xsl:map-entry key="substring-after(local-name(), 'data-')" select="string(.)"/>
+     <xsl:map-entry key="substring-after(local-name(), 'data-')" select="if (. castable as xs:float) then xs:float(.) else string(.)"/>
   </xsl:template>
 
   <xsl:function name="dhil:isSimilarityLink" as="xs:boolean">
