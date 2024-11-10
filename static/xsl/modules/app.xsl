@@ -329,11 +329,13 @@
               </xsl:when>
               <xsl:when test="ends-with($basename, '-details')">
                 <xsl:variable name="type" select="substring-before($basename,'-details')"/>
+                <xsl:variable name="value" select="$data($type)"/>
                 <li class="breadcrumb-item">
                   <a href="{$type}.html">Browse by <xsl:value-of select="dhil:capitalize($type)"/></a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">
-                  <xsl:value-of select="$data($type)"/>
+                  <xsl:value-of select="
+                    if ($type='language') then $code2lang($value) else $value"/>
                 </li>
               </xsl:when>
               <xsl:when test="some $template in $templates satisfies $template?basename = ($basename || '-details')">
