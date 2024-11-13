@@ -19,6 +19,7 @@
   
   <xsl:variable name="filters" select="//div[matches(@class,'ss(Desc|Date|Num|Bool)Filters')]" as="element(div)+"/>
   <xsl:variable name="secondaryButtons" select="//span[matches(@class, '(clearButton|postFilterSearchBtn)')]" as="element(span)+"/>
+  <xsl:variable name="helpRow" select="//div[@id='search_help']" as="element(div)?"/>
   
  <!-- <xsl:template match="div[@id='staticSearch']">
     <xsl:copy>
@@ -37,9 +38,11 @@
       <xsl:apply-templates select="form"/>
       
       <div class="ss-filters">
-        <h2>Filters</h2>
+        <h3>Filters</h3>
         <div class="input-group">
-          <xsl:apply-templates select="$secondaryButtons"/>
+          <xsl:apply-templates select="$secondaryButtons">
+            <xsl:sort select="@class" order="descending"/>
+          </xsl:apply-templates>
         </div>
         <xsl:apply-templates select="$filters"/>        
       </div>
@@ -51,6 +54,7 @@
     
   </xsl:template>
   
+  <xsl:template match="$helpRow"/>
   
   <xsl:template match="fieldset" priority="2">
     <details class="accordion panel panel-default">
@@ -95,6 +99,10 @@
     <div class="input-group">
       <xsl:next-match/>
     </div>
+    <div>
+      <xsl:apply-templates select="$helpRow/@*"/>
+      <xsl:apply-templates select="$helpRow/node()"/>
+    </div>
   </xsl:template>
   
   <xsl:template match="button">
@@ -104,6 +112,10 @@
       </xsl:call-template>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
+  </xsl:template>
+  
+  <xsl:template match="button[@id='ssDoSearch2']/text()">
+    <xsl:text>Apply</xsl:text>
   </xsl:template>
   
   <xsl:template name="atts">

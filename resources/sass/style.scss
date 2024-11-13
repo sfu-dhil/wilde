@@ -212,7 +212,7 @@ ul.ssDescCheckboxList{
   height:unset;
 }
 
-.ss-filters > h2{
+.ss-filters > h3{
   margin-top:0;
   margin-bottom: 16px;
 }
@@ -221,7 +221,10 @@ ul.ssDescCheckboxList{
   margin-bottom:20px;
 }
 
-
+.ss-content{
+  align-self: self-end;
+ }
+ 
 .ss-filters > div > details{
   width:100%;
 }

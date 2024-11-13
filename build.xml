@@ -163,6 +163,20 @@
   
   <target name="search" depends="search.build, search.postprocess"/>
   
+  <target name="updateSearchPage">
+    
+   
+    <antcall target="copy.resources"/>
+    <antcall target="html">
+      <param name="docsToBuild" value="search"/>
+    </antcall>
+    <delete file="${dist.dir}/search_tmp.html"/>
+    <antcall target="search.build" >
+      <param name="ssTarget" value="makeSearchPage"/>
+    </antcall>
+    <antcall target="search.postprocess"/>
+  </target>
+  
   <!--To find unmatched templates: ant html -Dlog=DEBUG | grep unmatched | sort -u -->
   
   <target name="all" depends="clean, copy, images, version, html, search, sitemap"/>

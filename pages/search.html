@@ -8,48 +8,32 @@
                 Select the Help button for search term guidelines.</p>
         </div>
     </div>
-    
-    <form class="" id='search-form' action='search.html'>
-        <div class="form-group">
-            <label class="sr-only" for="query">Search term</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="query" name="query"
-                    data-template="templates:form-control"/>
-                <div class="input-group-btn">
-                    <button class="btn btn-default" type="submit">
-                        <span class="glyphicon glyphicon-search"/>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-sm-12">                
-                <div class="btn-group pull-right">
-                    <a class="btn btn-primary" data-toggle="collapse" data-target="#advanced">Help</a>
-                    <a class="btn btn-primary" data-template="app:search-export"/>
-                </div>                
-                <dl class="dl-horizontal collapse" id="advanced">
-                    <dt>match any term</dt>
-                    <dd>
-                        <kbd>wilde verdict</kbd> matches "wilde" or "verdict."</dd>
-                    <dt>wildcards</dt>
-                    <dd>
-                        <kbd>crim*</kbd> matches "crime" and "criminal".<br/>
-                        <kbd>s?t</kbd> matches "sit" and "sat" but not "saat."</dd>
-                    <dt>match all terms</dt>
-                    <dd>
-                        <kbd>+wilde +verdict</kbd> matches paragraphs which contain both wilde and
-                        verdict.</dd>
-                    <dt>match <i>some</i> terms</dt>
-                    <dd>
-                        <kbd>-wilde +verdict</kbd> matches paragraphs which do not contain wilde but do
-                        contain verdict.</dd>
-                    <dt>phrase</dt>
-                    <dd>
-                        <kbd>"at the witness box"</kbd>
-                    </dd>
-                    <dt>proximity search</dt>
+    <div class="row" id="search_help">
+        <div class="col-sm-12">                
+            <div class="btn-group pull-right">
+                <a class="btn btn-primary" data-toggle="collapse" data-target="#advanced">Help</a>
+            </div>                
+            <dl class="dl-horizontal collapse" id="advanced">
+                <dt>match any term</dt>
+                <dd>
+                    <kbd>wilde verdict</kbd> matches "wilde" or "verdict."</dd>
+                <dt>wildcards</dt>
+                <dd>
+                    <kbd>crim*</kbd> matches "crime" and "criminal".<br/>
+                    <kbd>s?t</kbd> matches "sit" and "sat" but not "saat."</dd>
+                <dt>match all terms</dt>
+                <dd>
+                    <kbd>+wilde +verdict</kbd> matches reports that contain both "wilde" and
+                    "verdict".</dd>
+                <dt>match <i>some</i> terms</dt>
+                <dd>
+                    <kbd>-wilde +verdict</kbd> matches reports which do not contain wilde but do
+                    contain verdict.</dd>
+                <dt>phrase</dt>
+                <dd>
+                    <kbd>"at the witness box"</kbd> matches reports that contain the full phrase "at the witness box" 
+                </dd>
+                <!--<dt>proximity search</dt>
                     <dd>
                         <kbd>"wilde queensberry"~10</kbd> matches paragraphs which contain the words
                         wilde and queensberry no more than 10 words apart.</dd>
@@ -65,10 +49,25 @@
                     <dt>grouping</dt>
                     <dd>
                         <kbd>(queensberry OR wilde) AND clarke</kbd>
-                    </dd>
-                </dl>
+                    </dd>-->
+            </dl>
+        </div>
+    </div>
+    
+    <form class="" id='search-form' action='search.html'>
+        <div class="form-group">
+            <label class="sr-only" for="query">Search term</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="query" name="query"
+                    data-template="templates:form-control"/>
+                <div class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <span class="glyphicon glyphicon-search"/>
+                    </button>
+                </div>
             </div>
         </div>
+        
         
         <div class="row">
             <div class="app:search">
