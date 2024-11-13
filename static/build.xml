@@ -15,7 +15,7 @@
   
   <property name="thumbs.dir" value="${dist.dir}/thumbs"/>
   
-  <property name="staticSearch.dir" location="${basedir}/staticSearch"/>
+  <property name="staticSearch.dir" location="${basedir}/lib/staticSearch"/>
   <property name="ssConfigFile" location="${basedir}/staticSearch_config.xml"/>
   <property name="ssVerbose" value="false"/>
   <property name="ssTarget" value="allButValidate"/>
@@ -39,6 +39,10 @@
       
     </apply>
   </target>
+  
+  
+  
+  
   
   <target name="copy" depends="copy.templates, copy.resources, copy.tables"/>
   <!--Copy all of the templates we want to use, but remap the nocache ones to take over the non-nocache ones-->
@@ -91,6 +95,12 @@
     </copy>
   </target>
   
+  <target name="version">
+    <exec executable="git" append="false" output="${dist.dir}/VERSION">
+      <arg line="rev-parse --short HEAD"/>
+    </exec>
+  </target>
+  
   <target name="images" depends="images.copy, images.thumbnail"/>
   
   <target name="images.copy">
@@ -136,14 +146,10 @@
     </exec>
   </target>
   
-  <target name="search.init">
-    <exec executable="git" append="false" output="${dist.dir}/VERSION">
-      <arg line="rev-parse --short HEAD"/>
-    </exec>
-  </target>
   
-  <target name="search.build" depends="search.init">
-    <ant antfile="${staticSearch.dir}/build.xml" target="${ssTarget}" inheritall="false">
+  <target name="search.build" depends="version">
+    <ant antfile="${staticSearch.dir}/build.xml" 
+      target="${ssTarget}" inheritall="false">
       <property name="ssConfigFile" value="${ssConfigFile}"/>
       <property name="ssVerbose" value="${ssVerbose}"/>
     </ant>
@@ -173,11 +179,11 @@
     </exec>
   </target>
   
-  <target name="search" depends="search.init, search.build, search.postprocess"/>
+  <target name="search" depends="search.build, search.postprocess"/>
   
   <!--To find unmatched templates: ant html -Dlog=DEBUG | grep unmatched | sort -u -->
   
-  <target name="all" depends="clean, copy, images, html, search, sitemap"/>
+  <target name="all" depends="clean, copy, images, version, html, search, sitemap"/>
   
   
   

@@ -92,11 +92,13 @@
   </xsl:template>
   
   <xsl:template match="time[@id='revision']" mode="app">
-    <time datetime="{$now}">
-      <xsl:value-of 
-      select="format-dateTime($now, '[MNn] [D01], [Y0001]')"/>
-      (<xsl:value-of select="$now"/>)
-    </time>
+    <a href="https://github.com/sfu-dhil/wilde/tree/{$versionHash}">
+      <time datetime="{$now}">
+        <xsl:value-of 
+          select="format-dateTime($now, '[MNn] [D01], [Y0001]')"/>
+        (<xsl:value-of select="$now"/>)
+      </time>
+    </a>
   </xsl:template>
   
   

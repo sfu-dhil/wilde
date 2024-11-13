@@ -68,6 +68,11 @@
     select="document($dist.dir || '/images/images.xml')"
     as="document-node()"/>
   
+  <xsl:variable name="versionHash" 
+    select="unparsed-text($dist.dir || '/VERSION')
+            => normalize-space()"
+    as="xs:string"/>
+  
   
   <xsl:variable name="templates" as="map(xs:string, item()*)+">
     <xsl:sequence 

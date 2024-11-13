@@ -17,5 +17,9 @@ lib-existdb2.properties
 
 # Static stuff
 public
-static/pages
+static/templates
+tmp
+
+# Symlinks etc
+wilde-data
 
