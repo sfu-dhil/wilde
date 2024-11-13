@@ -155,11 +155,22 @@
     
   </target>
   
+  <target name="sitemap">
+    <exec executable="saxon">
+      <arg line="-xsl:${xsl.dir}/sitemap.xsl
+        -it:${it}
+        dist.dir=${dist.dir}
+        docsToBuild=${docsToBuild}
+        log=${log}
+        "/>
+    </exec>
+  </target>
+  
   <target name="search" depends="search.init, search.build, search.postprocess"/>
   
   <!--To find unmatched templates: ant html -Dlog=DEBUG | grep unmatched | sort -u -->
   
-  <target name="all" depends="clean, copy, images, html, search"/>
+  <target name="all" depends="clean, copy, images, html, search, sitemap"/>
   
   
   

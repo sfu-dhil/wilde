@@ -700,7 +700,8 @@
     <tr>
       <td data-name="Headline">
         <a href="{$report('id')}.html">
-          <xsl:sequence select="($report('headlines')[1],$report('title'))[1] => string()"/>
+          <xsl:sequence 
+            select="($report('headlines')[1],$report('title'))[matches(.,'\S')][1] => string()"/>
         </a>
       </td>
       <xsl:for-each select="$reportFields">

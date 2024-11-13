@@ -139,7 +139,7 @@
   <xsl:variable name="sourceToSourceId" as="map(*)">
     <xsl:map>
       <xsl:for-each select="map:keys($reportsByMeta?dc.source)">
-        <xsl:map-entry key="." select="normalize-space(.) => replace('\s+','_') => replace('[^A-Za-z\d_-]+','')"/>
+        <xsl:map-entry key="." select="normalize-space(.) => replace('\s+','_') => replace('[^\w-]+','')"/>
       </xsl:for-each>
     </xsl:map>
   </xsl:variable>
@@ -310,6 +310,7 @@
   <xsl:template name="view">
     <xsl:param name="template" select="." as="map(*)"/>
     <xsl:variable name="templateDoc" select="(.?template)/html" as="element(html)"/>
+    <xsl:call-template name="createRedirectDoc"/>
     <xsl:for-each select="map:keys($reports)">
       <xsl:variable name="newTemplate" select="dhil:addIdToTemplate($templateDoc,.)"/>
       <xsl:apply-templates select="$newTemplate" mode="app">
@@ -322,6 +323,7 @@
   <xsl:template name="details">
     <xsl:param name="template" select="." as="map(*)"/>
     <xsl:variable name="templateDoc" select="(.?template)/html" as="element(html)"/>
+    <xsl:call-template name="createRedirectDoc"/>
     <xsl:variable name="field" select="substring-before($template?basename, '-details')" as="xs:string"/>
     <xsl:for-each-group select="dhil:map-entries($reports)" group-by="
       let $values := map:get(., $fieldMap($field))
@@ -344,6 +346,25 @@
   </xsl:template>
   
   
+  <xsl:template name="createRedirectDoc">
+    <xsl:param name="template" select="." as="map(*)"/>
+    <xsl:variable name="templateDoc" select="(.?template)/html" as="element(html)"/>
+    <xsl:result-document href="{$dist.dir}/{$template?basename}.html"  method="xhtml" version="5.0">
+     
+      <xsl:sequence select="$log.debug('Building ' || current-output-uri())"/>
+      <html id="{$template?basename}">
+        <head>
+          <title>Wilde Redirect</title>
+          <xsl:sequence select="$templateDoc/head/link"/>
+        </head>
+        <body>
+          <p>Redirecting...</p>
+          <script src="resources/js/redirect.js"></script>
+        </body>
+      </html>
+    </xsl:result-document>
+    
+  </xsl:template>
   
   <xsl:function name="dhil:addIdToTemplate" as="element(html)">
     <xsl:param name="templateDoc" as="element(html)"/>
