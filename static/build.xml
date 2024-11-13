@@ -10,7 +10,7 @@
   <property name="schema.dir" location="${pd}/wilde-schema/schema"/>
   <property name="dist.dir" value="${basedir}/public"/>
   <property name="xsl.dir" value="${basedir}/xsl"/>
-  <property name="templates.dir" value="${basedir}/templates"/>
+  <property name="templates.dir" value="${wilde.dir}/pages"/>
   <property name="it" value="go"/>
   
   <property name="thumbs.dir" value="${dist.dir}/thumbs"/>
@@ -44,29 +44,21 @@
   
   
   
-  <target name="copy" depends="copy.templates, copy.resources, copy.tables"/>
+  <target name="copy" depends="copy.resources, copy.tables"/>
   <!--Copy all of the templates we want to use, but remap the nocache ones to take over the non-nocache ones-->
-  <target name="copy.templates">
+  <!--<target name="copy.templates">
     <delete dir="${templates.dir}"/>
     <copy todir="${templates.dir}" overwrite="true">
-      <fileset dir="${wilde.dir}">
+      <fileset dir="${wilde.dir}/pages">
         <include name="*.html"/>
         <exclude name="error-page.html"/>
         <exclude name="graph.html"/>
         <exclude name="gefx.html"/>
         <exclude name="networks.html"/>
-        <exclude name="*-nocache.html"/>
         <include name="templates/*.html"/>
       </fileset>
     </copy>
-    
-    <copy todir="${templates.dir}" overwrite="true">
-      <fileset dir="${wilde.dir}">
-        <include name="*-nocache.html"/>
-      </fileset>
-      <globmapper from="*-nocache.html" to="*.html"/>
-    </copy>
-  </target>
+  </target>-->
   
   <target name="copy.resources">
     <echo message="Copying and compiling SASS/CSS/JS resources"/>
