@@ -176,15 +176,16 @@ label.facet {
 
 
 .panel-facet {
-  max-height: 200px;
+  max-height: 40vh;
   overflow-x: auto;
+  padding: 0;
 }
 
 #staticSearch{
   display:grid;
   grid-template-columns: 1fr 3fr;
   grid-template-areas: 
-    "form form"
+    "filters form"
     "filters results";
  & > form{
    grid-area: form;
@@ -202,7 +203,14 @@ label.facet {
   flex-direction:column;
 }
 
+#ssResults{
+  height:100%;
+}
 
+ul.ssDescCheckboxList{
+  max-height:unset;
+  height:unset;
+}
 
 .ss-filters > h2{
   margin-top:0;
@@ -223,6 +231,14 @@ label.facet {
 }
 div > details{
   margin-bottom: 16px;
+}
+
+div#ssResults>ul>li>div>a{
+  font-size:1em;
+  font-weight:bold;
+  & + span{
+    display:none;
+  }
 }
 
 
