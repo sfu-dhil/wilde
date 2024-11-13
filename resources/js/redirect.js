@@ -86,6 +86,7 @@ const redirect = async () => {
   if (!replacements[docId]) {
     goHome();
   }
+  // Get all of the site ids
   const allIds = await (await fetch("./resources/sitemap.json")).json();
   const { param, replace } = replacements[docId];
   const value = params.get(param) ?? "NULL";
