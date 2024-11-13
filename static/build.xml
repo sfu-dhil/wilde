@@ -78,9 +78,10 @@
   
   <target name="copy.tables">
     <echo message="Copying generated tables..."/>
-    <copy todir="${dist.dir}">
-      <fileset dir="${data.dir}">
-        <include name="tables/**"/>
+    <mkdir dir="${dist.dir}/export"/>
+    <copy todir="${dist.dir}/export">
+      <fileset dir="${data.dir}/tables">
+        <include name="**"/>
       </fileset>
     </copy>
   </target>
