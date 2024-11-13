@@ -1,7 +1,7 @@
 <config xmlns="http://hcmc.uvic.ca/ns/staticSearch" version="2">
     <params>
-        <searchFile>public/search.html</searchFile>
-        <versionFile>public/VERSION</versionFile>
+        <searchFile>../public/search.html</searchFile>
+        <versionFile>../public/VERSION</versionFile>
         <recurse>false</recurse>
         <phrasalSearch>true</phrasalSearch>
         <wildcardSearch>true</wildcardSearch>
@@ -14,8 +14,8 @@
         <maxKwicsToShow>5</maxKwicsToShow>
         <totalKwicLength>15</totalKwicLength>
         <kwicTruncateString>...</kwicTruncateString>
-        <stopwordsFile>staticSearch/test/test_stopwords.txt</stopwordsFile>
-        <dictionaryFile>staticSearch/xsl/english_words.txt</dictionaryFile>
+        <stopwordsFile>lib/staticSearch/test/test_stopwords.txt</stopwordsFile>
+        <dictionaryFile>lib/staticSearch/xsl/english_words.txt</dictionaryFile>
         <outputFolder>search</outputFolder>
     </params>
     
@@ -45,10 +45,10 @@
     
     <filters>
         <filter filterName="dc.region.city">
-            <span xmlns="http://www.w3.org/1999/xhtml">City</span>
+            <span xmlns="http://www.w3.org/1999/xhtml" lang="en">City</span>
         </filter>
         <filter filterName="dc.date">
-            <span xmlns="http://www.w3.org/1999/xhtml">Date</span>
+            <span xmlns="http://www.w3.org/1999/xhtml" lang="en">Date</span>
         </filter>
         <filter filterName="dc.region">
             <span xmlns="http://www.w3.org/1999/xhtml" lang="en">Region</span>

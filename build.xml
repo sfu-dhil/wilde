@@ -2,21 +2,24 @@
 <project basedir="." default="all" name="Wilde Static" xmlns:if="ant:if"
   xmlns:unless="ant:unless">
   
-  <property name="pd" location="${basedir}/.."/>
-  
-  <property name="wilde.dir" location="${pd}"/>
-  <property name="data.dir" location="${pd}/wilde-data/data"/>
+
+  <property name="data.dir" location="${basedir}/wilde-data/data"/>
   <property name="reports.dir" location="${data.dir}/reports"/>
-  <property name="schema.dir" location="${pd}/wilde-schema/schema"/>
-  <property name="dist.dir" value="${basedir}/public"/>
-  <property name="xsl.dir" value="${basedir}/xsl"/>
-  <property name="templates.dir" value="${wilde.dir}/pages"/>
+  
+  <property name="templates.dir" value="${basedir}/pages"/>
+  <property name="schema.dir" location="${basedir}/wilde-schema/schema"/>
+  <property name="dist.dir" value="${basedir}/public"/>  
+  
+  <property name="static.dir" location="${basedir}/static"/>
+  <property name="xsl.dir" value="${static.dir}/xsl"/>
+  
+ 
   <property name="it" value="go"/>
   
   <property name="thumbs.dir" value="${dist.dir}/thumbs"/>
   
-  <property name="staticSearch.dir" location="${basedir}/lib/staticSearch"/>
-  <property name="ssConfigFile" location="${basedir}/staticSearch_config.xml"/>
+  <property name="staticSearch.dir" location="${static.dir}/lib/staticSearch"/>
+  <property name="ssConfigFile" location="${static.dir}/staticSearch_config.xml"/>
   <property name="ssVerbose" value="false"/>
   <property name="ssTarget" value="allButValidate"/>
   
@@ -45,28 +48,15 @@
   
   
   <target name="copy" depends="copy.resources, copy.tables"/>
-  <!--Copy all of the templates we want to use, but remap the nocache ones to take over the non-nocache ones-->
-  <!--<target name="copy.templates">
-    <delete dir="${templates.dir}"/>
-    <copy todir="${templates.dir}" overwrite="true">
-      <fileset dir="${wilde.dir}/pages">
-        <include name="*.html"/>
-        <exclude name="error-page.html"/>
-        <exclude name="graph.html"/>
-        <exclude name="gefx.html"/>
-        <exclude name="networks.html"/>
-        <include name="templates/*.html"/>
-      </fileset>
-    </copy>
-  </target>-->
+  
   
   <target name="copy.resources">
     <echo message="Copying and compiling SASS/CSS/JS resources"/>
     <exec executable="sass">
-      <arg line="${wilde.dir}/resources/sass:${wilde.dir}/resources/css"/>
+      <arg line="${basedir}/resources/sass:${basedir}/resources/css"/>
     </exec>
     <copy todir="${dist.dir}">
-      <fileset dir="${wilde.dir}">
+      <fileset dir="${basedir}">
         <include name="resources/**"/>
       </fileset>
     </copy>
