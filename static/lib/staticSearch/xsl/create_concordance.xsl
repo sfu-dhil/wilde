@@ -119,7 +119,7 @@
                                     <xsl:for-each select="$currInstances">
                                         <xsl:variable name="currInstance" select="." as="map(*)"/>
                                         <!--Retrieve the document id-->
-                                        <xsl:variable name="currDocId" select="$currInstance?docId" as="xs:string"/>
+                                        <xsl:variable name="currDocId" select="$currInstance?docUri" as="xs:string"/>
                                         <!--Get the set of contexts (as a sequence of maps)-->
                                         <xsl:variable name="currContexts"
                                             select="array:flatten($currInstance?contexts)" as="map(*)*"/>
