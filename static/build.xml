@@ -74,6 +74,11 @@
         <include name="resources/**"/>
       </fileset>
     </copy>
+    <copy todir="${dist.dir}">
+      <fileset dir="${dist.dir}/resources/img">
+        <include name="favicon.ico"/>
+      </fileset>
+    </copy>
   </target>
   
   <target name="copy.tables">
@@ -98,6 +103,7 @@
           <include name="images.xml"/>
         </fileset>
     </copy>
+   
   </target>
   
   <target name="images.thumbnail">

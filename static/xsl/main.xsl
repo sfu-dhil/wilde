@@ -46,6 +46,7 @@
     select="string-length(normalize-space($docsToBuild)) gt 0" 
     static="yes"/>
  
+ <xsl:variable name="now" select="current-dateTime()" as="xs:dateTime"/> 
   <!--Includes-->
 
   <xsl:include href="modules/app.xsl"/>

@@ -91,6 +91,14 @@
     </xsl:copy>
   </xsl:template>
   
+  <xsl:template match="time[@id='revision']" mode="app">
+    <time datetime="{$now}">
+      <xsl:value-of 
+      select="format-dateTime($now, '[MNn] [D01], [Y0001]')"/>
+      (<xsl:value-of select="$now"/>)
+    </time>
+  </xsl:template>
+  
   
   <!--Remove config:app-meta-->
   <xsl:template match="config:app-meta" mode="app">
