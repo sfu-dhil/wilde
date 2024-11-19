@@ -91,9 +91,14 @@
     </xsl:copy>
   </xsl:template>
   
+  <xsl:template match="span[@id='version']" mode="app">
+    <span id="version"><xsl:value-of select="$VERSION"/></span>
+  </xsl:template>
+  
   <xsl:template match="time[@id='revision']" mode="app">
-    <a href="https://github.com/sfu-dhil/wilde/tree/{$versionHash}">
-      <time datetime="{$now}">
+    <a href="https://github.com/sfu-dhil/wilde/tree/{$COMMIT}">
+      <time 
+        datetime="{format-dateTime($now,'[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]')}">
         <xsl:value-of 
           select="format-dateTime($now, '[MNn] [D01], [Y0001]')"/>
         (<xsl:value-of select="$now"/>)

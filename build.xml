@@ -8,7 +8,8 @@
   
   <property name="templates.dir" value="${basedir}/pages"/>
   <property name="schema.dir" location="${basedir}/wilde-schema/schema"/>
-  <property name="dist.dir" value="${basedir}/public"/>  
+  <property name="dist.dir" value="${basedir}/public"/>
+  <property name="dist.docs.dir" value="${dist.dir}/docs"/>  
   
   <property name="static.dir" location="${basedir}/static"/>
   <property name="xsl.dir" value="${static.dir}/xsl"/>
@@ -39,16 +40,10 @@
       <fileset dir="${reports.dir}">
         <include name="**/*.xml"/>
       </fileset>
-      
     </apply>
   </target>
   
-  
-  
-  
-  
   <target name="copy" depends="copy.resources, copy.tables"/>
-  
   
   <target name="copy.resources">
     <echo message="Copying and compiling SASS/CSS/JS resources"/>
@@ -58,6 +53,7 @@
     <copy todir="${dist.dir}">
       <fileset dir="${basedir}">
         <include name="resources/**"/>
+        <include name="VERSION"/>
       </fileset>
     </copy>
     <copy todir="${dist.dir}">
@@ -77,8 +73,8 @@
     </copy>
   </target>
   
-  <target name="version">
-    <exec executable="git" append="false" output="${dist.dir}/VERSION">
+  <target name="getCommitHash">
+    <exec executable="git" append="false" output="${dist.dir}/COMMIT">
       <arg line="rev-parse --short HEAD"/>
     </exec>
   </target>
@@ -116,7 +112,7 @@
   </target>
   
   <target name="html">
-    <exec executable="saxon">
+    <exec executable="saxon" failonerror="true">
       <arg line="-xsl:${xsl.dir}/main.xsl
         -it:${it}
         templates.dir=${templates.dir}
@@ -129,7 +125,7 @@
   </target>
   
   
-  <target name="search.build" depends="version">
+  <target name="search.build" depends="getCommitHash">
     <ant antfile="${staticSearch.dir}/build.xml" 
       target="${ssTarget}" inheritall="false">
       <property name="ssConfigFile" value="${ssConfigFile}"/>
@@ -147,7 +143,12 @@
         -s:${dist.dir}/search_tmp.html
         -o:${dist.dir}/search.html"/>
     </exec>
-    
+  </target>
+  
+  <target name="docs">
+    <ant antfile="${basedir}/wilde-schema/build.xml" inheritall="false" target="documentation">
+      <property name="out" value="${dist.docs.dir}"/>
+    </ant>
   </target>
   
   <target name="sitemap">
@@ -164,8 +165,6 @@
   <target name="search" depends="search.build, search.postprocess"/>
   
   <target name="updateSearchPage">
-    
-   
     <antcall target="copy.resources"/>
     <antcall target="html">
       <param name="docsToBuild" value="search"/>
@@ -179,38 +178,7 @@
   
   <!--To find unmatched templates: ant html -Dlog=DEBUG | grep unmatched | sort -u -->
   
-  <target name="all" depends="clean, copy, images, version, html, search, sitemap"/>
+  <target name="all" depends="clean, copy, images, getCommitHash, html, search, docs, sitemap"/>
   
-  
-  
-  <!--Targets in development, but not actively useful or 
- actually working -->
-  <!--  
-  <target name="compare">
-    <exec executable="saxon">
-      <arg line="-xsl:${xsl.dir}/compare.xsl
-        -it:go
-        templates.dir=${templates.dir}
-        reports.dir=${reports.dir}
-        dist.dir=${dist.dir}
-        docsToBuild=${docsToBuild}
-        log=${log}
-        "/>
-    </exec>
-  </target>
-  
-  
-  <target name="export">
-    <exec executable="saxon">
-      <arg line="-xsl:${xsl.dir}/main.xsl
-        -it:export
-        templates.dir=${templates.dir}
-        reports.dir=${reports.dir}
-        dist.dir=${dist.dir}
-        docsToBuild=${docsToBuild}
-        log=${log}
-        "/>
-    </exec>
-  </target>-->
   
 </project>

@@ -1,7 +1,7 @@
 <config xmlns="http://hcmc.uvic.ca/ns/staticSearch" version="2">
     <params>
         <searchFile>../public/search.html</searchFile>
-        <versionFile>../public/VERSION</versionFile>
+        <versionFile>../public/COMMIT</versionFile>
         <recurse>false</recurse>
         <phrasalSearch>true</phrasalSearch>
         <scoringAlgorithm>tf-idf</scoringAlgorithm>

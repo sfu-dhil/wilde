@@ -68,8 +68,13 @@
     select="document($dist.dir || '/images/images.xml')"
     as="document-node()"/>
   
-  <xsl:variable name="versionHash" 
-    select="unparsed-text($dist.dir || '/VERSION')
+  <xsl:variable name="VERSION" 
+    select="unparsed-text($dist.dir || '/VERSION') 
+            => normalize-space()"
+    as="xs:string"/>
+  
+  <xsl:variable name="COMMIT" 
+    select="unparsed-text($dist.dir || '/COMMIT')
             => normalize-space()"
     as="xs:string"/>
   
@@ -236,6 +241,8 @@
     select="($templates[matches(.?basename,'-details')] ! substring-before(.?basename, '-details'), 'publisher')"/>
   
   <xsl:template name="go">
+    <xsl:sequence 
+      select="$log.info('Building Wilde version ' || $VERSION || ' (' || $COMMIT || ')')"/>
     <xsl:sequence select="$log.info('Building subset of documents: ' || $docsToBuild)" use-when="$isSubset"/>
     <xsl:if test="map:size($reports) = 0">
       <xsl:message terminate="yes">No reports found</xsl:message>

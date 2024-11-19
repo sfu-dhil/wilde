@@ -23,12 +23,17 @@
     select="current-date() => format-date('[Y0001]-[M01]-[D01]')"/>
   <xsl:variable name="uris"  as="xs:anyURI+"
     select="uri-collection($dist.dir || '?select=*.html;recurse=no')"/>
+  <xsl:variable name="docsURIs" as="xs:anyURI+"
+    select="uri-collection($dist.dir || '/docs/?select=*.html;recurse=no')"/>
   <xsl:variable name="basenames" as="xs:string+"
     select="$uris ! tokenize(., '[/\.]')[last() - 1]"/>
-  
+  <xsl:variable name="docsBasenames" as="xs:string+"
+    select="$docsURIs ! ('/docs' || tokenize(., '[/\.]')[last() - 1])"/>
+  <xsl:variable name="allURIs" select="($uris, $docsURIs)" as="xs:anyURI+"/>
+  <xsl:variable name="allBasenames" select="($basenames, $docsBasenames)" as="xs:string+"/>
   <xsl:template name="go" expand-text="yes">
     <xsl:sequence 
-      select="$log.info('Processing ' || count($uris) || ' pages')"/>
+      select="$log.info('Processing ' || count($allURIs) || ' pages')"/>
     <xsl:call-template name="createXMLSitemap"/>
     <xsl:call-template name="createJSONSitemap"/>
   </xsl:template>
@@ -38,7 +43,7 @@
       <xsl:sequence 
         select="$log.info('Creating ' || current-output-uri())"/>
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        <xsl:for-each select="$basenames">
+        <xsl:for-each select="$allBasenames">
           <url>
             <loc>{$base}/{.}.html</loc>
             <lastmod>{$today}</lastmod>
@@ -49,7 +54,6 @@
   </xsl:template>
   
   <xsl:template name="createJSONSitemap">
-    
     <xsl:result-document href="{$dist.dir}/resources/sitemap.json" method="json">
       <xsl:sequence 
         select="$log.info('Creating ' || current-output-uri())"/>
