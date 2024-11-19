@@ -1428,25 +1428,25 @@ ul.browse-list .name[data-month]:before {
   border-left: 1px dashed #CCC;
 }
 
-#documentation {
+#documentation_content {
   display: grid;
   grid-template-columns: 1fr;
   grid-column-gap: 0;
 }
 @media (min-width: 768px) {
-  #documentation {
+  #documentation_content {
     grid-template-columns: 1fr 2fr;
     grid-column-gap: 3rem;
     padding-left: 15px;
   }
 }
 @media (min-width: 768px) {
-  #documentation *[id] {
+  #documentation_content *[id] {
     scroll-margin-top: 70px;
   }
 }
 
-#documentation.row:before, #documentation.row:after, #documentation .row:before, #documentation .row:after {
+#documentation_content.row:before, #documentation_content.row:after, #documentation_content .row:before, #documentation_content .row:after {
   content: unset;
 }
 
