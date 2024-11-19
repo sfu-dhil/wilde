@@ -1,71 +1,216 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="xar" name="wilde" xmlns:xdb="http://exist-db.org/ant">
-  <description>Wilde Trials International News Archive</description>
+<project basedir="." default="all" name="Wilde Static" xmlns:if="ant:if"
+  xmlns:unless="ant:unless">
+  
 
-  <xmlproperty file="expath-pkg.xml" />
-  <property name="project.version" value="${package(version)}" />
-  <property name="project.app" value="wilde" />
-  <property name="build.dir" value="build" />
-  <property name="cache.base" value="http://localhost:8080/exist/wilde"/>
+  <property name="data.dir" location="${basedir}/wilde-data/data"/>
+  <property name="reports.dir" location="${data.dir}/reports"/>
   
-  <property name="host" value="localhost"/>
-  <property file="${host}.properties"/>
+  <property name="templates.dir" value="${basedir}/pages"/>
+  <property name="schema.dir" location="${basedir}/wilde-schema/schema"/>
+  <property name="dist.dir" value="${basedir}/public"/>  
   
-  <path id="classpath.core">
-    <fileset dir="${local.dir}/lib">
-      <include name="*.jar"/>
-    </fileset>
-    <pathelement path="${local.dir}/exist.jar"/>
-    <pathelement path="${local.dir}/exist-optional.jar"/>
-  </path>
+  <property name="static.dir" location="${basedir}/static"/>
+  <property name="xsl.dir" value="${static.dir}/xsl"/>
   
-  <typedef resource="org/exist/ant/antlib.xml" uri="http://exist-db.org/ant">
-    <classpath refid="classpath.core"/>
-  </typedef>
+ 
+  <property name="it" value="go"/>
   
-  <fileset id="console-usages" dir="." includes="**/*.xql">
-    <contains text="console"/>
-  </fileset>
-  <fail status="1" message="One or more usages of console detected.">
-    <condition>
-      <resourcecount when="greater" count="0" refid="console-usages" />
-    </condition>
-  </fail>
+  <property name="thumbs.dir" value="${dist.dir}/thumbs"/>
   
-  <target depends="cache-list,yarn" name="xar">
-    <echo>Regenerating cache files and building .xar file</echo>
-    <mkdir dir="${build.dir}" />
-    <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludesfile='excludes.txt' />
+  <property name="staticSearch.dir" location="${static.dir}/lib/staticSearch"/>
+  <property name="ssConfigFile" location="${static.dir}/staticSearch_config.xml"/>
+  <property name="ssVerbose" value="false"/>
+  <property name="ssTarget" value="allButValidate"/>
+  
+  <!--Property for building a subset of docs-->
+  <property name="docsToBuild" value=""/>
+  <property name="log" value="INFO"/>
+  
+  <target name="clean">
+    <delete dir="${dist.dir}"/>
+    <mkdir dir="${dist.dir}"/>
   </target>
   
-  <target depends="yarn" name="xar-quick">
-    <echo>Skipping cache files and building .xar file</echo>
-    <mkdir dir="${build.dir}" />
-    <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludesfile='excludes.txt' />
+  <target name="validate">
+    <apply executable="jing" parallel="true">
+      <arg line="${schema.dir}/reports.rng"/>
+      <srcfile/>
+      <fileset dir="${reports.dir}">
+        <include name="**/*.xml"/>
+      </fileset>
+      
+    </apply>
   </target>
   
-  <target name="cache-list">
-    <get src="${cache.base}/city-nocache.html" dest="city.html"/>
-    <get src="${cache.base}/date-nocache.html" dest="date.html"/>
-    <get src="${cache.base}/language-nocache.html" dest="language.html"/>
-    <get src="${cache.base}/newspaper-nocache.html" dest="newspaper.html"/>
-    <get src="${cache.base}/region-nocache.html" dest="region.html"/>
-    <get src="${cache.base}/source-nocache.html" dest="source.html"/>
+  
+  
+  
+  
+  <target name="copy" depends="copy.resources, copy.tables"/>
+  
+  
+  <target name="copy.resources">
+    <echo message="Copying and compiling SASS/CSS/JS resources"/>
+    <exec executable="sass">
+      <arg line="${basedir}/resources/sass:${basedir}/resources/css"/>
+    </exec>
+    <copy todir="${dist.dir}">
+      <fileset dir="${basedir}">
+        <include name="resources/**"/>
+      </fileset>
+    </copy>
+    <copy todir="${dist.dir}">
+      <fileset dir="${dist.dir}/resources/img">
+        <include name="favicon.ico"/>
+      </fileset>
+    </copy>
   </target>
   
-  <target name="yarn">
-    <exec executable="yarn">
-      <arg value="install" />
+  <target name="copy.tables">
+    <echo message="Copying generated tables..."/>
+    <mkdir dir="${dist.dir}/export"/>
+    <copy todir="${dist.dir}/export">
+      <fileset dir="${data.dir}/tables">
+        <include name="**"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="version">
+    <exec executable="git" append="false" output="${dist.dir}/VERSION">
+      <arg line="rev-parse --short HEAD"/>
     </exec>
   </target>
   
-  <target name="store-pages">
-    <echo>Storing pages to ${host} at ${server.data}</echo>
-    <xdb:store uri="${server.root}" user="${server.user}" password="${server.pass}" type="xml">
-      <fileset dir=".">
-        <include name="*.html"/>
-      </fileset>
-    </xdb:store>
+  <target name="images" depends="images.copy, images.thumbnail"/>
+  
+  <target name="images.copy">
+    <echo message="Copying images (and associated metadata)..."/>
+    <copy todir="${dist.dir}/images">
+       <fileset dir="${data.dir}/images">
+         <include name="**"/>
+       </fileset>
+        <fileset dir="${data.dir}">
+          <include name="images.xml"/>
+        </fileset>
+    </copy>
+   
   </target>
-
+  
+  <target name="images.thumbnail">
+      <delete dir="${dist.dir}/thumbs"/>
+      <mkdir dir="${dist.dir}/thumbs"/>
+      <apply executable="convert">
+        <arg line="-strip -quality 95 -resize '160x160>'"/>
+        <srcfile/>
+        <targetfile/>
+        <fileset dir="${dist.dir}/images">
+          <include name="*.*"/>
+          <exclude name="*.xml"/>
+        </fileset>
+        <chainedmapper>
+          <mapper type="glob" from="*" to="${thumbs.dir}/*"/>
+        </chainedmapper>
+      </apply>
+  </target>
+  
+  <target name="html">
+    <exec executable="saxon">
+      <arg line="-xsl:${xsl.dir}/main.xsl
+        -it:${it}
+        templates.dir=${templates.dir}
+        reports.dir=${reports.dir}
+        dist.dir=${dist.dir}
+        docsToBuild=${docsToBuild}
+        log=${log}
+        "/>
+    </exec>
+  </target>
+  
+  
+  <target name="search.build" depends="version">
+    <ant antfile="${staticSearch.dir}/build.xml" 
+      target="${ssTarget}" inheritall="false">
+      <property name="ssConfigFile" value="${ssConfigFile}"/>
+      <property name="ssVerbose" value="${ssVerbose}"/>
+    </ant>
+  </target>
+  
+ 
+  <target name="search.postprocess">
+    <available property="search_tmp.exists"
+      file="${dist.dir}/search_tmp.html"/>
+    <copy file="${dist.dir}/search.html" tofile="${dist.dir}/search_tmp.html" unless:true="${search_tmp.exists}"/>
+    <exec executable="saxon">
+      <arg line="-xsl:${xsl.dir}/search.xsl
+        -s:${dist.dir}/search_tmp.html
+        -o:${dist.dir}/search.html"/>
+    </exec>
+    
+  </target>
+  
+  <target name="sitemap">
+    <exec executable="saxon">
+      <arg line="-xsl:${xsl.dir}/sitemap.xsl
+        -it:${it}
+        dist.dir=${dist.dir}
+        docsToBuild=${docsToBuild}
+        log=${log}
+        "/>
+    </exec>
+  </target>
+  
+  <target name="search" depends="search.build, search.postprocess"/>
+  
+  <target name="updateSearchPage">
+    
+   
+    <antcall target="copy.resources"/>
+    <antcall target="html">
+      <param name="docsToBuild" value="search"/>
+    </antcall>
+    <delete file="${dist.dir}/search_tmp.html"/>
+    <antcall target="search.build" >
+      <param name="ssTarget" value="makeSearchPage"/>
+    </antcall>
+    <antcall target="search.postprocess"/>
+  </target>
+  
+  <!--To find unmatched templates: ant html -Dlog=DEBUG | grep unmatched | sort -u -->
+  
+  <target name="all" depends="clean, copy, images, version, html, search, sitemap"/>
+  
+  
+  
+  <!--Targets in development, but not actively useful or 
+ actually working -->
+  <!--  
+  <target name="compare">
+    <exec executable="saxon">
+      <arg line="-xsl:${xsl.dir}/compare.xsl
+        -it:go
+        templates.dir=${templates.dir}
+        reports.dir=${reports.dir}
+        dist.dir=${dist.dir}
+        docsToBuild=${docsToBuild}
+        log=${log}
+        "/>
+    </exec>
+  </target>
+  
+  
+  <target name="export">
+    <exec executable="saxon">
+      <arg line="-xsl:${xsl.dir}/main.xsl
+        -it:export
+        templates.dir=${templates.dir}
+        reports.dir=${reports.dir}
+        dist.dir=${dist.dir}
+        docsToBuild=${docsToBuild}
+        log=${log}
+        "/>
+    </exec>
+  </target>-->
+  
 </project>

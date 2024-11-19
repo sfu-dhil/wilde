@@ -1,0 +1,3 @@
+[submodule "wilde-schema"]
+	path = wilde-schema
+	url = https://github.com/sfu-dhil/wilde-schema

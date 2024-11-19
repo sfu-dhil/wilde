@@ -1,0 +1,69 @@
+<config xmlns="http://hcmc.uvic.ca/ns/staticSearch" version="2">
+    <params>
+        <searchFile>../public/search.html</searchFile>
+        <versionFile>../public/VERSION</versionFile>
+        <recurse>false</recurse>
+        <phrasalSearch>true</phrasalSearch>
+        <scoringAlgorithm>tf-idf</scoringAlgorithm>
+        <wildcardSearch>true</wildcardSearch>
+        <createContexts>true</createContexts>
+        <resultsPerPage>50</resultsPerPage>
+        <minWordLength>3</minWordLength>
+        
+        <!--NOTE: If phrasalSearch is set to TRUE, then
+        maxContexts prop will be ignored-->
+        <maxKwicsToHarvest>5</maxKwicsToHarvest>
+        <maxKwicsToShow>5</maxKwicsToShow>
+        <totalKwicLength>15</totalKwicLength>
+        <kwicTruncateString>...</kwicTruncateString>
+        <stopwordsFile>lib/staticSearch/test/test_stopwords.txt</stopwordsFile>
+        <dictionaryFile>lib/staticSearch/xsl/english_words.txt</dictionaryFile>
+        <outputFolder>search</outputFolder>
+    </params>
+    
+    <rules>
+        <rule
+            weight="0"
+            match="nav |
+                   *[contains-token(@class,'nav')] | 
+                   div[contains-token(@class,'report-navigation')] | 
+                   div[div[contains-token(@class,'page-header')]] | 
+                   ul[@role='tablist'] |
+                   div[div[contains-token(@class,'panel')]] |
+                   footer"/>
+        <rule weight="0"
+              match="div[not(contains-token(@class,'matches-0'))][matches(@class,'matches-\d+')]"/>
+        <rule weight="0" match="*[@lang][@lang ne 'en']"/>
+        <rule weight="0" match="script | style"/>
+    </rules>
+    
+    <contexts/>
+    
+    
+    <excludes>
+        <!--Exclude everything except the reports-->
+        <exclude type="index" match="html[not(descendant::meta[@name='dc.date'])]"/>
+    </excludes>
+    
+    <filters>
+        <filter filterName="dc.region.city">
+            <span xmlns="http://www.w3.org/1999/xhtml" lang="en">City</span>
+        </filter>
+        <filter filterName="dc.date">
+            <span xmlns="http://www.w3.org/1999/xhtml" lang="en">Date</span>
+        </filter>
+        <filter filterName="dc.region">
+            <span xmlns="http://www.w3.org/1999/xhtml" lang="en">Region</span>
+        </filter>
+        <filter filterName="dc.language">
+            <span xmlns="http://www.w3.org/1999/xhtml" lang="en">Language</span>
+        </filter>
+        <filter filterName="dc.publisher">
+            <span xmlns="http://www.w3.org/1999/xhtml" lang="en">Publisher</span>
+        </filter>
+        <filter filterName="wr.word-count">
+            <span xmlns="http://www.w3.org/1999/xhtml" lang="en">Word Count</span>
+        </filter>
+        
+    </filters>
+</config>

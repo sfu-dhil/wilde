@@ -14,3 +14,12 @@
 resources/js/local-dev.js
 lib-existdb.properties
 lib-existdb2.properties
+
+# Static stuff
+public
+static/templates
+tmp
+
+# Symlinks etc
+wilde-data
+

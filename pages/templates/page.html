@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <head>
+        <title>Wilde Trials International News Archive</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <meta data-template="config:app-meta"></meta>
+        <link href="resources/lib/bootswatch/lumen/bootstrap.min.css" rel="stylesheet" type="text/css"></link>
+        <link href="resources/css/style.css" rel="stylesheet" type="text/css"></link>
+        <link href="resources/css/sortable-theme-bootstrap.css" rel="stylesheet" type="text/css"></link>
+        <script src="resources/lib/jquery/dist/jquery.min.js" type="text/javascript"></script>
+        <script src="resources/lib/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="resources/js/sortable.js"></script>
+        <script src="resources/js/list.js" type="module"></script>
+        <meta content="notranslate" name="google"/>
+    </head>
+    <body id="body">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <button class="navbar-toggle" data-target="#navbar-collapse-1" data-toggle="collapse" type="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"/>
+                    <span class="icon-bar"/>
+                    <span class="icon-bar"/>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-collapse-1">
+                <div class='container'>
+                    <ul class="nav navbar-nav">
+                        <li><a href="index.html" class="front-page">Wilde Trials International News Archive</a></li>
+                        <li class="dropdown">
+                            <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">About</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="about.html">Overview</a></li>
+                                <li><a href="curation.html">Curatorial Statement</a></li>
+                                <li><a href="source.html">News Sources</a></li>
+                                <li><a href="gallery.html">Image Gallery</a></li>
+                                <li><a href="contributors.html">Contributors</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">Reports</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="list.html">All Reports</a></li>
+                                <li><a href="city.html">By City</a></li>
+                                <li><a href="date.html">By Date</a></li>
+                                <li><a href="language.html">By Language</a></li>
+                                <li><a href="newspaper.html">By Newspaper</a></li>
+                                <li><a href="region.html">By Region</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="search.html">Search</a></li>
+                        <li><a href="measure.html">Compare</a></li>
+<!--                        <li><a href="networks.html">News Networks</a></li>-->
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+            <div class="row">
+                <div data-template="app:breadcrumb"/>
+            </div> 
+            <div id="content"/>
+        </main>
+        <footer class="footer">
+            <div class="container">
+                <p>
+                    <b>Wilde Trials International News Archive</b>
+                    <br/>
+                    <a href="export.html">Data</a> |
+                    <a href="documentation.html">Documentation</a> |
+                    <a href="https://sfu-dhil.github.io/wilde-schema/public/index.html">Workflow</a> |
+                    <a href="https://github.com/sfu-dhil/wilde">Code</a> |
+                    <a href="privacy.html">Privacy</a> |
+                    <a href="license.html">License</a> |
+                    <a href="contact.html">Contact</a> 
+                </p>
+                <p class="small">Last updated: <time id="revision"></time></p>
+            </div>
+        </footer>     
+    </body>
+</html>

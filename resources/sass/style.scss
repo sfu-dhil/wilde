@@ -28,6 +28,11 @@ div.compare-header{
         display:none;
     }
 }
+
+div.compare-documents .label{
+  display:none;
+}
+
 div.paragraph-compare {
   padding-top: 2rem;
   padding-bottom: 2rem;
@@ -81,7 +86,7 @@ div.paragraph-compare {
 
 
 /* Mobile friendly document comparison screen */
-.doc-compare{
+.compare-documents{
   display:flex;
   & > div {
     flex: 1 1 33%;
@@ -169,11 +174,125 @@ label.facet {
   }
 }
 
+
 .panel-facet {
-  max-height: 200px;
+  max-height: 40vh;
   overflow-x: auto;
+  padding: 0;
 }
 
+#staticSearch{
+  display:grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-areas: 
+    "filters form"
+    "filters results";
+ & > form{
+   grid-area: form;
+ }   
+ & > .ss-filters{
+   grid-area: filters;
+ }
+ & > .ss-content{
+   grid-area: results;
+ }
+}
+
+.ss-filters{
+  display:flex;
+  flex-direction:column;
+}
+
+#ssResults{
+  height:100%;
+}
+
+ul.ssDescCheckboxList{
+  max-height:unset;
+  height:unset;
+}
+
+.ss-filters > h3{
+  margin-top:0;
+  margin-bottom: 16px;
+}
+
+.ss-filters > .input-group{
+  margin-bottom:20px;
+}
+
+.ss-content{
+  align-self: self-end;
+ }
+ 
+.ss-filters > div > details{
+  width:100%;
+}
+
+.ss-filters > div {
+  margin-bottom: 0;
+}
+div > details{
+  margin-bottom: 16px;
+}
+
+div#ssResults>ul>li>div>a{
+  font-size:1em;
+  font-weight:bold;
+  & + span{
+    display:none;
+  }
+}
+
+
+#ssResults > p{
+  text-align:right;
+}
+
+.ss-filters ul{
+  width:100%;
+}
+
+.ss-filters ul > li{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    gap: 6px;
+    padding: 4px;
+    > *{
+      margin-top:0;
+      margin-bottom:0;
+    }
+}
+
+:is(.ssDateFilters, .ssNumFilters) .ssFieldset{
+  
+  span{
+    padding:0!important;
+    display:flex;
+    flex-direction:column;
+    background:none;
+    border:none;
+    margin:0;
+  }
+  span + span{
+    margin-top:8px;
+  }
+  input{
+    padding:0;
+    border:none;
+    border-bottom:1px solid #efefef;
+  }
+}
+
+legend.panel-heading{
+  font-size: inherit;
+}
+
+div.ss-filters > div > fieldset{
+  padding: 0;
+}
 /* images with captions */
 figure {
   margin: 1em 0;
@@ -620,6 +739,13 @@ table{
     }
 }
 
+// Remove cells/columns that are unnecessary
+@each $field in date, newspaper, region, city, language{
+  .table-#{$field} .cell-#{$field}{
+    display:none;
+  }
+}
+
 // Make table headings sticky
 thead{
     background: $color_white;
@@ -713,13 +839,16 @@ th.count{
   }
 
   .row.matches {
-
+    padding-top: 0.25em;
+    
     &:last-child {
       padding-bottom: 0.5em;
     }
-
-    padding-top: 0.25em;
-
+    
+    p[id]{
+      text-align: justify;
+    }
+    
     &.viewing-matches {
       background-color: $color_beige;
 
@@ -905,10 +1034,10 @@ th.count{
 
 
 .gallery{
-    display:flex;
-    flex-wrap:wrap;
+    display:grid;
     justify-content:space-evenly;
     align-content:center;
+    grid-template-columns: repeat(1, 1fr);
     .img-tile{
         flex: 1 0 100%;
         margin-bottom:.5rem;
@@ -922,16 +1051,16 @@ th.count{
                 flex: 1 1 60%;
             }
         }
-        @include tablet{
-            flex: 1 0 30%;
-            margin:0.5rem;
-            .thumbnail{
-                flex-direction:column;
-            }
-
-        }
     }
-
+    @include tablet{
+     grid-template-columns: repeat(3, 1fr);
+     .img-tile{
+        margin:0.5rem; 
+      }
+      .thumbnail{
+        flex-direction:column;
+       }
+   }
 }
 
 .img-container {

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" data-template="templates:surround"
+    data-template-with="templates/page.html" data-template-at="content">
+    <div class="row">
+        <div class="page-header">
+            <h1>Compare Paragraphs</h1>
+            <p>This page compares two reports at the paragraph level. The column on the left shows the first report in its entirety, and the column in the middle identifies paragraphs from the second report with significant matching content. The column on the right highlights any differences between the two matching paragraphs: pink shows differences in the first report and purple in the second report. The Match percentage underneath each comparison row in this column shows the percentage of similarity between the two paragraphs.</p>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-sm-12'>
+        <div data-template="app:compare-paragraphs"/>
+        </div>
+    </div>
+    <script type="text/javascript" src="resources/lib/htmldiff/dist/htmldiff.js"/>
+    <script type="text/javascript" src="resources/lib/google-diff-match-patch-js/diff_match_patch.js"/>
+    <script type="text/javascript" src="resources/js/page/compare.js"/>
+</div>
