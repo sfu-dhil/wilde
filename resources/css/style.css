@@ -243,6 +243,18 @@ label.facet input {
   padding: 0;
 }
 
+#staticSearch button#export {
+  display: none;
+}
+
+#staticSearch:has(#ssResults > ul > li) button#export {
+  display: inline-block;
+}
+
+#search_help {
+  margin-bottom: 4rem;
+}
+
 #staticSearch {
   display: grid;
   grid-template-columns: 1fr 3fr;
@@ -324,6 +336,10 @@ div#ssResults > ul > li > div > a + span {
 .ss-filters ul > li > * {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+.ss-content mark {
+  background: rgba(255, 179, 179, 0.7);
 }
 
 :is(.ssDateFilters, .ssNumFilters) .ssFieldset span {
@@ -775,8 +791,8 @@ table option {
   display: none;
 }
 
-.table-striped > tbody > tr:nth-of-type(2n+1) {
-  background: #EAE8E3;
+.table-striped > tbody > tr:nth-of-type(2n + 1) {
+  background: #eae8e3;
 }
 
 td a {
@@ -972,7 +988,9 @@ th.count {
   border-bottom: 1px solid #b3b3b3;
 }
 
-.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus,
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus,
 .nav-tabs > li > a:hover {
   border-color: #b3b3b3;
 }
@@ -1137,7 +1155,8 @@ th.count {
   margin-bottom: 0.75em;
 }
 
-.cal-header, .cal-body {
+.cal-header,
+.cal-body {
   --cell-num-size: 4rem;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -1177,7 +1196,8 @@ th.count {
 .cal-cell a:hover {
   background: #efefef;
 }
-.cal-cell a:hover .day, .cal-cell a:hover .count {
+.cal-cell a:hover .day,
+.cal-cell a:hover .count {
   opacity: 1;
   border-color: #E10000;
 }
@@ -1425,7 +1445,7 @@ ul.browse-list .name[data-month]:before {
   vertical-align: middle;
 }
 .export-fields li + li {
-  border-left: 1px dashed #CCC;
+  border-left: 1px dashed #ccc;
 }
 
 #documentation_content {
@@ -1446,7 +1466,9 @@ ul.browse-list .name[data-month]:before {
   }
 }
 
-#documentation_content.row:before, #documentation_content.row:after, #documentation_content .row:before, #documentation_content .row:after {
+#documentation_content.row:before, #documentation_content.row:after,
+#documentation_content .row:before,
+#documentation_content .row:after {
   content: unset;
 }
 

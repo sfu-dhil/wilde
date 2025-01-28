@@ -34,9 +34,7 @@
   <xsl:template match="div[@id='staticSearch']">
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
-
       <xsl:apply-templates select="form"/>
-      
       <div class="ss-filters">
         <h3>Filters</h3>
         <div class="input-group">
@@ -49,10 +47,12 @@
       <div class="ss-content">
         <xsl:apply-templates select="div"/>
       </div>
-      <xsl:apply-templates select="script | noscript"/>
     </xsl:copy>
-    
+    <xsl:apply-templates select="script | noscript"/>
   </xsl:template>
+  
+  <!--Delete initialization script, since we'll do it ourselves-->
+  <xsl:template match="script[matches(@src,'ssInitialize')]"/>
   
   <xsl:template match="$helpRow"/>
   

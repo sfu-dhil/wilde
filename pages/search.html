@@ -11,7 +11,8 @@
     <div class="row" id="search_help">
         <div class="col-sm-12">                
             <div class="btn-group pull-right">
-                <a class="btn btn-primary" data-toggle="collapse" data-target="#advanced">Help</a>
+                <button class="btn btn-primary" data-toggle="collapse" data-target="#advanced">Help</button>
+                <button class="btn btn-primary" id="export" disabled="disabled">Export Results</button>
             </div>                
             <dl class="dl-horizontal collapse" id="advanced">
                 <dt>match any term</dt>
@@ -20,7 +21,9 @@
                 <dt>wildcards</dt>
                 <dd>
                     <kbd>crim*</kbd> matches "crime" and "criminal".<br/>
-                    <kbd>s?t</kbd> matches "sit" and "sat" but not "saat."</dd>
+                    <kbd>s?t</kbd> matches "sit" and "sat" but not "saat".<br/>
+                    <kbd>th[ai]nk</kbd> matches "think" and "thank", but not "thunk".
+                </dd>
                 <dt>match all terms</dt>
                 <dd>
                     <kbd>+wilde +verdict</kbd> matches reports that contain both "wilde" and
