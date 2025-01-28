@@ -737,7 +737,7 @@
         </td>
       </xsl:for-each>
       <td class="count"><xsl:value-of select="count($report('doc-similarity'))"/></td>
-      <td class="count"><xsl:value-of select="count($report('paragraph-similarity'))"/></td>
+      <td class="count"><xsl:value-of select="map:size($report('paragraph-similarity'))"/></td>
       <td class="count"><xsl:value-of select="$report('word-count')"/></td>
     </tr>
   </xsl:function>
