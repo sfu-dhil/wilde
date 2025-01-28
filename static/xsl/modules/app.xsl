@@ -129,6 +129,10 @@
           <xsl:sequence select="@*"/>
           <xsl:attribute name="class" 
             select="'staticSearch_' || $searchClass"/>
+          <!--Switch language to use the full name of the language-->
+          <xsl:if test="@name = 'dc.language'">
+            <xsl:attribute name="content" select="$code2lang(@content)"/>
+          </xsl:if>
         </meta>
       </xsl:when>
       <xsl:otherwise>
