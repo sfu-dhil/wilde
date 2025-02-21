@@ -18,13 +18,11 @@ pipeline {
                 ANT_OPTS = "-Xmx6G"
             }
             steps {
-                dir('wilde') {
-                    sh "yarn install"
-                    withAnt {
-                        sh 'ant -f build.xml -Ddata.dir=./wilde-data/data'
-                    }
-                    archiveArtifacts artifacts: 'public/**/*', followSymlinks: false, onlyIfSuccessful: true
+                sh "yarn install"
+                withAnt {
+                    sh 'ant -f build.xml -Ddata.dir=./wilde-data/data'
                 }
+                archiveArtifacts artifacts: 'public/**/*', followSymlinks: false, onlyIfSuccessful: true
             }
         }
     }
