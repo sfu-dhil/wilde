@@ -214,7 +214,7 @@
     'langCode': 'dc.language',
     'city': 'dc.region.city',
     'date': 'dc.date',
-    'facsimile': 'dc.source.url',
+    'facsimile': 'dc.source.facsimile',
     'title': 'title',
     'word-count': 'wr.word-count',
     'edition': 'dc.publisher.edition',
