@@ -19,8 +19,8 @@
   
   <property name="thumbs.dir" value="${dist.dir}/thumbs"/>
   
-  <property name="staticSearch.dir" location="${static.dir}/lib/staticSearch"/>
-  <property name="ssConfigFile" location="${static.dir}/staticSearch_config.xml"/>
+  <property name="staticSearch.dir" value="${static.dir}/lib/staticSearch"/>
+  <property name="ssConfigFile" value="${static.dir}/staticSearch_config.xml"/>
   <property name="ssVerbose" value="false"/>
   <property name="ssTarget" value="allButValidate"/>
   
