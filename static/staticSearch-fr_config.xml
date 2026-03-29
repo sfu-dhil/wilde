@@ -7,7 +7,7 @@
       <searchPage file="../public/search-fr.html"/>
       <index recurse="false"/>
       <!--stopwords/@file may need to be changed to use a file in /stopwords/-->
-      <stopwords file="lib/staticSearch/stopwords/stopwords_fr.txt"/>
+      <stopwords file="../public/search/stopwords_fr_all.txt"/>
       <!--dictionary/@file may need to be changed to use a file in /dicts/-->
       <dictionary file="lib/staticSearch/dicts/words_fr.txt"/>
       <scoringAlgorithm name="tf-idf"/>

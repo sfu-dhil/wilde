@@ -7,7 +7,7 @@
       <searchPage file="../public/search.html"/>
       <index recurse="false"/>
       <!--stopwords/@file may need to be changed to use a file in /stopwords/-->
-      <stopwords file="lib/staticSearch/stopwords/stopwords_en.txt"/>
+      <stopwords file="../public/search/stopwords_en_all.txt"/>
       <!--dictionary/@file may need to be changed to use a file in /dicts/-->
       <dictionary file="lib/staticSearch/dicts/words_en.txt"/>
       <scoringAlgorithm name="tf-idf"/>
@@ -15,9 +15,9 @@
       <tokenizer minWordLength="3"/>
       <createContexts create="true"
          phrasalSearch="true"
-     wildcardSearch="true"
-     maxKwicLength="15"
-     kwicTruncateString="..."/>
+         wildcardSearch="true"
+         maxKwicLength="10"
+         kwicTruncateString="..."/>
       <results resultsPerPage="50" maxKwicsToShow="5" maxResults="2000"/>
       <version file="../public/COMMIT"/>
       <output dir="search/en"/>
@@ -38,6 +38,7 @@
    <contexts/>
    <excludes>
         <!--Exclude everything except the reports-->
+      <exclude type="index" match="html[not(matches(@id,'^[a-z]+_\d+$'))]"/>
       <exclude type="index" match="html[not(descendant::meta[@name='dc.date'])]"/>
    </excludes>
    <filters>
