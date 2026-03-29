@@ -20,7 +20,7 @@
      kwicTruncateString="..."/>
       <results resultsPerPage="50" maxKwicsToShow="5" maxResults="2000"/>
       <version file="../public/COMMIT"/>
-      <output dir="search"/>
+      <output dir="search/en"/>
    </params>
    <rules>
       <rule weight="0" 

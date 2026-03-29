@@ -20,7 +20,8 @@
   <property name="thumbs.dir" value="${dist.dir}/thumbs"/>
   
   <property name="staticSearch.dir" value="${static.dir}/lib/staticSearch"/>
-  <property name="ssConfigFile" value="${static.dir}/staticSearch_config.xml"/>
+  <property name="ssConfigFile.en" value="${static.dir}/staticSearch-en_config.xml"/>
+  <property name="ssConfigFile.fr" value="${static.dir}/staticSearch-fr_config.xml"/>
   <property name="ssVerbose" value="false"/>
   <property name="ssTarget" value="allButValidate"/>
   
@@ -125,16 +126,24 @@
   </target>
   
   
-  <target name="search.build" depends="getCommitHash">
+  <target name="search.en.build" depends="getCommitHash">
     <ant antfile="${staticSearch.dir}/build.xml" 
       target="${ssTarget}" inheritall="false">
-      <property name="ssConfigFile" value="${ssConfigFile}"/>
+      <property name="ssConfigFile" value="${ssConfigFile.en}"/>
+      <property name="ssVerbose" value="${ssVerbose}"/>
+    </ant>
+  </target>
+  
+  <target name="search.fr.build" depends="getCommitHash">
+    <ant antfile="${staticSearch.dir}/build.xml" 
+      target="${ssTarget}" inheritall="false">
+      <property name="ssConfigFile" value="${ssConfigFile.fr}"/>
       <property name="ssVerbose" value="${ssVerbose}"/>
     </ant>
   </target>
   
  
-  <target name="search.postprocess">
+  <target name="search.en.postprocess">
     <available property="search_tmp.exists"
       file="${dist.dir}/search_tmp.html"/>
     <copy file="${dist.dir}/search.html" tofile="${dist.dir}/search_tmp.html" unless:true="${search_tmp.exists}"/>
@@ -144,6 +153,24 @@
         -o:${dist.dir}/search.html"/>
     </exec>
   </target>
+  
+  
+  <target name="search.fr.postprocess">
+    <available property="search_tmp.exists"
+      file="${dist.dir}/search-fr_tmp.html"/>
+    <copy file="${dist.dir}/search-fr.html" tofile="${dist.dir}/search-fr_tmp.html" unless:true="${search_tmp.exists}"/>
+    <exec executable="saxon">
+      <arg line="-xsl:${xsl.dir}/search.xsl
+        -s:${dist.dir}/search-fr_tmp.html
+        -o:${dist.dir}/search-fr.html"/>
+    </exec>
+  </target>
+  
+  <target name="search" depends="search.en, search.fr"/>
+  <target name="search.en" depends="search.en.build, search.en.postprocess"/>
+  <target name="search.fr" depends="search.fr.build, search.fr.postprocess"/>
+  
+  
   
   <target name="docs">
     <ant antfile="${basedir}/wilde-schema/build.xml" inheritall="false" target="documentation">
@@ -162,7 +189,7 @@
     </exec>
   </target>
   
-  <target name="search" depends="search.build, search.postprocess"/>
+
   
   <target name="updateSearchPage">
     <antcall target="copy.resources"/>

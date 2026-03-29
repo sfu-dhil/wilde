@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="lib/staticSearch/schema/staticSearch.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="lib/staticSearch/schema/staticSearch.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<!--Configuration file file:/Users/takeda/projects/wilde/static/staticSearch_config.xml converted to version 2 2026-03-29.-->
+<config xmlns="http://hcmc.uvic.ca/ns/staticSearch" version="2">
+   <params>
+      <searchPage file="../public/search-fr.html"/>
+      <index recurse="false"/>
+      <!--stopwords/@file may need to be changed to use a file in /stopwords/-->
+      <stopwords file="lib/staticSearch/stopwords/stopwords_fr.txt"/>
+      <!--dictionary/@file may need to be changed to use a file in /dicts/-->
+      <dictionary file="lib/staticSearch/dicts/words_fr.txt"/>
+      <scoringAlgorithm name="tf-idf"/>
+      <stemmer dir="stemmers/fr/"/>
+      <tokenizer minWordLength="3"/>
+      <createContexts create="true"
+         phrasalSearch="true"
+     wildcardSearch="true"
+     maxKwicLength="15"
+     kwicTruncateString="..."/>
+      <results resultsPerPage="50" maxKwicsToShow="5" maxResults="2000"/>
+      <version file="../public/COMMIT"/>
+      <output dir="search/fr"/>
+   </params>
+   <rules>
+      <rule weight="0" 
+         match="nav | *[contains-token(@class,'nav')] | div[contains-token(@class,'report-navigation')] | div[div[contains-token(@class,'page-header')]] |
+                ul[@role='tablist'] | div[div[contains-token(@class,'panel')]] | footer"/>
+      <rule weight="0"
+            match="div[not(contains-token(@class,'matches-0'))][matches(@class,'matches-\d+')]"/>
+      <rule weight="0"
+            match="div[contains-token(@class,'col-sm-3')][a[contains-token(@class,'btn')][@title='Show matches']]"/>
+      <rule weight="0"
+            match="div[contains-token(@class,'similarity')]"/>
+      <rule weight="0" match="script | style"/>
+      <rule weight="0" match="div[@id='translation']"/>
+   </rules>
+   <contexts/>
+   <excludes>
+        <!--Exclude everything except the reports-->
+      <exclude type="index" match="html[not(descendant::meta[@name='dc.date'])]"/>
+      <exclude type="index" match="html[not(descendant::meta[@name='dc.language'][@content='French'])]"/>
+      <!--Since we're only looking in French -->
+      <exclude type="filter" match="meta[@name='dc.language']"/>
+   </excludes>
+   <filters>
+      <filter filterName="dc.region.city">
+         <span xmlns="http://www.w3.org/1999/xhtml" lang="en">City</span>
+      </filter>
+      <filter filterName="dc.date">
+         <span xmlns="http://www.w3.org/1999/xhtml" lang="en">Date</span>
+      </filter>
+      <filter filterName="dc.region">
+         <span xmlns="http://www.w3.org/1999/xhtml" lang="en">Region</span>
+      </filter>
+      <filter filterName="dc.language">
+         <span xmlns="http://www.w3.org/1999/xhtml" lang="en">Language</span>
+      </filter>
+      <filter filterName="dc.publisher">
+         <span xmlns="http://www.w3.org/1999/xhtml" lang="en">Publisher</span>
+      </filter>
+      <filter filterName="wr.word-count">
+         <span xmlns="http://www.w3.org/1999/xhtml" lang="en">Word Count</span>
+      </filter>
+   </filters>
+</config>

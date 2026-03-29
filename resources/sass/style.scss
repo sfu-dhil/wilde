@@ -172,6 +172,16 @@ label.facet {
   padding: 0;
 }
 
+main.container #content .row > .page-header:has(.nav-tabs){
+  padding-bottom:0;
+  padding-left:0;
+  margin-left: 15px;
+  .nav-tabs{
+    border-bottom:none;
+  }
+ }
+
+
 #staticSearch button#export {
   display: none;
 }
