@@ -172,15 +172,14 @@ label.facet {
   padding: 0;
 }
 
-main.container #content .row > .page-header:has(.nav-tabs){
-  padding-bottom:0;
-  padding-left:0;
+main.container #content .row > .page-header:has(.nav-tabs) {
+  padding-bottom: 0;
+  padding-left: 0;
   margin-left: 15px;
-  .nav-tabs{
-    border-bottom:none;
+  .nav-tabs {
+    border-bottom: none;
   }
- }
-
+}
 
 #staticSearch button#export {
   display: none;
@@ -636,7 +635,6 @@ dd {
 
 .dl-horizontal {
   width: 100%;
-  float: left;
 }
 
 @include tablet {
@@ -753,7 +751,9 @@ thead > tr {
   background: $color_white;
   // Adjust styling when it is stuck
   &.stuck {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 1px 3px 0 rgba(0, 0, 0, 0.1),
+      0 1px 2px 0 rgba(0, 0, 0, 0.06);
     transition: all 0.2s ease-in-out;
   }
 }
@@ -877,7 +877,9 @@ th.count {
     > a:hover,
     > a:focus {
       border-bottom-color: transparent;
-      transition: all 0.25s ease-in-out, border-bottom 0ms;
+      transition:
+        all 0.25s ease-in-out,
+        border-bottom 0ms;
     }
   }
 
@@ -1279,7 +1281,8 @@ ul.browse-list {
       z-index: -1;
       top: 0;
       transform: translateY(calc(100% - var(--height)));
-      transition: opacity 0.35s cubic-bezier(0.79, 0.14, 0.15, 0.86),
+      transition:
+        opacity 0.35s cubic-bezier(0.79, 0.14, 0.15, 0.86),
         background-color 0.35s cubic-bezier(0.79, 0.14, 0.15, 0.86);
     }
     &:hover {

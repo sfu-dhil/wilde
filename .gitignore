@@ -19,6 +19,7 @@ lib-existdb2.properties
 public
 static/templates
 tmp
+static/lib/staticSearch/xsl/config.xsl
 
 # Symlinks etc
 wilde-data

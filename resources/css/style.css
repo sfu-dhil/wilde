@@ -734,7 +734,6 @@ dd {
 
 .dl-horizontal {
   width: 100%;
-  float: left;
 }
 
 @media (min-width: 768px) {
